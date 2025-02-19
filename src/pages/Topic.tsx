@@ -1,23 +1,12 @@
 import React, { useState } from "react";
+import TopicCard from "../components/topic/TopicCard";
 
 export default function Topic() {
   const comments = useState([{ name: "John Doe", comment: "I agree with" }]);
   return (
     <div className="bg-[#6EB7FE] min-h-screen min-w-screen flex flex-col items-center ">
       <div className="max-w-[892px]">
-        <div className="p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
-          <div>badge</div>
-          <h2 className="wv-ibmplex text-[20px] wv-bold">
-            กรณี สสร มาจากพรรคการเมือง ควรให้พรรคการ เมือง "กรอง"
-            คุณสมบัติให้ด้วย ถือว่าเป็นการเน้นย้ำ เจตนารมณ์ +
-            เช็คว่าไม่ได้มีตำแหน่งทางการเมือง
-          </h2>
-          <div className="flex">
-            <button>เห็นด้วย</button>
-            <button>เห็นด้วยบ้าง</button>
-            <button>ไม่เห็นด้วย</button>
-          </div>
-        </div>
+        <TopicCard />
         <div className="comment-section mt-[10px]">
           <p className="text-[16px] wv-bold wv-ibmplex mt-[24px]">
             {comments.length} ความคิดเห็น
