@@ -5,8 +5,13 @@ export default function Topic() {
   const comments = useState([{ name: "John Doe", comment: "I agree with" }]);
   return (
     <div className="bg-[#6EB7FE] min-h-screen min-w-screen flex flex-col items-center ">
-      <div className="max-w-[892px]">
-        <TopicCard />
+      <div className="max-w-[920px]">
+        <div className="header-section relative overflow-hidden flex justify-end">
+          <div className="max-w-[892px] flex justify-end z-10">
+            <TopicCard />
+          </div>
+          <div className="absolute w-[50%] left-0 top-[50%] rounded-[16px] border-solid border-[2px] border-blue3 h-full"></div>
+        </div>
         <div className="comment-section mt-[10px]">
           <p className="text-[16px] wv-bold wv-ibmplex mt-[24px]">
             {comments.length} ความคิดเห็น
