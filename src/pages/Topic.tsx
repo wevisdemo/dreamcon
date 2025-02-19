@@ -1,5 +1,17 @@
 import React, { useState } from "react";
 import TopicCard from "../components/topic/TopicCard";
+import CommentCard from "../components/topic/CommentCard";
+import { Comment, CommentView } from "../types/comment";
+
+const mockComment1: Comment = {
+  id: "1",
+  comment_view: CommentView.AGREE,
+  reason:
+    "เพราะ..การเป็นสมาชิกพรรคการเมืองแสดงถึงการต้องการมีส่วนร่วมทางการเมือง",
+  comments: [],
+  created_at: new Date().toDateString(),
+  updated_at: new Date().toDateString(),
+};
 
 export default function Topic() {
   const comments = useState([{ name: "John Doe", comment: "I agree with" }]);
@@ -24,12 +36,13 @@ export default function Topic() {
               <div className="parent-wrapper flex flex-col gap-[16px] mt-[10px]">
                 <div className="comment-wrapper flex flex-col">
                   <div>
-                    <div className=" p-[10px] bg-white rounded-[16px] text[13px] flex items-center">
-                      <div className="w-[12px] h-[12px] rounded-full bg-lightGreen mr-[10px]"></div>
-                      <span>
-                        เพราะ..การเป็นสมาชิกพรรคการเมืองแสดงถึงการต้องการมีส่วนร่วมทางการเมือง
-                      </span>
-                    </div>
+                    <CommentCard
+                      comment={mockComment1}
+                      roundedBl
+                      roundedBr
+                      roundedTl
+                      roundedTr
+                    />
                   </div>
                 </div>
               </div>
