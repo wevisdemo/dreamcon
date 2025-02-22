@@ -16,13 +16,13 @@ export default function TopicCard() {
         ถือว่าเป็นการเน้นย้ำ เจตนารมณ์ + เช็คว่าไม่ได้มีตำแหน่งทางการเมือง
       </h2>
       <div className="flex gap-[8px]">
-        <button className="py-[10px] bg-lightGreen/25 border-solid border-[1px] border-lightGreen rounded-[48px] w-full">
+        <button className="py-[10px] bg-lightGreen/25 hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full">
           เห็นด้วย
         </button>
-        <button className="py-[10px] bg-lightYellow/25 border-solid border-[1px] border-lightYellow rounded-[48px] w-full">
+        <button className="py-[10px] bg-lightYellow/25 hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full">
           เห็นด้วยบ้าง
         </button>
-        <button className="py-[10px] bg-lightRed/25 border-solid border-[1px] border-lightRed rounded-[48px] w-full">
+        <button className="py-[10px] bg-lightRed/25 hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full">
           ไม่เห็นด้วย
         </button>
       </div>
