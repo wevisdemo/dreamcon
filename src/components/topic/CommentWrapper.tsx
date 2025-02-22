@@ -3,7 +3,7 @@ import { Comment } from "../../types/comment";
 
 interface PropTypes {
   comments: Comment[];
-  isFirstLevel?: boolean;
+  Level: number;
   isLastChildOfParent?: boolean;
 }
 
@@ -34,13 +34,13 @@ export default function CommentWrapper(props: PropTypes) {
   };
 
   const isRoundedTL = (previousComment: Comment | null): boolean => {
-    if (props.isFirstLevel) return true;
+    if (props.Level === 1) return true;
     if ((previousComment?.comments.length || 0) > 0) return true;
     return false;
   };
 
   const isRoundedTR = (): boolean => {
-    if (props.isFirstLevel) return true;
+    if (props.Level === 1) return true;
     return false;
   };
 
@@ -48,7 +48,7 @@ export default function CommentWrapper(props: PropTypes) {
     currentComment: Comment,
     nextComment: Comment | null
   ): boolean => {
-    if (props.isFirstLevel) return true;
+    if (props.Level === 1) return true;
     if (nextComment === null) return true;
     if ((currentComment.comments.length || 0) > 0) return true;
     return false;
@@ -64,7 +64,7 @@ export default function CommentWrapper(props: PropTypes) {
   return (
     <div
       className={`comment-wrapper flex flex-col ${
-        props.isFirstLevel ? "gap-[16px] mt-[10px]" : ""
+        props.Level === 1 ? "gap-[16px] mt-[10px]" : ""
       }`}
     >
       {props.comments.map((comment, index) => {
@@ -78,14 +78,14 @@ export default function CommentWrapper(props: PropTypes) {
               roundedTr={isRoundedTR()}
             />
             {comment.comments.length > 0 && (
-              <div className="ml-[20px]">
+              <div className="ml-[35px]">
                 <CommentWrapper
                   comments={comment.comments}
-                  isFirstLevel={false}
+                  Level={props.Level + 1}
                   isLastChildOfParent={
                     (props.isLastChildOfParent &&
                       getNextComment(index) === null) ||
-                    props.isFirstLevel
+                    props.Level === 1
                   }
                 />
               </div>
