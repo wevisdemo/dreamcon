@@ -1,8 +1,9 @@
-import TopicWrapper from "../TopicWrapper";
+import { mockTopics } from "../../data/topic";
+import TopicWrapper from "./TopicWrapper";
 
 export default function TopicListSection() {
   return (
-    <div className="flex flex-col items-center gap-[24px]">
+    <div className="flex flex-col items-center gap-[24px] w-full">
       <button className="flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white">
         <img
           className="w-[24px] h-[24px]"
@@ -13,7 +14,7 @@ export default function TopicListSection() {
           เพิ่มข้อถกเถียงใหม่
         </span>
       </button>
-      <TopicWrapper />
+      <TopicWrapper topics={mockTopics} />
     </div>
   );
 }
