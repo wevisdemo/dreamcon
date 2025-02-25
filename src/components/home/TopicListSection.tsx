@@ -9,7 +9,7 @@ interface PropTypes {
 
 export default function TopicListSection(props: PropTypes) {
   return (
-    <div className="flex flex-col items-center gap-[24px] w-full">
+    <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
       <button className="flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white">
         <img
           className="w-[24px] h-[24px]"
