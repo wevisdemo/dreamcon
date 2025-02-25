@@ -27,6 +27,7 @@ export default function CommentWrapper(props: PropTypes) {
     currentComment: Comment,
     nextComment: Comment | null
   ): boolean => {
+    if (props.Level === 1 && currentComment.comments.length === 0) return true;
     if (!props.isLastChildOfParent) return false;
     if (nextComment !== null) return false;
     if ((currentComment.comments.length || 0) > 0) return false;
