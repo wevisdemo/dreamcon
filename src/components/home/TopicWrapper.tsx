@@ -5,9 +5,23 @@ import TopicSummary from "./TopicSummary";
 
 interface PropTypes {
   topics: Topic[];
+  selectedTopic: Topic | null;
+  setSelectedTopic: (topic: Topic) => void;
 }
 
 export default function TopicWrapper(props: PropTypes) {
+  const handleAddComment = () => {
+    console.log("Add comment");
+    // TODO: do it later with context for open modal
+  };
+  const handleSelectTopic = (topic: Topic) => {
+    props.setSelectedTopic(topic);
+  };
+
+  const isSelected = (topic: Topic) => {
+    return props.selectedTopic?.id === topic.id;
+  };
+
   return (
     <div className="w-full h-full flex justify-center">
       <Masonry columns={3} spacing={3}>
@@ -15,7 +29,9 @@ export default function TopicWrapper(props: PropTypes) {
           <TopicSummary
             key={topic.id}
             topic={topic}
-            isSelected={topic.id === "T1"}
+            isSelected={isSelected(topic)}
+            onClick={() => handleSelectTopic(topic)}
+            onAddComment={handleAddComment}
           />
         ))}
       </Masonry>

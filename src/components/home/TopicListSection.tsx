@@ -1,7 +1,13 @@
-import { mockTopics } from "../../data/topic";
+import { Topic } from "../../types/topic";
 import TopicWrapper from "./TopicWrapper";
 
-export default function TopicListSection() {
+interface PropTypes {
+  topics: Topic[];
+  selectedTopic: Topic | null;
+  setSelectedTopic: (topic: Topic) => void;
+}
+
+export default function TopicListSection(props: PropTypes) {
   return (
     <div className="flex flex-col items-center gap-[24px] w-full">
       <button className="flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white">
@@ -14,7 +20,11 @@ export default function TopicListSection() {
           เพิ่มข้อถกเถียงใหม่
         </span>
       </button>
-      <TopicWrapper topics={mockTopics} />
+      <TopicWrapper
+        topics={props.topics}
+        selectedTopic={props.selectedTopic}
+        setSelectedTopic={props.setSelectedTopic}
+      />
     </div>
   );
 }

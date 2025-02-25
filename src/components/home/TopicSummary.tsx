@@ -6,22 +6,24 @@ import SideScreenIcon from "../icon/SideScreenIcon";
 interface PropTypes {
   topic: Topic;
   isSelected?: boolean;
+  onClick: () => void;
+  onAddComment: () => void;
 }
 
 export default function TopicSummary(props: PropTypes) {
   const [hovered, setHovered] = React.useState(false);
   return (
     <div
-      className={`bg-white rounded-[16px] p-[24px] relative flex flex-col gap-[16px] ${
+      className={`bg-white rounded-[16px] p-[24px] relative flex flex-col gap-[16px] border-[2px] ${
         hovered && !props.isSelected ? "hover:drop-shadow-xl" : ""
       }
       ${
-        props.isSelected ? "border-[2px] border-blue6" : ""
+        props.isSelected ? "border-blue6" : "border-transparent"
       } hover:cursor-pointer`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => {
-        console.log("TopicSummary clicked");
+        props.onClick();
       }}
     >
       {hovered && !props.isSelected && (
@@ -37,14 +39,17 @@ export default function TopicSummary(props: PropTypes) {
         />
       )}
       <p className="text-[16px] wv-bold wv-ibmplex"> {props.topic.title} </p>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center h-[32px]">
         <p className="text-accent underline text-[13px]">
           {props.topic.comments.length || 0} ความคิดเห็น
         </p>
         {!props.isSelected && (
           <button
             className="px-[12px] py-[6px] border-solid border-[1.5px] border-gray2 rounded-[48px] hover:bg-gray2"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onAddComment();
+            }}
           >
             <img src="/icon/bubble-plus.svg" alt="bubble-plus-icon" />
           </button>

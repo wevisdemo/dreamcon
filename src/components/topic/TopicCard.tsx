@@ -1,4 +1,10 @@
-export default function TopicCard() {
+import { Topic } from "../../types/topic";
+
+interface PropTypes {
+  topic: Topic;
+}
+
+export default function TopicCard(props: PropTypes) {
   return (
     <div className="p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
       <div className="flex justify-between items-start">
@@ -12,8 +18,7 @@ export default function TopicCard() {
         />
       </div>
       <h2 className="p-[10px] wv-ibmplex text-[20px] wv-bold">
-        กรณี สสร มาจากพรรคการเมือง ควรให้พรรคการ เมือง "กรอง" คุณสมบัติให้ด้วย
-        ถือว่าเป็นการเน้นย้ำ เจตนารมณ์ + เช็คว่าไม่ได้มีตำแหน่งทางการเมือง
+        {props.topic.title}
       </h2>
       <div className="flex gap-[8px]">
         <button className="py-[10px] bg-lightGreen/25 hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full">
