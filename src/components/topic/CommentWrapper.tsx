@@ -61,6 +61,30 @@ export default function CommentWrapper(props: PropTypes) {
     return isLastUltimateLastChild(currentComment, nextComment);
   };
 
+  const getCardBGColor = (comment: Comment): string => {
+    const hasChildren = comment.comments.length > 0;
+    if (hasChildren) {
+      switch (props.Level % 3) {
+        case 0:
+          return "#FFFFFF";
+        case 1:
+          return "#f5fbff";
+        case 2:
+          return "#cae8ff";
+      }
+    } else {
+      switch (props.Level % 3) {
+        case 0:
+          return "#cae8ff";
+        case 1:
+          return "#FFFFFF";
+        case 2:
+          return "#f5fbff";
+      }
+    }
+    return "#FFFFFF";
+  };
+
   return (
     <div
       className={`comment-wrapper flex flex-col ${
@@ -72,6 +96,7 @@ export default function CommentWrapper(props: PropTypes) {
           <div className="" key={index}>
             <CommentCard
               comment={comment}
+              bgColor={getCardBGColor(comment)}
               roundedBl={isRoundedBL(comment, getNextComment(index))}
               roundedBr={isRoundedBR(comment, getNextComment(index))}
               roundedTl={isRoundedTL(getPreviousComment(index))}

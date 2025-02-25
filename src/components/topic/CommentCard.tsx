@@ -2,6 +2,7 @@ import { Comment, CommentView } from "../../types/comment";
 
 interface PropTypes {
   comment: Comment;
+  bgColor: string;
   roundedTl?: boolean;
   roundedTr?: boolean;
   roundedBl?: boolean;
@@ -30,7 +31,8 @@ export default function CommentCard(props: PropTypes) {
 
   return (
     <div
-      className={`p-[10px] bg-white ${roundedClass()} text[13px] flex items-center`}
+      className={`p-[10px]  ${roundedClass()} text[13px] flex items-center`}
+      style={{ backgroundColor: props.bgColor }}
     >
       <div
         className={`w-[12px] h-[12px] rounded-full bg-${viewColor()} mr-[10px]`}
