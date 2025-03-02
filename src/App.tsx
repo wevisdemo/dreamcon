@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "@wevisdemo/ui/styles/index.css";
 import "./App.css";
 import Home from "./pages/Home";
-import Topic from "./pages/topic";
+import Topic from "./pages/Topic";
 
 function App() {
   return (
