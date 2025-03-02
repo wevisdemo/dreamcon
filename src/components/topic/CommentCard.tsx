@@ -11,7 +11,8 @@ interface PropTypes {
   roundedBl?: boolean;
   roundedBr?: boolean;
   onClickAddComment: () => void;
-  onClickMenu: () => void;
+  onClickEdit: () => void;
+  onClickDelete: () => void;
 }
 export default function CommentCard(props: PropTypes) {
   const [hovered, setHovered] = useState(false);
@@ -40,11 +41,13 @@ export default function CommentCard(props: PropTypes) {
   const handleDelete = () => {
     console.log("delete");
     handleCloseMenu();
+    props.onClickDelete();
   };
 
   const handleEdit = () => {
     console.log("edit");
     handleCloseMenu();
+    props.onClickEdit();
   };
 
   const viewColor = () => {
@@ -117,13 +120,12 @@ export default function CommentCard(props: PropTypes) {
           vertical: "top",
           horizontal: "right",
         }}
-        className="drop-shadow-none"
         classes={{ paper: "box-1" }}
+        disableAutoFocus
+        disableEnforceFocus
+        disableRestoreFocus
       >
-        <MenuPopover
-          onClickDelete={() => handleDelete}
-          onClickEdit={() => handleEdit}
-        />
+        <MenuPopover onClickDelete={handleDelete} onClickEdit={handleEdit} />
       </Popover>
     </div>
   );

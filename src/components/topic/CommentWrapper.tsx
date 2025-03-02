@@ -103,8 +103,18 @@ export default function CommentWrapper(props: PropTypes) {
     });
   };
 
-  const handleClickMenu = () => {
-    // TODO: handle click menu
+  const handleDeleteComment = (comment: Comment) => {
+    console.log("delete comment", comment);
+  };
+
+  const handleEditComment = (comment: Comment) => {
+    homePageContext.modalCommentSideSection.dispatch({
+      type: "OPEN_MODAL",
+      payload: {
+        mode: "edit",
+        defaultState: comment,
+      },
+    });
   };
 
   return (
@@ -124,7 +134,8 @@ export default function CommentWrapper(props: PropTypes) {
               roundedTl={isRoundedTL(getPreviousComment(index))}
               roundedTr={isRoundedTR()}
               onClickAddComment={() => handleAddComment(comment)}
-              onClickMenu={handleClickMenu}
+              onClickDelete={() => handleDeleteComment(comment)}
+              onClickEdit={() => handleEditComment(comment)}
             />
             {comment.comments.length > 0 && (
               <div className="ml-[35px]">
