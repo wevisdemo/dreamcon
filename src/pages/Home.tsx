@@ -37,7 +37,7 @@ export default function Home() {
             onSubmit={() => {}}
           />
         </section>
-        <section className="p-[60px] overflow-scroll">
+        <section className="p-[60px] w-full flex justify-center overflow-scroll relative">
           <TopicListSection
             topics={mockTopics}
             selectedTopic={selectedTopic}
