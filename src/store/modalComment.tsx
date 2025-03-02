@@ -1,3 +1,5 @@
+import { Comment } from "../types/comment";
+
 export interface ModalCommentState {
   isModalOpen: boolean;
   defaultState?: Comment;
@@ -11,6 +13,7 @@ export type ModalCommentAction =
       payload: {
         mode: "create" | "edit";
         defaultState?: Comment;
+        topic_id: string;
       };
     }
   | { type: "CLOSE_MODAL" };

@@ -1,7 +1,8 @@
-import React from "react";
+import { useContext } from "react";
 import Masonry from "@mui/lab/Masonry";
 import { Topic } from "../../types/topic";
 import TopicSummary from "./TopicSummary";
+import { StoreContext } from "../../store";
 
 interface PropTypes {
   topics: Topic[];
@@ -10,9 +11,15 @@ interface PropTypes {
 }
 
 export default function TopicWrapper(props: PropTypes) {
-  const handleAddComment = () => {
-    console.log("Add comment");
-    // TODO: do it later with context for open modal
+  const { homePage: homePageContext } = useContext(StoreContext);
+  const handleAddComment = (topic: Topic) => {
+    homePageContext.modalCommentMainSection.dispatch({
+      type: "OPEN_MODAL",
+      payload: {
+        mode: "create",
+        topic_id: topic.id,
+      },
+    });
   };
   const handleSelectTopic = (topic: Topic) => {
     props.setSelectedTopic(topic);
@@ -31,7 +38,7 @@ export default function TopicWrapper(props: PropTypes) {
             topic={topic}
             isSelected={isSelected(topic)}
             onClick={() => handleSelectTopic(topic)}
-            onAddComment={handleAddComment}
+            onAddComment={() => handleAddComment(topic)}
           />
         ))}
       </Masonry>

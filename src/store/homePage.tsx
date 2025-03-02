@@ -7,8 +7,15 @@ import {
 } from "./modalComment";
 
 export interface HomePageStore {
-  modalCommentLeft: HomePageModalState;
+  modalCommentMainSection: HomePageModalState;
 }
+
+export const initialHomePageState: HomePageStore = {
+  modalCommentMainSection: {
+    state: initialModalCommentState,
+    dispatch: () => null,
+  },
+};
 
 interface HomePageModalState {
   state: ModalCommentState;
@@ -16,15 +23,15 @@ interface HomePageModalState {
 }
 
 export const useHomePageStore = (): HomePageStore => {
-  const [modalCommentLeft, dispatchModalCommentLeft] = useReducer(
+  const [modalCommentMainSection, dispatchModalCommentMainSection] = useReducer(
     modalCommentReducer,
     initialModalCommentState
   );
 
   return {
-    modalCommentLeft: {
-      state: modalCommentLeft,
-      dispatch: dispatchModalCommentLeft,
+    modalCommentMainSection: {
+      state: modalCommentMainSection,
+      dispatch: dispatchModalCommentMainSection,
     },
   };
 };

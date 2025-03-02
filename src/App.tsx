@@ -3,10 +3,11 @@ import "@wevisdemo/ui/styles/index.css";
 import "./App.css";
 import Home from "./pages/Home";
 import Topic from "./pages/Topic";
+import { StoreProvider } from "./store";
 
 function App() {
   return (
-    <>
+    <StoreProvider>
       <Router>
         <Routes>
           {/* Route for listing all comments */}
@@ -15,7 +16,7 @@ function App() {
           <Route path="/topic/:id" element={<Topic />} />
         </Routes>
       </Router>
-    </>
+    </StoreProvider>
   );
 }
 
