@@ -3,6 +3,8 @@ import { CommentView } from "../../types/comment";
 import { Topic } from "../../types/topic";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import Tooltip from "@mui/material/Tooltip";
+import { Popover } from "@mui/material";
+import MenuPopover from "../share/MenuPopover";
 
 interface PropTypes {
   topic: Topic;
@@ -15,11 +17,35 @@ export default function TopicCard(props: PropTypes) {
   const [commentView, setCommentView] = useState<null | CommentView>(null);
   const [newCommentText, setNewCommentText] = useState("");
   const [isEditingTopicTitle, setIsEditingTopicTitle] = useState(false);
+  const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
+
+  const openMenu = Boolean(anchorMenu);
+  const popoverID = openMenu ? "topic-menu" : undefined;
 
   useEffect(() => {
     resetNewCommentText();
     resetEditTopic();
   }, [props.topic]);
+
+  const handleClickMenu = (event: React.MouseEvent<HTMLImageElement>) => {
+    setAnchorMenu(anchorMenu ? null : event.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setAnchorMenu(null);
+  };
+
+  const handleClickEditInMenu = () => {
+    setIsEditingTopicTitle(true);
+    handleCloseMenu();
+    document.getElementById("topic-title-text-area")?.focus();
+  };
+
+  const handleDeleteTopic = () => {
+    // TODO: implement delete topic
+    console.log("delete topic");
+    handleCloseMenu();
+  };
 
   const handleSelectCommentView = (selectedView: CommentView) => {
     if (commentView === selectedView) {
@@ -65,13 +91,44 @@ export default function TopicCard(props: PropTypes) {
           className="w-[18px] h-[18px] hover:cursor-pointer"
           src="/icon/menu.svg"
           alt="menu-icon"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClickMenu(e);
+          }}
         />
+        <Popover
+          id={popoverID}
+          open={openMenu}
+          anchorEl={anchorMenu}
+          onClose={handleCloseMenu}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          classes={{ paper: "box-1" }}
+          disableAutoFocus
+          disableEnforceFocus
+          disableRestoreFocus
+        >
+          <MenuPopover
+            onClickDelete={() => {
+              handleDeleteTopic();
+            }}
+            onClickEdit={() => {
+              handleClickEditInMenu();
+            }}
+          />
+        </Popover>
       </div>
       <div className="relative w-full">
         {isEditingTopicTitle ? (
           <>
             <TextareaAutosize
-              id="topic-title"
+              id="topic-title-text-area"
               className="w-full p-[10px] wv-ibmplex text-[20px] wv-bold resize-none overflow-hidden"
               value={topicTitle}
               onChange={(e) => {
