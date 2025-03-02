@@ -9,6 +9,13 @@
   --color-blue3: #95D0FF;
   --color-blue4: #6EB7FE;
   --color-blue6: #2579F5;
+  --color-gray1: #F8F8F8;
   --color-gray2: #E8E8E8;
+  --color-gray3: #D4D4D4;
   --color-gray5: #979797;
+}
+
+.box-1 {
+  border-radius: 8px !important;
+  box-shadow: none !important;
 }
