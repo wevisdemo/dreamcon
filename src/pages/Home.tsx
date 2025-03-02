@@ -22,6 +22,10 @@ export default function Home() {
   const { state: selectedTopic, setState: setSelectedTopic } =
     homePageContext.selectedTopic;
 
+  const redirectToTopicPage = () => {
+    if (!selectedTopic) return;
+    window.location.href = `/topic/${selectedTopic.id}`;
+  };
   return (
     <div className="min-w-screen flex">
       <section
@@ -90,7 +94,7 @@ export default function Home() {
                 alt="double-arrow-right-icon"
               />
             </button>
-            <button>
+            <button onClick={redirectToTopicPage}>
               <img
                 className="w-[24px] h-[24px]"
                 src="/icon/expand-wide.svg"
