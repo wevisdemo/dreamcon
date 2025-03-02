@@ -49,3 +49,13 @@ export const modalCommentReducer = (
       return state;
   }
 };
+
+export const initialCommentModalStore = {
+  state: initialModalCommentState,
+  dispatch: () => null,
+};
+
+export interface CommentModalStore {
+  state: ModalCommentState;
+  dispatch: React.Dispatch<ModalCommentAction>;
+}

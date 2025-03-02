@@ -4,6 +4,7 @@ import TopicTemplate from "../components/topic/TopicTemplate";
 import { mockTopics } from "../data/topic";
 import ModalComment from "../components/share/ModalComment";
 import { StoreContext } from "../store";
+import ModalTopic from "../components/share/ModalTopic";
 
 export default function Home() {
   const getMainSectionWidth = () => {
@@ -31,6 +32,19 @@ export default function Home() {
             isOpen={homePageContext.modalCommentMainSection.state.isModalOpen}
             onClose={() => {
               homePageContext.modalCommentMainSection.dispatch({
+                type: "CLOSE_MODAL",
+              });
+            }}
+            onSubmit={() => {}}
+          />
+          <ModalTopic
+            mode={homePageContext.modalTopicMainSection.state.mode}
+            defaultState={
+              homePageContext.modalTopicMainSection.state.defaultState
+            }
+            isOpen={homePageContext.modalTopicMainSection.state.isModalOpen}
+            onClose={() => {
+              homePageContext.modalTopicMainSection.dispatch({
                 type: "CLOSE_MODAL",
               });
             }}

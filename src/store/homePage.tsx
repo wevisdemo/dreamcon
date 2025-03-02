@@ -1,19 +1,26 @@
 import React, { useReducer, useState } from "react";
 import {
+  CommentModalStore,
+  initialCommentModalStore,
   initialModalCommentState,
-  ModalCommentAction,
   modalCommentReducer,
-  ModalCommentState,
 } from "./modalComment";
 import { Topic } from "../types/topic";
+import {
+  initialModalTopicState,
+  initialTopicModalStore,
+  TopicModalStore,
+  modalTopicReducer,
+} from "./modalTopic";
 
 export interface HomePageStore {
   selectedTopic: {
     state: Topic | null;
     setState: React.Dispatch<React.SetStateAction<Topic | null>>;
   };
-  modalCommentMainSection: HomePageModalState;
-  modalCommentSideSection: HomePageModalState;
+  modalCommentMainSection: CommentModalStore;
+  modalTopicMainSection: TopicModalStore;
+  modalCommentSideSection: CommentModalStore;
 }
 
 export const initialHomePageState: HomePageStore = {
@@ -21,20 +28,10 @@ export const initialHomePageState: HomePageStore = {
     state: null,
     setState: () => null,
   },
-  modalCommentMainSection: {
-    state: initialModalCommentState,
-    dispatch: () => null,
-  },
-  modalCommentSideSection: {
-    state: initialModalCommentState,
-    dispatch: () => null,
-  },
+  modalCommentMainSection: initialCommentModalStore,
+  modalTopicMainSection: initialTopicModalStore,
+  modalCommentSideSection: initialCommentModalStore,
 };
-
-interface HomePageModalState {
-  state: ModalCommentState;
-  dispatch: React.Dispatch<ModalCommentAction>;
-}
 
 export const useHomePageStore = (): HomePageStore => {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
@@ -42,6 +39,11 @@ export const useHomePageStore = (): HomePageStore => {
   const [modalCommentMainSection, dispatchModalCommentMainSection] = useReducer(
     modalCommentReducer,
     initialModalCommentState
+  );
+
+  const [modalTopicMainSection, dispatchModalTopicMainSection] = useReducer(
+    modalTopicReducer,
+    initialModalTopicState
   );
   const [modalCommentSideSection, dispatchModalCommentSideSection] = useReducer(
     modalCommentReducer,
@@ -56,6 +58,10 @@ export const useHomePageStore = (): HomePageStore => {
     modalCommentMainSection: {
       state: modalCommentMainSection,
       dispatch: dispatchModalCommentMainSection,
+    },
+    modalTopicMainSection: {
+      state: modalTopicMainSection,
+      dispatch: dispatchModalTopicMainSection,
     },
     modalCommentSideSection: {
       state: modalCommentSideSection,
