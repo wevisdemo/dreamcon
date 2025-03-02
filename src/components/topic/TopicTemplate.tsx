@@ -17,8 +17,16 @@ export default function TopicTemplate(props: PropTypes) {
   return (
     <div className="max-w-[920px]">
       <div className="header-section pl-[24px] relative overflow-hidden flex justify-end">
-        <div className=" flex justify-end z-10">
-          <TopicCard topic={props.topic} onAddComment={() => {}} />
+        <div className="w-full flex justify-end z-10">
+          <TopicCard
+            topic={props.topic}
+            onChangeTopicTitle={() => {
+              // TODO: Implement this function
+            }}
+            onAddComment={() => {
+              // TODO: Implement this function
+            }}
+          />
         </div>
         <div className="absolute w-[50%] left-0 top-[50%] rounded-[16px] border-solid border-[2px] border-blue3 h-[100vh]"></div>
       </div>

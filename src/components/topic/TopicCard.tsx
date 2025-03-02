@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { CommentView } from "../../types/comment";
 import { Topic } from "../../types/topic";
+import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 interface PropTypes {
   topic: Topic;
   onAddComment: (commentView: CommentView, reason: string) => void;
+  onChangeTopicTitle: (title: string) => void;
 }
 
 export default function TopicCard(props: PropTypes) {
+  const [topicTitle, setTopicTitle] = useState<string>(props.topic.title);
   const [commentView, setCommentView] = useState<null | CommentView>(null);
   const [newCommentText, setNewCommentText] = useState("");
+  const [isEditingTopicTitle, setIsEditingTopicTitle] = useState(false);
 
   useEffect(() => {
     resetNewCommentText();
@@ -28,6 +32,16 @@ export default function TopicCard(props: PropTypes) {
     setNewCommentText("");
   };
 
+  const handlerSubmitTopicTitle = () => {
+    props.onChangeTopicTitle(topicTitle);
+    resetEditTopic();
+  };
+
+  const resetEditTopic = () => {
+    setTopicTitle(props.topic.title);
+    setIsEditingTopicTitle(false);
+  };
+
   const handleAddComment = () => {
     if (newCommentText.trim().length > 0 && commentView !== null) {
       props.onAddComment(commentView, newCommentText);
@@ -40,7 +54,7 @@ export default function TopicCard(props: PropTypes) {
   };
 
   return (
-    <div className="p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
+    <div className="w-full p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
       <div className="flex justify-between items-start">
         <div className="badge px-[8px] py-[4px] rounded-[48px] bg-accent text-white w-fit">
           สสร.
@@ -51,9 +65,39 @@ export default function TopicCard(props: PropTypes) {
           alt="menu-icon"
         />
       </div>
-      <h2 className="p-[10px] wv-ibmplex text-[20px] wv-bold">
-        {props.topic.title}
-      </h2>
+      <div className="relative w-full">
+        {isEditingTopicTitle ? (
+          <>
+            <TextareaAutosize
+              id="topic-title"
+              className="w-full p-[10px] wv-ibmplex text-[20px] wv-bold resize-none overflow-hidden"
+              value={topicTitle}
+              onChange={(e) => {
+                setTopicTitle(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handlerSubmitTopicTitle();
+                }
+              }}
+              autoFocus
+              maxLength={140}
+            />
+            <span className="absolute bottom-[10px] right-[10px]  text-[10px] text-gray5">
+              {topicTitle.length}/140
+            </span>
+          </>
+        ) : (
+          <h2
+            className="p-[10px] wv-ibmplex text-[20px] wv-bold"
+            onClick={() => setIsEditingTopicTitle(true)}
+          >
+            {props.topic.title}
+          </h2>
+        )}
+      </div>
+
       <div className="flex gap-[8px]">
         <button
           className={`py-[10px] ${
@@ -98,9 +142,7 @@ export default function TopicCard(props: PropTypes) {
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                // Handle the enter key press event here
                 handleAddComment();
-                resetNewCommentText();
               }
             }}
             placeholder="เพราะว่า...(140ตัวอักษร)"
