@@ -32,7 +32,7 @@ export default function SideScreenIcon(props: PropTypes) {
           height="12"
           rx="1.6"
           stroke={props.color || "#2579F5"}
-          stroke-width="1.6"
+          strokeWidth="1.6"
         />
         <rect
           x="12"

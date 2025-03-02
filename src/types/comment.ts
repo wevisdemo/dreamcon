@@ -15,8 +15,6 @@ export enum CommentView {
 }
 
 export interface AddOrEditCommentPayload {
-  id?: string;
-  topic_id: string;
   comment_view: CommentView;
   reason: string;
 }

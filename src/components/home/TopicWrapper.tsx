@@ -17,7 +17,8 @@ export default function TopicWrapper(props: PropTypes) {
       type: "OPEN_MODAL",
       payload: {
         mode: "create",
-        topic_id: topic.id,
+        parent_id: topic.id,
+        parent_type: "topic",
       },
     });
   };

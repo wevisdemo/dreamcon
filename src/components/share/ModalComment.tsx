@@ -8,7 +8,6 @@ import {
 interface PropTypes {
   mode: "create" | "edit";
   defaultState?: Comment;
-  topic_id: string;
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (payload: AddOrEditCommentPayload) => void;
@@ -61,7 +60,6 @@ export default function ModalComment(props: PropTypes) {
       props.onSubmit({
         comment_view: commentView,
         reason: text,
-        topic_id: props.topic_id,
       });
     }
     handleClose();

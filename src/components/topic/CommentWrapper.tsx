@@ -1,13 +1,19 @@
+import { useContext } from "react";
 import CommentCard from "./CommentCard";
 import { Comment } from "../../types/comment";
+import { Topic } from "../../types/topic";
+import { StoreContext } from "../../store";
 
 interface PropTypes {
   comments: Comment[];
   Level: number;
   isLastChildOfParent?: boolean;
+  parent: Topic | Comment;
 }
 
 export default function CommentWrapper(props: PropTypes) {
+  const { homePage: homePageContext } = useContext(StoreContext);
+
   //rounded top-left if previous has children OR is parent
   //rounded top-right if parent
   //rounded bottom-right is ultimate last child
@@ -86,6 +92,21 @@ export default function CommentWrapper(props: PropTypes) {
     return "#FFFFFF";
   };
 
+  const handleAddComment = (comment: Comment) => {
+    homePageContext.modalCommentSideSection.dispatch({
+      type: "OPEN_MODAL",
+      payload: {
+        mode: "create",
+        parent_type: "comment",
+        parent_id: comment.id,
+      },
+    });
+  };
+
+  const handleClickMenu = () => {
+    // TODO: handle click menu
+  };
+
   return (
     <div
       className={`comment-wrapper flex flex-col ${
@@ -102,6 +123,8 @@ export default function CommentWrapper(props: PropTypes) {
               roundedBr={isRoundedBR(comment, getNextComment(index))}
               roundedTl={isRoundedTL(getPreviousComment(index))}
               roundedTr={isRoundedTR()}
+              onClickAddComment={() => handleAddComment(comment)}
+              onClickMenu={handleClickMenu}
             />
             {comment.comments.length > 0 && (
               <div className="ml-[35px]">
@@ -113,6 +136,7 @@ export default function CommentWrapper(props: PropTypes) {
                       getNextComment(index) === null) ||
                     props.Level === 1
                   }
+                  parent={comment}
                 />
               </div>
             )}
