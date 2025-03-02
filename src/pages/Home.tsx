@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import TopicListSection from "../components/home/TopicListSection";
 import TopicTemplate from "../components/topic/TopicTemplate";
 import { mockTopics } from "../data/topic";
@@ -7,6 +7,11 @@ import { StoreContext } from "../store";
 import ModalTopic from "../components/share/ModalTopic";
 
 export default function Home() {
+  const { homePage: homePageContext, currentPage } = useContext(StoreContext);
+  useEffect(() => {
+    currentPage.setValue("home");
+  }, []);
+
   const getMainSectionWidth = () => {
     return selectedTopic ? "w-[60%]" : "w-full";
   };
@@ -14,7 +19,6 @@ export default function Home() {
     return selectedTopic ? "w-[40%] overflow-hidden" : "w-0 overflow-hidden";
   };
 
-  const { homePage: homePageContext } = useContext(StoreContext);
   const { state: selectedTopic, setState: setSelectedTopic } =
     homePageContext.selectedTopic;
 
