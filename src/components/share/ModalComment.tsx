@@ -65,6 +65,22 @@ export default function ModalComment(props: PropTypes) {
     handleClose();
   };
 
+  const data = [
+    {
+      text: "เห็นด้วย",
+      color: getCommentViewColor(CommentView.AGREE),
+    },
+
+    {
+      text: "เห็นด้วยบางส่วน",
+      color: getCommentViewColor(CommentView.PARTIAL_AGREE),
+    },
+    {
+      text: "ไม่เห็นด้วย",
+      color: getCommentViewColor(CommentView.DISAGREE),
+    },
+  ];
+
   return (
     <div
       className="w-full h-screen inset-0 bg-transparent flex items-center justify-center z-50"
@@ -89,57 +105,21 @@ export default function ModalComment(props: PropTypes) {
         <div className="p-[16px] flex flex-col space-y-[8px]">
           <p>คุณคิดอย่างไรกับข้อถกเถียงนี้</p>
           <div className="flex space-x-[8px]">
-            <button
-              className={getCommentViewStyle}
-              style={{
-                borderColor: getCommentViewColor(CommentView.AGREE),
-                color:
-                  commentView === CommentView.AGREE
-                    ? "#FFFFFF"
-                    : getCommentViewColor(CommentView.AGREE),
-                backgroundColor:
-                  commentView === CommentView.AGREE
-                    ? getCommentViewColor(CommentView.AGREE)
-                    : "transparent",
-              }}
-              onClick={() => setCommentView(CommentView.AGREE)}
-            >
-              เห็นด้วย
-            </button>
-            <button
-              className={getCommentViewStyle}
-              style={{
-                borderColor: getCommentViewColor(CommentView.PARTIAL_AGREE),
-                color:
-                  commentView === CommentView.PARTIAL_AGREE
-                    ? "#FFFFFF"
-                    : getCommentViewColor(CommentView.PARTIAL_AGREE),
-                backgroundColor:
-                  commentView === CommentView.PARTIAL_AGREE
-                    ? getCommentViewColor(CommentView.PARTIAL_AGREE)
-                    : "transparent",
-              }}
-              onClick={() => setCommentView(CommentView.PARTIAL_AGREE)}
-            >
-              เห็นด้วยบ้าง
-            </button>
-            <button
-              className={getCommentViewStyle}
-              style={{
-                borderColor: getCommentViewColor(CommentView.DISAGREE),
-                color:
-                  commentView === CommentView.DISAGREE
-                    ? "#FFFFFF"
-                    : getCommentViewColor(CommentView.DISAGREE),
-                backgroundColor:
-                  commentView === CommentView.DISAGREE
-                    ? getCommentViewColor(CommentView.DISAGREE)
-                    : "transparent",
-              }}
-              onClick={() => setCommentView(CommentView.DISAGREE)}
-            >
-              ไม่เห็นด้วย
-            </button>
+            {data.map((item, index) => (
+              <button
+                key={index}
+                className={getCommentViewStyle}
+                style={{
+                  borderColor: item.color,
+                  color: commentView === item.text ? "#FFFFFF" : item.color,
+                  backgroundColor:
+                    commentView === item.text ? item.color : "transparent",
+                }}
+                onClick={() => setCommentView(item.text as CommentView)}
+              >
+                {item.text}
+              </button>
+            ))}
           </div>
         </div>
         <div className="p-[16px] h-full flex flex-col">
