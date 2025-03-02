@@ -67,10 +67,10 @@ export default function ModalComment(props: PropTypes) {
 
   return (
     <div
-      className="fixed inset-0 bg-transparent flex items-center justify-center z-50"
+      className="w-full h-screen inset-0 bg-transparent flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="flex flex-col w-full h-full md:h-[480px] md:max-w-[480px] bg-white md:rounded-lg shadow-lg ">
+      <div className="flex flex-col w-full h-full md:h-[480px] md:max-w-[480px] bg-white md:rounded-lg shadow-lg m-[20px]">
         <div className="flex justify-between px-[16px] py-[12px] border-solid border-b-[1px] border-[#D4D4D4]">
           <button
             className="py-[10px] px-[16px] pl-0 text-16 wv-ibmplex wv-bold "
