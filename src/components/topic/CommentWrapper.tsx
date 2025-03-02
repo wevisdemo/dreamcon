@@ -3,6 +3,10 @@ import CommentCard from "./CommentCard";
 import { Comment } from "../../types/comment";
 import { Topic } from "../../types/topic";
 import { StoreContext } from "../../store";
+import {
+  ActionCreateCommentPayload,
+  ActionEditCommentPayload,
+} from "../../store/modalComment";
 
 interface PropTypes {
   comments: Comment[];
@@ -12,7 +16,11 @@ interface PropTypes {
 }
 
 export default function CommentWrapper(props: PropTypes) {
-  const { homePage: homePageContext } = useContext(StoreContext);
+  const {
+    homePage: homePageContext,
+    topicPage: topicPageContext,
+    currentPage,
+  } = useContext(StoreContext);
 
   //rounded top-left if previous has children OR is parent
   //rounded top-right if parent
@@ -93,14 +101,23 @@ export default function CommentWrapper(props: PropTypes) {
   };
 
   const handleAddComment = (comment: Comment) => {
-    homePageContext.modalCommentSideSection.dispatch({
-      type: "OPEN_MODAL",
-      payload: {
-        mode: "create",
-        parent_type: "comment",
-        parent_id: comment.id,
-      },
-    });
+    const payload: ActionCreateCommentPayload = {
+      mode: "create",
+      parent_type: "comment",
+      parent_id: comment.id,
+    };
+    if (currentPage.value === "topic") {
+      topicPageContext.modalComment.dispatch({
+        type: "OPEN_MODAL",
+        payload,
+      });
+    }
+    if (currentPage.value === "home") {
+      homePageContext.modalCommentSideSection.dispatch({
+        type: "OPEN_MODAL",
+        payload,
+      });
+    }
   };
 
   const handleDeleteComment = (comment: Comment) => {
@@ -108,13 +125,22 @@ export default function CommentWrapper(props: PropTypes) {
   };
 
   const handleEditComment = (comment: Comment) => {
-    homePageContext.modalCommentSideSection.dispatch({
-      type: "OPEN_MODAL",
-      payload: {
-        mode: "edit",
-        defaultState: comment,
-      },
-    });
+    const payload: ActionEditCommentPayload = {
+      mode: "edit",
+      defaultState: comment,
+    };
+    if (currentPage.value === "topic") {
+      topicPageContext.modalComment.dispatch({
+        type: "OPEN_MODAL",
+        payload,
+      });
+    }
+    if (currentPage.value === "home") {
+      homePageContext.modalCommentSideSection.dispatch({
+        type: "OPEN_MODAL",
+        payload,
+      });
+    }
   };
 
   return (

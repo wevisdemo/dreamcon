@@ -8,13 +8,13 @@ export interface ModalCommentState {
   mode: "create" | "edit";
 }
 
-interface ActionCreatePayload {
+export interface ActionCreateCommentPayload {
   mode: "create";
   parent_type: "topic" | "comment";
   parent_id: string;
 }
 
-interface ActionEditPayload {
+export interface ActionEditCommentPayload {
   mode: "edit";
   defaultState: Comment;
 }
@@ -22,7 +22,7 @@ interface ActionEditPayload {
 export type ModalCommentAction =
   | {
       type: "OPEN_MODAL";
-      payload: ActionCreatePayload | ActionEditPayload;
+      payload: ActionCreateCommentPayload | ActionEditCommentPayload;
     }
   | { type: "CLOSE_MODAL" };
 
