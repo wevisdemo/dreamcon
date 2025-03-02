@@ -13,11 +13,12 @@ export default function TopicTemplate(props: PropTypes) {
       (comment) => comment.comment_view === view
     );
   };
+
   return (
     <div className="max-w-[920px]">
       <div className="header-section pl-[24px] relative overflow-hidden flex justify-end">
         <div className=" flex justify-end z-10">
-          <TopicCard topic={props.topic} />
+          <TopicCard topic={props.topic} onAddComment={() => {}} />
         </div>
         <div className="absolute w-[50%] left-0 top-[50%] rounded-[16px] border-solid border-[2px] border-blue3 h-[100vh]"></div>
       </div>
@@ -36,6 +37,7 @@ export default function TopicTemplate(props: PropTypes) {
             <CommentWrapper
               comments={getCommentsByView(CommentView.AGREE)}
               Level={1}
+              parent={props.topic}
               isLastChildOfParent
             />
           </div>
@@ -50,6 +52,7 @@ export default function TopicTemplate(props: PropTypes) {
             <CommentWrapper
               comments={getCommentsByView(CommentView.PARTIAL_AGREE)}
               Level={1}
+              parent={props.topic}
               isLastChildOfParent
             />
           </div>
@@ -63,6 +66,7 @@ export default function TopicTemplate(props: PropTypes) {
             <CommentWrapper
               comments={getCommentsByView(CommentView.DISAGREE)}
               Level={1}
+              parent={props.topic}
               isLastChildOfParent
             />
           </div>
