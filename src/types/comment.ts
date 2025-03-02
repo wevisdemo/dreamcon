@@ -1,5 +1,6 @@
 export interface Comment {
   id: string;
+  topic_id: string;
   comment_view: CommentView;
   reason: string;
   comments: Comment[];
@@ -11,4 +12,11 @@ export enum CommentView {
   AGREE = "เห็นด้วย",
   PARTIAL_AGREE = "เห็นด้วยบางส่วน",
   DISAGREE = "ไม่เห็นด้วย",
+}
+
+export interface AddOrEditCommentPayload {
+  id?: string;
+  topic_id: string;
+  comment_view: CommentView;
+  reason: string;
 }

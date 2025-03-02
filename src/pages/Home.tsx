@@ -3,6 +3,7 @@ import TopicListSection from "../components/home/TopicListSection";
 import TopicTemplate from "../components/topic/TopicTemplate";
 import { mockTopics } from "../data/topic";
 import { Topic } from "../types/topic";
+import ModalComment from "../components/share/ModalComment";
 
 export default function Home() {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
@@ -13,11 +14,20 @@ export default function Home() {
     return selectedTopic ? "w-[40%] overflow-scroll" : "w-0 overflow-hidden";
   };
 
+  const [showCommentModal, setShowCommentModal] = useState(false);
+
   return (
     <div className="min-w-screen flex">
       <section
         className={`bg-blue2 ${getMainSectionWidth()} h-screen overflow-scroll flex flex-col items-center p-[60px] duration-300 ease-in`}
       >
+        <ModalComment
+          mode="create"
+          topic_id={selectedTopic?.id || ""}
+          isOpen={showCommentModal}
+          onClose={() => setShowCommentModal(false)}
+          onSubmit={() => {}}
+        />
         <TopicListSection
           topics={mockTopics}
           selectedTopic={selectedTopic}
