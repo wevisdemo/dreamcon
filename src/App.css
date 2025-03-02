@@ -13,9 +13,15 @@
   --color-gray2: #E8E8E8;
   --color-gray3: #D4D4D4;
   --color-gray5: #979797;
+  --colot-gray8: #454343;
 }
 
 .box-1 {
   border-radius: 8px !important;
   box-shadow: none !important;
+}
+
+.tooltip-1{
+  background-color: #454343 !important;
+  /* background-color: var(--color-gray8) !important; */
 }

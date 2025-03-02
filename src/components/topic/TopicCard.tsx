@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CommentView } from "../../types/comment";
 import { Topic } from "../../types/topic";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
+import Tooltip from "@mui/material/Tooltip";
 
 interface PropTypes {
   topic: Topic;
@@ -17,6 +18,7 @@ export default function TopicCard(props: PropTypes) {
 
   useEffect(() => {
     resetNewCommentText();
+    resetEditTopic();
   }, [props.topic]);
 
   const handleSelectCommentView = (selectedView: CommentView) => {
@@ -89,12 +91,30 @@ export default function TopicCard(props: PropTypes) {
             </span>
           </>
         ) : (
-          <h2
-            className="p-[10px] wv-ibmplex text-[20px] wv-bold"
-            onClick={() => setIsEditingTopicTitle(true)}
+          <Tooltip
+            title="กดเพื่อแก้ไข"
+            placement="bottom-start"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -20],
+                    },
+                  },
+                ],
+              },
+            }}
+            classes={{ tooltip: "tooltip-1" }}
           >
-            {props.topic.title}
-          </h2>
+            <h2
+              className="p-[10px] wv-ibmplex text-[20px] wv-bold"
+              onClick={() => setIsEditingTopicTitle(true)}
+            >
+              {props.topic.title}
+            </h2>
+          </Tooltip>
         )}
       </div>
 
