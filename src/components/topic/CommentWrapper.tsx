@@ -7,6 +7,7 @@ import {
   ActionCreateCommentPayload,
   ActionEditCommentPayload,
 } from "../../store/modalComment";
+import { Draggable } from "../Draggable";
 
 interface PropTypes {
   comments: Comment[];
@@ -151,18 +152,20 @@ export default function CommentWrapper(props: PropTypes) {
     >
       {props.comments.map((comment, index) => {
         return (
-          <div className="" key={index}>
-            <CommentCard
-              comment={comment}
-              bgColor={getCardBGColor(comment)}
-              roundedBl={isRoundedBL(comment, getNextComment(index))}
-              roundedBr={isRoundedBR(comment, getNextComment(index))}
-              roundedTl={isRoundedTL(getPreviousComment(index))}
-              roundedTr={isRoundedTR()}
-              onClickAddComment={() => handleAddComment(comment)}
-              onClickDelete={() => handleDeleteComment(comment)}
-              onClickEdit={() => handleEditComment(comment)}
-            />
+          <div className="w-full flex flex-col" key={index}>
+            <Draggable id={comment.id} data={comment}>
+              <CommentCard
+                comment={comment}
+                bgColor={getCardBGColor(comment)}
+                roundedBl={isRoundedBL(comment, getNextComment(index))}
+                roundedBr={isRoundedBR(comment, getNextComment(index))}
+                roundedTl={isRoundedTL(getPreviousComment(index))}
+                roundedTr={isRoundedTR()}
+                onClickAddComment={() => handleAddComment(comment)}
+                onClickDelete={() => handleDeleteComment(comment)}
+                onClickEdit={() => handleEditComment(comment)}
+              />
+            </Draggable>
             {comment.comments.length > 0 && (
               <div className="ml-[35px]">
                 <CommentWrapper

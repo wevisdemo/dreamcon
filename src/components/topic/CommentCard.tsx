@@ -70,7 +70,7 @@ export default function CommentCard(props: PropTypes) {
     return classes;
   };
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div
         aria-describedby={popoverID}
         className={`p-[10px]  ${roundedClass()} text[13px] flex justify-between border-[2px] border-transparent hover:border-blue6 hover:cursor-pointer`}
