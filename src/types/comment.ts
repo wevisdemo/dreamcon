@@ -1,6 +1,5 @@
 export interface Comment {
   id: string;
-  topic_id: string;
   comment_view: CommentView;
   reason: string;
   comments: Comment[];
