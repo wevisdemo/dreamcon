@@ -10,6 +10,7 @@ import CommentWrapper from "./CommentWrapper";
 import { StoreContext } from "../../store";
 import { Topic } from "../../types/topic";
 import { DraggableCommentProps } from "../../types/dragAndDrop";
+import { Droppable } from "../Droppable";
 
 interface PropTypes {
   comment: Comment;
@@ -155,17 +156,22 @@ export default function CommentAndChildren(props: PropTypes) {
   return (
     <Draggable id={comment.id} data={getCommentDraggableProps()}>
       <div className="w-full flex flex-col">
-        <CommentCard
-          comment={comment}
-          bgColor={getCardBGColor(comment)}
-          roundedBl={isRoundedBL(comment, nextComment)}
-          roundedBr={isRoundedBR(comment, nextComment)}
-          roundedTl={isRoundedTL(previousComment)}
-          roundedTr={isRoundedTR()}
-          onClickAddComment={() => handleAddComment(comment)}
-          onClickDelete={() => handleDeleteComment(comment)}
-          onClickEdit={() => handleEditComment(comment)}
-        />
+        <Droppable id={`droppable-comment-${comment.id}`}>
+          {(isOver) => (
+            <CommentCard
+              comment={comment}
+              bgColor={getCardBGColor(comment)}
+              roundedBl={isRoundedBL(comment, nextComment)}
+              roundedBr={isRoundedBR(comment, nextComment)}
+              roundedTl={isRoundedTL(previousComment)}
+              roundedTr={isRoundedTR()}
+              onClickAddComment={() => handleAddComment(comment)}
+              onClickDelete={() => handleDeleteComment(comment)}
+              onClickEdit={() => handleEditComment(comment)}
+              isOver={isOver}
+            />
+          )}
+        </Droppable>
 
         {comment.comments.length > 0 && (
           <div className="ml-[35px]">

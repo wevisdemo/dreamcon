@@ -13,6 +13,7 @@ interface PropTypes {
   onClickAddComment: () => void;
   onClickEdit: () => void;
   onClickDelete: () => void;
+  isOver?: boolean;
 }
 export default function CommentCard(props: PropTypes) {
   const [hovered, setHovered] = useState(false);
@@ -73,7 +74,9 @@ export default function CommentCard(props: PropTypes) {
     <div className="relative w-full">
       <div
         aria-describedby={popoverID}
-        className={`p-[10px]  ${roundedClass()} text[13px] flex justify-between border-[2px] border-transparent hover:border-blue6 hover:cursor-pointer`}
+        className={`p-[10px] ${roundedClass()} text[13px] flex justify-between border-[2px] ${
+          props.isOver ? "border-dashed border-blue4" : "border-transparent"
+        } hover:border-blue6 hover:cursor-pointer`}
         style={{ backgroundColor: props.bgColor }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
