@@ -3,6 +3,7 @@ import Masonry from "@mui/lab/Masonry";
 import { Topic } from "../../types/topic";
 import TopicSummary from "./TopicSummary";
 import { StoreContext } from "../../store";
+import { Droppable } from "../Droppable";
 
 interface PropTypes {
   topics: Topic[];
@@ -34,13 +35,17 @@ export default function TopicWrapper(props: PropTypes) {
     <div className="w-full h-full flex justify-center">
       <Masonry columns={3} spacing={3}>
         {props.topics.map((topic) => (
-          <TopicSummary
-            key={topic.id}
-            topic={topic}
-            isSelected={isSelected(topic)}
-            onClick={() => handleSelectTopic(topic)}
-            onAddComment={() => handleAddComment(topic)}
-          />
+          <Droppable id={`droppable-topic-${topic.id}`} key={topic.id}>
+            {(isOver) => (
+              <TopicSummary
+                topic={topic}
+                isSelected={isSelected(topic)}
+                onClick={() => handleSelectTopic(topic)}
+                onAddComment={() => handleAddComment(topic)}
+                isOver={isOver}
+              />
+            )}
+          </Droppable>
         ))}
       </Masonry>
     </div>

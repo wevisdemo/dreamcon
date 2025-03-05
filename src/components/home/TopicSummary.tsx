@@ -8,18 +8,23 @@ interface PropTypes {
   isSelected?: boolean;
   onClick: () => void;
   onAddComment: () => void;
+  isOver?: boolean;
 }
 
 export default function TopicSummary(props: PropTypes) {
   const [hovered, setHovered] = React.useState(false);
+  const getBorderClass = () => {
+    if (props.isOver && !props.isSelected) return "border-dashed border-blue4";
+    else if (props.isSelected) return "border-blue6";
+    else return "border-transparent";
+  };
+
   return (
     <div
       className={`bg-white rounded-[16px] p-[24px] relative flex flex-col gap-[16px] border-[2px] ${
         hovered && !props.isSelected ? "hover:drop-shadow-xl" : ""
       }
-      ${
-        props.isSelected ? "border-blue6" : "border-transparent"
-      } hover:cursor-pointer`}
+      ${getBorderClass()} hover:cursor-pointer`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => {

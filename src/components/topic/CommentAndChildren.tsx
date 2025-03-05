@@ -172,7 +172,6 @@ export default function CommentAndChildren(props: PropTypes) {
             />
           )}
         </Droppable>
-
         {comment.comments.length > 0 && (
           <div className="ml-[35px]">
             <CommentWrapper

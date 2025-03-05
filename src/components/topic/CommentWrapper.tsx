@@ -29,6 +29,7 @@ export default function CommentWrapper(props: PropTypes) {
       {props.comments.map((comment, index) => {
         return (
           <CommentAndChildren
+            key={comment.id}
             comment={comment}
             previousComment={getPreviousComment(index)}
             nextComment={getNextComment(index)}
