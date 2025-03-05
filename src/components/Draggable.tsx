@@ -1,11 +1,11 @@
 import React from "react";
 import { useDraggable } from "@dnd-kit/core";
-import { Comment } from "../types/comment";
+import { DraggableCommentProps } from "../types/dragAndDrop";
 
 interface DraggableProps {
   id: string;
   children: React.ReactNode;
-  data: Comment;
+  data: DraggableCommentProps;
 }
 
 export function Draggable(props: DraggableProps) {

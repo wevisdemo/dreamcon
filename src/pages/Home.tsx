@@ -11,11 +11,12 @@ import {
   DragOverlay,
   DragStartEvent,
 } from "@dnd-kit/core";
-import { Comment } from "../types/comment";
-import CommentCard from "../components/topic/CommentCard";
+import { DraggableCommentProps } from "../types/dragAndDrop";
+import CommentAndChildren from "../components/topic/CommentAndChildren";
 
 export default function Home() {
-  const [draggedComment, setDraggedComment] = useState<Comment | null>(null);
+  const [draggedCommentProps, setDraggedCommentProps] =
+    useState<DraggableCommentProps | null>(null);
   const { homePage: homePageContext, currentPage } = useContext(StoreContext);
   useEffect(() => {
     currentPage.setValue("home");
@@ -123,13 +124,14 @@ export default function Home() {
         </section>
       </div>
       <DragOverlay>
-        {draggedComment ? (
-          <CommentCard
-            comment={draggedComment}
-            onClickAddComment={() => {}}
-            onClickDelete={() => {}}
-            onClickEdit={() => {}}
-            bgColor={"#FFFFFF"}
+        {draggedCommentProps ? (
+          <CommentAndChildren
+            comment={draggedCommentProps.comment}
+            previousComment={draggedCommentProps.previousComment}
+            nextComment={draggedCommentProps.nextComment}
+            level={draggedCommentProps.level}
+            isLastChildOfParent={draggedCommentProps.isLastChildOfParent}
+            parent={draggedCommentProps.parent}
           />
         ) : null}
       </DragOverlay>
@@ -139,7 +141,7 @@ export default function Home() {
   function handleDragStart(event: DragStartEvent) {
     console.log("drag start", event);
     const { active } = event;
-    setDraggedComment(active.data.current as Comment);
+    setDraggedCommentProps(active.data.current as DraggableCommentProps);
   }
 
   function handleDragEnd(event: DragEndEvent) {

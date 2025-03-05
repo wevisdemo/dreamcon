@@ -44,7 +44,7 @@ export default function TopicTemplate(props: PropTypes) {
             </div>
             <CommentWrapper
               comments={getCommentsByView(CommentView.AGREE)}
-              Level={1}
+              level={1}
               parent={props.topic}
               isLastChildOfParent
             />
@@ -59,7 +59,7 @@ export default function TopicTemplate(props: PropTypes) {
             </div>
             <CommentWrapper
               comments={getCommentsByView(CommentView.PARTIAL_AGREE)}
-              Level={1}
+              level={1}
               parent={props.topic}
               isLastChildOfParent
             />
@@ -73,7 +73,7 @@ export default function TopicTemplate(props: PropTypes) {
             </div>
             <CommentWrapper
               comments={getCommentsByView(CommentView.DISAGREE)}
-              Level={1}
+              level={1}
               parent={props.topic}
               isLastChildOfParent
             />
