@@ -36,6 +36,7 @@ import {
   AddOrEditCommentPayload,
   CommentDB,
   CreateCommentDBPayload,
+  UpdateCommentDBPayload,
 } from "../types/comment";
 
 export default function Home() {
@@ -191,6 +192,7 @@ export default function Home() {
         await handleAddNewComment(payload);
         break;
       case "edit":
+        await handleEditComment(payload);
         break;
     }
   };
@@ -219,6 +221,35 @@ export default function Home() {
       })
       .catch((error) => {
         console.error("Error adding document: ", error);
+      });
+  };
+
+  const handleEditComment = async (payload: AddOrEditCommentPayload) => {
+    if (!payload.id) {
+      console.error("No ID found in Edit Comment Payload");
+      return;
+    }
+
+    if (!payload.parent_topic_id) {
+      console.error("No parent_topic_id found in Add New Comment Payload");
+      return;
+    }
+
+    const timeNow = new Date();
+    const CommentDBPayload: UpdateCommentDBPayload = {
+      comment_view: payload.comment_view,
+      reason: payload.reason,
+      updated_at: timeNow,
+      notified_at: timeNow,
+    };
+
+    const commentDocRef = doc(db, `comments/${payload.id}`);
+    await updateDoc(commentDocRef, CommentDBPayload)
+      .then(() => {
+        console.log("Document updated with ID: ", payload.id);
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
       });
   };
 
