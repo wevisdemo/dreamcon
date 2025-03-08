@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import TopicListSection from "../components/home/TopicListSection";
 import TopicTemplate from "../components/topic/TopicTemplate";
-import { mockTopics } from "../data/topic";
 import ModalComment from "../components/share/ModalComment";
 import { StoreContext } from "../store";
 import ModalTopic from "../components/share/ModalTopic";
@@ -19,18 +18,31 @@ import CommentAndChildren from "../components/topic/CommentAndChildren";
 import {
   AddOrEditTopicPayload,
   CreateTopicDBPayload,
+  Topic,
+  TopicDB,
   UpdateTopicDBPayload,
 } from "../types/topic";
-import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  getDocs,
+  where,
+  query,
+} from "firebase/firestore";
 import { db } from "../utils/firestore";
+import { CommentDB } from "../types/comment";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
+  const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const { homePage: homePageContext, currentPage } = useContext(StoreContext);
   useEffect(() => {
     currentPage.setValue("home");
+    fetchTopics();
   }, []);
 
   const getMainSectionWidth = () => {
@@ -105,6 +117,65 @@ export default function Home() {
       });
   };
 
+  const fetchTopics = async () => {
+    const topicsCollection = collection(db, "topics");
+    const commentsCollection = collection(db, "comments");
+    const topicsSnapshot = await getDocs(topicsCollection);
+    const topics = topicsSnapshot.docs.map((doc) => {
+      return { id: doc.id, ...doc.data() } as TopicDB;
+    });
+    const topicIds = topics.map((topic) => topic.id);
+
+    const commentsQuery = query(
+      commentsCollection,
+      where("parent_topic_id", "in", topicIds)
+    );
+    const commentsSnapshot = await getDocs(commentsQuery);
+    const commentsByTopic: Record<string, CommentDB[]> = {};
+    commentsSnapshot.forEach((doc) => {
+      const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
+      const topicId = commentDB.parent_topic_id;
+
+      if (!commentsByTopic[topicId]) {
+        commentsByTopic[topicId] = [];
+      }
+      commentsByTopic[topicId].push(commentDB);
+    });
+
+    // Map comments to topics
+    const fineTopics = topics.map((topic) => {
+      const comments = commentsByTopic[topic.id] || [];
+      return convertTopicDBToTopic(topic, comments);
+    });
+
+    setDisplayTopics(fineTopics);
+  };
+
+  const convertTopicDBToTopic = (
+    topicDB: TopicDB,
+    commentDBs: CommentDB[]
+  ): Topic => {
+    // TODO: map comment Level
+    return {
+      id: topicDB.id,
+      title: topicDB.title,
+      comments: commentDBs.map((commentDB) => {
+        return {
+          id: commentDB.id,
+          comment_view: commentDB.comment_view,
+          reason: commentDB.reason,
+          comments: [],
+          created_at: commentDB.created_at,
+          updated_at: commentDB.updated_at,
+          notified_at: commentDB.notified_at,
+        };
+      }),
+      created_at: topicDB.created_at,
+      updated_at: topicDB.updated_at,
+      notified_at: topicDB.notified_at,
+    };
+  };
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
@@ -145,7 +216,7 @@ export default function Home() {
           </section>
           <section className="p-[60px] w-full flex justify-center overflow-scroll relative">
             <TopicListSection
-              topics={mockTopics}
+              topics={displayTopics}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />
