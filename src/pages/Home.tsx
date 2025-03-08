@@ -16,6 +16,9 @@ import {
 } from "@dnd-kit/core";
 import { DraggableCommentProps } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
+import { AddOrEditTopicPayload, CreateTopicDBPayload } from "../types/topic";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../utils/firestore";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -40,6 +43,38 @@ export default function Home() {
     if (!selectedTopic) return;
     window.location.href = `/topic/${selectedTopic.id}`;
   };
+
+  const handleOnSubmitTopic = async (
+    mode: "create" | "edit",
+    payload: AddOrEditTopicPayload
+  ) => {
+    switch (mode) {
+      case "create":
+        await handleAddNewTopic(payload);
+        break;
+      case "edit":
+        break;
+    }
+  };
+
+  const handleAddNewTopic = async (payload: AddOrEditTopicPayload) => {
+    const topicsCollection = collection(db, "topics");
+
+    const timeNow = new Date();
+    const TopicDBPayload: CreateTopicDBPayload = {
+      title: payload.title,
+      created_at: timeNow,
+      updated_at: timeNow,
+    };
+    await addDoc(topicsCollection, TopicDBPayload) // Changed payload to TopicDBPayload
+      .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
+  };
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
@@ -75,7 +110,7 @@ export default function Home() {
                   type: "CLOSE_MODAL",
                 });
               }}
-              onSubmit={() => {}}
+              onSubmit={handleOnSubmitTopic}
             />
           </section>
           <section className="p-[60px] w-full flex justify-center overflow-scroll relative">

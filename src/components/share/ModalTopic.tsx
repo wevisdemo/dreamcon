@@ -6,7 +6,7 @@ interface PropTypes {
   defaultState?: Topic;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (payload: AddOrEditTopicPayload) => void;
+  onSubmit: (mode: "create" | "edit", payload: AddOrEditTopicPayload) => void;
 }
 
 export default function ModalTopic(props: PropTypes) {
@@ -35,7 +35,7 @@ export default function ModalTopic(props: PropTypes) {
       : "rounded-[48px] py-[10px] px-[16px] bg-[#E8E8E8] text-16 text-[#979797] wv-ibmplex wv-bold leading-[19px]";
 
   const onSubmit = () => {
-    props.onSubmit({ title: text });
+    props.onSubmit(props.mode, { title: text });
     handleClose();
   };
 
