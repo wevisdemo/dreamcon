@@ -3,8 +3,9 @@ export interface Comment {
   comment_view: CommentView;
   reason: string;
   comments: Comment[];
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
+  notified_at: Date;
 }
 
 export interface CommentDB {
@@ -13,9 +14,9 @@ export interface CommentDB {
   reason: string;
   parent_comment_ids: string[];
   parent_topic_id: string;
-  created_at: string;
-  updated_at: string;
-  notified_at: string;
+  created_at: Date;
+  updated_at: Date;
+  notified_at: Date;
 }
 
 export enum CommentView {

@@ -4,8 +4,9 @@ export interface Topic {
   id: string;
   title: string;
   comments: Comment[];
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
+  notified_at: Date;
 }
 
 export interface TopicDB {
@@ -13,6 +14,7 @@ export interface TopicDB {
   title: string;
   created_at: Date;
   updated_at: Date;
+  notified_at: Date;
 }
 
 export type CreateTopicDBPayload = Omit<TopicDB, "id">;
