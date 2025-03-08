@@ -3,15 +3,15 @@ import { Comment } from "../types/comment";
 export interface ModalCommentState {
   isModalOpen: boolean;
   defaultState?: Comment;
-  parent_type?: "topic" | "comment";
-  parent_id?: string;
+  parentTopicId?: string;
+  parentCommentIds?: string[];
   mode: "create" | "edit";
 }
 
 export interface ActionCreateCommentPayload {
   mode: "create";
-  parent_type: "topic" | "comment";
-  parent_id: string;
+  parentTopicId: string;
+  parentCommentIds: string[];
 }
 
 export interface ActionEditCommentPayload {

@@ -102,8 +102,8 @@ export default function CommentAndChildren(props: PropTypes) {
   const handleAddComment = (comment: Comment) => {
     const payload: ActionCreateCommentPayload = {
       mode: "create",
-      parent_type: "comment",
-      parent_id: comment.id,
+      parentTopicId: comment.parent_topic_id,
+      parentCommentIds: [...comment.parent_comment_ids, comment.id],
     };
     if (currentPage.value === "topic") {
       topicPageContext.modalComment.dispatch({

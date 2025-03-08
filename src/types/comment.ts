@@ -2,6 +2,8 @@ export interface Comment {
   id: string;
   comment_view: CommentView;
   reason: string;
+  parent_comment_ids: string[];
+  parent_topic_id: string;
   comments: Comment[];
   created_at: Date;
   updated_at: Date;
@@ -19,6 +21,8 @@ export interface CommentDB {
   notified_at: Date;
 }
 
+export type CreateCommentDBPayload = Omit<CommentDB, "id">;
+
 export enum CommentView {
   AGREE = "เห็นด้วย",
   PARTIAL_AGREE = "เห็นด้วยบางส่วน",
@@ -26,6 +30,9 @@ export enum CommentView {
 }
 
 export interface AddOrEditCommentPayload {
+  id?: string;
   comment_view: CommentView;
   reason: string;
+  parent_comment_ids?: string[];
+  parent_topic_id?: string;
 }

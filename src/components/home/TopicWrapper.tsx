@@ -18,8 +18,8 @@ export default function TopicWrapper(props: PropTypes) {
       type: "OPEN_MODAL",
       payload: {
         mode: "create",
-        parent_id: topic.id,
-        parent_type: "topic",
+        parentTopicId: topic.id,
+        parentCommentIds: [],
       },
     });
   };

@@ -10,6 +10,8 @@ export const mockComments1: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
 ];
 
@@ -29,6 +31,8 @@ export const mockComments2: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
       {
         id: "P12",
@@ -38,11 +42,15 @@ export const mockComments2: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
     ],
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "P2",
@@ -52,6 +60,8 @@ export const mockComments2: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
 ];
 
@@ -70,6 +80,8 @@ export const mockComments3: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
       {
         id: "D12",
@@ -85,11 +97,15 @@ export const mockComments3: Comment[] = [
             created_at: new Date("2023-10-01T00:00:00.000Z"),
             updated_at: new Date("2023-10-01T00:00:00.000Z"),
             notified_at: new Date("2023-10-01T00:00:00.000Z"),
+            parent_comment_ids: [],
+            parent_topic_id: "T1",
           },
         ],
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
       {
         id: "D13",
@@ -100,6 +116,8 @@ export const mockComments3: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
       {
         id: "D14",
@@ -110,11 +128,15 @@ export const mockComments3: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
     ],
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "D2",
@@ -124,6 +146,8 @@ export const mockComments3: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
 ];
 
@@ -146,11 +170,15 @@ export const mockComments4: Comment[] = [
             created_at: new Date("2023-10-01T00:00:00.000Z"),
             updated_at: new Date("2023-10-01T00:00:00.000Z"),
             notified_at: new Date("2023-10-01T00:00:00.000Z"),
+            parent_comment_ids: [],
+            parent_topic_id: "T1",
           },
         ],
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
       {
         id: "R12",
@@ -160,11 +188,15 @@ export const mockComments4: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
     ],
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "R2",
@@ -174,6 +206,8 @@ export const mockComments4: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "R3",
@@ -183,6 +217,8 @@ export const mockComments4: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "R4",
@@ -192,6 +228,8 @@ export const mockComments4: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "R5",
@@ -201,6 +239,8 @@ export const mockComments4: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "R6",
@@ -210,6 +250,8 @@ export const mockComments4: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "R7",
@@ -219,6 +261,8 @@ export const mockComments4: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
 ];
 
@@ -241,11 +285,15 @@ export const mockComments5: Comment[] = [
             created_at: new Date("2023-10-01T00:00:00.000Z"),
             updated_at: new Date("2023-10-01T00:00:00.000Z"),
             notified_at: new Date("2023-10-01T00:00:00.000Z"),
+            parent_comment_ids: [],
+            parent_topic_id: "T1",
           },
         ],
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
       {
         id: "S12",
@@ -255,11 +303,15 @@ export const mockComments5: Comment[] = [
         created_at: new Date("2023-10-01T00:00:00.000Z"),
         updated_at: new Date("2023-10-01T00:00:00.000Z"),
         notified_at: new Date("2023-10-01T00:00:00.000Z"),
+        parent_comment_ids: [],
+        parent_topic_id: "T1",
       },
     ],
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "S2",
@@ -269,6 +321,8 @@ export const mockComments5: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "S3",
@@ -278,6 +332,8 @@ export const mockComments5: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "S4",
@@ -287,6 +343,8 @@ export const mockComments5: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "S5",
@@ -296,6 +354,8 @@ export const mockComments5: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "S6",
@@ -305,6 +365,8 @@ export const mockComments5: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
   {
     id: "S7",
@@ -314,5 +376,7 @@ export const mockComments5: Comment[] = [
     created_at: new Date("2023-10-01T00:00:00.000Z"),
     updated_at: new Date("2023-10-01T00:00:00.000Z"),
     notified_at: new Date("2023-10-01T00:00:00.000Z"),
+    parent_comment_ids: [],
+    parent_topic_id: "T1",
   },
 ];

@@ -32,7 +32,11 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../utils/firestore";
-import { CommentDB } from "../types/comment";
+import {
+  AddOrEditCommentPayload,
+  CommentDB,
+  CreateCommentDBPayload,
+} from "../types/comment";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -164,6 +168,8 @@ export default function Home() {
           id: commentDB.id,
           comment_view: commentDB.comment_view,
           reason: commentDB.reason,
+          parent_comment_ids: commentDB.parent_comment_ids,
+          parent_topic_id: commentDB.parent_topic_id,
           comments: [],
           created_at: commentDB.created_at,
           updated_at: commentDB.updated_at,
@@ -174,6 +180,46 @@ export default function Home() {
       updated_at: topicDB.updated_at,
       notified_at: topicDB.notified_at,
     };
+  };
+
+  const handleOnSubmitComment = async (
+    mode: "create" | "edit",
+    payload: AddOrEditCommentPayload
+  ) => {
+    switch (mode) {
+      case "create":
+        await handleAddNewComment(payload);
+        break;
+      case "edit":
+        break;
+    }
+  };
+
+  const handleAddNewComment = async (payload: AddOrEditCommentPayload) => {
+    const commentsCollection = collection(db, "comments");
+
+    if (!payload.parent_topic_id) {
+      console.error("No parent_topic_id found in Add New Comment Payload");
+      return;
+    }
+
+    const timeNow = new Date();
+    const CommentDBPayload: CreateCommentDBPayload = {
+      comment_view: payload.comment_view,
+      reason: payload.reason,
+      parent_comment_ids: payload.parent_comment_ids || [],
+      parent_topic_id: payload.parent_topic_id,
+      created_at: timeNow,
+      updated_at: timeNow,
+      notified_at: timeNow,
+    };
+    await addDoc(commentsCollection, CommentDBPayload)
+      .then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error adding document: ", error);
+      });
   };
 
   return (
@@ -198,7 +244,13 @@ export default function Home() {
                   type: "CLOSE_MODAL",
                 });
               }}
-              onSubmit={() => {}}
+              parentCommentIds={
+                homePageContext.modalCommentMainSection.state.parentCommentIds
+              }
+              parentTopicId={
+                homePageContext.modalCommentMainSection.state.parentTopicId
+              }
+              onSubmit={handleOnSubmitComment}
             />
             <ModalTopic
               mode={homePageContext.modalTopicMainSection.state.mode}
@@ -237,7 +289,13 @@ export default function Home() {
                   type: "CLOSE_MODAL",
                 });
               }}
-              onSubmit={() => {}}
+              parentCommentIds={
+                homePageContext.modalCommentSideSection.state.parentCommentIds
+              }
+              parentTopicId={
+                homePageContext.modalCommentSideSection.state.parentTopicId
+              }
+              onSubmit={handleOnSubmitComment}
             />
           </section>
           <section className="w-full h-full">

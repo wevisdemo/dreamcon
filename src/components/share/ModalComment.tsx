@@ -10,7 +10,9 @@ interface PropTypes {
   defaultState?: Comment;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (payload: AddOrEditCommentPayload) => void;
+  onSubmit: (mode: "create" | "edit", payload: AddOrEditCommentPayload) => void;
+  parentTopicId?: string;
+  parentCommentIds?: string[];
 }
 
 export default function ModalComment(props: PropTypes) {
@@ -57,12 +59,27 @@ export default function ModalComment(props: PropTypes) {
 
   const onSubmit = () => {
     if (commentView && text) {
-      props.onSubmit({
-        comment_view: commentView,
-        reason: text,
-      });
+      switch (props.mode) {
+        case "edit":
+          props.onSubmit(props.mode, {
+            id: props.defaultState?.id,
+            comment_view: commentView,
+            reason: text,
+            parent_comment_ids: props.defaultState?.parent_comment_ids,
+            parent_topic_id: props.defaultState?.parent_topic_id,
+          });
+          break;
+        case "create":
+          props.onSubmit(props.mode, {
+            comment_view: commentView,
+            reason: text,
+            parent_comment_ids: props.parentCommentIds,
+            parent_topic_id: props.parentTopicId,
+          });
+          break;
+      }
+      handleClose();
     }
-    handleClose();
   };
 
   const data = [
