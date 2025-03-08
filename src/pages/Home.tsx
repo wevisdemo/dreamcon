@@ -16,8 +16,12 @@ import {
 } from "@dnd-kit/core";
 import { DraggableCommentProps } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
-import { AddOrEditTopicPayload, CreateTopicDBPayload } from "../types/topic";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  AddOrEditTopicPayload,
+  CreateTopicDBPayload,
+  UpdateTopicDBPayload,
+} from "../types/topic";
+import { collection, addDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../utils/firestore";
 
 export default function Home() {
@@ -53,6 +57,7 @@ export default function Home() {
         await handleAddNewTopic(payload);
         break;
       case "edit":
+        await handleEditTopic(payload);
         break;
     }
   };
@@ -72,6 +77,29 @@ export default function Home() {
       })
       .catch((error) => {
         console.error("Error adding document: ", error);
+      });
+  };
+
+  const handleEditTopic = async (payload: AddOrEditTopicPayload) => {
+    if (!payload.id) {
+      console.error("No ID found in Edit Topic Payload");
+      return;
+    }
+
+    const topicDocRef = doc(db, `topics/${payload.id}`);
+
+    const timeNow = new Date();
+    const TopicDBPayload: UpdateTopicDBPayload = {
+      title: payload.title,
+      updated_at: timeNow,
+    };
+
+    await updateDoc(topicDocRef, TopicDBPayload)
+      .then(() => {
+        console.log("Document updated with ID: ", payload.id);
+      })
+      .catch((error) => {
+        console.error("Error updating document: ", error);
       });
   };
 
@@ -158,7 +186,15 @@ export default function Home() {
             </div>
             <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
               {selectedTopic ? (
-                <TopicTemplate topic={selectedTopic} />
+                <TopicTemplate
+                  topic={selectedTopic}
+                  onChangeTopicTitle={(newTitle) => {
+                    handleEditTopic({
+                      id: selectedTopic.id,
+                      title: newTitle,
+                    });
+                  }}
+                />
               ) : (
                 <div className=" w-full h-full" />
               )}

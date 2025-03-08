@@ -17,6 +17,9 @@ export interface TopicDB {
 
 export type CreateTopicDBPayload = Omit<TopicDB, "id">;
 
+export type UpdateTopicDBPayload = Omit<TopicDB, "created_at" | "id">;
+
 export interface AddOrEditTopicPayload {
+  id?: string;
   title: string;
 }

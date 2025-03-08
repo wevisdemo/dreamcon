@@ -5,6 +5,7 @@ import TopicCard from "./TopicCard";
 
 interface PropTypes {
   topic: Topic;
+  onChangeTopicTitle: (title: string) => void;
 }
 
 export default function TopicTemplate(props: PropTypes) {
@@ -20,9 +21,7 @@ export default function TopicTemplate(props: PropTypes) {
         <div className="w-full flex justify-end z-10">
           <TopicCard
             topic={props.topic}
-            onChangeTopicTitle={() => {
-              // TODO: Implement this function
-            }}
+            onChangeTopicTitle={props.onChangeTopicTitle}
             onAddComment={() => {
               // TODO: Implement this function
             }}

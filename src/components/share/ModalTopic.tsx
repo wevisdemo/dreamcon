@@ -35,7 +35,14 @@ export default function ModalTopic(props: PropTypes) {
       : "rounded-[48px] py-[10px] px-[16px] bg-[#E8E8E8] text-16 text-[#979797] wv-ibmplex wv-bold leading-[19px]";
 
   const onSubmit = () => {
-    props.onSubmit(props.mode, { title: text });
+    switch (props.mode) {
+      case "create":
+        props.onSubmit(props.mode, { title: text });
+        break;
+      case "edit":
+        props.onSubmit(props.mode, { id: props.defaultState?.id, title: text });
+        break;
+    }
     handleClose();
   };
 
