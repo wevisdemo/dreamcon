@@ -15,29 +15,14 @@ import {
 } from "@dnd-kit/core";
 import { DraggableCommentProps } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
-import {
-  AddOrEditTopicPayload,
-  CreateTopicDBPayload,
-  Topic,
-  TopicDB,
-  UpdateTopicDBPayload,
-} from "../types/topic";
-import {
-  collection,
-  addDoc,
-  doc,
-  updateDoc,
-  getDocs,
-  where,
-  query,
-} from "firebase/firestore";
+import { AddOrEditTopicPayload, Topic, TopicDB } from "../types/topic";
+import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firestore";
-import {
-  AddOrEditCommentPayload,
-  CommentDB,
-  CreateCommentDBPayload,
-  UpdateCommentDBPayload,
-} from "../types/comment";
+import { AddOrEditCommentPayload, CommentDB } from "../types/comment";
+import { useAddTopic } from "../hooks/useAddTopic";
+import { useEditTopic } from "../hooks/userEditTopic";
+import { useAddComment } from "../hooks/useAddComment";
+import { useEditComment } from "../hooks/useEditComment";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -45,6 +30,11 @@ export default function Home() {
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const { homePage: homePageContext, currentPage } = useContext(StoreContext);
+  const { addNewTopic } = useAddTopic();
+  const { editTopic } = useEditTopic();
+  const { addNewComment } = useAddComment();
+  const { editComment } = useEditComment();
+
   useEffect(() => {
     currentPage.setValue("home");
     fetchTopics();
@@ -71,57 +61,13 @@ export default function Home() {
   ) => {
     switch (mode) {
       case "create":
-        await handleAddNewTopic(payload);
+        await addNewTopic(payload);
         break;
       case "edit":
-        await handleEditTopic(payload);
+        await editTopic(payload);
         break;
     }
   };
-
-  const handleAddNewTopic = async (payload: AddOrEditTopicPayload) => {
-    const topicsCollection = collection(db, "topics");
-
-    const timeNow = new Date();
-    const TopicDBPayload: CreateTopicDBPayload = {
-      title: payload.title,
-      created_at: timeNow,
-      updated_at: timeNow,
-      notified_at: timeNow,
-    };
-    await addDoc(topicsCollection, TopicDBPayload) // Changed payload to TopicDBPayload
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch((error) => {
-        console.error("Error adding document: ", error);
-      });
-  };
-
-  const handleEditTopic = async (payload: AddOrEditTopicPayload) => {
-    if (!payload.id) {
-      console.error("No ID found in Edit Topic Payload");
-      return;
-    }
-
-    const topicDocRef = doc(db, `topics/${payload.id}`);
-
-    const timeNow = new Date();
-    const TopicDBPayload: UpdateTopicDBPayload = {
-      title: payload.title,
-      updated_at: timeNow,
-      notified_at: timeNow,
-    };
-
-    await updateDoc(topicDocRef, TopicDBPayload)
-      .then(() => {
-        console.log("Document updated with ID: ", payload.id);
-      })
-      .catch((error) => {
-        console.error("Error updating document: ", error);
-      });
-  };
-
   const fetchTopics = async () => {
     const topicsCollection = collection(db, "topics");
     const commentsCollection = collection(db, "comments");
@@ -189,68 +135,12 @@ export default function Home() {
   ) => {
     switch (mode) {
       case "create":
-        await handleAddNewComment(payload);
+        await addNewComment(payload);
         break;
       case "edit":
-        await handleEditComment(payload);
+        await editComment(payload);
         break;
     }
-  };
-
-  const handleAddNewComment = async (payload: AddOrEditCommentPayload) => {
-    const commentsCollection = collection(db, "comments");
-
-    if (!payload.parent_topic_id) {
-      console.error("No parent_topic_id found in Add New Comment Payload");
-      return;
-    }
-
-    const timeNow = new Date();
-    const CommentDBPayload: CreateCommentDBPayload = {
-      comment_view: payload.comment_view,
-      reason: payload.reason,
-      parent_comment_ids: payload.parent_comment_ids || [],
-      parent_topic_id: payload.parent_topic_id,
-      created_at: timeNow,
-      updated_at: timeNow,
-      notified_at: timeNow,
-    };
-    await addDoc(commentsCollection, CommentDBPayload)
-      .then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch((error) => {
-        console.error("Error adding document: ", error);
-      });
-  };
-
-  const handleEditComment = async (payload: AddOrEditCommentPayload) => {
-    if (!payload.id) {
-      console.error("No ID found in Edit Comment Payload");
-      return;
-    }
-
-    if (!payload.parent_topic_id) {
-      console.error("No parent_topic_id found in Add New Comment Payload");
-      return;
-    }
-
-    const timeNow = new Date();
-    const CommentDBPayload: UpdateCommentDBPayload = {
-      comment_view: payload.comment_view,
-      reason: payload.reason,
-      updated_at: timeNow,
-      notified_at: timeNow,
-    };
-
-    const commentDocRef = doc(db, `comments/${payload.id}`);
-    await updateDoc(commentDocRef, CommentDBPayload)
-      .then(() => {
-        console.log("Document updated with ID: ", payload.id);
-      })
-      .catch((error) => {
-        console.error("Error updating document: ", error);
-      });
   };
 
   return (
@@ -351,7 +241,7 @@ export default function Home() {
                 <TopicTemplate
                   topic={selectedTopic}
                   onChangeTopicTitle={(newTitle) => {
-                    handleEditTopic({
+                    editTopic({
                       id: selectedTopic.id,
                       title: newTitle,
                     });
