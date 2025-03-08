@@ -5,16 +5,20 @@ import { mockTopics } from "../data/topic";
 import ModalComment from "../components/share/ModalComment";
 import { StoreContext } from "../store";
 import ModalTopic from "../components/share/ModalTopic";
+import { SmartPointerSensor } from "../utils/SmartSenson";
 import {
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { DraggableCommentProps } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
 
 export default function Home() {
+  const sensors = useSensors(useSensor(SmartPointerSensor));
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const { homePage: homePageContext, currentPage } = useContext(StoreContext);
@@ -37,7 +41,11 @@ export default function Home() {
     window.location.href = `/topic/${selectedTopic.id}`;
   };
   return (
-    <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      sensors={sensors}
+    >
       <div className="min-w-screen flex">
         <section
           className={`bg-blue2 ${getMainSectionWidth()} h-screen flex flex-col items-center duration-300 ease-in relative`}

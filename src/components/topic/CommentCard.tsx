@@ -31,7 +31,7 @@ export default function CommentCard(props: PropTypes) {
     return false;
   };
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLImageElement>) => {
+  const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorMenu(anchorMenu ? null : event.currentTarget);
   };
 
@@ -90,6 +90,7 @@ export default function CommentCard(props: PropTypes) {
           {showOption() && (
             <>
               <BubblePlusIcon
+                data-dndkit-disable-drag
                 color="#979797"
                 className="w-[18px] h-[18px]"
                 onClick={(e) => {
@@ -98,6 +99,7 @@ export default function CommentCard(props: PropTypes) {
                 }}
               />
               <img
+                data-dndkit-disable-drag
                 src="/icon/menu.svg"
                 alt="menu-icon"
                 className="w-[18px] h-[18px]"
