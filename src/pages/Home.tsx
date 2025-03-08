@@ -70,6 +70,7 @@ export default function Home() {
       title: payload.title,
       created_at: timeNow,
       updated_at: timeNow,
+      notified_at: timeNow,
     };
     await addDoc(topicsCollection, TopicDBPayload) // Changed payload to TopicDBPayload
       .then((docRef) => {
@@ -92,6 +93,7 @@ export default function Home() {
     const TopicDBPayload: UpdateTopicDBPayload = {
       title: payload.title,
       updated_at: timeNow,
+      notified_at: timeNow,
     };
 
     await updateDoc(topicDocRef, TopicDBPayload)
