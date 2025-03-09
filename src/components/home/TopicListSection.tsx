@@ -23,7 +23,7 @@ export default function TopicListSection(props: PropTypes) {
   };
   return (
     <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
-      <Droppable id="add-topic">
+      <Droppable id="add-topic" data={{ type: "convert-to-topic" }}>
         {(isOver) => (
           <button
             className={`flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white ${

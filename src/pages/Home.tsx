@@ -13,17 +13,22 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { DraggableCommentProps } from "../types/dragAndDrop";
+import {
+  DraggableCommentProps,
+  DroppableData,
+  DroppableDataComment,
+} from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
 import { AddOrEditTopicPayload, Topic, TopicDB } from "../types/topic";
 import { collection, getDocs, where, query } from "firebase/firestore";
 import { db } from "../utils/firestore";
-import { AddOrEditCommentPayload, CommentDB } from "../types/comment";
+import { AddOrEditCommentPayload, CommentDB, Comment } from "../types/comment";
 import { useAddTopic } from "../hooks/useAddTopic";
 import { useEditTopic } from "../hooks/userEditTopic";
 import { useAddComment } from "../hooks/useAddComment";
 import { useEditComment } from "../hooks/useEditComment";
 import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
+import { useMoveComment } from "../hooks/useMoveComment";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -36,6 +41,7 @@ export default function Home() {
   const { addNewComment } = useAddComment();
   const { editComment } = useEditComment();
   const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
+  const { moveCommentToComment } = useMoveComment();
 
   useEffect(() => {
     currentPage.setValue("home");
@@ -293,7 +299,23 @@ export default function Home() {
 
   function handleDragEnd(event: DragEndEvent) {
     console.log("drag end", event);
-    const { over } = event;
+    const { over, active } = event;
+    const draggedCommentProps = active.data.current as DraggableCommentProps;
+    const draggedComment = draggedCommentProps.comment;
+    if ((over?.data.current as DroppableData)?.type === "comment") {
+      const destinationComment = (over?.data.current as DroppableDataComment)
+        .comment;
+      handleDropToComment(draggedComment, destinationComment);
+    }
+
     console.log("over", over);
+    console.log("active", active);
+  }
+
+  function handleDropToComment(
+    draggedComment: Comment,
+    destinationComment: Comment
+  ) {
+    moveCommentToComment(draggedComment.id, destinationComment.id);
   }
 }

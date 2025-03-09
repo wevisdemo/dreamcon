@@ -159,7 +159,10 @@ export default function CommentAndChildren(props: PropTypes) {
   return (
     <Draggable id={comment.id} data={getCommentDraggableProps()}>
       <div className="w-full flex flex-col">
-        <Droppable id={`droppable-comment-${comment.id}`}>
+        <Droppable
+          id={`droppable-comment-${comment.id}`}
+          data={{ type: "comment", comment }}
+        >
           {(isOver) => (
             <CommentCard
               comment={comment}

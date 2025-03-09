@@ -9,3 +9,22 @@ export interface DraggableCommentProps {
   isLastChildOfParent?: boolean;
   parent: Topic | Comment;
 }
+
+export type DroppableData =
+  | DroppableDataTopic
+  | DroppableDataComment
+  | DroppableConvertToTopic;
+
+export interface DroppableDataTopic {
+  type: "topic";
+  topic: Topic;
+}
+
+export interface DroppableDataComment {
+  type: "comment";
+  comment: Comment;
+}
+
+export interface DroppableConvertToTopic {
+  type: "convert-to-topic";
+}

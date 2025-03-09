@@ -35,7 +35,11 @@ export default function TopicWrapper(props: PropTypes) {
     <div className="w-full h-full flex justify-center">
       <Masonry columns={3} spacing={3}>
         {props.topics.map((topic) => (
-          <Droppable id={`droppable-topic-${topic.id}`} key={topic.id}>
+          <Droppable
+            id={`droppable-topic-${topic.id}`}
+            key={topic.id}
+            data={{ type: "topic", topic }}
+          >
             {(isOver) => (
               <TopicSummary
                 topic={topic}
