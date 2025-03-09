@@ -21,7 +21,14 @@ import {
 } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
 import { AddOrEditTopicPayload, Topic, TopicDB } from "../types/topic";
-import { collection, getDocs, where, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  where,
+  query,
+  onSnapshot,
+  Unsubscribe,
+} from "firebase/firestore";
 import { db } from "../utils/firestore";
 import { AddOrEditCommentPayload, CommentDB, Comment } from "../types/comment";
 import { useAddTopic } from "../hooks/useAddTopic";
@@ -45,11 +52,28 @@ export default function Home() {
   const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
   const { moveCommentToComment, moveCommentToTopic } = useMoveComment();
   const { convertCommentToTopic } = useConvertCommentToTopic();
+  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   useEffect(() => {
     currentPage.setValue("home");
     fetchTopics();
+    const unsubscribe = subscribeTopics();
+    return () => {
+      unsubscribe();
+    };
   }, []);
+
+  const subscribeTopics = (): Unsubscribe => {
+    const topicsQuery = query(collection(db, "topics"));
+    const unsubscribe = onSnapshot(topicsQuery, () => {
+      fetchTopics();
+    });
+    return unsubscribe;
+  };
+
+  useEffect(() => {
+    refreshSelectedTopicFromDisplayTopic(displayTopics);
+  }, [displayTopics]);
 
   const getMainSectionWidth = () => {
     return selectedTopic ? "w-[60%]" : "w-full";
@@ -57,9 +81,6 @@ export default function Home() {
   const getSideSectionWidth = () => {
     return selectedTopic ? "w-[40%] overflow-hidden" : "w-0 overflow-hidden";
   };
-
-  const { state: selectedTopic, setState: setSelectedTopic } =
-    homePageContext.selectedTopic;
 
   const redirectToTopicPage = () => {
     if (!selectedTopic) return;
@@ -115,6 +136,17 @@ export default function Home() {
       });
 
     setDisplayTopics(fineTopics);
+    refreshSelectedTopicFromDisplayTopic(fineTopics);
+  };
+
+  const refreshSelectedTopicFromDisplayTopic = (topics: Topic[]) => {
+    if (!selectedTopic) return;
+    const topic = topics.find((topic) => topic.id === selectedTopic.id);
+    if (!topic) {
+      setSelectedTopic(null);
+    } else {
+      setSelectedTopic(topic);
+    }
   };
 
   const convertTopicDBToTopic = (
@@ -122,23 +154,9 @@ export default function Home() {
     commentDBs: CommentDB[]
   ): Topic => {
     const comments = mapCommentsHierarchy(commentDBs);
-    // TODO: map comment Level
     return {
       id: topicDB.id,
       title: topicDB.title,
-      // comments: commentDBs.map((commentDB) => {
-      //   return {
-      //     id: commentDB.id,
-      //     comment_view: commentDB.comment_view,
-      //     reason: commentDB.reason,
-      //     parent_comment_ids: commentDB.parent_comment_ids,
-      //     parent_topic_id: commentDB.parent_topic_id,
-      //     comments: [],
-      //     created_at: commentDB.created_at,
-      //     updated_at: commentDB.updated_at,
-      //     notified_at: commentDB.notified_at,
-      //   };
-      // }),
       comments: comments,
       created_at: topicDB.created_at,
       updated_at: topicDB.updated_at,
@@ -339,13 +357,11 @@ export default function Home() {
   );
 
   function handleDragStart(event: DragStartEvent) {
-    console.log("drag start", event);
     const { active } = event;
     setDraggedCommentProps(active.data.current as DraggableCommentProps);
   }
 
   function handleDragEnd(event: DragEndEvent) {
-    console.log("drag end", event);
     const { over, active } = event;
     const draggedCommentProps = active.data.current as DraggableCommentProps;
     const draggedComment = draggedCommentProps.comment;
@@ -367,9 +383,6 @@ export default function Home() {
         handleDropToAddTopic(draggedComment);
       }
     }
-
-    console.log("over", over);
-    console.log("active", active);
   }
 
   function handleDropToTopic(draggedComment: Comment, destinationTopic: Topic) {

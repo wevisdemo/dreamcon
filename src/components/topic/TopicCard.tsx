@@ -43,7 +43,6 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const handleDeleteTopic = () => {
-    // TODO: implement delete topic
     props.onDeleteTopic();
     handleCloseMenu();
   };
