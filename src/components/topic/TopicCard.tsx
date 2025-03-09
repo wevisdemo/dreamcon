@@ -10,6 +10,7 @@ interface PropTypes {
   topic: Topic;
   onAddComment: (commentView: CommentView, reason: string) => void;
   onChangeTopicTitle: (title: string) => void;
+  onDeleteTopic: () => void;
 }
 
 export default function TopicCard(props: PropTypes) {
@@ -43,7 +44,7 @@ export default function TopicCard(props: PropTypes) {
 
   const handleDeleteTopic = () => {
     // TODO: implement delete topic
-    console.log("delete topic");
+    props.onDeleteTopic();
     handleCloseMenu();
   };
 

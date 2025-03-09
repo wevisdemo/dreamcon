@@ -23,6 +23,7 @@ import { useAddTopic } from "../hooks/useAddTopic";
 import { useEditTopic } from "../hooks/userEditTopic";
 import { useAddComment } from "../hooks/useAddComment";
 import { useEditComment } from "../hooks/useEditComment";
+import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -34,6 +35,7 @@ export default function Home() {
   const { editTopic } = useEditTopic();
   const { addNewComment } = useAddComment();
   const { editComment } = useEditComment();
+  const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
 
   useEffect(() => {
     currentPage.setValue("home");
@@ -143,6 +145,11 @@ export default function Home() {
     }
   };
 
+  const handleOnDeleteTopic = async (topicId: string) => {
+    await deleteTopicWithChildren(topicId);
+    setSelectedTopic(null);
+  };
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
@@ -246,6 +253,7 @@ export default function Home() {
                       title: newTitle,
                     });
                   }}
+                  onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}
                 />
               ) : (
                 <div className=" w-full h-full" />

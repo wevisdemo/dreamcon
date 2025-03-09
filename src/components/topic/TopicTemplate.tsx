@@ -6,6 +6,7 @@ import TopicCard from "./TopicCard";
 interface PropTypes {
   topic: Topic;
   onChangeTopicTitle: (title: string) => void;
+  onDeleteTopic: () => void;
 }
 
 export default function TopicTemplate(props: PropTypes) {
@@ -13,6 +14,10 @@ export default function TopicTemplate(props: PropTypes) {
     return props.topic.comments.filter(
       (comment) => comment.comment_view === view
     );
+  };
+
+  const handleOnDeleteTopic = () => {
+    props.onDeleteTopic();
   };
 
   return (
@@ -25,6 +30,7 @@ export default function TopicTemplate(props: PropTypes) {
             onAddComment={() => {
               // TODO: Implement this function
             }}
+            onDeleteTopic={handleOnDeleteTopic}
           />
         </div>
         <div className="absolute w-[50%] left-0 top-[50%] rounded-[16px] border-solid border-[2px] border-blue3 h-[100vh]"></div>
