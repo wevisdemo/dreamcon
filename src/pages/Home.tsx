@@ -105,10 +105,14 @@ export default function Home() {
     });
 
     // Map comments to topics
-    const fineTopics = topics.map((topic) => {
-      const comments = commentsByTopic[topic.id] || [];
-      return convertTopicDBToTopic(topic, comments);
-    });
+    const fineTopics = topics
+      .map((topic) => {
+        const comments = commentsByTopic[topic.id] || [];
+        return convertTopicDBToTopic(topic, comments);
+      })
+      .sort((a, b) => {
+        return a.created_at > b.created_at ? -1 : 1;
+      });
 
     setDisplayTopics(fineTopics);
   };
