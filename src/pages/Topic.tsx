@@ -12,7 +12,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  onSnapshot,
   query,
+  Unsubscribe,
   where,
 } from "firebase/firestore";
 import { db } from "../utils/firestore";
@@ -37,15 +39,24 @@ export default function TopicPage() {
 
   useEffect(() => {
     if (topicId) {
-      fetchTopicById(topicId).then((topic) => {
-        if (topic) {
-          setSelectedTopic(topic);
-        }
-      });
+      fetchTopicById(topicId);
     } else {
       window.location.href = "/";
     }
   }, [topicId]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeTopic();
+    return () => unsubscribe();
+  }, []);
+
+  const subscribeTopic = (): Unsubscribe => {
+    const topicRef = doc(db, `topics/${topicId}`);
+    return onSnapshot(topicRef, () => {
+      console.log("watch topic", topicId);
+      if (topicId) fetchTopicById(topicId);
+    });
+  };
 
   const fetchTopicById = async (topicId: string) => {
     const topicRef = doc(db, "topics", topicId);
@@ -73,7 +84,7 @@ export default function TopicPage() {
     })) as CommentDB[];
 
     // Convert the data into Topic format
-    return convertTopicDBToTopic(topic, comments);
+    setSelectedTopic(convertTopicDBToTopic(topic, comments));
   };
 
   return (
