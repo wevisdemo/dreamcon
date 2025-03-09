@@ -11,6 +11,7 @@ import { StoreContext } from "../../store";
 import { Topic } from "../../types/topic";
 import { DraggableCommentProps } from "../../types/dragAndDrop";
 import { Droppable } from "../Droppable";
+import { useDeleteCommentWithChildren } from "../../hooks/useDeleteCommentWithChildren";
 
 interface PropTypes {
   comment: Comment;
@@ -30,6 +31,8 @@ export default function CommentAndChildren(props: PropTypes) {
     topicPage: topicPageContext,
     currentPage,
   } = useContext(StoreContext);
+
+  const { deleteCommentWithChildren } = useDeleteCommentWithChildren();
 
   //rounded top-left if previous has children OR is parent
   //rounded top-right if parent
@@ -119,8 +122,8 @@ export default function CommentAndChildren(props: PropTypes) {
     }
   };
 
-  const handleDeleteComment = (comment: Comment) => {
-    console.log("delete comment", comment);
+  const handleDeleteComment = async (comment: Comment) => {
+    await deleteCommentWithChildren(comment.id);
   };
 
   const handleEditComment = (comment: Comment) => {
