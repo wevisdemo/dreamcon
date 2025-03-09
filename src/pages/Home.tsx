@@ -332,6 +332,20 @@ export default function Home() {
     draggedComment: Comment,
     destinationComment: Comment
   ) {
+    // Prevent dropping to itself
+    if (draggedComment.id === destinationComment.id) return;
+    // Prevent dropping to its last parent
+    if (draggedComment.parent_comment_ids.length !== 0) {
+      if (
+        draggedComment.parent_comment_ids[
+          destinationComment.parent_comment_ids.length - 1
+        ] === destinationComment.id
+      )
+        return;
+    }
+    // prevent dropping to its children
+    if (destinationComment.parent_comment_ids.includes(draggedComment.id))
+      return;
     moveCommentToComment(draggedComment.id, destinationComment.id);
   }
 }
