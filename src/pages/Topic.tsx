@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import TopicTemplate from "../components/topic/TopicTemplate";
 import { Topic, TopicDB } from "../types/topic";
-import { Comment } from "../types/comment";
+import { AddOrEditCommentPayload, Comment } from "../types/comment";
 import { StoreContext } from "../store";
 import ModalComment from "../components/share/ModalComment";
 import { useEditTopic } from "../hooks/userEditTopic";
@@ -37,6 +37,7 @@ import {
 } from "../types/dragAndDrop";
 import { useMoveComment } from "../hooks/useMoveComment";
 import { SmartPointerSensor } from "../utils/SmartSenson";
+import { useEditComment } from "../hooks/useEditComment";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
@@ -52,6 +53,7 @@ export default function TopicPage() {
   }, []);
   const { editTopic } = useEditTopic();
   const { addNewComment } = useAddComment();
+  const { editComment } = useEditComment();
   const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
   const { moveCommentToComment } = useMoveComment();
 
@@ -71,7 +73,6 @@ export default function TopicPage() {
   const subscribeTopic = (): Unsubscribe => {
     const topicRef = doc(db, `topics/${topicId}`);
     return onSnapshot(topicRef, () => {
-      console.log("watch topic", topicId);
       if (topicId) fetchTopicById(topicId);
     });
   };
@@ -146,6 +147,20 @@ export default function TopicPage() {
     moveCommentToComment(draggedComment, destinationComment.id);
   }
 
+  const handleOnSubmitComment = async (
+    mode: "create" | "edit",
+    payload: AddOrEditCommentPayload
+  ) => {
+    switch (mode) {
+      case "create":
+        await addNewComment(payload);
+        break;
+      case "edit":
+        await editComment(payload);
+        break;
+    }
+  };
+
   return (
     <>
       {selectedTopic ? (
@@ -185,7 +200,13 @@ export default function TopicPage() {
                     type: "CLOSE_MODAL",
                   });
                 }}
-                onSubmit={() => {}}
+                parentCommentIds={
+                  topicPageContext.modalComment.state.parentCommentIds
+                }
+                parentTopicId={
+                  topicPageContext.modalComment.state.parentTopicId
+                }
+                onSubmit={handleOnSubmitComment}
               />
             </section>
           </div>
