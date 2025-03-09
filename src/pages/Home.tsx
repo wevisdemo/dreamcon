@@ -17,6 +17,7 @@ import {
   DraggableCommentProps,
   DroppableData,
   DroppableDataComment,
+  DroppableDataTopic,
 } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
 import { AddOrEditTopicPayload, Topic, TopicDB } from "../types/topic";
@@ -41,7 +42,7 @@ export default function Home() {
   const { addNewComment } = useAddComment();
   const { editComment } = useEditComment();
   const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
-  const { moveCommentToComment } = useMoveComment();
+  const { moveCommentToComment, moveCommentToTopic } = useMoveComment();
 
   useEffect(() => {
     currentPage.setValue("home");
@@ -302,14 +303,29 @@ export default function Home() {
     const { over, active } = event;
     const draggedCommentProps = active.data.current as DraggableCommentProps;
     const draggedComment = draggedCommentProps.comment;
-    if ((over?.data.current as DroppableData)?.type === "comment") {
-      const destinationComment = (over?.data.current as DroppableDataComment)
-        .comment;
-      handleDropToComment(draggedComment, destinationComment);
+
+    switch ((over?.data.current as DroppableData)?.type) {
+      case "topic": {
+        const destinationTopic = (over?.data.current as DroppableDataTopic)
+          .topic;
+        handleDropToTopic(draggedComment, destinationTopic);
+        break;
+      }
+      case "comment": {
+        const destinationComment = (over?.data.current as DroppableDataComment)
+          .comment;
+        handleDropToComment(draggedComment, destinationComment);
+        break;
+      }
     }
 
     console.log("over", over);
     console.log("active", active);
+  }
+
+  function handleDropToTopic(draggedComment: Comment, destinationTopic: Topic) {
+    if (draggedComment.parent_topic_id === destinationTopic.id) return;
+    moveCommentToTopic(draggedComment.id, destinationTopic.id);
   }
 
   function handleDropToComment(
