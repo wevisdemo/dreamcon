@@ -30,6 +30,7 @@ import { useAddComment } from "../hooks/useAddComment";
 import { useEditComment } from "../hooks/useEditComment";
 import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
 import { useMoveComment } from "../hooks/useMoveComment";
+import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -43,6 +44,7 @@ export default function Home() {
   const { editComment } = useEditComment();
   const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
   const { moveCommentToComment, moveCommentToTopic } = useMoveComment();
+  const { convertCommentToTopic } = useConvertCommentToTopic();
 
   useEffect(() => {
     currentPage.setValue("home");
@@ -317,6 +319,9 @@ export default function Home() {
         handleDropToComment(draggedComment, destinationComment);
         break;
       }
+      case "convert-to-topic": {
+        handleDropToAddTopic(draggedComment);
+      }
     }
 
     console.log("over", over);
@@ -347,5 +352,9 @@ export default function Home() {
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
     moveCommentToComment(draggedComment.id, destinationComment.id);
+  }
+
+  function handleDropToAddTopic(draggedComment: Comment) {
+    convertCommentToTopic(draggedComment.id);
   }
 }
