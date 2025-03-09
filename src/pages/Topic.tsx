@@ -27,6 +27,8 @@ export default function TopicPage() {
   const { topicPage: topicPageContext, currentPage } = useContext(StoreContext);
   useEffect(() => {
     currentPage.setValue("topic");
+    const unsubscribe = subscribeTopic();
+    return () => unsubscribe();
   }, []);
   const { editTopic } = useEditTopic();
   const { addNewComment } = useAddComment();
@@ -44,11 +46,6 @@ export default function TopicPage() {
       window.location.href = "/";
     }
   }, [topicId]);
-
-  useEffect(() => {
-    const unsubscribe = subscribeTopic();
-    return () => unsubscribe();
-  }, []);
 
   const subscribeTopic = (): Unsubscribe => {
     const topicRef = doc(db, `topics/${topicId}`);
