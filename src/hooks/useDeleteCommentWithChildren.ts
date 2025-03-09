@@ -8,12 +8,14 @@ import {
   getDocs,
   runTransaction,
 } from "firebase/firestore";
+import { Comment } from "../types/comment";
 
 export const useDeleteCommentWithChildren = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deleteCommentWithChildren = async (commentId: string) => {
+  const deleteCommentWithChildren = async (comment: Comment) => {
+    const commentId = comment.id;
     if (!commentId) {
       setError("No comment ID provided for deletion");
       return;
@@ -42,6 +44,16 @@ export const useDeleteCommentWithChildren = () => {
         // Step 3: Delete the main comment
         const commentDocRef = doc(db, `comments/${commentId}`);
         transaction.delete(commentDocRef);
+
+        // Step 4: Update the parent topic to notify of the deletion
+        const parentTopicId = comment.parent_topic_id;
+
+        if (parentTopicId) {
+          const parentTopicRef = doc(db, `topics/${parentTopicId}`);
+          transaction.update(parentTopicRef, {
+            notified_at: new Date(),
+          });
+        }
       });
 
       console.log(

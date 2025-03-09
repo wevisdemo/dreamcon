@@ -3,19 +3,20 @@ import { db } from "../utils/firestore";
 import {
   doc,
   collection,
-  addDoc,
   query,
   where,
   getDocs,
   runTransaction,
 } from "firebase/firestore";
 import { CreateTopicDBPayload } from "../types/topic";
+import { Comment } from "../types/comment";
 
 export const useConvertCommentToTopic = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const convertCommentToTopic = async (commentId: string) => {
+  const convertCommentToTopic = async (comment: Comment) => {
+    const commentId = comment.id;
     if (!commentId) {
       setError("Missing comment ID");
       return;
@@ -37,6 +38,8 @@ export const useConvertCommentToTopic = () => {
         const targetCommentData = targetCommentSnap.data();
 
         // Step 2: Create a new topic using `reason` as the title
+        const newTopicDocRef = doc(topicsCollection);
+        const newTopicId = newTopicDocRef.id;
         const timeNow = new Date();
         const topicPayload: CreateTopicDBPayload = {
           title: targetCommentData.reason, // Convert reason to title
@@ -44,9 +47,7 @@ export const useConvertCommentToTopic = () => {
           updated_at: timeNow,
           notified_at: timeNow,
         };
-        const newTopicRef = await addDoc(topicsCollection, topicPayload);
-
-        const newTopicId = newTopicRef.id;
+        await transaction.set(newTopicDocRef, topicPayload);
 
         // Step 3: Fetch all child comments recursively
         const fetchChildComments = async (parentId: string) => {
@@ -84,6 +85,12 @@ export const useConvertCommentToTopic = () => {
 
         // Step 5: Delete the old comment after conversion
         transaction.delete(targetCommentRef);
+
+        // Step 6: Update the notified_at field of the new topic
+        const oldParentTopicRef = doc(db, `topics/${comment.parent_topic_id}`);
+        transaction.update(oldParentTopicRef, {
+          notified_at: new Date(),
+        });
       });
 
       console.log(`Comment ${commentId} converted to topic successfully.`);

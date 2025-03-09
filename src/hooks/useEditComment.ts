@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../utils/firestore"; // ✅ Correct import path
+import { doc, runTransaction } from "firebase/firestore";
+import { db } from "../utils/firestore";
 import {
   AddOrEditCommentPayload,
   UpdateCommentDBPayload,
@@ -36,7 +36,14 @@ export const useEditComment = () => {
       };
 
       const commentDocRef = doc(db, `comments/${payload.id}`);
-      await updateDoc(commentDocRef, CommentDBPayload);
+      const parentDocRef = doc(db, `topics/${payload.parent_topic_id}`);
+
+      await runTransaction(db, async (transaction) => {
+        transaction.update(commentDocRef, CommentDBPayload);
+        transaction.update(parentDocRef, {
+          notified_at: timeNow,
+        });
+      });
       console.log("Document updated with ID:", payload.id);
     } catch (err) {
       console.error("Error updating document:", err);

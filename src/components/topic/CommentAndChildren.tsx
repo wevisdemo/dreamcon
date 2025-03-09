@@ -123,7 +123,7 @@ export default function CommentAndChildren(props: PropTypes) {
   };
 
   const handleDeleteComment = async (comment: Comment) => {
-    await deleteCommentWithChildren(comment.id);
+    await deleteCommentWithChildren(comment);
   };
 
   const handleEditComment = (comment: Comment) => {

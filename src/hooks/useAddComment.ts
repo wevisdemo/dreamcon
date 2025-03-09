@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, doc, runTransaction } from "firebase/firestore";
 import { db } from "../utils/firestore";
 import {
   AddOrEditCommentPayload,
@@ -33,8 +33,17 @@ export const useAddComment = () => {
         notified_at: timeNow,
       };
 
-      const docRef = await addDoc(commentsCollection, CommentDBPayload);
-      console.log("Document written with ID: ", docRef.id);
+      await runTransaction(db, async (transaction) => {
+        const docRef = doc(commentsCollection);
+        transaction.set(docRef, CommentDBPayload);
+
+        const parentDocRef = doc(db, `topics/${payload.parent_topic_id}`);
+        transaction.update(parentDocRef, {
+          notified_at: timeNow,
+        });
+
+        console.log("Document written with ID: ", docRef.id);
+      });
     } catch (err) {
       console.error("Error adding document: ", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred");

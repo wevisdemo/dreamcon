@@ -136,7 +136,6 @@ export default function Home() {
       });
 
     setDisplayTopics(fineTopics);
-    refreshSelectedTopicFromDisplayTopic(fineTopics);
   };
 
   const refreshSelectedTopicFromDisplayTopic = (topics: Topic[]) => {
@@ -408,10 +407,11 @@ export default function Home() {
     // prevent dropping to its children
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
-    moveCommentToComment(draggedComment.id, destinationComment.id);
+    moveCommentToComment(draggedComment, destinationComment.id);
   }
 
   function handleDropToAddTopic(draggedComment: Comment) {
-    convertCommentToTopic(draggedComment.id);
+    convertCommentToTopic(draggedComment);
+    fetchTopics();
   }
 }

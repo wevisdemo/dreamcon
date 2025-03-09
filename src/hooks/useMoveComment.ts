@@ -8,6 +8,7 @@ import {
   getDocs,
   runTransaction,
 } from "firebase/firestore";
+import { Comment } from "../types/comment";
 
 export const useMoveComment = () => {
   const [loading, setLoading] = useState(false);
@@ -28,9 +29,10 @@ export const useMoveComment = () => {
   };
 
   const moveCommentToComment = async (
-    commentId: string,
+    comment: Comment,
     newParentId: string
   ) => {
+    const commentId = comment.id;
     if (!commentId || !newParentId) {
       setError("Missing comment ID or new parent ID");
       return;
@@ -82,6 +84,15 @@ export const useMoveComment = () => {
 
         // Step 6: Recursively update child comments with the new hierarchy
         await updateChildComments(commentId);
+
+        // Step 7: Update the `notified_at` field of the parent topic
+        const parentTopicId = newParentData.parent_topic_id;
+        if (parentTopicId) {
+          const parentTopicRef = doc(db, `topics/${parentTopicId}`);
+          transaction.update(parentTopicRef, {
+            notified_at: new Date(),
+          });
+        }
       });
 
       console.log("Comment moved successfully:", commentId);
@@ -136,6 +147,12 @@ export const useMoveComment = () => {
 
         // Step 4: Recursively update all children
         await updateChildComments(commentId);
+
+        // Step 7: Update the `notified_at` field of the parent topic
+        const parentTopicRef = doc(db, `topics/${newTopicId}`);
+        transaction.update(parentTopicRef, {
+          notified_at: new Date(),
+        });
       });
 
       console.log(

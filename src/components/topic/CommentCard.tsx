@@ -40,13 +40,11 @@ export default function CommentCard(props: PropTypes) {
   };
 
   const handleDelete = () => {
-    console.log("delete");
     handleCloseMenu();
     props.onClickDelete();
   };
 
   const handleEdit = () => {
-    console.log("edit");
     handleCloseMenu();
     props.onClickEdit();
   };
@@ -80,7 +78,6 @@ export default function CommentCard(props: PropTypes) {
         style={{ backgroundColor: props.bgColor }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        onClick={() => console.log("click")}
       >
         <div className="flex flex-1 gap-[10px]">
           <div className={`w-[12px] h-[12px] rounded-full bg-${viewColor()}`} />
