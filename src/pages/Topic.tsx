@@ -6,6 +6,7 @@ import { StoreContext } from "../store";
 import ModalComment from "../components/share/ModalComment";
 import { useEditTopic } from "../hooks/userEditTopic";
 import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
+import { useAddComment } from "../hooks/useAddComment";
 
 export default function TopicPage() {
   const [selectedTopic, setSelectedTopic] = useState<Topic>(mockTopic1);
@@ -14,6 +15,7 @@ export default function TopicPage() {
     currentPage.setValue("topic");
   }, []);
   const { editTopic } = useEditTopic();
+  const { addNewComment } = useAddComment();
   const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
 
   const handleOnDeleteTopic = async (topicId: string) => {
@@ -31,6 +33,14 @@ export default function TopicPage() {
               editTopic({
                 id: selectedTopic.id,
                 title: newTitle,
+              });
+            }}
+            onAddComment={(commentView, reason) => {
+              addNewComment({
+                parent_topic_id: selectedTopic.id,
+                parent_comment_ids: [],
+                comment_view: commentView,
+                reason,
               });
             }}
             onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}

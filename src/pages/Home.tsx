@@ -247,6 +247,14 @@ export default function Home() {
               {selectedTopic ? (
                 <TopicTemplate
                   topic={selectedTopic}
+                  onAddComment={(commentView, reason) => {
+                    addNewComment({
+                      comment_view: commentView,
+                      reason,
+                      parent_topic_id: selectedTopic.id,
+                      parent_comment_ids: [],
+                    });
+                  }}
                   onChangeTopicTitle={(newTitle) => {
                     editTopic({
                       id: selectedTopic.id,

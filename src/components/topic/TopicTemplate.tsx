@@ -7,6 +7,7 @@ interface PropTypes {
   topic: Topic;
   onChangeTopicTitle: (title: string) => void;
   onDeleteTopic: () => void;
+  onAddComment: (commentView: CommentView, reason: string) => void;
 }
 
 export default function TopicTemplate(props: PropTypes) {
@@ -27,8 +28,8 @@ export default function TopicTemplate(props: PropTypes) {
           <TopicCard
             topic={props.topic}
             onChangeTopicTitle={props.onChangeTopicTitle}
-            onAddComment={() => {
-              // TODO: Implement this function
+            onAddComment={(commentView: CommentView, reason: string) => {
+              props.onAddComment(commentView, reason);
             }}
             onDeleteTopic={handleOnDeleteTopic}
           />
