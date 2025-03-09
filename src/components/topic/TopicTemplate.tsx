@@ -22,7 +22,7 @@ export default function TopicTemplate(props: PropTypes) {
   };
 
   return (
-    <div className="max-w-[920px]">
+    <div className="max-w-[920px] w-full">
       <div className="header-section pl-[24px] relative overflow-hidden flex justify-end">
         <div className="w-full flex justify-end z-10">
           <TopicCard
