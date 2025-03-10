@@ -38,6 +38,7 @@ import {
 import { useMoveComment } from "../hooks/useMoveComment";
 import { SmartPointerSensor } from "../utils/SmartSenson";
 import { useEditComment } from "../hooks/useEditComment";
+import FullPageLoader from "../components/FullPageLoader";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
@@ -45,21 +46,35 @@ export default function TopicPage() {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
+  const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const { topicPage: topicPageContext, currentPage } = useContext(StoreContext);
   useEffect(() => {
     currentPage.setValue("topic");
     const unsubscribe = subscribeTopic();
     return () => unsubscribe();
   }, []);
-  const { editTopic } = useEditTopic();
-  const { addNewComment } = useAddComment();
-  const { editComment } = useEditComment();
-  const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
-  const { moveCommentToComment } = useMoveComment();
+  const { editTopic, loading: editTopicLoading } = useEditTopic();
+  const { addNewComment, loading: addNewCommentLoading } = useAddComment();
+  const { editComment, loading: editCommentLoading } = useEditComment();
+  const { deleteTopicWithChildren, loading: deleteTopicLoading } =
+    useDeleteTopicWithChildren();
+  const { moveCommentToComment, loading: moveCommentLoading } =
+    useMoveComment();
 
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
     window.location.href = "/";
+  };
+
+  const isPageLoading = () => {
+    return (
+      firstTimeLoading ||
+      editTopicLoading ||
+      addNewCommentLoading ||
+      editCommentLoading ||
+      deleteTopicLoading ||
+      moveCommentLoading
+    );
   };
 
   useEffect(() => {
@@ -104,6 +119,7 @@ export default function TopicPage() {
 
     // Convert the data into Topic format
     setSelectedTopic(convertTopicDBToTopic(topic, comments));
+    setFirstTimeLoading(false);
   };
 
   function handleDragStart(event: DragStartEvent) {
@@ -163,12 +179,13 @@ export default function TopicPage() {
 
   return (
     <>
-      {selectedTopic ? (
-        <DndContext
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-          sensors={sensors}
-        >
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        sensors={sensors}
+      >
+        {isPageLoading() ? <FullPageLoader /> : null}
+        {selectedTopic ? (
           <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center">
             <section className="py-[24px] overflow-scroll w-full flex justify-center">
               <TopicTemplate
@@ -210,22 +227,22 @@ export default function TopicPage() {
               />
             </section>
           </div>
-          <DragOverlay>
-            {draggedCommentProps ? (
-              <CommentAndChildren
-                comment={draggedCommentProps.comment}
-                previousComment={draggedCommentProps.previousComment}
-                nextComment={draggedCommentProps.nextComment}
-                level={draggedCommentProps.level}
-                isLastChildOfParent={draggedCommentProps.isLastChildOfParent}
-                parent={draggedCommentProps.parent}
-              />
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-      ) : (
-        <div></div>
-      )}
+        ) : (
+          <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center"></div>
+        )}
+        <DragOverlay>
+          {draggedCommentProps ? (
+            <CommentAndChildren
+              comment={draggedCommentProps.comment}
+              previousComment={draggedCommentProps.previousComment}
+              nextComment={draggedCommentProps.nextComment}
+              level={draggedCommentProps.level}
+              isLastChildOfParent={draggedCommentProps.isLastChildOfParent}
+              parent={draggedCommentProps.parent}
+            />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
     </>
   );
 }
