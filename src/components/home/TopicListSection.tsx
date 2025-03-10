@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Topic } from "../../types/topic";
 import TopicWrapper from "./TopicWrapper";
 import { StoreContext } from "../../store";
 import { Droppable } from "../Droppable";
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface PropTypes {
   topics: Topic[];
@@ -12,6 +13,7 @@ interface PropTypes {
 
 export default function TopicListSection(props: PropTypes) {
   const { homePage: homePageContext } = useContext(StoreContext);
+  const [hoveredAddTopic, setHoveredAddTopic] = useState(false);
 
   const handleAddTopic = () => {
     homePageContext.modalTopicMainSection.dispatch({
@@ -21,11 +23,19 @@ export default function TopicListSection(props: PropTypes) {
       },
     });
   };
+
+  useHotkeys("Meta+v, ctrl+v", () => {
+    if (hoveredAddTopic) {
+      console.log("paste to add topic => ");
+    }
+  });
   return (
     <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
       <Droppable id="add-topic" data={{ type: "convert-to-topic" }}>
         {(isOver) => (
           <button
+            onMouseEnter={() => setHoveredAddTopic(true)}
+            onMouseLeave={() => setHoveredAddTopic(false)}
             className={`flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white ${
               isOver
                 ? "border-blue7 border-[2px]"

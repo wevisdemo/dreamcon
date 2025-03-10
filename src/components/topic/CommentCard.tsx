@@ -3,6 +3,7 @@ import { Comment, CommentView } from "../../types/comment";
 import BubblePlusIcon from "../icon/BubblePlusIcon";
 import Popover from "@mui/material/Popover";
 import MenuPopover from "../share/MenuPopover";
+import { useHotkeys } from "react-hotkeys-hook";
 interface PropTypes {
   comment: Comment;
   bgColor: string;
@@ -68,6 +69,19 @@ export default function CommentCard(props: PropTypes) {
     if (props.roundedBr) classes += "rounded-br-[16px] ";
     return classes;
   };
+
+  useHotkeys("Meta+x, ctrl+x", () => {
+    if (hovered) {
+      console.log("copy comment => ", props.comment);
+    }
+  });
+
+  useHotkeys("Meta+v, ctrl+v", () => {
+    if (hovered) {
+      console.log("paste comment => ", props.comment);
+    }
+  });
+
   return (
     <div className="relative w-full">
       <div

@@ -2,6 +2,7 @@ import React from "react";
 import { Topic } from "../../types/topic";
 import TopicSummaryComment from "./TopicSummaryComment";
 import SideScreenIcon from "../icon/SideScreenIcon";
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface PropTypes {
   topic: Topic;
@@ -18,6 +19,12 @@ export default function TopicSummary(props: PropTypes) {
     else if (props.isSelected) return "border-blue6";
     else return "border-transparent";
   };
+
+  useHotkeys("Meta+v, ctrl+v", () => {
+    if (hovered) {
+      console.log("paste to topic => ", props.topic);
+    }
+  });
 
   return (
     <div
