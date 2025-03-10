@@ -22,7 +22,7 @@ export default function TopicTemplate(props: PropTypes) {
   };
 
   return (
-    <div className="max-w-[920px] w-full">
+    <div className="max-w-[920px] w-full py-[24px]">
       <div className="header-section pl-[24px] relative overflow-hidden flex justify-end">
         <div className="w-full flex justify-end z-10">
           <TopicCard
@@ -36,7 +36,7 @@ export default function TopicTemplate(props: PropTypes) {
         </div>
         <div className="absolute w-[50%] left-0 top-[50%] rounded-[16px] border-solid border-[2px] border-blue3 h-[100vh]"></div>
       </div>
-      <div className="comment-section pl-[24px] py-[10px] overflow-hidden ">
+      <div className="comment-section pl-[24px] pt-[10px] pb-[24px] overflow-hidden ">
         <p className="text-[16px] wv-bold wv-ibmplex mt-[24px]">
           {props.topic.comments.length} ความคิดเห็น
         </p>

@@ -174,9 +174,9 @@ export default function Home() {
       onDragStart={handleDragStart}
       sensors={sensors}
     >
-      <div className="min-w-screen flex">
+      <div className="min-w-screen flex h-full">
         <section
-          className={`bg-blue2 ${getMainSectionWidth()} h-screen flex flex-col items-center duration-300 ease-in relative`}
+          className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
         >
           <section className="absolute w-full h-content z-20 bg-transparent">
             <ModalComment
@@ -221,7 +221,7 @@ export default function Home() {
           </section>
         </section>
         <section
-          className={`${getSideSectionWidth()} h-screen flex flex-col items-center duration-300 ease-in relative`}
+          className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
         >
           <section className="absolute w-full h-content z-20 bg-transparent">
             <ModalComment

@@ -4,6 +4,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import Topic from "./pages/Topic";
 import { StoreProvider } from "./store";
+import DefaultLayout from "./layouts/default";
 
 function App() {
   return (
@@ -11,9 +12,23 @@ function App() {
       <Router>
         <Routes>
           {/* Route for listing all comments */}
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <DefaultLayout>
+                <Home />
+              </DefaultLayout>
+            }
+          />
           {/* Dynamic route for comment details */}
-          <Route path="/topic/:id" element={<Topic />} />
+          <Route
+            path="/topic/:id"
+            element={
+              <DefaultLayout>
+                <Topic />
+              </DefaultLayout>
+            }
+          />
         </Routes>
       </Router>
     </StoreProvider>

@@ -169,7 +169,7 @@ export default function TopicPage() {
           onDragStart={handleDragStart}
           sensors={sensors}
         >
-          <div className="relative bg-[#6EB7FE] w-screen h-screen flex flex-col items-center">
+          <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center">
             <section className="py-[24px] overflow-scroll w-full flex justify-center">
               <TopicTemplate
                 topic={selectedTopic}
