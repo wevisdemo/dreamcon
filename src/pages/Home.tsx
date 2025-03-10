@@ -65,10 +65,8 @@ export default function Home() {
 
   useEffect(() => {
     currentPage.setValue("home");
-    console.log("fetching topics");
     fetchTopics();
     const unsubscribe = subscribeTopics();
-    console.log("set fetch");
     return () => {
       unsubscribe();
     };
@@ -159,7 +157,6 @@ export default function Home() {
         return a.created_at > b.created_at ? -1 : 1;
       });
 
-    console.log("fetch done");
     setFirstTimeLoading(false);
     setDisplayTopics(fineTopics);
   };
