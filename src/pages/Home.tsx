@@ -39,6 +39,7 @@ import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren"
 import { useMoveComment } from "../hooks/useMoveComment";
 import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
 import { convertTopicDBToTopic } from "../utils/mapping";
+import FullPageLoader from "../components/FullPageLoader";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -46,23 +47,45 @@ export default function Home() {
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const { homePage: homePageContext, currentPage } = useContext(StoreContext);
-  const { addNewTopic } = useAddTopic();
-  const { editTopic } = useEditTopic();
-  const { addNewComment } = useAddComment();
-  const { editComment } = useEditComment();
-  const { deleteTopicWithChildren } = useDeleteTopicWithChildren();
-  const { moveCommentToComment, moveCommentToTopic } = useMoveComment();
-  const { convertCommentToTopic } = useConvertCommentToTopic();
+  const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
+  const { editTopic, loading: editTopicLoading } = useEditTopic();
+  const { addNewComment, loading: addNewCommentLoading } = useAddComment();
+  const { editComment, loading: editCommentLoading } = useEditComment();
+  const { deleteTopicWithChildren, loading: deleteTopicLoading } =
+    useDeleteTopicWithChildren();
+  const {
+    moveCommentToComment,
+    moveCommentToTopic,
+    loading: moveCommentLoading,
+  } = useMoveComment();
+  const { convertCommentToTopic, loading: convertCommentLoading } =
+    useConvertCommentToTopic();
+  const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   useEffect(() => {
     currentPage.setValue("home");
+    console.log("fetching topics");
     fetchTopics();
     const unsubscribe = subscribeTopics();
+    console.log("set fetch");
     return () => {
       unsubscribe();
     };
   }, []);
+
+  const isPageLoading = () => {
+    return (
+      firstTimeLoading ||
+      addNewTopicLoading ||
+      editTopicLoading ||
+      addNewCommentLoading ||
+      editCommentLoading ||
+      deleteTopicLoading ||
+      moveCommentLoading ||
+      convertCommentLoading
+    );
+  };
 
   const subscribeTopics = (): Unsubscribe => {
     const topicsQuery = query(collection(db, "topics"));
@@ -136,6 +159,8 @@ export default function Home() {
         return a.created_at > b.created_at ? -1 : 1;
       });
 
+    console.log("fetch done");
+    setFirstTimeLoading(false);
     setDisplayTopics(fineTopics);
   };
 
@@ -174,6 +199,7 @@ export default function Home() {
       onDragStart={handleDragStart}
       sensors={sensors}
     >
+      {isPageLoading() ? <FullPageLoader /> : null}
       <div className="min-w-screen flex h-full">
         <section
           className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
