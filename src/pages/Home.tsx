@@ -313,7 +313,7 @@ export default function Home() {
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />
-            <div className="absolute bottom-0 right-0 p-[24px]">
+            <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
               <AlertPopup
                 visible={showAlert}
                 onClose={() => setShowAlert(false)}

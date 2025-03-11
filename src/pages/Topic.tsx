@@ -39,11 +39,13 @@ import { useMoveComment } from "../hooks/useMoveComment";
 import { SmartPointerSensor } from "../utils/SmartSenson";
 import { useEditComment } from "../hooks/useEditComment";
 import FullPageLoader from "../components/FullPageLoader";
+import AlertPopup from "../components/AlertMoveComment";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
   const sensors = useSensors(useSensor(SmartPointerSensor));
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+  const [showAlert, setShowAlert] = useState(true);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
@@ -142,7 +144,7 @@ export default function TopicPage() {
     }
   }
 
-  function handleDropToComment(
+  async function handleDropToComment(
     draggedComment: Comment,
     destinationComment: Comment
   ) {
@@ -160,7 +162,8 @@ export default function TopicPage() {
     // prevent dropping to its children
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
-    moveCommentToComment(draggedComment, destinationComment.id);
+    await moveCommentToComment(draggedComment, destinationComment.id);
+    setShowAlert(true);
   }
 
   const handleOnSubmitComment = async (
@@ -226,6 +229,13 @@ export default function TopicPage() {
                 onSubmit={handleOnSubmitComment}
               />
             </section>
+            <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
+              <AlertPopup
+                visible={showAlert}
+                onClose={() => setShowAlert(false)}
+                onUndo={() => {}}
+              />
+            </div>
           </div>
         ) : (
           <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center"></div>

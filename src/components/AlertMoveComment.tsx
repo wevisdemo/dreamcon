@@ -20,7 +20,7 @@ export default function AlertPopup({
   return (
     <>
       {visible && (
-        <div className="bg-gray8 text-white text-[10px] py-[4px] px-[6px] rounded-[3px] shadow-lg flex flex-col items-center gap-[2px]">
+        <div className="bg-gray8 text-white text-[10px] py-[4px] px-[6px] rounded-[3px] shadow-lg flex flex-col items-center gap-[2px] z-50">
           <span className="wv-bold">🎉 ย้ายแล้ว!</span>
           <div className="flex items-center justify-center gap-[2px]">
             <span
