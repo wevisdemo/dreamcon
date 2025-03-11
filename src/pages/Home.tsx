@@ -40,9 +40,11 @@ import { useMoveComment } from "../hooks/useMoveComment";
 import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
 import { convertTopicDBToTopic } from "../utils/mapping";
 import FullPageLoader from "../components/FullPageLoader";
+import AlertPopup from "../components/AlertMoveComment";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
+  const [showAlert, setShowAlert] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
@@ -274,6 +276,13 @@ export default function Home() {
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />
+            <div className="absolute bottom-0 right-0 p-[24px]">
+              <AlertPopup
+                visible={showAlert}
+                onClose={() => setShowAlert(false)}
+                onUndo={() => {}}
+              />
+            </div>
           </section>
         </section>
         <section
@@ -388,12 +397,16 @@ export default function Home() {
     }
   }
 
-  function handleDropToTopic(draggedComment: Comment, destinationTopic: Topic) {
+  async function handleDropToTopic(
+    draggedComment: Comment,
+    destinationTopic: Topic
+  ) {
     if (draggedComment.parent_topic_id === destinationTopic.id) return;
-    moveCommentToTopic(draggedComment.id, destinationTopic.id);
+    await moveCommentToTopic(draggedComment.id, destinationTopic.id);
+    setShowAlert(true);
   }
 
-  function handleDropToComment(
+  async function handleDropToComment(
     draggedComment: Comment,
     destinationComment: Comment
   ) {
@@ -411,11 +424,13 @@ export default function Home() {
     // prevent dropping to its children
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
-    moveCommentToComment(draggedComment, destinationComment.id);
+    await moveCommentToComment(draggedComment, destinationComment.id);
+    setShowAlert(true);
   }
 
-  function handleDropToAddTopic(draggedComment: Comment) {
-    convertCommentToTopic(draggedComment);
+  async function handleDropToAddTopic(draggedComment: Comment) {
+    await convertCommentToTopic(draggedComment);
     fetchTopics();
+    setShowAlert(true);
   }
 }
