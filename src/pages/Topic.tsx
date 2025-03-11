@@ -190,6 +190,16 @@ export default function TopicPage() {
         {isPageLoading() ? <FullPageLoader /> : null}
         {selectedTopic ? (
           <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center">
+            <div className="w-full h-[32px] bg-gray2 flex justify-center items-center">
+              <div className="w-full max-w-[920px] flex">
+                <a
+                  className="text-accent text-[13px] wv-ibmplex underline!"
+                  href="/"
+                >
+                  กลับหน้าหลัก
+                </a>
+              </div>
+            </div>
             <section className="py-[24px] overflow-scroll w-full flex justify-center">
               <TopicTemplate
                 topic={selectedTopic}
