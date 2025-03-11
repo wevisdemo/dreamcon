@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import TopicListSection from "../components/home/TopicListSection";
 import TopicTemplate from "../components/topic/TopicTemplate";
 import ModalComment from "../components/share/ModalComment";
@@ -28,6 +28,8 @@ import {
   query,
   onSnapshot,
   Unsubscribe,
+  limit,
+  orderBy,
 } from "firebase/firestore";
 import { db } from "../utils/firestore";
 import { AddOrEditCommentPayload, CommentDB, Comment } from "../types/comment";
@@ -44,8 +46,10 @@ import AlertPopup from "../components/AlertMoveComment";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
+  const [itemLimit, setItemLimit] = useState(24);
   const [showAlert, setShowAlert] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
+  const observerRef = useRef<HTMLElement | null>(null);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const {
@@ -70,6 +74,10 @@ export default function Home() {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
   useEffect(() => {
+    fetchTopics();
+  }, [itemLimit]);
+
+  useEffect(() => {
     currentPage.setValue("home");
     fetchTopics();
     const unsubscribe = subscribeTopics();
@@ -79,7 +87,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    console.log("subscribing clipboard event");
+    observerRef.current?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      observerRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [displayTopics]);
+
+  const handleScroll = () => {
+    if (!observerRef.current) return;
+    const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      fetchMoreTopics(); // Load more topics when scrolled to bottom
+    }
+  };
+
+  useEffect(() => {
     clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
   }, [clipboardContext.subscribeMoveComment]);
 
@@ -94,6 +117,12 @@ export default function Home() {
       moveCommentLoading ||
       convertCommentLoading
     );
+  };
+
+  const fetchMoreTopics = async () => {
+    if (displayTopics.length < itemLimit) return;
+    const limitCount = itemLimit + 12;
+    setItemLimit(limitCount);
   };
 
   const subscribeTopics = (): Unsubscribe => {
@@ -118,7 +147,6 @@ export default function Home() {
       case "comment": {
         const destinationComment = (droppableData as DroppableDataComment)
           .comment;
-        console.log("destinationComment", destinationComment);
         handleDropToComment(copiedComment, destinationComment);
         break;
       }
@@ -158,9 +186,15 @@ export default function Home() {
     }
   };
   const fetchTopics = async () => {
+    const limitCount = itemLimit;
     const topicsCollection = collection(db, "topics");
     const commentsCollection = collection(db, "comments");
-    const topicsSnapshot = await getDocs(topicsCollection);
+    const topicQuery = query(
+      topicsCollection,
+      limit(limitCount),
+      orderBy("created_at", "desc")
+    );
+    const topicsSnapshot = await getDocs(topicQuery);
     const topics = topicsSnapshot.docs.map((doc) => {
       return { id: doc.id, ...doc.data() } as TopicDB;
     });
@@ -270,7 +304,10 @@ export default function Home() {
               onSubmit={handleOnSubmitTopic}
             />
           </section>
-          <section className="p-[60px] w-full flex justify-center overflow-scroll relative">
+          <section
+            ref={observerRef}
+            className="p-[60px] w-full flex justify-center overflow-scroll relative"
+          >
             <TopicListSection
               topics={displayTopics}
               selectedTopic={selectedTopic}
