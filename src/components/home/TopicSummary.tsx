@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Topic } from "../../types/topic";
 import TopicSummaryComment from "./TopicSummaryComment";
 import SideScreenIcon from "../icon/SideScreenIcon";
 import { useHotkeys } from "react-hotkeys-hook";
+import { StoreContext } from "../../store";
 
 interface PropTypes {
   topic: Topic;
@@ -14,6 +15,8 @@ interface PropTypes {
 
 export default function TopicSummary(props: PropTypes) {
   const [hovered, setHovered] = React.useState(false);
+  const { clipboard: clipboardContext } = useContext(StoreContext);
+
   const getBorderClass = () => {
     if (props.isOver && !props.isSelected) return "border-dashed border-blue4";
     else if (props.isSelected) return "border-blue6";
@@ -22,7 +25,10 @@ export default function TopicSummary(props: PropTypes) {
 
   useHotkeys("Meta+v, ctrl+v", () => {
     if (hovered) {
-      console.log("paste to topic => ", props.topic);
+      clipboardContext.emitMoveComment({
+        type: "topic",
+        topic: props.topic,
+      });
     }
   });
 

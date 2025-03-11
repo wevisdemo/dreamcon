@@ -17,7 +17,7 @@ export const initialClipboardStore: ClipboardStore = {
 };
 
 export const useClipboardStore = (): ClipboardStore => {
-  const [comment, setComment] = useState<Comment | null>(null);
+  const [currentComment, setCurrentComment] = useState<Comment | null>(null);
   const [callback, setCallback] = useState<
     ((copiedComment: Comment, droppableData: DroppableData) => void) | null
   >(null);
@@ -33,11 +33,17 @@ export const useClipboardStore = (): ClipboardStore => {
   // Emit event
   const emitMoveComment = useCallback(
     (droppableData: DroppableData) => {
-      if (comment && callback) {
-        callback(comment, droppableData);
+      if (currentComment && callback) {
+        callback(currentComment, droppableData);
       }
     },
-    [callback]
+    [currentComment, callback]
+  );
+  const setComment = useCallback(
+    (comment: Comment) => {
+      setCurrentComment(comment);
+    },
+    [setCurrentComment]
   );
 
   return {

@@ -12,7 +12,8 @@ interface PropTypes {
 }
 
 export default function TopicListSection(props: PropTypes) {
-  const { homePage: homePageContext } = useContext(StoreContext);
+  const { homePage: homePageContext, clipboard: clipboardContext } =
+    useContext(StoreContext);
   const [hoveredAddTopic, setHoveredAddTopic] = useState(false);
 
   const handleAddTopic = () => {
@@ -26,7 +27,9 @@ export default function TopicListSection(props: PropTypes) {
 
   useHotkeys("Meta+v, ctrl+v", () => {
     if (hoveredAddTopic) {
-      console.log("paste to add topic => ");
+      clipboardContext.emitMoveComment({
+        type: "convert-to-topic",
+      });
     }
   });
   return (

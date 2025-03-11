@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Comment, CommentView } from "../../types/comment";
 import BubblePlusIcon from "../icon/BubblePlusIcon";
 import Popover from "@mui/material/Popover";
 import MenuPopover from "../share/MenuPopover";
 import { useHotkeys } from "react-hotkeys-hook";
+import { StoreContext } from "../../store";
 interface PropTypes {
   comment: Comment;
   bgColor: string;
@@ -22,6 +23,7 @@ export default function CommentCard(props: PropTypes) {
   const onClickAddComment = () => {
     props.onClickAddComment();
   };
+  const { clipboard: clipboardContext } = useContext(StoreContext);
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "comment-menu" : undefined;
@@ -72,13 +74,16 @@ export default function CommentCard(props: PropTypes) {
 
   useHotkeys("Meta+x, ctrl+x", () => {
     if (hovered) {
-      console.log("copy comment => ", props.comment);
+      clipboardContext.setComment(props.comment);
     }
   });
 
   useHotkeys("Meta+v, ctrl+v", () => {
     if (hovered) {
-      console.log("paste comment => ", props.comment);
+      clipboardContext.emitMoveComment({
+        type: "comment",
+        comment: props.comment,
+      });
     }
   });
 

@@ -46,7 +46,11 @@ export default function Home() {
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
-  const { homePage: homePageContext, currentPage } = useContext(StoreContext);
+  const {
+    homePage: homePageContext,
+    currentPage,
+    clipboard: clipboardContext,
+  } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
   const { editTopic, loading: editTopicLoading } = useEditTopic();
   const { addNewComment, loading: addNewCommentLoading } = useAddComment();
@@ -72,6 +76,11 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    console.log("subscribing clipboard event");
+    clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
+  }, [clipboardContext.subscribeMoveComment]);
+
   const isPageLoading = () => {
     return (
       firstTimeLoading ||
@@ -91,6 +100,30 @@ export default function Home() {
       fetchTopics();
     });
     return unsubscribe;
+  };
+
+  const subscribeClipboardEvent = (
+    copiedComment: Comment,
+    droppableData: DroppableData
+  ) => {
+    const { type } = droppableData;
+    switch (type) {
+      case "topic": {
+        const destinationTopic = (droppableData as DroppableDataTopic).topic;
+        handleDropToTopic(copiedComment, destinationTopic);
+        break;
+      }
+      case "comment": {
+        const destinationComment = (droppableData as DroppableDataComment)
+          .comment;
+        console.log("destinationComment", destinationComment);
+        handleDropToComment(copiedComment, destinationComment);
+        break;
+      }
+      case "convert-to-topic": {
+        handleDropToAddTopic(copiedComment);
+      }
+    }
   };
 
   useEffect(() => {
