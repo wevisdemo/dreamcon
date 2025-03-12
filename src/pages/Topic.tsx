@@ -45,11 +45,16 @@ export default function TopicPage() {
   const { id: topicId } = useParams();
   const sensors = useSensors(useSensor(SmartPointerSensor));
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
-  const [showAlert, setShowAlert] = useState(true);
+  const [showCopyAlert, setShowCopyAlert] = useState(false);
+  const [showPasteAlert, setShowPasteAlert] = useState(false);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
-  const { topicPage: topicPageContext, currentPage } = useContext(StoreContext);
+  const {
+    topicPage: topicPageContext,
+    currentPage,
+    clipboard: clipboardContext,
+  } = useContext(StoreContext);
   useEffect(() => {
     currentPage.setValue("topic");
     const unsubscribe = subscribeTopic();
@@ -163,7 +168,7 @@ export default function TopicPage() {
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
     await moveCommentToComment(draggedComment, destinationComment.id);
-    setShowAlert(true);
+    setShowPasteAlert(true);
   }
 
   const handleOnSubmitComment = async (
@@ -178,6 +183,33 @@ export default function TopicPage() {
         await editComment(payload);
         break;
     }
+  };
+
+  const subscribeClipboardEvent = (
+    copiedComment: Comment,
+    droppableData: DroppableData
+  ) => {
+    const { type } = droppableData;
+    switch (type) {
+      case "comment": {
+        const destinationComment = (droppableData as DroppableDataComment)
+          .comment;
+        handleDropToComment(copiedComment, destinationComment);
+        break;
+      }
+    }
+  };
+
+  useEffect(() => {
+    clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
+  }, [clipboardContext.subscribeMoveComment]);
+
+  useEffect(() => {
+    clipboardContext.subscribeCopyComment(subscribeCopyComment);
+  }, [clipboardContext.subscribeCopyComment]);
+
+  const subscribeCopyComment = () => {
+    setShowCopyAlert(true);
   };
 
   return (
@@ -241,9 +273,16 @@ export default function TopicPage() {
             </section>
             <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
               <AlertPopup
-                visible={showAlert}
-                onClose={() => setShowAlert(false)}
+                visible={showCopyAlert}
+                onClose={() => setShowCopyAlert(false)}
                 onUndo={() => {}}
+                mode="copy"
+              />
+              <AlertPopup
+                visible={showPasteAlert}
+                onClose={() => setShowPasteAlert(false)}
+                onUndo={() => {}}
+                mode="paste"
               />
             </div>
           </div>

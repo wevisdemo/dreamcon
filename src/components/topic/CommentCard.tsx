@@ -74,7 +74,7 @@ export default function CommentCard(props: PropTypes) {
 
   useHotkeys("Meta+x, ctrl+x", () => {
     if (hovered) {
-      clipboardContext.setComment(props.comment);
+      clipboardContext.emitCopyComment(props.comment);
     }
   });
 

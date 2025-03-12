@@ -47,7 +47,8 @@ import AlertPopup from "../components/AlertMoveComment";
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
   const [itemLimit, setItemLimit] = useState(24);
-  const [showAlert, setShowAlert] = useState(false);
+  const [showCopyAlert, setShowCopyAlert] = useState(false);
+  const [showPasteAlert, setShowPasteAlert] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   const observerRef = useRef<HTMLElement | null>(null);
   const [draggedCommentProps, setDraggedCommentProps] =
@@ -105,6 +106,14 @@ export default function Home() {
   useEffect(() => {
     clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
   }, [clipboardContext.subscribeMoveComment]);
+
+  useEffect(() => {
+    clipboardContext.subscribeCopyComment(subscribeCopyComment);
+  }, [clipboardContext.subscribeCopyComment]);
+
+  const subscribeCopyComment = () => {
+    setShowCopyAlert(true);
+  };
 
   const isPageLoading = () => {
     return (
@@ -313,14 +322,21 @@ export default function Home() {
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
             />
-            <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
-              <AlertPopup
-                visible={showAlert}
-                onClose={() => setShowAlert(false)}
-                onUndo={() => {}}
-              />
-            </div>
           </section>
+          <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
+            <AlertPopup
+              visible={showCopyAlert}
+              onClose={() => setShowCopyAlert(false)}
+              onUndo={() => {}}
+              mode="copy"
+            />
+            <AlertPopup
+              visible={showPasteAlert}
+              onClose={() => setShowPasteAlert(false)}
+              onUndo={() => {}}
+              mode="paste"
+            />
+          </div>
         </section>
         <section
           className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
@@ -440,7 +456,7 @@ export default function Home() {
   ) {
     if (draggedComment.parent_topic_id === destinationTopic.id) return;
     await moveCommentToTopic(draggedComment.id, destinationTopic.id);
-    setShowAlert(true);
+    setShowPasteAlert(true);
   }
 
   async function handleDropToComment(
@@ -462,12 +478,12 @@ export default function Home() {
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
     await moveCommentToComment(draggedComment, destinationComment.id);
-    setShowAlert(true);
+    setShowPasteAlert(true);
   }
 
   async function handleDropToAddTopic(draggedComment: Comment) {
     await convertCommentToTopic(draggedComment);
     fetchTopics();
-    setShowAlert(true);
+    setShowPasteAlert(true);
   }
 }
