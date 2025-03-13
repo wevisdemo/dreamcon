@@ -22,6 +22,7 @@ export const initialClipboardStore: ClipboardStore = {
 
 export const useClipboardStore = (): ClipboardStore => {
   const [currentComment, setCurrentComment] = useState<Comment | null>(null);
+
   const [copyCallback, setCopyCallback] = useState<
     ((comment: Comment) => void) | null
   >(null);

@@ -1,4 +1,4 @@
-import { Topic } from "./topic";
+import { Topic, TopicDB } from "./topic";
 import { Comment } from "./comment";
 
 export interface DraggableCommentProps {
@@ -27,4 +27,10 @@ export interface DroppableDataComment {
 
 export interface DroppableConvertToTopic {
   type: "convert-to-topic";
+}
+
+export interface MoveCommentEvent {
+  comment: Comment;
+  droppableData: DroppableData;
+  initialTopic?: TopicDB;
 }

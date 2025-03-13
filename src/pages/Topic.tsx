@@ -254,7 +254,7 @@ export default function TopicPage() {
                 onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}
               />
             </section>
-            <section className="absolute w-full h-content z-20 bg-transparent">
+            <section className="absolute w-full h-content z-30 bg-transparent">
               <ModalComment
                 mode={topicPageContext.modalComment.state.mode}
                 defaultState={topicPageContext.modalComment.state.defaultState}

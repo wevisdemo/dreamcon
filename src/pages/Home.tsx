@@ -18,6 +18,7 @@ import {
   DroppableData,
   DroppableDataComment,
   DroppableDataTopic,
+  MoveCommentEvent,
 } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
 import { AddOrEditTopicPayload, Topic, TopicDB } from "../types/topic";
@@ -43,6 +44,7 @@ import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
 import { convertTopicDBToTopic } from "../utils/mapping";
 import FullPageLoader from "../components/FullPageLoader";
 import AlertPopup from "../components/AlertMoveComment";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -50,6 +52,8 @@ export default function Home() {
   const [showCopyAlert, setShowCopyAlert] = useState(false);
   const [showPasteAlert, setShowPasteAlert] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
+  const [previousMoveCommentEvent, setPreviousMoveCommentEvent] =
+    useState<MoveCommentEvent | null>(null);
   const observerRef = useRef<HTMLElement | null>(null);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
@@ -69,8 +73,11 @@ export default function Home() {
     moveCommentToTopic,
     loading: moveCommentLoading,
   } = useMoveComment();
-  const { convertCommentToTopic, loading: convertCommentLoading } =
-    useConvertCommentToTopic();
+  const {
+    convertCommentToTopic,
+    undoConvertCommentToTopic,
+    loading: convertCommentLoading,
+  } = useConvertCommentToTopic();
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
@@ -86,6 +93,24 @@ export default function Home() {
       unsubscribe();
     };
   }, []);
+
+  useHotkeys("Meta+z, ctrl+z", () => {
+    handleUndoMoveComment();
+  });
+
+  const handleUndoMoveComment = async () => {
+    if (!previousMoveCommentEvent) return;
+    const { comment, droppableData } = previousMoveCommentEvent;
+    switch (droppableData.type) {
+      case "convert-to-topic": {
+        if (!previousMoveCommentEvent.initialTopic) return;
+        const topic = previousMoveCommentEvent.initialTopic;
+        await undoConvertCommentToTopic(comment, topic);
+        break;
+      }
+    }
+    setPreviousMoveCommentEvent(null);
+  };
 
   useEffect(() => {
     observerRef.current?.addEventListener("scroll", handleScroll);
@@ -147,7 +172,15 @@ export default function Home() {
     copiedComment: Comment,
     droppableData: DroppableData
   ) => {
+    handleMoveComment(copiedComment, droppableData);
+  };
+
+  const handleMoveComment = (
+    copiedComment: Comment,
+    droppableData: DroppableData
+  ) => {
     const { type } = droppableData;
+    setPreviousMoveCommentEvent({ comment: copiedComment, droppableData });
     switch (type) {
       case "topic": {
         const destinationTopic = (droppableData as DroppableDataTopic).topic;
@@ -280,7 +313,7 @@ export default function Home() {
         <section
           className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
         >
-          <section className="absolute w-full h-content z-20 bg-transparent">
+          <section className="absolute w-full h-content z-30 bg-transparent">
             <ModalComment
               mode={homePageContext.modalCommentMainSection.state.mode}
               defaultState={
@@ -342,7 +375,7 @@ export default function Home() {
         <section
           className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
         >
-          <section className="absolute w-full h-content z-20 bg-transparent">
+          <section className="absolute w-full h-content z-30 bg-transparent">
             <ModalComment
               mode={homePageContext.modalCommentSideSection.state.mode}
               defaultState={
@@ -429,26 +462,12 @@ export default function Home() {
 
   function handleDragEnd(event: DragEndEvent) {
     const { over, active } = event;
+    if (!active || !over) return;
     const draggedCommentProps = active.data.current as DraggableCommentProps;
     const draggedComment = draggedCommentProps.comment;
+    const droppableData = over?.data.current as DroppableData;
 
-    switch ((over?.data.current as DroppableData)?.type) {
-      case "topic": {
-        const destinationTopic = (over?.data.current as DroppableDataTopic)
-          .topic;
-        handleDropToTopic(draggedComment, destinationTopic);
-        break;
-      }
-      case "comment": {
-        const destinationComment = (over?.data.current as DroppableDataComment)
-          .comment;
-        handleDropToComment(draggedComment, destinationComment);
-        break;
-      }
-      case "convert-to-topic": {
-        handleDropToAddTopic(draggedComment);
-      }
-    }
+    handleMoveComment(draggedComment, droppableData);
   }
 
   async function handleDropToTopic(
@@ -485,7 +504,13 @@ export default function Home() {
   }
 
   async function handleDropToAddTopic(draggedComment: Comment) {
-    await convertCommentToTopic(draggedComment);
+    const topic = await convertCommentToTopic(draggedComment);
+    if (!topic) return;
+    setPreviousMoveCommentEvent({
+      comment: draggedComment,
+      droppableData: { type: "convert-to-topic" },
+      initialTopic: topic,
+    });
     fetchTopics();
     setShowCopyAlert(false);
     setShowPasteAlert(true);
