@@ -5,6 +5,7 @@ import Popover from "@mui/material/Popover";
 import MenuPopover from "../share/MenuPopover";
 import { useHotkeys } from "react-hotkeys-hook";
 import { StoreContext } from "../../store";
+import Tooltip from "@mui/material/Tooltip";
 interface PropTypes {
   comment: Comment;
   bgColor: string;
@@ -88,15 +89,47 @@ export default function CommentCard(props: PropTypes) {
   });
 
   return (
-    <div className="relative w-full">
+    <div
+      className="relative w-full z-20"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {hovered && (
+        <Tooltip
+          title={
+            <div className="flex flex-col font-[400]">
+              <span>
+                <span className="wv-bold">ลาก</span> เพื่อย้าย
+              </span>
+              <div className="flex gap-[1px]">
+                <span className="flex justify-center align-center w-[16px] h-[16px] text-gray3 rounded-[2px] border-gray4 border-[1px]">
+                  ⌘
+                </span>
+                <span className="flex justify-center align-center w-[16px] h-[16px] text-gray3 rounded-[2px] border-gray4 border-[1px]">
+                  X
+                </span>
+              </div>
+            </div>
+          }
+          placement="bottom-start"
+          className="hover:cursor-pointer"
+          classes={{ tooltip: "tooltip-1" }}
+        >
+          <img
+            style={{ transform: "translate(0, -50%)" }}
+            className="absolute left-[-24px] top-[50%] w-[24px] h-[24px]"
+            src="/icon/six-dot.svg"
+            alt="six-dot-icon"
+          />
+        </Tooltip>
+      )}
+
       <div
         aria-describedby={popoverID}
         className={`p-[10px] ${roundedClass()} text[13px] flex justify-between border-[2px] ${
           props.isOver ? "border-dashed border-blue4" : "border-transparent"
         } hover:border-blue6 hover:cursor-pointer`}
         style={{ backgroundColor: props.bgColor }}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
       >
         <div className="flex flex-1 gap-[10px]">
           <div className={`w-[12px] h-[12px] rounded-full bg-${viewColor()}`} />
