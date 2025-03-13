@@ -112,6 +112,7 @@ export default function Home() {
   }, [clipboardContext.subscribeCopyComment]);
 
   const subscribeCopyComment = () => {
+    setShowPasteAlert(false);
     setShowCopyAlert(true);
   };
 
@@ -456,6 +457,7 @@ export default function Home() {
   ) {
     if (draggedComment.parent_topic_id === destinationTopic.id) return;
     await moveCommentToTopic(draggedComment.id, destinationTopic.id);
+    setShowCopyAlert(false);
     setShowPasteAlert(true);
   }
 
@@ -478,12 +480,14 @@ export default function Home() {
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
     await moveCommentToComment(draggedComment, destinationComment.id);
+    setShowCopyAlert(false);
     setShowPasteAlert(true);
   }
 
   async function handleDropToAddTopic(draggedComment: Comment) {
     await convertCommentToTopic(draggedComment);
     fetchTopics();
+    setShowCopyAlert(false);
     setShowPasteAlert(true);
   }
 }

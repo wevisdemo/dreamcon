@@ -168,6 +168,7 @@ export default function TopicPage() {
     if (destinationComment.parent_comment_ids.includes(draggedComment.id))
       return;
     await moveCommentToComment(draggedComment, destinationComment.id);
+    setShowCopyAlert(false);
     setShowPasteAlert(true);
   }
 
@@ -209,6 +210,7 @@ export default function TopicPage() {
   }, [clipboardContext.subscribeCopyComment]);
 
   const subscribeCopyComment = () => {
+    setShowPasteAlert(false);
     setShowCopyAlert(true);
   };
 
