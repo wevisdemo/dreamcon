@@ -9,6 +9,7 @@ import {
   runTransaction,
 } from "firebase/firestore";
 import { Comment } from "../types/comment";
+import { Topic } from "../types/topic";
 
 export const useMoveComment = () => {
   const [loading, setLoading] = useState(false);
@@ -166,5 +167,163 @@ export const useMoveComment = () => {
     }
   };
 
-  return { moveCommentToComment, moveCommentToTopic, loading, error };
+  const undoMoveCommentToComment = async (previousComment: Comment) => {
+    setLoading(true);
+    setError(null);
+
+    // !! known issue: not handling if former parent topic or comment is deleted
+
+    try {
+      await runTransaction(db, async (transaction) => {
+        // Step 1: Update the target comment
+        const targetCommentRef = doc(db, `comments/${previousComment.id}`);
+        transaction.update(targetCommentRef, {
+          parent_comment_ids: previousComment.parent_comment_ids,
+          parent_topic_id: previousComment.parent_topic_id,
+        });
+
+        // Step 2: Fetch all child comments
+        const fetchChildComments = async (parentId: string) => {
+          const childCommentsQuery = query(
+            commentsCollection,
+            where("parent_comment_ids", "array-contains", parentId)
+          );
+          const childCommentsSnapshot = await getDocs(childCommentsQuery);
+          return childCommentsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            parent_comment_ids: doc.data().parent_comment_ids,
+          }));
+        };
+
+        // Step 3: Recursively update all children
+        const updateChildComments = async (parentId: string) => {
+          const childComments = await fetchChildComments(parentId);
+          for (const child of childComments) {
+            const childRef = doc(db, `comments/${child.id}`);
+
+            // Update parent_comment_ids up to the target comment index
+            const targetIndex = child.parent_comment_ids.indexOf(
+              previousComment.id
+            );
+            const newParentIds = [
+              ...previousComment.parent_comment_ids,
+              ...child.parent_comment_ids.slice(targetIndex),
+            ];
+
+            await transaction.update(childRef, {
+              parent_topic_id: previousComment.parent_topic_id,
+              parent_comment_ids: newParentIds,
+            });
+          }
+        };
+
+        // Step 4: Recursively update all children
+        await updateChildComments(previousComment.id);
+
+        // Step 5: Update the notified_at field of the new topic
+        const oldParentTopicRef = doc(
+          db,
+          `topics/${previousComment.parent_topic_id}`
+        );
+        transaction.update(oldParentTopicRef, {
+          notified_at: new Date(),
+        });
+      });
+    } catch (err) {
+      console.error("Error undo moving comment to topic:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const undoMoveCommentToTopic = async (
+    previousComment: Comment,
+    unusedTopic: Topic
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    // !! known issue: not handling if former parent topic or comment is deleted
+
+    try {
+      await runTransaction(db, async (transaction) => {
+        // Step 1: Update the target comment
+        const targetCommentRef = doc(db, `comments/${previousComment.id}`);
+        transaction.update(targetCommentRef, {
+          parent_comment_ids: previousComment.parent_comment_ids,
+          parent_topic_id: previousComment.parent_topic_id,
+        });
+
+        // Step 2: Fetch all child comments
+        const fetchChildComments = async (parentId: string) => {
+          const childCommentsQuery = query(
+            commentsCollection,
+            where("parent_comment_ids", "array-contains", parentId)
+          );
+          const childCommentsSnapshot = await getDocs(childCommentsQuery);
+          return childCommentsSnapshot.docs.map((doc) => ({
+            id: doc.id,
+            parent_comment_ids: doc.data().parent_comment_ids,
+          }));
+        };
+
+        // Step 3: Recursively update all children
+        const updateChildComments = async (parentId: string) => {
+          const childComments = await fetchChildComments(parentId);
+          for (const child of childComments) {
+            const childRef = doc(db, `comments/${child.id}`);
+
+            // Update parent_comment_ids up to the target comment index
+            const targetIndex = child.parent_comment_ids.indexOf(
+              previousComment.id
+            );
+            const newParentIds = [
+              ...previousComment.parent_comment_ids,
+              ...child.parent_comment_ids.slice(targetIndex),
+            ];
+
+            await transaction.update(childRef, {
+              parent_topic_id: previousComment.parent_topic_id,
+              parent_comment_ids: newParentIds,
+            });
+          }
+        };
+
+        // Step 4: Recursively update all children
+        await updateChildComments(previousComment.id);
+
+        // Step 5: Update the notified_at field of the new topic
+        const oldParentTopicRef = doc(
+          db,
+          `topics/${previousComment.parent_topic_id}`
+        );
+        transaction.update(oldParentTopicRef, {
+          notified_at: new Date(),
+        });
+
+        // Step 6: Update the notified_at field of the old topic
+        const newParentTopicRef = doc(db, `topics/${unusedTopic.id}`);
+        transaction.update(newParentTopicRef, {
+          notified_at: new Date(),
+        });
+      });
+    } catch (err) {
+      console.error("Error undo moving comment to topic:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    moveCommentToComment,
+    undoMoveCommentToComment,
+    moveCommentToTopic,
+    undoMoveCommentToTopic,
+    loading,
+    error,
+  };
 };

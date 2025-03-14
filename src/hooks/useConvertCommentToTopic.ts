@@ -9,7 +9,7 @@ import {
   runTransaction,
 } from "firebase/firestore";
 import { CreateTopicDBPayload, TopicDB } from "../types/topic";
-import { Comment, CommentDB } from "../types/comment";
+import { Comment, CreateCommentDBPayload } from "../types/comment";
 
 export const useConvertCommentToTopic = () => {
   const [loading, setLoading] = useState(false);
@@ -116,17 +116,16 @@ export const useConvertCommentToTopic = () => {
     setLoading(true);
     setError(null);
 
-    // !!known issue: not handling if former parent topic or comment is deleted
+    // !! known issue: not handling if former parent topic or comment is deleted
 
     try {
       await runTransaction(db, async (transaction) => {
         const commentsCollection = collection(db, "comments");
 
         // Step 1: Create a new comment using the topic title as the reason
-        const newCommentDocRef = doc(commentsCollection);
+        const newCommentDocRef = doc(db, `comments/${previousComment.id}`);
         const timeNow = new Date();
-        const commentPayload: CommentDB = {
-          id: previousComment.id,
+        const commentPayload: CreateCommentDBPayload = {
           reason: previousComment.reason, // Convert title to reason
           comment_view: previousComment.comment_view,
           parent_comment_ids: previousComment.parent_comment_ids,

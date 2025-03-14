@@ -71,6 +71,8 @@ export default function Home() {
   const {
     moveCommentToComment,
     moveCommentToTopic,
+    undoMoveCommentToComment,
+    undoMoveCommentToTopic,
     loading: moveCommentLoading,
   } = useMoveComment();
   const {
@@ -106,6 +108,14 @@ export default function Home() {
         if (!previousMoveCommentEvent.initialTopic) return;
         const topic = previousMoveCommentEvent.initialTopic;
         await undoConvertCommentToTopic(comment, topic);
+        break;
+      }
+      case "topic": {
+        await undoMoveCommentToTopic(comment, droppableData.topic);
+        break;
+      }
+      case "comment": {
+        await undoMoveCommentToComment(comment);
         break;
       }
     }
@@ -269,6 +279,7 @@ export default function Home() {
         return a.created_at > b.created_at ? -1 : 1;
       });
 
+    console.log(fineTopics);
     setFirstTimeLoading(false);
     setDisplayTopics(fineTopics);
   };
