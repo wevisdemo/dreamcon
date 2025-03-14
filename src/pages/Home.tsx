@@ -120,6 +120,7 @@ export default function Home() {
       }
     }
     setPreviousMoveCommentEvent(null);
+    setShowPasteAlert(false);
   };
 
   useEffect(() => {
@@ -149,6 +150,7 @@ export default function Home() {
   const subscribeCopyComment = () => {
     setShowPasteAlert(false);
     setShowCopyAlert(true);
+    setPreviousMoveCommentEvent(null);
   };
 
   const isPageLoading = () => {
