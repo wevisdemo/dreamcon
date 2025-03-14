@@ -34,12 +34,14 @@ import {
   DraggableCommentProps,
   DroppableData,
   DroppableDataComment,
+  MoveCommentEvent,
 } from "../types/dragAndDrop";
 import { useMoveComment } from "../hooks/useMoveComment";
 import { SmartPointerSensor } from "../utils/SmartSenson";
 import { useEditComment } from "../hooks/useEditComment";
 import FullPageLoader from "../components/FullPageLoader";
 import AlertPopup from "../components/AlertMoveComment";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
@@ -47,6 +49,8 @@ export default function TopicPage() {
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [showCopyAlert, setShowCopyAlert] = useState(false);
   const [showPasteAlert, setShowPasteAlert] = useState(false);
+  const [previousMoveCommentEvent, setPreviousMoveCommentEvent] =
+    useState<MoveCommentEvent | null>(null);
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
@@ -65,8 +69,11 @@ export default function TopicPage() {
   const { editComment, loading: editCommentLoading } = useEditComment();
   const { deleteTopicWithChildren, loading: deleteTopicLoading } =
     useDeleteTopicWithChildren();
-  const { moveCommentToComment, loading: moveCommentLoading } =
-    useMoveComment();
+  const {
+    moveCommentToComment,
+    undoMoveCommentToComment,
+    loading: moveCommentLoading,
+  } = useMoveComment();
 
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
@@ -136,17 +143,12 @@ export default function TopicPage() {
 
   function handleDragEnd(event: DragEndEvent) {
     const { over, active } = event;
+    if (!active || !over) return;
     const draggedCommentProps = active.data.current as DraggableCommentProps;
     const draggedComment = draggedCommentProps.comment;
+    const droppableData = over?.data.current as DroppableData;
 
-    switch ((over?.data.current as DroppableData)?.type) {
-      case "comment": {
-        const destinationComment = (over?.data.current as DroppableDataComment)
-          .comment;
-        handleDropToComment(draggedComment, destinationComment);
-        break;
-      }
-    }
+    handleMoveComment(draggedComment, droppableData);
   }
 
   async function handleDropToComment(
@@ -190,12 +192,20 @@ export default function TopicPage() {
     copiedComment: Comment,
     droppableData: DroppableData
   ) => {
-    const { type } = droppableData;
-    switch (type) {
+    setPreviousMoveCommentEvent({ comment: copiedComment, droppableData });
+    handleMoveComment(copiedComment, droppableData);
+  };
+
+  const handleMoveComment = async (
+    copiedComment: Comment,
+    droppableData: DroppableData
+  ) => {
+    setPreviousMoveCommentEvent({ comment: copiedComment, droppableData });
+    switch (droppableData.type) {
       case "comment": {
         const destinationComment = (droppableData as DroppableDataComment)
           .comment;
-        handleDropToComment(copiedComment, destinationComment);
+        await handleDropToComment(copiedComment, destinationComment);
         break;
       }
     }
@@ -212,6 +222,25 @@ export default function TopicPage() {
   const subscribeCopyComment = () => {
     setShowPasteAlert(false);
     setShowCopyAlert(true);
+    setPreviousMoveCommentEvent(null);
+  };
+
+  useHotkeys("Meta+z, ctrl+z", () => {
+    handleUndoMoveComment();
+  });
+
+  const handleUndoMoveComment = async () => {
+    console.log("undo move comment", previousMoveCommentEvent);
+    if (!previousMoveCommentEvent) return;
+    const { comment, droppableData } = previousMoveCommentEvent;
+    switch (droppableData.type) {
+      case "comment": {
+        await undoMoveCommentToComment(comment);
+        break;
+      }
+    }
+    setPreviousMoveCommentEvent(null);
+    setShowPasteAlert(false);
   };
 
   return (
