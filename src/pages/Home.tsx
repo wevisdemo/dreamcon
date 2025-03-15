@@ -374,13 +374,13 @@ export default function Home() {
             <AlertPopup
               visible={showCopyAlert}
               onClose={() => setShowCopyAlert(false)}
-              onUndo={() => {}}
+              onUndo={() => handleUndoMoveComment()}
               mode="copy"
             />
             <AlertPopup
               visible={showPasteAlert}
               onClose={() => setShowPasteAlert(false)}
-              onUndo={() => {}}
+              onUndo={() => handleUndoMoveComment()}
               mode="paste"
             />
           </div>

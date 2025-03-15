@@ -28,12 +28,7 @@ export default function AlertPopup({
           </span>
           <div className="flex items-center justify-center gap-[2px]">
             {mode === "copy" ? (
-              <span
-                className="text-accent underline px-[2px] hover:cursor-pointer"
-                onClick={onUndo}
-              >
-                hover ตำแหน่งที่ต้องการย้าย
-              </span>
+              <span className=" px-[2px] ">hover ตำแหน่งที่ต้องการย้าย</span>
             ) : (
               <span
                 className="text-accent underline px-[2px] hover:cursor-pointer"
