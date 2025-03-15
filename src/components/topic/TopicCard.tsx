@@ -227,9 +227,10 @@ export default function TopicCard(props: PropTypes) {
           />
           {canSubmit() && (
             <img
-              className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px]"
+              className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
               src="/icon/upload.svg"
               alt="upload-icon"
+              onClick={handleAddComment}
             />
           )}
         </div>
