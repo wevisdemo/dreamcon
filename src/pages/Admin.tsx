@@ -1,4 +1,6 @@
 import React from "react";
+import EventCard from "../components/admin/EventCard";
+import { mockEvent } from "../data/event";
 
 const Admin = () => {
   enum RoomSortOption {
@@ -81,37 +83,7 @@ const Admin = () => {
             />
           </div>
         </div>
-        <div className="bg-white p-4 rounded shadow mb-4">
-          <div className="flex items-center mb-4">
-            <div className="bg-blue-200 rounded-full h-16 w-16 flex items-center justify-center text-2xl font-bold">
-              5
-            </div>
-            <div className="ml-4">
-              <h2 className="text-xl font-bold">Prisoners’ Dream Con</h2>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
-                แก้ไขข้อมูล
-              </button>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-lg font-bold">
-              Dream Constitution for Future of Freedom
-            </h3>
-            <p>เติมจินตนาการ ต่อความฝันให้ประเทศไทย...</p>
-            <a
-              href="https://www.facebook.com/share/p/18UCTjpauy/"
-              className="text-blue-500"
-            >
-              ลิงก์ข่าว
-            </a>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded shadow">
-          <h3 className="text-lg font-bold">สร้างข้อถกเถียงของวงสนทนานี้</h3>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded mt-2">
-            แชร์ลิงก์
-          </button>
-        </div>
+        <EventCard event={mockEvent} />
       </main>
     </div>
   );
