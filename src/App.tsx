@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Topic from "./pages/Topic";
 import { StoreProvider } from "./store";
 import DefaultLayout from "./layouts/default";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -26,6 +27,14 @@ function App() {
             element={
               <DefaultLayout>
                 <Topic />
+              </DefaultLayout>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <DefaultLayout>
+                <Admin />
               </DefaultLayout>
             }
           />
