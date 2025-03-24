@@ -2,7 +2,7 @@ import React from "react";
 import EventCard from "../components/admin/EventCard";
 import { mockEvent } from "../data/event";
 
-const Admin = () => {
+const AdminPage = () => {
   enum RoomSortOption {
     LATEST,
     POPULAR,
@@ -89,4 +89,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default AdminPage;

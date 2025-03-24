@@ -5,7 +5,8 @@ import Home from "./pages/Home";
 import Topic from "./pages/Topic";
 import { StoreProvider } from "./store";
 import DefaultLayout from "./layouts/default";
-import Admin from "./pages/Admin";
+import AdminPage from "./pages/Admin";
+import LoginPage from "./pages/Login";
 
 function App() {
   return (
@@ -31,10 +32,18 @@ function App() {
             }
           />
           <Route
+            path="/admin/login"
+            element={
+              <DefaultLayout>
+                <LoginPage />
+              </DefaultLayout>
+            }
+          />
+          <Route
             path="/admin"
             element={
               <DefaultLayout>
-                <Admin />
+                <AdminPage />
               </DefaultLayout>
             }
           />
