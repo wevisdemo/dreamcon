@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EventCard from "../components/admin/EventCard";
 import { mockEvent } from "../data/event";
+import { useNavigate } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -10,6 +12,20 @@ const AdminPage = () => {
   const [filter, setFilter] = React.useState<RoomSortOption>(
     RoomSortOption.LATEST
   );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate("/admin/login");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
   return (
     <div className="min-h-screen w-screen bg-blue2 flex justify-center">
       <main className="max-w-[940px] w-full py-[32px] flex flex-col gap-[32px]">

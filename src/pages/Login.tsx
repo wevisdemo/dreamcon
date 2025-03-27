@@ -1,11 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [validInputs, setValidInputs] = useState<{
     username: boolean;
     password: boolean;
   }>({ username: true, password: true });
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigate("/admin");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = (
       e.currentTarget.elements.namedItem("username") as HTMLInputElement
@@ -15,6 +31,17 @@ export default function LoginPage() {
     ).value;
     const [validUsername, validPassword] = validateInputs(username, password);
     setValidInputs({ username: validUsername, password: validPassword });
+
+    try {
+      if (!validUsername || !validPassword) {
+        throw new Error("Invalid inputs");
+      }
+      await signInWithEmailAndPassword(auth, username, password);
+      navigate("/admin");
+    } catch (error) {
+      console.error("Error signing in:", error);
+      // Handle error (e.g., show an error message)
+    }
 
     console.log(username, password);
   };
