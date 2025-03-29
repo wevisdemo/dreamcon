@@ -3,6 +3,8 @@ import EventCard from "../components/admin/EventCard";
 import { mockEvent } from "../data/event";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import ModalEvent from "../components/admin/ModalEvent";
+import { DreamConEvent } from "../types/event";
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -12,6 +14,11 @@ const AdminPage = () => {
   const [filter, setFilter] = React.useState<RoomSortOption>(
     RoomSortOption.LATEST
   );
+  const [modalEvent, setModalEvent] = React.useState<{
+    isOpen: boolean;
+    mode: "create" | "edit";
+    defaultState?: DreamConEvent;
+  }>({ isOpen: true, mode: "create" });
 
   const navigate = useNavigate();
 
@@ -27,7 +34,7 @@ const AdminPage = () => {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen w-screen bg-blue2 flex justify-center">
+    <div className="h-full w-screen bg-blue2 flex justify-center relative">
       <main className="max-w-[940px] w-full py-[32px] flex flex-col gap-[32px]">
         <div className="flex justify-center gap-[12px] items-center mb-4">
           <div className="flex flex-col items-center">
@@ -45,7 +52,9 @@ const AdminPage = () => {
           </div>
           <div
             className="flex flex-col gap-[16px] items-center justify-center w-[150px] h-[150px] border-2 border-dashed border-blue7 rounded-full wv-ibmplex hover:cursor-pointer"
-            onClick={() => {}}
+            onClick={() => {
+              setModalEvent({ ...modalEvent, isOpen: true });
+            }}
           >
             <div className="text-blue7 text-4xl h-[24px]">+</div>
             <div className="text-blue7 text-[16px] font-bold">เพิ่มวงสนทนา</div>
@@ -101,6 +110,15 @@ const AdminPage = () => {
         </div>
         <EventCard event={mockEvent} />
       </main>
+      <ModalEvent
+        mode={modalEvent.mode}
+        isOpen={modalEvent.isOpen}
+        onClose={() => {
+          setModalEvent({ ...modalEvent, isOpen: false });
+        }}
+        defaultState={modalEvent.defaultState}
+        onSubmit={() => {}}
+      />
     </div>
   );
 };

@@ -32,8 +32,8 @@ export default function EventCard(props: PropTypes) {
         {/* Middle Section */}
         <div className="w-1/2 h-fit p-[16px] bg-gray1 rounded-[8px] flex flex-col gap-[16px] text-[13px]">
           <div className="flex flex-col gap-[6px]">
-            <h2 className="font-bold">{props.event.title}</h2>
-            <p className="">{props.event.subtitle}</p>
+            <h2 className="font-bold">{props.event.title_en}</h2>
+            <p className="">{props.event.title_th}</p>
           </div>
           <div className="flex flex-col gap-[6px]">
             <p className="text-[10px] mt-[8px]">{props.event.description}</p>

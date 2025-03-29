@@ -230,7 +230,6 @@ export default function TopicPage() {
   });
 
   const handleUndoMoveComment = async () => {
-    console.log("undo move comment", previousMoveCommentEvent);
     if (!previousMoveCommentEvent) return;
     const { comment, droppableData } = previousMoveCommentEvent;
     switch (droppableData.type) {
