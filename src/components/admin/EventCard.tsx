@@ -29,7 +29,7 @@ export default function EventCard(props: PropTypes) {
         </button>
       </div>
 
-      <div className="flex w-full h-full gap-[16px]">
+      <div className="flex w-full h-auto gap-[16px]">
         {/* Middle Section */}
         <div className="w-1/2 h-fit p-[16px] bg-gray1 rounded-[8px] flex flex-col gap-[16px] text-[13px]">
           <div className="flex flex-col gap-[6px]">

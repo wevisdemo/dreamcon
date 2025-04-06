@@ -1,5 +1,9 @@
-import { collection, doc, runTransaction } from "firebase/firestore";
-import { AddOrEditEventPayload, CreateEventDBPayload } from "../types/event";
+import { collection, doc, runTransaction, getDocs } from "firebase/firestore";
+import {
+  AddOrEditEventPayload,
+  CreateEventDBPayload,
+  DreamConEventDB,
+} from "../types/event";
 import { db } from "../utils/firestore";
 import { useState } from "react";
 
@@ -48,5 +52,30 @@ export const useEvent = () => {
     }
   };
 
-  return { createEvent, loading, error };
+  const getEvents = async (): Promise<DreamConEventDB[]> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const eventsCollection = collection(db, "events");
+      const snapshot = await getDocs(eventsCollection);
+      const events = snapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as DreamConEventDB)
+      );
+
+      return events;
+    } catch (err) {
+      console.error("Error fetching documents: ", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createEvent, getEvents, loading, error };
 };

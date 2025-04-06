@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import EventCard from "../components/admin/EventCard";
-import { mockEvent } from "../data/event";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ModalEvent from "../components/admin/ModalEvent";
-import { AddOrEditEventPayload, DreamConEvent } from "../types/event";
+import {
+  AddOrEditEventPayload,
+  DreamConEvent,
+  DreamConEventDB,
+} from "../types/event";
 import { useEvent } from "../hooks/useEvent";
 import { useWriter } from "../hooks/userWriter";
+import { useTopic } from "../hooks/useTopic";
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -19,11 +23,13 @@ const AdminPage = () => {
     mode: "create" | "edit";
     defaultState?: DreamConEvent;
   }>({ isOpen: false, mode: "create" });
+  const [displayEvents, setDisplayEvents] = useState<DreamConEvent[]>([]);
 
   const navigate = useNavigate();
 
-  const { createEvent } = useEvent();
+  const { createEvent, getEvents } = useEvent();
   const { createWriter } = useWriter();
+  const { getTopicByEventId } = useTopic();
 
   useEffect(() => {
     const auth = getAuth();
@@ -35,6 +41,10 @@ const AdminPage = () => {
 
     return () => unsubscribe();
   }, [navigate]);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   const handleSubmitEvent = async (
     mode: "create" | "edit",
@@ -61,6 +71,28 @@ const AdminPage = () => {
   const handleCreateEvent = async (payload: AddOrEditEventPayload) => {
     await createEvent(payload);
     setModalEvent({ ...modalEvent, isOpen: false });
+  };
+
+  const fetchEvents = async () => {
+    const rawEvents = await getEvents();
+    const fineEvents = await mapTopicCountToEvent(rawEvents);
+
+    setDisplayEvents(fineEvents);
+  };
+
+  const mapTopicCountToEvent = async (
+    events: DreamConEventDB[]
+  ): Promise<DreamConEvent[]> => {
+    const eventsWithTopicCount: DreamConEvent[] = await Promise.all(
+      events.map(async (event) => {
+        const topics = await getTopicByEventId(event.id);
+        return {
+          ...event,
+          topic_counts: topics.length,
+        };
+      })
+    );
+    return eventsWithTopicCount;
   };
 
   return (
@@ -138,10 +170,15 @@ const AdminPage = () => {
             />
           </div>
         </div>
-        <EventCard
-          event={mockEvent}
-          onClickShareLink={() => handleCopyWriterLink(mockEvent.id)}
-        />
+        <div>
+          {displayEvents.map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              onClickShareLink={() => handleCopyWriterLink(event.id)}
+            />
+          ))}
+        </div>
       </main>
       <ModalEvent
         mode={modalEvent.mode}

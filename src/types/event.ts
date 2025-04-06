@@ -48,3 +48,5 @@ export type UpdateEventDBPayload = Omit<
   DreamConEvent,
   "id" | "topic_counts" | "created_at"
 >;
+
+export type DreamConEventDB = Omit<DreamConEvent, "topic_counts">;
