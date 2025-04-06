@@ -27,7 +27,7 @@ const AdminPage = () => {
 
   const navigate = useNavigate();
 
-  const { createEvent, getEvents } = useEvent();
+  const { createEvent, editEvent, getEvents } = useEvent();
   const { createWriter } = useWriter();
   const { getTopicByEventId } = useTopic();
 
@@ -51,10 +51,12 @@ const AdminPage = () => {
     payload: AddOrEditEventPayload
   ) => {
     if (mode === "edit") {
-      // Handle edit event logic here
+      await handleEditEvent(payload);
     } else {
       await handleCreateEvent(payload);
     }
+    setModalEvent({ defaultState: undefined, mode: "create", isOpen: false });
+    fetchEvents();
   };
 
   const handleCopyWriterLink = async (eventId: string) => {
@@ -70,7 +72,12 @@ const AdminPage = () => {
 
   const handleCreateEvent = async (payload: AddOrEditEventPayload) => {
     await createEvent(payload);
-    setModalEvent({ ...modalEvent, isOpen: false });
+  };
+
+  const handleEditEvent = async (payload: AddOrEditEventPayload) => {
+    if (!modalEvent.defaultState) return;
+
+    await editEvent(modalEvent.defaultState.id, payload);
   };
 
   const fetchEvents = async () => {
@@ -176,6 +183,15 @@ const AdminPage = () => {
               key={event.id}
               event={event}
               onClickShareLink={() => handleCopyWriterLink(event.id)}
+              onClickCreateDebate={() => {}}
+              onClickEdit={() => {
+                setModalEvent({
+                  ...modalEvent,
+                  isOpen: true,
+                  mode: "edit",
+                  defaultState: event,
+                });
+              }}
             />
           ))}
         </div>

@@ -77,5 +77,35 @@ export const useEvent = () => {
     }
   };
 
-  return { createEvent, getEvents, loading, error };
+  const editEvent = async (id: string, payload: AddOrEditEventPayload) => {
+    setLoading(true);
+    setError(null);
+
+    if (!id) {
+      setError("No event ID provided for editing");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const eventDocRef = doc(db, "events", id);
+      const timeNow = new Date();
+      const updatedPayload = {
+        ...payload,
+        updated_at: timeNow,
+      };
+
+      await runTransaction(db, async (transaction) => {
+        transaction.update(eventDocRef, updatedPayload);
+        console.log("Document updated with ID: ", id);
+      });
+    } catch (err) {
+      console.error("Error updating document: ", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createEvent, editEvent, getEvents, loading, error };
 };

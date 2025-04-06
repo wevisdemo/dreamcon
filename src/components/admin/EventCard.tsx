@@ -5,6 +5,8 @@ import IconPen from "../icon/Pen";
 interface PropTypes {
   event: DreamConEvent;
   onClickShareLink: () => void;
+  onClickEdit: () => void;
+  onClickCreateDebate: () => void;
 }
 
 export default function EventCard(props: PropTypes) {
@@ -23,7 +25,10 @@ export default function EventCard(props: PropTypes) {
         <p className="font-bold text-center text-[16px]">
           {props.event.display_name}
         </p>
-        <button className="flex gap-[8px] items-center px-[16px] py-[4px] bg-blue1 text-blue6 font-bold rounded-[48px]">
+        <button
+          className="flex gap-[8px] items-center px-[16px] py-[4px] bg-blue1 text-blue6 font-bold rounded-[48px]"
+          onClick={props.onClickEdit}
+        >
           <IconPen color="#2579F5" />
           แก้ไขข้อมูล
         </button>
@@ -71,7 +76,10 @@ export default function EventCard(props: PropTypes) {
           <p className="text-blue7 font-bold text-right">
             สร้าง {props.event.topic_counts} ข้อถกเถียง
           </p>
-          <button className="w-full h-full flex flex-col justify-center items-center gap-[8px] bg-blue1 text-blue6 font-bold rounded-[8px]">
+          <button
+            className="w-full h-full flex flex-col justify-center items-center gap-[8px] bg-blue1 text-blue6 font-bold rounded-[8px]"
+            onClick={props.onClickCreateDebate}
+          >
             <img
               className="w-[16px] h-[16px]"
               src="/icon/new-tab.svg"
