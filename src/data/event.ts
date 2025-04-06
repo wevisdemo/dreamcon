@@ -14,6 +14,8 @@ export const mockEvent: DreamConEvent = {
   participants: 70,
   news_link: "https://www.facebook.com/share/p/18UCTjpauy/",
   topic_counts: 5,
+  created_at: new Date("2023-10-01"),
+  updated_at: new Date("2023-10-01"),
 };
 
 export const eventAvatars = [

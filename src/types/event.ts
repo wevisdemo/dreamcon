@@ -11,6 +11,8 @@ export interface DreamConEvent {
   participants: number;
   news_link: string;
   topic_counts: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export const defaultAddOrEditEventPayload: AddOrEditEventPayload = {
@@ -39,3 +41,10 @@ export interface AddOrEditEventPayload {
   participants: number | null;
   news_link: string;
 }
+
+export type CreateEventDBPayload = Omit<DreamConEvent, "id" | "topic_counts">;
+
+export type UpdateEventDBPayload = Omit<
+  DreamConEvent,
+  "id" | "topic_counts" | "created_at"
+>;

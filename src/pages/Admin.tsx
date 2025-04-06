@@ -1,26 +1,27 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EventCard from "../components/admin/EventCard";
 import { mockEvent } from "../data/event";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ModalEvent from "../components/admin/ModalEvent";
-import { DreamConEvent } from "../types/event";
+import { AddOrEditEventPayload, DreamConEvent } from "../types/event";
+import { useEvent } from "../hooks/useEvent";
 
 const AdminPage = () => {
   enum RoomSortOption {
     LATEST,
     POPULAR,
   }
-  const [filter, setFilter] = React.useState<RoomSortOption>(
-    RoomSortOption.LATEST
-  );
-  const [modalEvent, setModalEvent] = React.useState<{
+  const [filter, setFilter] = useState<RoomSortOption>(RoomSortOption.LATEST);
+  const [modalEvent, setModalEvent] = useState<{
     isOpen: boolean;
     mode: "create" | "edit";
     defaultState?: DreamConEvent;
   }>({ isOpen: true, mode: "create" });
 
   const navigate = useNavigate();
+
+  const { createEvent } = useEvent();
 
   useEffect(() => {
     const auth = getAuth();
@@ -32,6 +33,22 @@ const AdminPage = () => {
 
     return () => unsubscribe();
   }, [navigate]);
+
+  const handleSubmitEvent = async (
+    mode: "create" | "edit",
+    payload: AddOrEditEventPayload
+  ) => {
+    if (mode === "edit") {
+      // Handle edit event logic here
+    } else {
+      await handleCreateEvent(payload);
+    }
+  };
+
+  const handleCreateEvent = async (payload: AddOrEditEventPayload) => {
+    await createEvent(payload);
+    setModalEvent({ ...modalEvent, isOpen: false });
+  };
 
   return (
     <div className="h-full w-screen bg-blue2 flex justify-center relative">
@@ -117,7 +134,7 @@ const AdminPage = () => {
           setModalEvent({ ...modalEvent, isOpen: false });
         }}
         defaultState={modalEvent.defaultState}
-        onSubmit={() => {}}
+        onSubmit={handleSubmitEvent}
       />
     </div>
   );
