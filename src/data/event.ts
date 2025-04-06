@@ -1,7 +1,7 @@
 import { DreamConEvent } from "../types/event";
 
 export const mockEvent: DreamConEvent = {
-  id: "E1",
+  id: "ljUg85X01F2aUJIhSFFr",
   avatar_url: "/avatar/avatar1.png",
   display_name: "Prisoners’ Dream Con",
   title_en: "Dream Constitution for Future of Freedom",

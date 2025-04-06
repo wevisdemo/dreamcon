@@ -4,6 +4,7 @@ import IconPen from "../icon/Pen";
 
 interface PropTypes {
   event: DreamConEvent;
+  onClickShareLink: () => void;
 }
 
 export default function EventCard(props: PropTypes) {
@@ -78,7 +79,10 @@ export default function EventCard(props: PropTypes) {
             />
             <p>สร้างข้อถกเถียงของวงสนทนานี้</p>
           </button>
-          <button className="flex gap-[8px] items-center justify-center py-[8px] bg-blue2 text-blue7 font-bold rounded-[8px]">
+          <button
+            className="flex gap-[8px] items-center justify-center py-[8px] bg-blue2 text-blue7 font-bold rounded-[8px]"
+            onClick={props.onClickShareLink}
+          >
             <img
               className="w-[16px] h-[16px]"
               src="/icon/chain.svg"

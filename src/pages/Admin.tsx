@@ -6,6 +6,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ModalEvent from "../components/admin/ModalEvent";
 import { AddOrEditEventPayload, DreamConEvent } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
+import { useWriter } from "../hooks/userWriter";
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -17,11 +18,12 @@ const AdminPage = () => {
     isOpen: boolean;
     mode: "create" | "edit";
     defaultState?: DreamConEvent;
-  }>({ isOpen: true, mode: "create" });
+  }>({ isOpen: false, mode: "create" });
 
   const navigate = useNavigate();
 
   const { createEvent } = useEvent();
+  const { createWriter } = useWriter();
 
   useEffect(() => {
     const auth = getAuth();
@@ -43,6 +45,17 @@ const AdminPage = () => {
     } else {
       await handleCreateEvent(payload);
     }
+  };
+
+  const handleCopyWriterLink = async (eventId: string) => {
+    const writerID = await createWriter({ event_id: eventId });
+    if (!writerID) {
+      alert("Failed to create writer link.");
+      return;
+    }
+    const link = `${window.origin}/?writer=${writerID}`;
+    navigator.clipboard.writeText(link);
+    alert("Writer link copied to clipboard!");
   };
 
   const handleCreateEvent = async (payload: AddOrEditEventPayload) => {
@@ -125,7 +138,10 @@ const AdminPage = () => {
             />
           </div>
         </div>
-        <EventCard event={mockEvent} />
+        <EventCard
+          event={mockEvent}
+          onClickShareLink={() => handleCopyWriterLink(mockEvent.id)}
+        />
       </main>
       <ModalEvent
         mode={modalEvent.mode}
