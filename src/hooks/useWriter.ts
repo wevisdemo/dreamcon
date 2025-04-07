@@ -9,6 +9,28 @@ export const useWriter = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const getWriterByID = async (id: string) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const writerDocRef = doc(db, "writers", id);
+      const writerSnapshot = await writerDocRef.get();
+
+      if (!writerSnapshot.exists()) {
+        throw new Error("Writer not found for the given ID");
+      }
+
+      return writerSnapshot.data();
+    } catch (err) {
+      console.error("Error fetching writer document: ", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const createWriter = async (payload: CreateWritePayload): Promise<string> => {
     setLoading(true);
     setError(null);
@@ -55,5 +77,5 @@ export const useWriter = () => {
     return id;
   };
 
-  return { createWriter, loading, error };
+  return { createWriter, getWriterByID, loading, error };
 };

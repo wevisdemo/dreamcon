@@ -35,7 +35,7 @@ import {
 import { db } from "../utils/firestore";
 import { AddOrEditCommentPayload, CommentDB, Comment } from "../types/comment";
 import { useAddTopic } from "../hooks/useAddTopic";
-import { useEditTopic } from "../hooks/userEditTopic";
+import { useEditTopic } from "../hooks/useEditTopic";
 import { useAddComment } from "../hooks/useAddComment";
 import { useEditComment } from "../hooks/useEditComment";
 import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
@@ -45,6 +45,8 @@ import { convertTopicDBToTopic } from "../utils/mapping";
 import FullPageLoader from "../components/FullPageLoader";
 import AlertPopup from "../components/AlertMoveComment";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -82,6 +84,20 @@ export default function Home() {
   } = useConvertCommentToTopic();
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
+  const { saveToken } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const writerToken = params.get("writer");
+
+    if (writerToken) {
+      saveToken(writerToken);
+      params.delete("writer");
+      navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+    }
+  }, [location, saveToken, navigate]);
 
   useEffect(() => {
     fetchTopics();

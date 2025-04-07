@@ -4,7 +4,7 @@ import { Topic, TopicDB } from "../types/topic";
 import { AddOrEditCommentPayload, Comment } from "../types/comment";
 import { StoreContext } from "../store";
 import ModalComment from "../components/share/ModalComment";
-import { useEditTopic } from "../hooks/userEditTopic";
+import { useEditTopic } from "../hooks/useEditTopic";
 import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
 import { useAddComment } from "../hooks/useAddComment";
 import { useParams } from "react-router-dom";
