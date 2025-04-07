@@ -9,7 +9,7 @@ import {
   DreamConEventDB,
 } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
-import { useWriter } from "../hooks/userWriter";
+import { useWriter } from "../hooks/useWriter";
 import { useTopic } from "../hooks/useTopic";
 
 const AdminPage = () => {

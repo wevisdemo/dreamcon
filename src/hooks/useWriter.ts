@@ -1,7 +1,11 @@
-import { collection, doc, runTransaction } from "firebase/firestore";
+import { collection, doc, getDoc, runTransaction } from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../utils/firestore";
-import { CreateWritePayload, CreateWriterDBPayload } from "../types/writer";
+import {
+  CreateWritePayload,
+  CreateWriterDBPayload,
+  Writer,
+} from "../types/writer";
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useWriter.ts
 
@@ -9,19 +13,27 @@ export const useWriter = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getWriterByID = async (id: string) => {
+  const getWriterByID = async (id: string): Promise<Writer | null> => {
     setLoading(true);
     setError(null);
 
     try {
       const writerDocRef = doc(db, "writers", id);
-      const writerSnapshot = await writerDocRef.get();
+      const writerSnapshot = await getDoc(writerDocRef);
 
       if (!writerSnapshot.exists()) {
         throw new Error("Writer not found for the given ID");
       }
+      const data = writerSnapshot.data();
+      if (!data) {
+        throw new Error("Writer data is empty");
+      }
 
-      return writerSnapshot.data();
+      return {
+        ...data,
+        created_at: data.created_at.toDate(),
+        expired_at: data.expired_at.toDate(),
+      } as Writer;
     } catch (err) {
       console.error("Error fetching writer document: ", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred");
