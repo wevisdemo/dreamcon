@@ -14,8 +14,10 @@ import {
   initialClipboardStore,
   useClipboardStore,
 } from "./clipboard";
+import { initialUserStore, UserStore, useUserStore } from "./user";
 
 interface State {
+  user: UserStore;
   homePage: HomePageStore;
   topicPage: TopicPageStore;
   clipboard: ClipboardStore;
@@ -26,6 +28,7 @@ interface State {
 }
 
 const StoreContext = createContext<State>({
+  user: initialUserStore,
   homePage: initialHomePageState,
   topicPage: initialTopicPageState,
   clipboard: initialClipboardStore,
@@ -37,12 +40,14 @@ const StoreContext = createContext<State>({
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [currenPage, setCurrentPage] = React.useState<"home" | "topic">("home");
+  const userState = useUserStore();
   const homePageState = useHomePageStore();
   const topicPageState = useTopicPageStore();
   const clipboardState = useClipboardStore();
   return (
     <StoreContext.Provider
       value={{
+        user: userState,
         currentPage: {
           value: currenPage,
           setValue: setCurrentPage,

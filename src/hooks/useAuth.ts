@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { useWriter } from "./useWriter";
+import { StoreContext } from "../store";
+import { useEvent } from "./useEvent";
+import { getAuth } from "firebase/auth";
 
 const useAuth = () => {
+  const { getEventByID } = useEvent();
+  const { user: userContext } = useContext(StoreContext);
   const [token, setToken] = useState<string | null>(null);
   const { getWriterByID } = useWriter();
   const saveToken = async (newToken: string) => {
@@ -12,18 +17,21 @@ const useAuth = () => {
       if (!writer) {
         throw new Error("Writer not found for the given ID");
       }
+      const event = await getEventByID(writer.event_id);
+      if (!event) {
+        throw new Error("Event not found for the given ID");
+      }
+
       const { expired_at } = writer;
       const expirationDate = expired_at;
+      console.log("Expiration Date: ", writer, event);
       const currentDate = new Date();
       if (expirationDate < currentDate) {
         throw new Error("Token has expired");
       }
       // Set the cookie with the token and expiration date
-      const expiresInDays = Math.floor(
-        (expirationDate.getTime() - currentDate.getTime()) /
-          (1000 * 60 * 60 * 24)
-      );
-      Cookies.set("authToken", newToken, { expires: expiresInDays }); // Token will expire in 7 days
+
+      Cookies.set("authToken", newToken, { expires: expirationDate }); // Token will expire in 7 days
       // Set the token in the state
       setToken(newToken);
     } catch (error) {
@@ -42,11 +50,33 @@ const useAuth = () => {
     Cookies.remove("authToken");
   };
 
+  const setUserStoreFromToken = async () => {
+    const token = getToken();
+    const adminAuth = getAuth();
+    if (adminAuth.currentUser) {
+      userContext.setAdminRole();
+    }
+    if (token) {
+      const writer = await getWriterByID(token);
+      if (!writer) {
+        throw new Error("Writer not found for the given ID");
+      }
+      const event = await getEventByID(writer.event_id);
+      if (!event) {
+        throw new Error("Event not found for the given ID");
+      }
+      userContext.setWriterRole(writer, event);
+    } else {
+      userContext.setUserRole();
+    }
+  };
+
   return {
     token,
     saveToken,
     getToken,
     clearToken,
+    setUserStoreFromToken,
   };
 };
 

@@ -84,20 +84,27 @@ export default function Home() {
   } = useConvertCommentToTopic();
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
-  const { saveToken } = useAuth();
+  const { saveToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
+    doToken();
+  }, []);
+
+  const doToken = async () => {
     const params = new URLSearchParams(location.search);
     const writerToken = params.get("writer");
 
     if (writerToken) {
-      saveToken(writerToken);
+      await saveToken(writerToken);
       params.delete("writer");
       navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+      return;
     }
-  }, [location, saveToken, navigate]);
+
+    setUserStoreFromToken();
+  };
 
   useEffect(() => {
     fetchTopics();

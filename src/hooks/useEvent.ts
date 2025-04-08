@@ -1,4 +1,10 @@
-import { collection, doc, runTransaction, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  runTransaction,
+  getDocs,
+  getDoc,
+} from "firebase/firestore";
 import {
   AddOrEditEventPayload,
   CreateEventDBPayload,
@@ -107,5 +113,39 @@ export const useEvent = () => {
     }
   };
 
-  return { createEvent, editEvent, getEvents, loading, error };
+  const getEventByID = async (id: string): Promise<DreamConEventDB | null> => {
+    setLoading(true);
+    setError(null);
+
+    if (!id) {
+      setError("No event ID provided");
+      setLoading(false);
+      return null;
+    }
+
+    try {
+      const eventDocRef = doc(db, "events", id);
+      const docSnapshot = await getDoc(eventDocRef);
+
+      if (!docSnapshot.exists()) {
+        setError("Event not found");
+        return null;
+      }
+
+      return {
+        id: docSnapshot.id,
+        ...docSnapshot.data(),
+        created_at: docSnapshot.data()?.created_at.toDate(),
+        updated_at: docSnapshot.data()?.updated_at.toDate(),
+      } as DreamConEventDB;
+    } catch (err) {
+      console.error("Error fetching document: ", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { createEvent, editEvent, getEventByID, getEvents, loading, error };
 };
