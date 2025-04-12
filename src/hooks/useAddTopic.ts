@@ -17,6 +17,7 @@ export const useAddTopic = () => {
       const timeNow = new Date();
       const TopicDBPayload: CreateTopicDBPayload = {
         title: payload.title,
+        event_id: payload.event_id,
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,

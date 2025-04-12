@@ -1,4 +1,4 @@
-import { AddOrEditTopicPayload, Topic } from "../../types/topic";
+import { ModalTopicPayload, Topic } from "../../types/topic";
 import React, { useEffect, useState } from "react";
 
 interface PropTypes {
@@ -6,7 +6,7 @@ interface PropTypes {
   defaultState?: Topic;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (mode: "create" | "edit", payload: AddOrEditTopicPayload) => void;
+  onSubmit: (mode: "create" | "edit", payload: ModalTopicPayload) => void;
 }
 
 export default function ModalTopic(props: PropTypes) {
@@ -40,7 +40,11 @@ export default function ModalTopic(props: PropTypes) {
         props.onSubmit(props.mode, { title: text });
         break;
       case "edit":
-        props.onSubmit(props.mode, { id: props.defaultState?.id, title: text });
+        props.onSubmit(props.mode, {
+          id: props.defaultState?.id,
+          title: text,
+          event_id: props.defaultState?.event_id,
+        });
         break;
     }
     handleClose();

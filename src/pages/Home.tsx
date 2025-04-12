@@ -21,7 +21,7 @@ import {
   MoveCommentEvent,
 } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
-import { AddOrEditTopicPayload, Topic, TopicDB } from "../types/topic";
+import { ModalTopicPayload, Topic, TopicDB } from "../types/topic";
 import {
   collection,
   getDocs,
@@ -47,6 +47,7 @@ import AlertPopup from "../components/AlertMoveComment";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import { DreamConEvent } from "../types/event";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -63,6 +64,7 @@ export default function Home() {
     homePage: homePageContext,
     currentPage,
     clipboard: clipboardContext,
+    user: userContext,
   } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
   const { editTopic, loading: editTopicLoading } = useEditTopic();
@@ -87,6 +89,7 @@ export default function Home() {
   const { saveToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [displayEvent, setDisplayEvent] = useState<DreamConEvent | null>(null);
 
   useEffect(() => {
     doToken();
@@ -119,6 +122,26 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    observerRef.current?.addEventListener("scroll", handleScroll);
+
+    return () => {
+      observerRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [displayTopics]);
+
+  useEffect(() => {
+    clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
+  }, [clipboardContext.subscribeMoveComment]);
+
+  useEffect(() => {
+    clipboardContext.subscribeCopyComment(subscribeCopyComment);
+  }, [clipboardContext.subscribeCopyComment]);
+
+  useEffect(() => {
+    refreshSelectedTopicFromDisplayTopic(displayTopics);
+  }, [displayTopics]);
+
   useHotkeys("Meta+z, ctrl+z", () => {
     handleUndoMoveComment();
   });
@@ -146,14 +169,6 @@ export default function Home() {
     setShowPasteAlert(false);
   };
 
-  useEffect(() => {
-    observerRef.current?.addEventListener("scroll", handleScroll);
-
-    return () => {
-      observerRef.current?.removeEventListener("scroll", handleScroll);
-    };
-  }, [displayTopics]);
-
   const handleScroll = () => {
     if (!observerRef.current) return;
     const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
@@ -161,14 +176,6 @@ export default function Home() {
       fetchMoreTopics(); // Load more topics when scrolled to bottom
     }
   };
-
-  useEffect(() => {
-    clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
-  }, [clipboardContext.subscribeMoveComment]);
-
-  useEffect(() => {
-    clipboardContext.subscribeCopyComment(subscribeCopyComment);
-  }, [clipboardContext.subscribeCopyComment]);
 
   const subscribeCopyComment = () => {
     setShowPasteAlert(false);
@@ -234,10 +241,6 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    refreshSelectedTopicFromDisplayTopic(displayTopics);
-  }, [displayTopics]);
-
   const getMainSectionWidth = () => {
     return selectedTopic ? "w-[60%]" : "w-full";
   };
@@ -252,14 +255,29 @@ export default function Home() {
 
   const handleOnSubmitTopic = async (
     mode: "create" | "edit",
-    payload: AddOrEditTopicPayload
+    payload: ModalTopicPayload
   ) => {
     switch (mode) {
-      case "create":
-        await addNewTopic(payload);
+      case "create": {
+        // TODO: validate
+        let eventID = "";
+        if (userContext.userState?.role == "writer") {
+          eventID = userContext.userState?.event.id;
+        } else if (userContext.userState?.role == "admin") {
+          eventID = displayEvent?.id || "";
+        }
+        if (!eventID) return;
+        await addNewTopic({ ...payload, event_id: eventID });
         break;
+      }
       case "edit":
-        await editTopic(payload);
+        if (!payload.event_id) return;
+        await editTopic({
+          id: payload.id,
+          title: payload.title,
+          event_id: payload.event_id,
+        });
+
         break;
     }
   };
@@ -465,6 +483,7 @@ export default function Home() {
                     editTopic({
                       id: selectedTopic.id,
                       title: newTitle,
+                      event_id: selectedTopic.event_id,
                     });
                   }}
                   onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}

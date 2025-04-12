@@ -4,6 +4,7 @@ export interface Topic {
   id: string;
   title: string;
   comments: Comment[];
+  event_id: string;
   created_at: Date;
   updated_at: Date;
   notified_at: Date;
@@ -12,6 +13,7 @@ export interface Topic {
 export interface TopicDB {
   id: string;
   title: string;
+  event_id: string;
   created_at: Date;
   updated_at: Date;
   notified_at: Date;
@@ -24,4 +26,11 @@ export type UpdateTopicDBPayload = Omit<TopicDB, "created_at" | "id">;
 export interface AddOrEditTopicPayload {
   id?: string;
   title: string;
+  event_id: string;
+}
+
+export interface ModalTopicPayload {
+  id?: string;
+  title: string;
+  event_id?: string;
 }
