@@ -4,10 +4,14 @@ import {
   runTransaction,
   getDocs,
   getDoc,
+  getCountFromServer,
+  query,
+  where,
 } from "firebase/firestore";
 import {
   AddOrEditEventPayload,
   CreateEventDBPayload,
+  DreamConEvent,
   DreamConEventDB,
 } from "../types/event";
 import { db } from "../utils/firestore";
@@ -58,7 +62,7 @@ export const useEvent = () => {
     }
   };
 
-  const getEvents = async (): Promise<DreamConEventDB[]> => {
+  const getEvents = async (): Promise<DreamConEvent[]> => {
     setLoading(true);
     setError(null);
 
@@ -70,8 +74,19 @@ export const useEvent = () => {
           ({
             id: doc.id,
             ...doc.data(),
-          } as DreamConEventDB)
+          } as DreamConEvent)
       );
+      // get topic counts
+      const topicsCollection = collection(db, "topics");
+      for (const event of events) {
+        const queryChain = query(
+          topicsCollection,
+          where("event_id", "==", event.id)
+        );
+        const topicsSnapshot = await getCountFromServer(queryChain);
+        const count = topicsSnapshot.data().count;
+        event.topic_counts = count;
+      }
 
       return events;
     } catch (err) {

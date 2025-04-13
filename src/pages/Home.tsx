@@ -29,8 +29,9 @@ import {
   query,
   onSnapshot,
   Unsubscribe,
-  limit,
-  orderBy,
+  // limit,
+  // orderBy,
+  QueryConstraint,
 } from "firebase/firestore";
 import { db } from "../utils/firestore";
 import { AddOrEditCommentPayload, CommentDB, Comment } from "../types/comment";
@@ -53,7 +54,7 @@ import { TopicFilter } from "../types/home";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
-  const [itemLimit, setItemLimit] = useState(24);
+  // const [itemLimit, setItemLimit] = useState(24);
   const [showCopyAlert, setShowCopyAlert] = useState(false);
   const [showPasteAlert, setShowPasteAlert] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
@@ -92,7 +93,6 @@ export default function Home() {
   const { saveToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const [displayEvent, setDisplayEvent] = useState<DreamConEvent | null>(null);
   const [events, setEvents] = useState<DreamConEvent[]>([]);
   const [topicFilter, setTopicFilter] = useState<TopicFilter>({
     selectedEvent: null,
@@ -119,9 +119,14 @@ export default function Home() {
     setUserStoreFromToken();
   };
 
+  // useEffect(() => {
+  //   fetchTopics();
+  // }, [itemLimit]);
+
   useEffect(() => {
     fetchTopics();
-  }, [itemLimit]);
+    console.log("topicFilter", topicFilter);
+  }, [topicFilter]);
 
   useEffect(() => {
     currentPage.setValue("home");
@@ -133,13 +138,13 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    observerRef.current?.addEventListener("scroll", handleScroll);
+  // useEffect(() => {
+  //   observerRef.current?.addEventListener("scroll", handleScroll);
 
-    return () => {
-      observerRef.current?.removeEventListener("scroll", handleScroll);
-    };
-  }, [displayTopics]);
+  //   return () => {
+  //     observerRef.current?.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, [displayTopics]);
 
   useEffect(() => {
     clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
@@ -180,13 +185,13 @@ export default function Home() {
     setShowPasteAlert(false);
   };
 
-  const handleScroll = () => {
-    if (!observerRef.current) return;
-    const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
-    if (scrollTop + clientHeight >= scrollHeight - 10) {
-      fetchMoreTopics(); // Load more topics when scrolled to bottom
-    }
-  };
+  // const handleScroll = () => {
+  //   if (!observerRef.current) return;
+  //   const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
+  //   if (scrollTop + clientHeight >= scrollHeight - 10) {
+  //     fetchMoreTopics(); // Load more topics when scrolled to bottom
+  //   }
+  // };
 
   const subscribeCopyComment = () => {
     setShowPasteAlert(false);
@@ -209,22 +214,15 @@ export default function Home() {
   };
 
   const fetchEvents = async () => {
-    const eventDBs = await getEvents();
-    const events: DreamConEvent[] = eventDBs.map((event) => {
-      return {
-        // TODO: map topic count later
-        ...event,
-        topic_counts: 0,
-      } as DreamConEvent;
-    });
+    const events = await getEvents();
     setEvents(events);
   };
 
-  const fetchMoreTopics = async () => {
-    if (displayTopics.length < itemLimit) return;
-    const limitCount = itemLimit + 12;
-    setItemLimit(limitCount);
-  };
+  // const fetchMoreTopics = async () => {
+  //   if (displayTopics.length < itemLimit) return;
+  //   const limitCount = itemLimit + 12;
+  //   setItemLimit(limitCount);
+  // };
 
   const subscribeTopics = (): Unsubscribe => {
     const topicsQuery = query(collection(db, "topics"));
@@ -277,6 +275,25 @@ export default function Home() {
     window.location.href = `/topic/${selectedTopic.id}`;
   };
 
+  const buildFirestoreQueryFromFilter = (
+    filter: TopicFilter
+  ): QueryConstraint[] => {
+    const { selectedEvent, category } = filter;
+    const queryChain: QueryConstraint[] = [];
+    if (selectedEvent) {
+      queryChain.push(where("event_id", "==", selectedEvent.id));
+    }
+    if (category !== "ทั้งหมด") {
+      queryChain.push(where("category", "==", category));
+    }
+
+    // TODO: search by title later
+    // if (searchText) {
+    //   queryRef = query(queryRef, where("title", ">=", searchText), where("title", "<=", searchText + "\uf8ff"));
+    // }
+    return queryChain;
+  };
+
   const handleOnSubmitTopic = async (
     mode: "create" | "edit",
     payload: ModalTopicPayload
@@ -288,7 +305,7 @@ export default function Home() {
         if (userContext.userState?.role == "writer") {
           eventID = userContext.userState?.event.id;
         } else if (userContext.userState?.role == "admin") {
-          eventID = displayEvent?.id || "";
+          eventID = topicFilter.selectedEvent?.id || "";
         }
         if (!eventID) return;
         await addNewTopic({ ...payload, event_id: eventID });
@@ -306,19 +323,22 @@ export default function Home() {
     }
   };
   const fetchTopics = async () => {
-    const limitCount = itemLimit;
+    // const limitCount = itemLimit;
     const topicsCollection = collection(db, "topics");
     const commentsCollection = collection(db, "comments");
+    const filterQurey = buildFirestoreQueryFromFilter(topicFilter);
     const topicQuery = query(
       topicsCollection,
-      limit(limitCount),
-      orderBy("created_at", "desc")
+      ...filterQurey
+      // limit(limitCount),
+      // orderBy("created_at", "desc")
     );
     const topicsSnapshot = await getDocs(topicQuery);
     const topics = topicsSnapshot.docs.map((doc) => {
       return { id: doc.id, ...doc.data() } as TopicDB;
     });
     if (!topics.length) {
+      setDisplayTopics([]);
       setFirstTimeLoading(false);
       return;
     }

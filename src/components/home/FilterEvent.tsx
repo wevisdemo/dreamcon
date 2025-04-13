@@ -41,7 +41,7 @@ export default function FilterEvent(props: PropTypes) {
         />
       </div>
 
-      <div className="relative  px-[5px] py-[3px]">
+      <div className="relative  px-[5px]">
         <p
           className={`text-[10px] text-gray5 truncate px-[5px] py-[3px] text-center ${
             props.isSelected

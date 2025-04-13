@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { DreamConEvent } from "../../types/event";
 import {
   TopicFilter,
@@ -15,7 +14,6 @@ interface PropTypes {
 }
 
 export default function Filter(props: PropTypes) {
-  const [textSearch, setTextSearch] = useState("");
   const handleEventChange = (event: DreamConEvent | null) => {
     props.setFilter({
       ...props.filter,
@@ -44,6 +42,9 @@ export default function Filter(props: PropTypes) {
     });
   };
 
+  const filteredEvents = (): DreamConEvent[] =>
+    props.events.filter((event) => props.filter.selectedEvent?.id !== event.id);
+
   return (
     <div className="bg-white w-full rounded-[16px] py-[16px] flex flex-col gap-[16px]">
       <div className="flex items-center gap-[18px] w-full pl-[24px] mt-[12px]">
@@ -67,7 +68,13 @@ export default function Filter(props: PropTypes) {
         </div>
         <div className="w-[12px] h-[12px] bg-blue2 rounded-full shrink-0" />
         <div className="flex gap-[16px] w-full overflow-scroll no-scrollbar">
-          {props.events.map((event) => (
+          {props.filter.selectedEvent !== null && (
+            <DefaultFilterEvent
+              count={99}
+              onClick={() => handleEventChange(null)}
+            />
+          )}
+          {filteredEvents().map((event) => (
             <FilterEvent
               event={event}
               onClick={handleEventChange}
@@ -141,25 +148,15 @@ export default function Filter(props: PropTypes) {
             type="text"
             placeholder="ค้นหา"
             className="bg-white w-[150px] border border-blue3 outline-none px-[8px] py-[6px] rounded-[48px]"
-            value={textSearch}
+            value={props.filter.searchText}
             onChange={(e) => {
-              setTextSearch(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearchTextChange(textSearch);
-                setTextSearch("");
-              }
+              handleSearchTextChange(e.target.value);
             }}
           />
           <img
-            className="absolute right-[8px] top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
+            className="absolute right-[8px] top-1/2 transform -translate-y-1/2"
             src="/icon/search.svg"
             alt="search-icon"
-            onClick={() => {
-              handleSearchTextChange(textSearch);
-              setTextSearch("");
-            }}
           />
         </div>
       </div>

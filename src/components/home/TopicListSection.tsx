@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Topic } from "../../types/topic";
 import TopicWrapper from "./TopicWrapper";
 import { StoreContext } from "../../store";
@@ -21,7 +21,30 @@ export default function TopicListSection(props: PropTypes) {
   const { homePage: homePageContext, clipboard: clipboardContext } =
     useContext(StoreContext);
   const [hoveredAddTopic, setHoveredAddTopic] = useState(false);
+  const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
+  useEffect(() => {
+    const filteredTopics = props.topics.filter((topic) => {
+      // regex to check if topic.title contains the search text
+      const regex = new RegExp(props.topicFilter.searchText, "i");
+      // sorted by filter
+      return regex.test(topic.title);
+    });
 
+    // sort by latest or most-commented
+    if (props.topicFilter.sortedBy === "latest") {
+      filteredTopics.sort((a, b) => {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      });
+    } else if (props.topicFilter.sortedBy === "most-commented") {
+      filteredTopics.sort((a, b) => {
+        return b.comments.length - a.comments.length;
+      });
+    }
+
+    setDisplayTopics(filteredTopics);
+  }, [props.topics]);
   const handleAddTopic = () => {
     homePageContext.modalTopicMainSection.dispatch({
       type: "OPEN_MODAL",
@@ -69,7 +92,7 @@ export default function TopicListSection(props: PropTypes) {
         setFilter={props.setTopicFilter}
       />
       <TopicWrapper
-        topics={props.topics}
+        topics={displayTopics}
         selectedTopic={props.selectedTopic}
         setSelectedTopic={props.setSelectedTopic}
       />
