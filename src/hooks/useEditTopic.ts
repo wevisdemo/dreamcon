@@ -23,6 +23,8 @@ export const useEditTopic = () => {
       const timeNow = new Date();
       const TopicDBPayload: UpdateTopicDBPayload = {
         title: payload.title,
+        category: payload.category,
+        event_id: payload.event_id,
         updated_at: timeNow,
         notified_at: timeNow,
       };

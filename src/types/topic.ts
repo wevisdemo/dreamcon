@@ -3,6 +3,7 @@ import { Comment } from "./comment";
 export interface Topic {
   id: string;
   title: string;
+  category: string;
   comments: Comment[];
   event_id: string;
   created_at: Date;
@@ -13,6 +14,7 @@ export interface Topic {
 export interface TopicDB {
   id: string;
   title: string;
+  category: string;
   event_id: string;
   created_at: Date;
   updated_at: Date;
@@ -27,11 +29,13 @@ export interface AddOrEditTopicPayload {
   id?: string;
   title: string;
   event_id: string;
+  category: TopicCategory;
 }
 
 export interface ModalTopicPayload {
   id?: string;
   title: string;
+  category: TopicCategory;
   event_id?: string;
 }
 

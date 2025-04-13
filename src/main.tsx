@@ -5,7 +5,7 @@ import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <main className=" wv-ibmplexlooped">
+    <main className="wv-ibmplexlooped">
       <App />
     </main>
   </StrictMode>

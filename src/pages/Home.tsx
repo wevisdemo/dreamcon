@@ -21,7 +21,12 @@ import {
   MoveCommentEvent,
 } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
-import { ModalTopicPayload, Topic, TopicDB } from "../types/topic";
+import {
+  ModalTopicPayload,
+  Topic,
+  TopicCategory,
+  TopicDB,
+} from "../types/topic";
 import {
   collection,
   getDocs,
@@ -317,6 +322,7 @@ export default function Home() {
           id: payload.id,
           title: payload.title,
           event_id: payload.event_id,
+          category: payload.category as TopicCategory,
         });
 
         break;
@@ -404,6 +410,20 @@ export default function Home() {
     setSelectedTopic(null);
   };
 
+  const getEventById = (eventId: string) => {
+    return events.find((event) => event.id === eventId);
+  };
+
+  const getCreatedByEvent = () => {
+    console.log(userContext.userState);
+    if (userContext.userState?.role === "writer") {
+      return userContext.userState?.event;
+    }
+    if (userContext.userState?.role === "admin") {
+      return getEventById(topicFilter.selectedEvent?.id || "");
+    }
+  };
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
@@ -446,6 +466,7 @@ export default function Home() {
                   type: "CLOSE_MODAL",
                 });
               }}
+              createdByEvent={getCreatedByEvent() as DreamConEvent}
               onSubmit={handleOnSubmitTopic}
             />
           </section>
@@ -535,6 +556,7 @@ export default function Home() {
                       id: selectedTopic.id,
                       title: newTitle,
                       event_id: selectedTopic.event_id,
+                      category: selectedTopic.category as TopicCategory,
                     });
                   }}
                   onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}
