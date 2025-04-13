@@ -4,11 +4,17 @@ import TopicWrapper from "./TopicWrapper";
 import { StoreContext } from "../../store";
 import { Droppable } from "../Droppable";
 import { useHotkeys } from "react-hotkeys-hook";
+import Filter from "./Filter";
+import { TopicFilter } from "../../types/home";
+import { DreamConEvent } from "../../types/event";
 
 interface PropTypes {
   topics: Topic[];
   selectedTopic: Topic | null;
   setSelectedTopic: (topic: Topic) => void;
+  events: DreamConEvent[];
+  topicFilter: TopicFilter;
+  setTopicFilter: (filter: TopicFilter) => void;
 }
 
 export default function TopicListSection(props: PropTypes) {
@@ -57,6 +63,11 @@ export default function TopicListSection(props: PropTypes) {
           </button>
         )}
       </Droppable>
+      <Filter
+        events={props.events}
+        filter={props.topicFilter}
+        setFilter={props.setTopicFilter}
+      />
       <TopicWrapper
         topics={props.topics}
         selectedTopic={props.selectedTopic}

@@ -48,6 +48,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { DreamConEvent } from "../types/event";
+import { useEvent } from "../hooks/useEvent";
+import { TopicFilter } from "../types/home";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -84,12 +86,20 @@ export default function Home() {
     undoConvertCommentToTopic,
     loading: convertCommentLoading,
   } = useConvertCommentToTopic();
+  const { getEvents, loading: eventLoading } = useEvent();
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const { saveToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [displayEvent, setDisplayEvent] = useState<DreamConEvent | null>(null);
+  const [events, setEvents] = useState<DreamConEvent[]>([]);
+  const [topicFilter, setTopicFilter] = useState<TopicFilter>({
+    selectedEvent: null,
+    sortedBy: "latest",
+    category: "ทั้งหมด",
+    searchText: "",
+  });
 
   useEffect(() => {
     doToken();
@@ -116,6 +126,7 @@ export default function Home() {
   useEffect(() => {
     currentPage.setValue("home");
     fetchTopics();
+    fetchEvents();
     const unsubscribe = subscribeTopics();
     return () => {
       unsubscribe();
@@ -192,8 +203,21 @@ export default function Home() {
       editCommentLoading ||
       deleteTopicLoading ||
       moveCommentLoading ||
-      convertCommentLoading
+      convertCommentLoading ||
+      eventLoading
     );
+  };
+
+  const fetchEvents = async () => {
+    const eventDBs = await getEvents();
+    const events: DreamConEvent[] = eventDBs.map((event) => {
+      return {
+        // TODO: map topic count later
+        ...event,
+        topic_counts: 0,
+      } as DreamConEvent;
+    });
+    setEvents(events);
   };
 
   const fetchMoreTopics = async () => {
@@ -294,6 +318,10 @@ export default function Home() {
     const topics = topicsSnapshot.docs.map((doc) => {
       return { id: doc.id, ...doc.data() } as TopicDB;
     });
+    if (!topics.length) {
+      setFirstTimeLoading(false);
+      return;
+    }
     const topicIds = topics.map((topic) => topic.id);
 
     const commentsQuery = query(
@@ -409,6 +437,9 @@ export default function Home() {
               topics={displayTopics}
               selectedTopic={selectedTopic}
               setSelectedTopic={setSelectedTopic}
+              events={events}
+              topicFilter={topicFilter}
+              setTopicFilter={setTopicFilter}
             />
           </section>
           <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">

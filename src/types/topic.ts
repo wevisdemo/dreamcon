@@ -34,3 +34,20 @@ export interface ModalTopicPayload {
   title: string;
   event_id?: string;
 }
+
+export type TopicCategory =
+  | "สิทธิเสรีภาพ"
+  | "รัฐสภา"
+  | "ศาล รธน."
+  | "การปกครองส่วนท้องถิ่น"
+  | "สสร."
+  | "ไม่ระบุ";
+
+export const topicCategories: TopicCategory[] = [
+  "สิทธิเสรีภาพ",
+  "รัฐสภา",
+  "ศาล รธน.",
+  "การปกครองส่วนท้องถิ่น",
+  "สสร.",
+  "ไม่ระบุ",
+];
