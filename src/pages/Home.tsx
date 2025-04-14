@@ -75,6 +75,7 @@ export default function Home() {
     user: userContext,
     event: eventContext,
     selectedTopic,
+    pin: pinContext,
   } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
   const { editTopic, loading: editTopicLoading } = useEditTopic();
@@ -590,7 +591,7 @@ export default function Home() {
                     handleOnDeleteTopic(selectedTopic.value?.id || "")
                   }
                   onPinTopic={() => {
-                    // TODO: pin topics
+                    pinContext.pinTopic(selectedTopic.value?.id || "");
                   }}
                 />
               ) : (

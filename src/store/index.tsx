@@ -17,6 +17,7 @@ import {
 import { initialUserStore, UserStore, useUserStore } from "./user";
 import { EventStore, useEventStore } from "./event";
 import { Topic } from "../types/topic";
+import { PinStore, initialPinStore, usePinStore } from "./pin";
 
 interface State {
   user: UserStore;
@@ -32,6 +33,7 @@ interface State {
     value: "home" | "topic";
     setValue: (value: "home" | "topic") => void;
   };
+  pin: PinStore;
 }
 
 const StoreContext = createContext<State>({
@@ -51,6 +53,7 @@ const StoreContext = createContext<State>({
     value: "home",
     setValue: () => {},
   },
+  pin: initialPinStore,
 });
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
@@ -60,6 +63,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const homePageState = useHomePageStore();
   const topicPageState = useTopicPageStore();
   const clipboardState = useClipboardStore();
+  const pinState = usePinStore();
   const eventState = useEventStore();
   return (
     <StoreContext.Provider
@@ -77,6 +81,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         homePage: homePageState,
         topicPage: topicPageState,
         clipboard: clipboardState,
+        pin: pinState,
       }}
     >
       {children}
