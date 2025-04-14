@@ -197,7 +197,11 @@ export default function CommentAndChildren(props: PropTypes) {
   };
 
   return (
-    <Draggable id={comment.id} data={getCommentDraggableProps()}>
+    <Draggable
+      id={comment.id}
+      data={getCommentDraggableProps()}
+      disabled={!hasPermissionToEdit()}
+    >
       <div className="w-full flex flex-col">
         <Droppable
           id={`droppable-comment-${comment.id}`}
