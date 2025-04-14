@@ -589,6 +589,9 @@ export default function Home() {
                   onDeleteTopic={() =>
                     handleOnDeleteTopic(selectedTopic.value?.id || "")
                   }
+                  onPinTopic={() => {
+                    // TODO: pin topics
+                  }}
                 />
               ) : (
                 <div className=" w-full h-full" />

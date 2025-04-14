@@ -17,6 +17,7 @@ interface PropTypes {
   onClickEdit: () => void;
   onClickDelete: () => void;
   isOver?: boolean;
+  canEdit: boolean;
 }
 export default function CommentCard(props: PropTypes) {
   const [hovered, setHovered] = useState(false);
@@ -179,7 +180,11 @@ export default function CommentCard(props: PropTypes) {
         disableEnforceFocus
         disableRestoreFocus
       >
-        <MenuPopover onClickDelete={handleDelete} onClickEdit={handleEdit} />
+        <MenuPopover
+          onClickDelete={handleDelete}
+          onClickEdit={handleEdit}
+          canEdit={props.canEdit}
+        />
       </Popover>
     </div>
   );

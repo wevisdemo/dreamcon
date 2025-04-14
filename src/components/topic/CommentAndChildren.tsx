@@ -33,6 +33,7 @@ export default function CommentAndChildren(props: PropTypes) {
     currentPage,
     selectedTopic,
     event: eventContext,
+    user: userContext,
   } = useContext(StoreContext);
 
   const { deleteCommentWithChildren } = useDeleteCommentWithChildren();
@@ -183,6 +184,18 @@ export default function CommentAndChildren(props: PropTypes) {
     return null;
   };
 
+  // TODO: move to global
+  const hasPermissionToEdit = () => {
+    switch (userContext.userState?.role) {
+      case "admin":
+        return true;
+      case "writer":
+        return props.comment.event_id === userContext.userState?.event.id;
+      default:
+        return false;
+    }
+  };
+
   return (
     <Draggable id={comment.id} data={getCommentDraggableProps()}>
       <div className="w-full flex flex-col">
@@ -218,6 +231,7 @@ export default function CommentAndChildren(props: PropTypes) {
                 onClickDelete={() => handleDeleteComment(comment)}
                 onClickEdit={() => handleEditComment(comment)}
                 isOver={isOver}
+                canEdit={hasPermissionToEdit()}
               />
             </>
           )}

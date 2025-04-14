@@ -12,6 +12,7 @@ interface PropTypes {
   onChangeTopicTitle: (title: string) => void;
   onDeleteTopic: () => void;
   onAddComment: (commentView: CommentView, reason: string) => void;
+  onPinTopic: () => void;
 }
 
 export default function TopicTemplate(props: PropTypes) {
@@ -63,6 +64,7 @@ export default function TopicTemplate(props: PropTypes) {
                 props.onAddComment(commentView, reason);
               }}
               onDeleteTopic={handleOnDeleteTopic}
+              onPinTopic={props.onPinTopic}
             />
           </div>
         </div>

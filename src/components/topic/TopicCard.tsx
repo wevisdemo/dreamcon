@@ -14,6 +14,7 @@ interface PropTypes {
   onChangeTopicCategory: (category: TopicCategory) => void;
   onChangeTopicTitle: (title: string) => void;
   onDeleteTopic: () => void;
+  onPinTopic: () => void;
 }
 
 export default function TopicCard(props: PropTypes) {
@@ -85,6 +86,11 @@ export default function TopicCard(props: PropTypes) {
     resetNewCommentText();
   };
 
+  const handlePinTopic = () => {
+    props.onPinTopic();
+    handleCloseMenu();
+  };
+
   const canSubmit = () => {
     return newCommentText.trim().length > 0 && commentView !== null;
   };
@@ -143,11 +149,16 @@ export default function TopicCard(props: PropTypes) {
           disableRestoreFocus
         >
           <MenuPopover
+            hasPin
+            canEdit={hasPermissionToEdit()}
             onClickDelete={() => {
               handleDeleteTopic();
             }}
             onClickEdit={() => {
               handleClickEditInMenu();
+            }}
+            onClickPin={() => {
+              handlePinTopic();
             }}
           />
         </Popover>
