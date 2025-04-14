@@ -31,6 +31,7 @@ export default function CommentCard(props: PropTypes) {
   const popoverID = openMenu ? "comment-menu" : undefined;
 
   const showOption = () => {
+    if (!props.canEdit) return false;
     if (hovered) return true;
     if (openMenu) return true;
     return false;
@@ -95,7 +96,7 @@ export default function CommentCard(props: PropTypes) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {hovered && (
+      {hovered && props.canEdit && (
         <Tooltip
           title={
             <div className="flex flex-col font-[400]">
