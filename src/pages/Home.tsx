@@ -74,6 +74,7 @@ export default function Home() {
     clipboard: clipboardContext,
     user: userContext,
     event: eventContext,
+    selectedTopic,
   } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
   const { editTopic, loading: editTopicLoading } = useEditTopic();
@@ -95,7 +96,6 @@ export default function Home() {
   } = useConvertCommentToTopic();
   const { getEvents, loading: eventLoading } = useEvent();
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
-  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const { saveToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -271,15 +271,17 @@ export default function Home() {
   };
 
   const getMainSectionWidth = () => {
-    return selectedTopic ? "w-[60%]" : "w-full";
+    return selectedTopic.value ? "w-[60%]" : "w-full";
   };
   const getSideSectionWidth = () => {
-    return selectedTopic ? "w-[40%] overflow-hidden" : "w-0 overflow-hidden";
+    return selectedTopic.value
+      ? "w-[40%] overflow-hidden"
+      : "w-0 overflow-hidden";
   };
 
   const redirectToTopicPage = () => {
-    if (!selectedTopic) return;
-    window.location.href = `/topic/${selectedTopic.id}`;
+    if (!selectedTopic.value) return;
+    window.location.href = `/topic/${selectedTopic.value.id}`;
   };
 
   const buildFirestoreQueryFromFilter = (
@@ -384,11 +386,11 @@ export default function Home() {
 
   const refreshSelectedTopicFromDisplayTopic = (topics: Topic[]) => {
     if (!selectedTopic) return;
-    const topic = topics.find((topic) => topic.id === selectedTopic.id);
+    const topic = topics.find((topic) => topic.id === selectedTopic.value?.id);
     if (!topic) {
-      setSelectedTopic(null);
+      selectedTopic.setValue(null);
     } else {
-      setSelectedTopic(topic);
+      selectedTopic.setValue(topic);
     }
   };
 
@@ -408,7 +410,7 @@ export default function Home() {
 
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
-    setSelectedTopic(null);
+    selectedTopic.setValue(null);
   };
 
   const getEventById = (eventId: string) => {
@@ -484,8 +486,8 @@ export default function Home() {
           >
             <TopicListSection
               topics={displayTopics}
-              selectedTopic={selectedTopic}
-              setSelectedTopic={setSelectedTopic}
+              selectedTopic={selectedTopic.value}
+              setSelectedTopic={selectedTopic.setValue}
               events={events}
               topicFilter={topicFilter}
               setTopicFilter={setTopicFilter}
@@ -540,7 +542,7 @@ export default function Home() {
           </section>
           <section className="w-full h-full">
             <div className="w-full px-[10px] py-[4px] bg-gray2 flex gap-[10px]">
-              <button onClick={() => setSelectedTopic(null)}>
+              <button onClick={() => selectedTopic.setValue(null)}>
                 <img
                   className="w-[24px] h-[24px]"
                   src="/icon/double-arrow-right.svg"
@@ -556,27 +558,29 @@ export default function Home() {
               </button>
             </div>
             <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
-              {selectedTopic ? (
+              {selectedTopic.value ? (
                 <TopicTemplate
-                  topic={selectedTopic}
+                  topic={selectedTopic.value}
                   onAddComment={(commentView, reason) => {
                     addNewComment({
                       comment_view: commentView,
                       reason,
-                      parent_topic_id: selectedTopic.id,
+                      parent_topic_id: selectedTopic.value?.id,
                       parent_comment_ids: [],
                       event_id: getCreatedByEvent()?.id || "",
                     });
                   }}
                   onChangeTopicTitle={(newTitle) => {
                     editTopic({
-                      id: selectedTopic.id,
+                      id: selectedTopic.value?.id,
                       title: newTitle,
-                      event_id: selectedTopic.event_id,
-                      category: selectedTopic.category as TopicCategory,
+                      event_id: selectedTopic.value?.event_id || "",
+                      category: selectedTopic.value?.category as TopicCategory,
                     });
                   }}
-                  onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}
+                  onDeleteTopic={() =>
+                    handleOnDeleteTopic(selectedTopic.value?.id || "")
+                  }
                 />
               ) : (
                 <div className=" w-full h-full" />

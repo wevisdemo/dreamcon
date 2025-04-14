@@ -16,10 +16,15 @@ import {
 } from "./clipboard";
 import { initialUserStore, UserStore, useUserStore } from "./user";
 import { EventStore, useEventStore } from "./event";
+import { Topic } from "../types/topic";
 
 interface State {
   user: UserStore;
   event: EventStore;
+  selectedTopic: {
+    value: Topic | null;
+    setValue: (topic: Topic | null) => void;
+  };
   homePage: HomePageStore;
   topicPage: TopicPageStore;
   clipboard: ClipboardStore;
@@ -35,6 +40,10 @@ const StoreContext = createContext<State>({
     events: [],
     setEvents: () => {},
   },
+  selectedTopic: {
+    value: null,
+    setValue: () => {},
+  },
   homePage: initialHomePageState,
   topicPage: initialTopicPageState,
   clipboard: initialClipboardStore,
@@ -46,6 +55,7 @@ const StoreContext = createContext<State>({
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [currenPage, setCurrentPage] = React.useState<"home" | "topic">("home");
+  const [selectedTopic, setSelectedTopic] = React.useState<Topic | null>(null);
   const userState = useUserStore();
   const homePageState = useHomePageStore();
   const topicPageState = useTopicPageStore();
@@ -56,6 +66,10 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user: userState,
         event: eventState,
+        selectedTopic: {
+          value: selectedTopic,
+          setValue: setSelectedTopic,
+        },
         currentPage: {
           value: currenPage,
           setValue: setCurrentPage,
