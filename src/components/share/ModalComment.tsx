@@ -96,6 +96,7 @@ export default function ModalComment(props: PropTypes) {
             reason: text,
             parent_comment_ids: props.parentCommentIds,
             parent_topic_id: props.parentTopicId,
+            event_id: props.createdByEvent.id,
           });
           break;
       }

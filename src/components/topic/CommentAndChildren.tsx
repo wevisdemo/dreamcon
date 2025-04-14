@@ -55,14 +55,14 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const isRoundedTL = (previousComment: Comment | null): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent() !== null) return true;
+    if (showHeaderEvent(props.comment) !== null) return true;
     if ((previousComment?.comments.length || 0) > 0) return true;
     return false;
   };
 
   const isRoundedTR = (): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent() !== null) return true;
+    if (showHeaderEvent(props.comment) !== null) return true;
     return false;
   };
 
@@ -72,6 +72,9 @@ export default function CommentAndChildren(props: PropTypes) {
   ): boolean => {
     if (props.level === 1) return true;
     if (nextComment === null) return true;
+    if (nextComment !== null) {
+      if (showHeaderEvent(nextComment) !== null) return true;
+    }
     if ((currentComment.comments.length || 0) > 0) return true;
     return false;
   };
@@ -80,6 +83,9 @@ export default function CommentAndChildren(props: PropTypes) {
     currentComment: Comment,
     nextComment: Comment | null
   ): boolean => {
+    if (nextComment !== null) {
+      if (showHeaderEvent(nextComment) !== null) return true;
+    }
     return isLastUltimateLastChild(currentComment, nextComment);
   };
 
@@ -162,13 +168,13 @@ export default function CommentAndChildren(props: PropTypes) {
     };
   };
 
-  const showHeaderEvent = (): DreamConEvent | null => {
+  const showHeaderEvent = (comment: Comment): DreamConEvent | null => {
     if (selectedTopic) {
       const isNotOwnerEvent =
-        selectedTopic.value?.event_id !== props.comment.event_id;
+        selectedTopic.value?.event_id !== comment.event_id;
 
       const event = eventContext.events.find(
-        (event) => event.id === props.comment.event_id
+        (event) => event.id === comment.event_id
       );
       if (isNotOwnerEvent && event) {
         return event;
@@ -186,15 +192,17 @@ export default function CommentAndChildren(props: PropTypes) {
         >
           {(isOver) => (
             <>
-              {showHeaderEvent() && (
-                <div className="flex gap-[8px] items-center text-[10px] pl-[4px] mb-[4px]">
+              {showHeaderEvent(props.comment) && (
+                <div className="flex gap-[8px] items-center text-[10px] pl-[4px] my-[4px]">
                   <img
                     className="rounded-full w-[25px] h-[25px]"
-                    src={showHeaderEvent()?.avatar_url}
-                    alt={`avatar-event-${showHeaderEvent()?.display_name}`}
+                    src={showHeaderEvent(props.comment)?.avatar_url}
+                    alt={`avatar-event-${
+                      showHeaderEvent(props.comment)?.display_name
+                    }`}
                   />
                   <span className="wv-bold">
-                    {showHeaderEvent()?.display_name}
+                    {showHeaderEvent(props.comment)?.display_name}
                   </span>
                   <span>เพิ่มข้อถกเถียงต่อยอด</span>
                 </div>
