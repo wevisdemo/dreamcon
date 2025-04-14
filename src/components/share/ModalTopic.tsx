@@ -70,7 +70,7 @@ export default function ModalTopic(props: PropTypes) {
       onClick={handleBackdropClick}
     >
       <div className="w-full md:max-w-[480px] bg-white md:rounded-lg shadow-lg">
-        <div className="flex justify-between items-center bg-gray1 px-[16px] py-[12px] border-solid border-b-[1px] border-[#D4D4D4] relative">
+        <div className="flex justify-between items-center p-[16px] mt-[8px] border-solid border-b-[1px] border-[#D4D4D4] relative">
           <Dropdown
             onSelect={(v) => setCategory(v as TopicCategory)}
             options={topicCategories}
