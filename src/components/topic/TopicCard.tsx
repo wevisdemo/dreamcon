@@ -85,7 +85,7 @@ export default function TopicCard(props: PropTypes) {
     <div className="w-full p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
       <div className="flex justify-between items-start">
         <div className="badge px-[8px] py-[4px] rounded-[48px] bg-accent text-white w-fit">
-          สสร.
+          {props.topic.category}
         </div>
         <img
           className="w-[18px] h-[18px] hover:cursor-pointer"

@@ -1,7 +1,10 @@
+import { useContext } from "react";
+import { StoreContext } from "../../store";
 import { CommentView } from "../../types/comment";
 import { Topic } from "../../types/topic";
 import CommentWrapper from "./CommentWrapper";
 import TopicCard from "./TopicCard";
+import { DreamConEvent } from "../../types/event";
 
 interface PropTypes {
   topic: Topic;
@@ -11,6 +14,7 @@ interface PropTypes {
 }
 
 export default function TopicTemplate(props: PropTypes) {
+  const { event: eventContext } = useContext(StoreContext);
   const getCommentsByView = (view: CommentView) => {
     return props.topic.comments.filter(
       (comment) => comment.comment_view === view
@@ -21,9 +25,30 @@ export default function TopicTemplate(props: PropTypes) {
     props.onDeleteTopic();
   };
 
+  const getOwnerEvent = (): DreamConEvent | null => {
+    const event = eventContext.events.find(
+      (event) => event.id === props.topic.event_id
+    );
+    if (event) {
+      return event;
+    }
+    return null;
+  };
+
   return (
     <div className="max-w-[920px] w-full py-[24px]">
-      <div className="header-section pl-[24px] relative overflow-hidden flex justify-end">
+      <div className="header-section pl-[24px] relative overflow-hidden flex flex-col gap-[10px]">
+        {getOwnerEvent() && (
+          <div className="flex gap-[8px] items-center text-[10px] pl-[16px]">
+            <img
+              className="rounded-full w-[25px] h-[25px]"
+              src={getOwnerEvent()?.avatar_url}
+              alt={`avatar-event-${getOwnerEvent()?.display_name}`}
+            />
+            <span className="wv-bold">{getOwnerEvent()?.display_name}</span>
+            <span>สร้างข้อถกเถียงนี้</span>
+          </div>
+        )}
         <div className="w-full flex justify-end z-10">
           <TopicCard
             topic={props.topic}
