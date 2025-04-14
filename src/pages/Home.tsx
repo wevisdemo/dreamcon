@@ -578,6 +578,14 @@ export default function Home() {
                       category: selectedTopic.value?.category as TopicCategory,
                     });
                   }}
+                  onChangeTopicCategory={(newCategory) => {
+                    editTopic({
+                      id: selectedTopic.value?.id,
+                      title: selectedTopic.value?.title || "",
+                      event_id: selectedTopic.value?.event_id || "",
+                      category: newCategory as TopicCategory,
+                    });
+                  }}
                   onDeleteTopic={() =>
                     handleOnDeleteTopic(selectedTopic.value?.id || "")
                   }

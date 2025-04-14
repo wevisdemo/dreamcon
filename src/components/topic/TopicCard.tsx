@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { CommentView } from "../../types/comment";
-import { Topic } from "../../types/topic";
+import { Topic, topicCategories, TopicCategory } from "../../types/topic";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 import Tooltip from "@mui/material/Tooltip";
 import { Popover } from "@mui/material";
 import MenuPopover from "../share/MenuPopover";
+import Dropdown from "../share/Dropdown";
 
 interface PropTypes {
   topic: Topic;
   onAddComment: (commentView: CommentView, reason: string) => void;
+  onChangeTopicCategory: (category: TopicCategory) => void;
   onChangeTopicTitle: (title: string) => void;
   onDeleteTopic: () => void;
 }
@@ -17,7 +19,7 @@ export default function TopicCard(props: PropTypes) {
   const [topicTitle, setTopicTitle] = useState<string>(props.topic.title);
   const [commentView, setCommentView] = useState<null | CommentView>(null);
   const [newCommentText, setNewCommentText] = useState("");
-  const [isEditingTopicTitle, setIsEditingTopicTitle] = useState(false);
+  const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
 
   const openMenu = Boolean(anchorMenu);
@@ -37,7 +39,7 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const handleClickEditInMenu = () => {
-    setIsEditingTopicTitle(true);
+    setIsEditingMode(true);
     handleCloseMenu();
     document.getElementById("topic-title-text-area")?.focus();
   };
@@ -67,7 +69,7 @@ export default function TopicCard(props: PropTypes) {
 
   const resetEditTopic = () => {
     setTopicTitle(props.topic.title);
-    setIsEditingTopicTitle(false);
+    setIsEditingMode(false);
   };
 
   const handleAddComment = () => {
@@ -84,9 +86,18 @@ export default function TopicCard(props: PropTypes) {
   return (
     <div className="w-full p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
       <div className="flex justify-between items-start">
-        <div className="badge px-[8px] py-[4px] rounded-[48px] bg-accent text-white w-fit">
-          {props.topic.category}
-        </div>
+        {isEditingMode ? (
+          <Dropdown
+            onSelect={(v) => props.onChangeTopicCategory(v as TopicCategory)}
+            options={topicCategories}
+            placeholder={props.topic.category}
+          />
+        ) : (
+          <div className="badge px-[8px] py-[4px] rounded-[48px] bg-accent text-white w-fit">
+            {props.topic.category}
+          </div>
+        )}
+
         <img
           className="w-[18px] h-[18px] hover:cursor-pointer"
           src="/icon/menu.svg"
@@ -125,7 +136,7 @@ export default function TopicCard(props: PropTypes) {
         </Popover>
       </div>
       <div className="relative w-full">
-        {isEditingTopicTitle ? (
+        {isEditingMode ? (
           <>
             <TextareaAutosize
               id="topic-title-text-area"
@@ -167,7 +178,7 @@ export default function TopicCard(props: PropTypes) {
           >
             <h2
               className="p-[10px] wv-ibmplex text-[20px] wv-bold"
-              onClick={() => setIsEditingTopicTitle(true)}
+              onClick={() => setIsEditingMode(true)}
             >
               {props.topic.title}
             </h2>
