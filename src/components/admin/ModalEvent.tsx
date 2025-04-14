@@ -183,7 +183,6 @@ export default function ModalEvent(props: PropTypes) {
               }
               className="w-full p-[10px] bg-gray1 border border-gray3 rounded-lg focus:outline-none resize-none"
               placeholder="กรอกคำอธิบาย"
-              maxLength={140}
             ></textarea>
           </div>
           <div>
