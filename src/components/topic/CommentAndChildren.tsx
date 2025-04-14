@@ -107,6 +107,7 @@ export default function CommentAndChildren(props: PropTypes) {
       mode: "create",
       parentTopicId: comment.parent_topic_id,
       parentCommentIds: [...comment.parent_comment_ids, comment.id],
+      fromComment: comment,
     };
     if (currentPage.value === "topic") {
       topicPageContext.modalComment.dispatch({

@@ -437,6 +437,7 @@ export default function Home() {
         >
           <section className="absolute w-full h-content z-30 bg-transparent">
             <ModalComment
+              events={events}
               mode={homePageContext.modalCommentMainSection.state.mode}
               defaultState={
                 homePageContext.modalCommentMainSection.state.defaultState
@@ -453,7 +454,14 @@ export default function Home() {
               parentTopicId={
                 homePageContext.modalCommentMainSection.state.parentTopicId
               }
+              createdByEvent={getCreatedByEvent() as DreamConEvent}
               onSubmit={handleOnSubmitComment}
+              fromTopic={
+                homePageContext.modalCommentMainSection.state.fromTopic
+              }
+              fromComment={
+                homePageContext.modalCommentMainSection.state.fromComment
+              }
             />
             <ModalTopic
               mode={homePageContext.modalTopicMainSection.state.mode}
@@ -503,6 +511,7 @@ export default function Home() {
         >
           <section className="absolute w-full h-content z-30 bg-transparent">
             <ModalComment
+              events={events}
               mode={homePageContext.modalCommentSideSection.state.mode}
               defaultState={
                 homePageContext.modalCommentSideSection.state.defaultState
@@ -518,6 +527,13 @@ export default function Home() {
               }
               parentTopicId={
                 homePageContext.modalCommentSideSection.state.parentTopicId
+              }
+              createdByEvent={getCreatedByEvent() as DreamConEvent}
+              fromTopic={
+                homePageContext.modalCommentSideSection.state.fromTopic
+              }
+              fromComment={
+                homePageContext.modalCommentSideSection.state.fromComment
               }
               onSubmit={handleOnSubmitComment}
             />

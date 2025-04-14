@@ -4,11 +4,19 @@ import {
   Comment,
   CommentView,
 } from "../../types/comment";
+import { DreamConEvent } from "../../types/event";
+import { Topic } from "../../types/topic";
+import { TextareaAutosize } from "@mui/material";
 
+// TODO: refactor to reduce props
 interface PropTypes {
   mode: "create" | "edit";
   defaultState?: Comment;
   isOpen: boolean;
+  createdByEvent: DreamConEvent;
+  events: DreamConEvent[];
+  fromTopic?: Topic;
+  fromComment?: Comment;
   onClose: () => void;
   onSubmit: (mode: "create" | "edit", payload: AddOrEditCommentPayload) => void;
   parentTopicId?: string;
@@ -34,6 +42,28 @@ export default function ModalComment(props: PropTypes) {
     setText("");
     setCommentView(null);
     props.onClose();
+  };
+
+  const getParentEvent = (): DreamConEvent | null => {
+    if (props.fromTopic) {
+      console.log("fromTopic", props.fromTopic);
+      const event = props.events.find(
+        (event) => event.id === props.fromTopic?.event_id
+      );
+      if (event) {
+        return event;
+      }
+    }
+    if (props.fromComment) {
+      console.log("fromComment", props.fromComment);
+      const event = props.events.find(
+        (event) => event.id === props.fromComment?.event_id
+      );
+      if (event) {
+        return event;
+      }
+    }
+    return null;
   };
 
   const getConfirmStyle = () =>
@@ -82,6 +112,21 @@ export default function ModalComment(props: PropTypes) {
     }
   };
 
+  const canSubmit = () => {
+    return text !== "" && commentView !== null;
+  };
+
+  const viewColor = (comment: Comment) => {
+    switch (comment.comment_view) {
+      case CommentView.AGREE:
+        return "lightGreen";
+      case CommentView.PARTIAL_AGREE:
+        return "lightYellow";
+      case CommentView.DISAGREE:
+        return "lightRed";
+    }
+  };
+
   const data = [
     {
       text: "เห็นด้วย",
@@ -103,23 +148,51 @@ export default function ModalComment(props: PropTypes) {
       className="w-full h-screen inset-0 bg-transparent flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="flex flex-col w-full h-full md:h-[480px] md:max-w-[480px] bg-white md:rounded-lg shadow-lg m-[20px]">
-        <div className="flex justify-between px-[16px] py-[12px] border-solid border-b-[1px] border-[#D4D4D4]">
-          <button
-            className="py-[10px] px-[16px] pl-0 text-16 wv-ibmplex wv-bold "
-            onClick={handleClose}
-          >
-            ยกเลิก
-          </button>
-          <button
-            className={getConfirmStyle()}
-            onClick={onSubmit}
-            disabled={text === "" || commentView === null}
-          >
-            {props.mode === "edit" ? "แก้ไข" : "โพสต์"}
-          </button>
+      <div className="flex flex-col w-full md:max-w-[480px] bg-white md:rounded-lg shadow-lg m-[20px] rounded-[8px] overflow-hidden">
+        <div className="flex flex-col gap-[12px] bg-gray1 p-[16px] border-solid border-b-[1px] border-[#D4D4D4]">
+          <div className="flex justify-end items-center mt-[8px] relative">
+            <p className="absolute wv-ibmplex text-[16px] text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] px-[8px]">
+              {props.mode === "create"
+                ? "เพิ่มข้อถกเถียงต่อยอด"
+                : "แก้ไขข้อถกเถียงต่อยอด"}
+            </p>
+
+            <div
+              className="text-gray5 wv-ibmplex underline hover:cursor-pointer"
+              onClick={handleClose}
+            >
+              ยกเลิก
+            </div>
+          </div>
+          {props.mode === "create" && (
+            <>
+              <div className="flex gap-[8px] items-center">
+                <img
+                  className="rounded-full w-[25px] h-[25px]"
+                  src={getParentEvent()?.avatar_url}
+                  alt={`avatar-event-${getParentEvent()?.display_name}`}
+                />
+                <span className="text-[10px] wv-bold">
+                  {getParentEvent()?.display_name}
+                </span>
+              </div>
+              <div className="p-[10px] rounded-[16px] bg-white">
+                {props.fromTopic && props.fromTopic.title}
+                {props.fromComment && (
+                  <div className="flex gap-[8px] items-center">
+                    <div
+                      className={`w-[12px] h-[12px] rounded-full bg-${viewColor(
+                        props.fromComment
+                      )}`}
+                    />
+                    <span className="flex-1">{props.fromComment.reason}</span>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
-        <div className="p-[16px] flex flex-col space-y-[8px]">
+        <div className="p-[16px] flex flex-col space-y-[12px]">
           <p>คุณคิดอย่างไรกับข้อถกเถียงนี้</p>
           <div className="flex space-x-[8px]">
             {data.map((item, index) => (
@@ -138,18 +211,33 @@ export default function ModalComment(props: PropTypes) {
               </button>
             ))}
           </div>
-        </div>
-        <div className="p-[16px] h-full flex flex-col">
+          <div className="w-full rounded-[5px] border border-[1px] border-gray1 overflow-hidden">
+            <div className="px-[10px] py-[8px] bg-gray2 flex gap-[4px]">
+              <span>ความคิดเห็นของ</span>
+              <img src="/icon/community.svg" alt="icon-community" />
+              <span>{props.createdByEvent.display_name}</span>
+            </div>
+            <div className="w-full bg-gray1 relative">
+              <TextareaAutosize
+                id="topic-title-text-area"
+                className="w-full bg-gray1 p-[10px] text-gray5 resize-none overflow-hidden focus:outline-none"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                autoFocus
+                maxLength={140}
+                placeholder="เพราะว่า...(140ตัวอักษร)"
+              />
+              {canSubmit() && (
+                <img
+                  className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
+                  src="/icon/upload.svg"
+                  alt="upload-icon"
+                  onClick={onSubmit}
+                />
+              )}
+            </div>
+          </div>
           <span className="text-[#6E6E6E]">{text.length}/140</span>
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            className="w-full h-full resize-none focus:outline-none"
-            name="topic"
-            id="topic"
-            placeholder="คุณมีข้อถกเถียงว่า... &#10;ข้อถกเถียงควรประกอบด้วยเหตุผลและข้อสรุป (140 ตัวอักษร)"
-            maxLength={140}
-          ></textarea>
         </div>
       </div>
     </div>

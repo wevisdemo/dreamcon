@@ -1,4 +1,5 @@
 import { Comment } from "../types/comment";
+import { Topic } from "../types/topic";
 
 export interface ModalCommentState {
   isModalOpen: boolean;
@@ -6,12 +7,16 @@ export interface ModalCommentState {
   parentTopicId?: string;
   parentCommentIds?: string[];
   mode: "create" | "edit";
+  fromTopic?: Topic;
+  fromComment?: Comment;
 }
 
 export interface ActionCreateCommentPayload {
   mode: "create";
   parentTopicId: string;
   parentCommentIds: string[];
+  fromTopic?: Topic;
+  fromComment?: Comment;
 }
 
 export interface ActionEditCommentPayload {

@@ -13,6 +13,8 @@ export const convertTopicDBToTopic = (
     created_at: topicDB.created_at,
     updated_at: topicDB.updated_at,
     notified_at: topicDB.notified_at,
+    event_id: topicDB.event_id,
+    category: topicDB.category,
   };
 };
 
