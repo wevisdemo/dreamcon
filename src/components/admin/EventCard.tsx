@@ -3,6 +3,7 @@ import { DreamConEvent } from "../../types/event";
 import IconPen from "../icon/Pen";
 
 interface PropTypes {
+  index: number;
   event: DreamConEvent;
   onClickShareLink: () => void;
   onClickEdit: () => void;
@@ -15,7 +16,7 @@ export default function EventCard(props: PropTypes) {
       {/* Left Section */}
       <div className="flex flex-col items-center max-w-[150px] w-full gap-[16px]">
         <div className="w-[25px] h-[25px] flex items-center justify-center text-blue6 border-1 border-blue6 rounded-full text-[13px] font-bold">
-          {props.event.topic_counts}
+          {props.index}
         </div>
         <img
           src={props.event.avatar_url}

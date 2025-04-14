@@ -3,14 +3,9 @@ import EventCard from "../components/admin/EventCard";
 import { useNavigate } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ModalEvent from "../components/admin/ModalEvent";
-import {
-  AddOrEditEventPayload,
-  DreamConEvent,
-  DreamConEventDB,
-} from "../types/event";
+import { AddOrEditEventPayload, DreamConEvent } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
 import { useWriter } from "../hooks/useWriter";
-import { useTopic } from "../hooks/useTopic";
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -29,7 +24,6 @@ const AdminPage = () => {
 
   const { createEvent, editEvent, getEvents } = useEvent();
   const { createWriter } = useWriter();
-  const { getTopicByEventId } = useTopic();
 
   useEffect(() => {
     const auth = getAuth();
@@ -81,38 +75,21 @@ const AdminPage = () => {
   };
 
   const fetchEvents = async () => {
-    const rawEvents = await getEvents();
-    const fineEvents = await mapTopicCountToEvent(rawEvents);
-
-    setDisplayEvents(fineEvents);
-  };
-
-  const mapTopicCountToEvent = async (
-    events: DreamConEventDB[]
-  ): Promise<DreamConEvent[]> => {
-    const eventsWithTopicCount: DreamConEvent[] = await Promise.all(
-      events.map(async (event) => {
-        const topics = await getTopicByEventId(event.id);
-        return {
-          ...event,
-          topic_counts: topics.length,
-        };
-      })
-    );
-    return eventsWithTopicCount;
+    const events = await getEvents();
+    setDisplayEvents(events);
   };
 
   return (
-    <div className="h-full w-screen bg-blue2 flex justify-center relative">
-      <main className="max-w-[940px] w-full py-[32px] flex flex-col gap-[32px]">
-        <div className="flex justify-center gap-[12px] items-center mb-4">
+    <div className="h-full w-screen bg-blue2 flex justify-center relative overflow-auto">
+      <main className="max-w-[940px] w-full py-[32px] flex flex-col ">
+        <div className="flex justify-center gap-[12px] items-center mb-4 mb-[32px]">
           <div className="flex flex-col items-center">
             <div className="relative flex flex-col items-center wv-ibmplex text-center">
               <div className=" top-0 bg-white w-full px-[16px] py-[8px] rounded-l-[20px] rounded-tr-[20px] text-blue7 text-[16px] font-bold">
                 ทั้งหมด
               </div>
               <div className="bg-white rounded-full h-[86px] w-[86px] flex items-center justify-center text-[36px] font-bold text-blue7">
-                5
+                {displayEvents.length}
               </div>
               <div className=" bottom-0 bg-white w-full px-2 rounded-full text-blue7 font-bold">
                 วงสนทนา
@@ -125,7 +102,7 @@ const AdminPage = () => {
               setModalEvent({ ...modalEvent, isOpen: true });
             }}
           >
-            <div className="text-blue7 text-4xl h-[24px]">+</div>
+            <div className="text-blue7 text-[48px] leading-[24px]">+</div>
             <div className="text-blue7 text-[16px] font-bold">เพิ่มวงสนทนา</div>
           </div>
         </div>
@@ -177,9 +154,10 @@ const AdminPage = () => {
             />
           </div>
         </div>
-        <div>
-          {displayEvents.map((event) => (
+        <div className="flex flex-col gap-[32px] pb-[32px]">
+          {displayEvents.map((event, index) => (
             <EventCard
+              index={index + 1}
               key={event.id}
               event={event}
               onClickShareLink={() => handleCopyWriterLink(event.id)}
