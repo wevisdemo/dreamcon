@@ -73,6 +73,7 @@ export default function Home() {
     currentPage,
     clipboard: clipboardContext,
     user: userContext,
+    event: eventContext,
   } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
   const { editTopic, loading: editTopicLoading } = useEditTopic();
@@ -136,6 +137,7 @@ export default function Home() {
     currentPage.setValue("home");
     fetchTopics();
     fetchEvents();
+
     const unsubscribe = subscribeTopics();
     return () => {
       unsubscribe();
@@ -220,6 +222,7 @@ export default function Home() {
   const fetchEvents = async () => {
     const events = await getEvents();
     setEvents(events);
+    eventContext.setEvents(events);
   };
 
   // const fetchMoreTopics = async () => {
