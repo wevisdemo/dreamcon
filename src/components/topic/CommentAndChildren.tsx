@@ -12,6 +12,7 @@ import { Topic } from "../../types/topic";
 import { DraggableCommentProps } from "../../types/dragAndDrop";
 import { Droppable } from "../Droppable";
 import { useDeleteCommentWithChildren } from "../../hooks/useDeleteCommentWithChildren";
+import { DreamConEvent } from "../../types/event";
 
 interface PropTypes {
   comment: Comment;
@@ -30,6 +31,8 @@ export default function CommentAndChildren(props: PropTypes) {
     homePage: homePageContext,
     topicPage: topicPageContext,
     currentPage,
+    selectedTopic,
+    event: eventContext,
   } = useContext(StoreContext);
 
   const { deleteCommentWithChildren } = useDeleteCommentWithChildren();
@@ -52,12 +55,14 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const isRoundedTL = (previousComment: Comment | null): boolean => {
     if (props.level === 1) return true;
+    if (showHeaderEvent() !== null) return true;
     if ((previousComment?.comments.length || 0) > 0) return true;
     return false;
   };
 
   const isRoundedTR = (): boolean => {
     if (props.level === 1) return true;
+    if (showHeaderEvent() !== null) return true;
     return false;
   };
 
@@ -157,6 +162,21 @@ export default function CommentAndChildren(props: PropTypes) {
     };
   };
 
+  const showHeaderEvent = (): DreamConEvent | null => {
+    if (selectedTopic) {
+      const isNotOwnerEvent =
+        selectedTopic.value?.event_id !== props.comment.event_id;
+
+      const event = eventContext.events.find(
+        (event) => event.id === props.comment.event_id
+      );
+      if (isNotOwnerEvent && event) {
+        return event;
+      }
+    }
+    return null;
+  };
+
   return (
     <Draggable id={comment.id} data={getCommentDraggableProps()}>
       <div className="w-full flex flex-col">
@@ -165,18 +185,33 @@ export default function CommentAndChildren(props: PropTypes) {
           data={{ type: "comment", comment }}
         >
           {(isOver) => (
-            <CommentCard
-              comment={comment}
-              bgColor={getCardBGColor(comment)}
-              roundedBl={isRoundedBL(comment, nextComment)}
-              roundedBr={isRoundedBR(comment, nextComment)}
-              roundedTl={isRoundedTL(previousComment)}
-              roundedTr={isRoundedTR()}
-              onClickAddComment={() => handleAddComment(comment)}
-              onClickDelete={() => handleDeleteComment(comment)}
-              onClickEdit={() => handleEditComment(comment)}
-              isOver={isOver}
-            />
+            <>
+              {showHeaderEvent() && (
+                <div className="flex gap-[8px] items-center text-[10px] pl-[4px] mb-[4px]">
+                  <img
+                    className="rounded-full w-[25px] h-[25px]"
+                    src={showHeaderEvent()?.avatar_url}
+                    alt={`avatar-event-${showHeaderEvent()?.display_name}`}
+                  />
+                  <span className="wv-bold">
+                    {showHeaderEvent()?.display_name}
+                  </span>
+                  <span>เพิ่มข้อถกเถียงต่อยอด</span>
+                </div>
+              )}
+              <CommentCard
+                comment={comment}
+                bgColor={getCardBGColor(comment)}
+                roundedBl={isRoundedBL(comment, nextComment)}
+                roundedBr={isRoundedBR(comment, nextComment)}
+                roundedTl={isRoundedTL(previousComment)}
+                roundedTr={isRoundedTR()}
+                onClickAddComment={() => handleAddComment(comment)}
+                onClickDelete={() => handleDeleteComment(comment)}
+                onClickEdit={() => handleEditComment(comment)}
+                isOver={isOver}
+              />
+            </>
           )}
         </Droppable>
         {comment.comments.length > 0 && (
