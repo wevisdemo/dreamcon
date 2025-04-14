@@ -28,6 +28,7 @@ export const useAddComment = () => {
         reason: payload.reason,
         parent_comment_ids: payload.parent_comment_ids || [],
         parent_topic_id: payload.parent_topic_id,
+        event_id: payload.event_id || "",
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,

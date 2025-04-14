@@ -130,7 +130,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchTopics();
-    console.log("topicFilter", topicFilter);
   }, [topicFilter]);
 
   useEffect(() => {
@@ -376,7 +375,6 @@ export default function Home() {
         return a.created_at > b.created_at ? -1 : 1;
       });
 
-    console.log(fineTopics);
     setFirstTimeLoading(false);
     setDisplayTopics(fineTopics);
   };
@@ -415,7 +413,6 @@ export default function Home() {
   };
 
   const getCreatedByEvent = () => {
-    console.log(userContext.userState);
     if (userContext.userState?.role === "writer") {
       return userContext.userState?.event;
     }
@@ -565,6 +562,7 @@ export default function Home() {
                       reason,
                       parent_topic_id: selectedTopic.id,
                       parent_comment_ids: [],
+                      event_id: getCreatedByEvent()?.id || "",
                     });
                   }}
                   onChangeTopicTitle={(newTitle) => {

@@ -27,7 +27,7 @@ export type CreateCommentDBPayload = Omit<CommentDB, "id">;
 
 export type UpdateCommentDBPayload = Omit<
   CommentDB,
-  "created_at" | "id" | "parent_topic_id" | "parent_comment_ids"
+  "created_at" | "id" | "parent_topic_id" | "parent_comment_ids" | "event_id"
 >;
 
 export enum CommentView {
@@ -42,4 +42,5 @@ export interface AddOrEditCommentPayload {
   reason: string;
   parent_comment_ids?: string[];
   parent_topic_id?: string;
+  event_id?: string;
 }

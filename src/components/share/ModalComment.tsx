@@ -46,7 +46,6 @@ export default function ModalComment(props: PropTypes) {
 
   const getParentEvent = (): DreamConEvent | null => {
     if (props.fromTopic) {
-      console.log("fromTopic", props.fromTopic);
       const event = props.events.find(
         (event) => event.id === props.fromTopic?.event_id
       );
@@ -55,7 +54,6 @@ export default function ModalComment(props: PropTypes) {
       }
     }
     if (props.fromComment) {
-      console.log("fromComment", props.fromComment);
       const event = props.events.find(
         (event) => event.id === props.fromComment?.event_id
       );
@@ -65,13 +63,6 @@ export default function ModalComment(props: PropTypes) {
     }
     return null;
   };
-
-  const getConfirmStyle = () =>
-    !isPostDisabled()
-      ? "rounded-[48px] py-[10px] px-[16px] bg-[#2579F5] text-16 text-white wv-ibmplex wv-bold leading-[19px] shadow-md"
-      : "rounded-[48px] py-[10px] px-[16px] bg-[#E8E8E8] text-16 text-[#979797] wv-ibmplex wv-bold leading-[19px]";
-
-  const isPostDisabled = () => text === "" || commentView === null;
 
   const getCommentViewStyle =
     "rounded-[48px] py-[10px] px-[16px] text-[13px] leading-[13px] border-[1px]";
