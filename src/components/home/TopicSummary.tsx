@@ -11,6 +11,7 @@ interface PropTypes {
   onClick: () => void;
   onAddComment: () => void;
   isOver?: boolean;
+  isPinned?: boolean;
 }
 
 export default function TopicSummary(props: PropTypes) {
@@ -44,6 +45,13 @@ export default function TopicSummary(props: PropTypes) {
         props.onClick();
       }}
     >
+      {props.isPinned && (
+        <img
+          className="absolute top-[-12px] left-[24px] bg-white h-[24px] w-[24px] rounded-full border-blue6 border-[2px]"
+          src="/icon/pin-blue.svg"
+          alt="icon-pin-blue"
+        />
+      )}
       {hovered && !props.isSelected && (
         <SideScreenIcon
           className="h-[24px] w-[24px] absolute top-[5px] right-[8px] hover:cursor-pointer"

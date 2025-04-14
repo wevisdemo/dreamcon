@@ -12,7 +12,8 @@ interface PropTypes {
 }
 
 export default function TopicWrapper(props: PropTypes) {
-  const { homePage: homePageContext } = useContext(StoreContext);
+  const { homePage: homePageContext, pin: pinContext } =
+    useContext(StoreContext);
   const handleAddComment = (topic: Topic) => {
     homePageContext.modalCommentMainSection.dispatch({
       type: "OPEN_MODAL",
@@ -32,6 +33,12 @@ export default function TopicWrapper(props: PropTypes) {
     return props.selectedTopic?.id === topic.id;
   };
 
+  const isTopicPinned = (topic: Topic) => {
+    return pinContext.pinnedTopics.some(
+      (pinnedTopic) => pinnedTopic === topic.id
+    );
+  };
+
   return (
     <div className="w-full h-full flex justify-center">
       <Masonry columns={3} spacing={3}>
@@ -48,6 +55,7 @@ export default function TopicWrapper(props: PropTypes) {
                 onClick={() => handleSelectTopic(topic)}
                 onAddComment={() => handleAddComment(topic)}
                 isOver={isOver}
+                isPinned={isTopicPinned(topic)}
               />
             )}
           </Droppable>
