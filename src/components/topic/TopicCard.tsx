@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CommentView } from "../../types/comment";
 import { Topic, topicCategories, TopicCategory } from "../../types/topic";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
@@ -6,6 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Popover } from "@mui/material";
 import MenuPopover from "../share/MenuPopover";
 import Dropdown from "../share/Dropdown";
+import { StoreContext } from "../../store";
 
 interface PropTypes {
   topic: Topic;
@@ -21,6 +22,7 @@ export default function TopicCard(props: PropTypes) {
   const [newCommentText, setNewCommentText] = useState("");
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
+  const { user: userContext } = useContext(StoreContext);
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "topic-menu" : undefined;
@@ -39,6 +41,10 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const handleClickEditInMenu = () => {
+    if (!hasPermissionToEdit()) {
+      handleCloseMenu();
+      return;
+    }
     setIsEditingMode(true);
     handleCloseMenu();
     document.getElementById("topic-title-text-area")?.focus();
@@ -81,6 +87,17 @@ export default function TopicCard(props: PropTypes) {
 
   const canSubmit = () => {
     return newCommentText.trim().length > 0 && commentView !== null;
+  };
+
+  const hasPermissionToEdit = () => {
+    switch (userContext.userState?.role) {
+      case "admin":
+        return true;
+      case "writer":
+        return props.topic.event_id === userContext.userState?.event.id;
+      default:
+        return false;
+    }
   };
 
   return (
@@ -160,7 +177,7 @@ export default function TopicCard(props: PropTypes) {
           </>
         ) : (
           <Tooltip
-            title="กดเพื่อแก้ไข"
+            title={hasPermissionToEdit() ? "กดเพื่อแก้ไข" : ""}
             placement="bottom-start"
             slotProps={{
               popper: {
@@ -178,7 +195,11 @@ export default function TopicCard(props: PropTypes) {
           >
             <h2
               className="p-[10px] wv-ibmplex text-[20px] wv-bold"
-              onClick={() => setIsEditingMode(true)}
+              onClick={() => {
+                if (hasPermissionToEdit()) {
+                  setIsEditingMode(true);
+                }
+              }}
             >
               {props.topic.title}
             </h2>
