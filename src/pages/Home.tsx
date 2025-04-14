@@ -593,6 +593,9 @@ export default function Home() {
                   onPinTopic={() => {
                     pinContext.pinTopic(selectedTopic.value?.id || "");
                   }}
+                  onUnpinTopic={() => {
+                    pinContext.unpinTopic(selectedTopic.value?.id || "");
+                  }}
                 />
               ) : (
                 <div className=" w-full h-full" />

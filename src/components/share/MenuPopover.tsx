@@ -1,9 +1,11 @@
 interface PropTypes {
   canEdit: boolean;
   hasPin?: boolean;
+  isPinned?: boolean;
   onClickEdit: () => void;
   onClickDelete: () => void;
   onClickPin?: () => void;
+  onClickUnpin?: () => void;
 }
 
 export default function MenuPopover(props: PropTypes) {
@@ -34,19 +36,25 @@ export default function MenuPopover(props: PropTypes) {
         <div
           data-dndkit-disable-drag
           className="w-full flex items-center px-[16px] py-[12px] gap-[8px] hover:bg-gray1 hover:cursor-pointer"
-          onClick={props.onClickPin}
+          onClick={() => {
+            if (props.isPinned) {
+              props.onClickUnpin?.();
+            } else {
+              props.onClickPin?.();
+            }
+          }}
         >
           <img
             style={{ pointerEvents: "none" }}
             className="w-[20px] h-[20px]"
-            src="/icon/pin.svg"
+            src={props.isPinned ? "/icon/unpin.svg" : "/icon/pin.svg"}
             alt="pin-icon"
           />
           <span
             style={{ pointerEvents: "none" }}
             className="text-black text-[13px]"
           >
-            ปักหมุด
+            {props.isPinned ? "ถอนหมุด" : "ปักหมุด"}
           </span>
         </div>
       )}

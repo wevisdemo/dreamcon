@@ -13,10 +13,11 @@ interface PropTypes {
   onDeleteTopic: () => void;
   onAddComment: (commentView: CommentView, reason: string) => void;
   onPinTopic: () => void;
+  onUnpinTopic: () => void;
 }
 
 export default function TopicTemplate(props: PropTypes) {
-  const { event: eventContext } = useContext(StoreContext);
+  const { event: eventContext, pin: pinContext } = useContext(StoreContext);
   const getCommentsByView = (view: CommentView) => {
     return props.topic.comments.filter(
       (comment) => comment.comment_view === view
@@ -35,6 +36,13 @@ export default function TopicTemplate(props: PropTypes) {
       return event;
     }
     return null;
+  };
+
+  // TODO: duplicated
+  const isTopicPinned = (topic: Topic) => {
+    return pinContext.pinnedTopics.some(
+      (pinnedTopic) => pinnedTopic === topic.id
+    );
   };
 
   return (
@@ -58,6 +66,7 @@ export default function TopicTemplate(props: PropTypes) {
           <div className="w-full flex justify-end z-10">
             <TopicCard
               topic={props.topic}
+              isPinned={isTopicPinned(props.topic)}
               onChangeTopicCategory={props.onChangeTopicCategory}
               onChangeTopicTitle={props.onChangeTopicTitle}
               onAddComment={(commentView: CommentView, reason: string) => {
@@ -65,6 +74,7 @@ export default function TopicTemplate(props: PropTypes) {
               }}
               onDeleteTopic={handleOnDeleteTopic}
               onPinTopic={props.onPinTopic}
+              onUnpinTopic={props.onUnpinTopic}
             />
           </div>
         </div>

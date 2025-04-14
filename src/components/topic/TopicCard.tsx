@@ -10,11 +10,13 @@ import { StoreContext } from "../../store";
 
 interface PropTypes {
   topic: Topic;
+  isPinned?: boolean;
   onAddComment: (commentView: CommentView, reason: string) => void;
   onChangeTopicCategory: (category: TopicCategory) => void;
   onChangeTopicTitle: (title: string) => void;
   onDeleteTopic: () => void;
   onPinTopic: () => void;
+  onUnpinTopic: () => void;
 }
 
 export default function TopicCard(props: PropTypes) {
@@ -91,6 +93,11 @@ export default function TopicCard(props: PropTypes) {
     handleCloseMenu();
   };
 
+  const handleUnpinTopic = () => {
+    props.onUnpinTopic();
+    handleCloseMenu();
+  };
+
   const canSubmit = () => {
     return newCommentText.trim().length > 0 && commentView !== null;
   };
@@ -150,6 +157,7 @@ export default function TopicCard(props: PropTypes) {
         >
           <MenuPopover
             hasPin
+            isPinned={props.isPinned}
             canEdit={hasPermissionToEdit()}
             onClickDelete={() => {
               handleDeleteTopic();
@@ -159,6 +167,9 @@ export default function TopicCard(props: PropTypes) {
             }}
             onClickPin={() => {
               handlePinTopic();
+            }}
+            onClickUnpin={() => {
+              handleUnpinTopic();
             }}
           />
         </Popover>

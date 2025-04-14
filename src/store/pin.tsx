@@ -18,19 +18,20 @@ const LOCAL_STORAGE_KEY = "pinned_topics";
 
 export const usePinStore = (): PinStore => {
   const [pinnedTopics, setPinnedTopics] = useState<string[]>([]);
-
-  // Load pinned topics from localStorage on mount
-  useEffect(() => {
-    const storedTopics = localStorage.getItem(LOCAL_STORAGE_KEY);
-    if (storedTopics) {
-      setPinnedTopics(JSON.parse(storedTopics));
-    }
-  }, []);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   // Save pinned topics to localStorage whenever they change
   useEffect(() => {
+    if (isFirstLoad) {
+      setIsFirstLoad(false);
+      const storedTopics = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (storedTopics) {
+        setPinnedTopics(JSON.parse(storedTopics));
+      }
+      return;
+    }
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(pinnedTopics));
-  }, [pinnedTopics]);
+  }, [pinnedTopics, isFirstLoad]);
 
   // Pin a topic
   const pinTopic = (topicId: string) => {
