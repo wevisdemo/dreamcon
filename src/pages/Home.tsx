@@ -56,6 +56,7 @@ import useAuth from "../hooks/useAuth";
 import { DreamConEvent } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
 import { TopicFilter } from "../types/home";
+import ChainIcon from "../components/icon/ChainIcon";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -107,6 +108,7 @@ export default function Home() {
     category: "ทั้งหมด",
     searchText: "",
   });
+  const [topicLink, setTopicLink] = useState<string>("");
 
   useEffect(() => {
     doToken();
@@ -542,21 +544,38 @@ export default function Home() {
             />
           </section>
           <section className="w-full h-full">
-            <div className="w-full px-[10px] py-[4px] bg-gray2 flex gap-[10px]">
-              <button onClick={() => selectedTopic.setValue(null)}>
-                <img
-                  className="w-[24px] h-[24px]"
-                  src="/icon/double-arrow-right.svg"
-                  alt="double-arrow-right-icon"
-                />
-              </button>
-              <button onClick={redirectToTopicPage}>
-                <img
-                  className="w-[24px] h-[24px]"
-                  src="/icon/expand-wide.svg"
-                  alt="expand-icon"
-                />
-              </button>
+            <div className="w-full px-[10px] py-[4px] bg-gray2 flex justify-between items-center">
+              <div className="flex items-center gap-[10px]">
+                <button onClick={() => selectedTopic.setValue(null)}>
+                  <img
+                    className="w-[24px] h-[24px]"
+                    src="/icon/double-arrow-right.svg"
+                    alt="double-arrow-right-icon"
+                  />
+                </button>
+                <button onClick={redirectToTopicPage}>
+                  <img
+                    className="w-[24px] h-[24px]"
+                    src="/icon/expand-wide.svg"
+                    alt="expand-icon"
+                  />
+                </button>
+              </div>
+              <div
+                className="flex gap-[4px] items-center hover:cursor-pointer"
+                onClick={async () => {
+                  const hostUrl = window.location.origin;
+                  const topicLink =
+                    hostUrl + "/topic/" + selectedTopic.value?.id;
+                  await navigator.clipboard.writeText(topicLink);
+                  setTopicLink(topicLink);
+                }}
+              >
+                <ChainIcon color={topicLink ? "#4999FA" : "#979797"} />
+                <span className={topicLink ? "text-[#4999FA]" : "text-gray5"}>
+                  {topicLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+                </span>
+              </div>
             </div>
             <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
               {selectedTopic.value ? (
