@@ -8,6 +8,7 @@ interface PropTypes {
   event: DreamConEvent;
   onClick: (event: DreamConEvent) => void;
   isSelected?: boolean;
+  isOwner?: boolean;
 }
 
 export default function FilterEvent(props: PropTypes) {
@@ -15,7 +16,7 @@ export default function FilterEvent(props: PropTypes) {
 
   return (
     <div
-      className="flex flex-col w-[75px] shrink-0"
+      className="flex items-center flex-col shrink-0"
       onMouseEnter={() => {
         setHovered(true);
       }}
@@ -43,15 +44,17 @@ export default function FilterEvent(props: PropTypes) {
 
       <div className="relative  px-[5px]">
         <p
-          className={`text-[10px] text-gray5 truncate px-[5px] py-[3px] text-center ${
+          className={`text-[10px] text-gray5 px-[5px] py-[3px] text-center ${
             props.isSelected
-              ? "bg-blue6 rounded-full text-white wv-semibold"
-              : ""
+              ? "bg-blue6 rounded-full text-white wv-semibold whitespace-nowrap"
+              : "truncate w-[75px]"
           }`}
         >
-          {props.event.display_name}
+          {props.isOwner && props.isSelected
+            ? "วงสนทนาของคุณ"
+            : props.event.display_name}
         </p>
-        {hovered && !props.isSelected && (
+        {hovered && (!props.isSelected || !props.isOwner) && (
           <Tooltip
             title={
               <TooltipEventInfo

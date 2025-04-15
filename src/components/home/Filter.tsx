@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { DreamConEvent } from "../../types/event";
 import {
   TopicFilter,
@@ -6,6 +7,7 @@ import {
 } from "../../types/home";
 import DefaultFilterEvent from "./DefaultFilterEvent";
 import FilterEvent from "./FilterEvent";
+import { StoreContext } from "../../store";
 
 interface PropTypes {
   events: DreamConEvent[];
@@ -14,6 +16,8 @@ interface PropTypes {
 }
 
 export default function Filter(props: PropTypes) {
+  const { user: userContext } = useContext(StoreContext);
+
   const handleEventChange = (event: DreamConEvent | null) => {
     props.setFilter({
       ...props.filter,
@@ -42,6 +46,13 @@ export default function Filter(props: PropTypes) {
     });
   };
 
+  const isEventOwner = () => {
+    if (userContext.userState?.role === "writer") {
+      return userContext.userState.event.id === props.filter.selectedEvent?.id;
+    }
+    return false;
+  };
+
   const filteredEvents = (): DreamConEvent[] =>
     props.events.filter((event) => props.filter.selectedEvent?.id !== event.id);
 
@@ -60,6 +71,7 @@ export default function Filter(props: PropTypes) {
               event={props.filter.selectedEvent}
               onClick={handleEventChange}
               isSelected
+              isOwner={isEventOwner()}
             />
           )}
           <p className="absolute whitespace-nowrap text-[16px] text-white wv-bold wv-ibmplex px-[16px] py-[8px] top-[-40px] left-[-50%] bg-blue6 rounded-l-full rounded-tr-full shrink-0">

@@ -18,8 +18,11 @@ interface PropTypes {
 }
 
 export default function TopicListSection(props: PropTypes) {
-  const { homePage: homePageContext, clipboard: clipboardContext } =
-    useContext(StoreContext);
+  const {
+    homePage: homePageContext,
+    clipboard: clipboardContext,
+    pin: pinContext,
+  } = useContext(StoreContext);
   const [hoveredAddTopic, setHoveredAddTopic] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   useEffect(() => {
@@ -43,8 +46,24 @@ export default function TopicListSection(props: PropTypes) {
       });
     }
 
+    const pinnedTopicIds = pinContext.pinnedTopics;
+
+    //sort pinned topics to the top
+    filteredTopics.sort((a, b) => {
+      const aPinnedIndex = pinnedTopicIds.indexOf(a.id);
+      const bPinnedIndex = pinnedTopicIds.indexOf(b.id);
+      if (aPinnedIndex !== -1 && bPinnedIndex === -1) {
+        return -1;
+      } else if (aPinnedIndex === -1 && bPinnedIndex !== -1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+
     setDisplayTopics(filteredTopics);
-  }, [props.topics]);
+  }, [props.topics, props.topicFilter, pinContext.pinnedTopics]);
+
   const handleAddTopic = () => {
     homePageContext.modalTopicMainSection.dispatch({
       type: "OPEN_MODAL",
