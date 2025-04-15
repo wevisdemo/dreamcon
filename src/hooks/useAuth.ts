@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useWriter } from "./useWriter";
 import { StoreContext } from "../store";
 import { useEvent } from "./useEvent";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const useAuth = () => {
   const { getEventByID } = useEvent();
@@ -52,8 +52,10 @@ const useAuth = () => {
 
   const setUserStoreFromToken = async () => {
     const token = getToken();
-    const adminAuth = getAuth();
-    if (adminAuth.currentUser) {
+    const adminAuth = await getAuth();
+    console.log("Admin Auth: ", adminAuth);
+    console.log("adminAuth.currentUser: ", adminAuth.currentUser?.email);
+    if (adminAuth.currentUser !== null) {
       userContext.setAdminRole();
     }
     if (token) {
@@ -70,6 +72,17 @@ const useAuth = () => {
       userContext.setUserRole();
     }
   };
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        userContext.setAdminRole();
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return {
     token,

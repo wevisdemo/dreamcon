@@ -12,6 +12,9 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
     const isAdmin = userContext.userState?.role === "admin";
     return isAdmin || isWriter;
   };
+  const isAdmin = () => {
+    return userContext.userState?.role === "admin";
+  };
   const getWriterEvent = (): DreamConEventDB | null => {
     if (userContext.userState?.role === "writer") {
       return userContext.userState.event;
@@ -38,21 +41,27 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
             </a>
           )}
         </div>
-        {userCanEdit() && (
+        {isAdmin() && (
+          <div className="flex gap-[8px] items-center pl-[16px]">
+            <img
+              className="rounded-full bg-blue1 p-[4px] w-[25px] h-[25px]"
+              src="/icon/profile.svg"
+              alt={`avatar-event-admin`}
+            />
+            <span className="wv-bold">Admin</span>
+          </div>
+        )}
+        {getWriterEvent() && (
           <div className="flex items-center gap-[16px]">
             <span className="text-gray5">สร้างข้อถกเถียงของ</span>
-            {getWriterEvent() && (
-              <div className="flex gap-[8px] items-center pl-[16px]">
-                <img
-                  className="rounded-full w-[25px] h-[25px]"
-                  src={getWriterEvent()?.avatar_url}
-                  alt={`avatar-event-${getWriterEvent()?.display_name}`}
-                />
-                <span className="wv-bold">
-                  {getWriterEvent()?.display_name}
-                </span>
-              </div>
-            )}
+            <div className="flex gap-[8px] items-center pl-[16px]">
+              <img
+                className="rounded-full w-[25px] h-[25px]"
+                src={getWriterEvent()?.avatar_url}
+                alt={`avatar-event-${getWriterEvent()?.display_name}`}
+              />
+              <span className="wv-bold">{getWriterEvent()?.display_name}</span>
+            </div>
           </div>
         )}
       </nav>
