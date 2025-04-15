@@ -98,7 +98,7 @@ export default function Home() {
   } = useConvertCommentToTopic();
   const { getEvents, loading: eventLoading } = useEvent();
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
-  const { saveToken, setUserStoreFromToken } = useAuth();
+  const { loginFromToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [events, setEvents] = useState<DreamConEvent[]>([]);
@@ -119,7 +119,7 @@ export default function Home() {
     const writerToken = params.get("writer");
 
     if (writerToken) {
-      await saveToken(writerToken);
+      await loginFromToken(writerToken);
       params.delete("writer");
       navigate(`${location.pathname}?${params.toString()}`, { replace: true });
       return;

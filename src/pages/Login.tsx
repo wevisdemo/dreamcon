@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../utils/firestore";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 export default function LoginPage() {
   const [validInputs, setValidInputs] = useState<{
     username: boolean;
     password: boolean;
   }>({ username: true, password: true });
+  const { loginAsAdmin } = useAuth();
 
   const navigate = useNavigate();
 
@@ -36,7 +37,7 @@ export default function LoginPage() {
       if (!validUsername || !validPassword) {
         throw new Error("Invalid inputs");
       }
-      await signInWithEmailAndPassword(auth, username, password);
+      loginAsAdmin(username, password);
       navigate("/admin");
     } catch (error) {
       console.error("Error signing in:", error);

@@ -1,11 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import NewTabIcon from "../components/icon/NewTab";
 import { StoreContext } from "../store";
 import { DreamConEventDB } from "../types/event";
+import { Popover } from "@mui/material";
+import useAuth from "../hooks/useAuth";
 
 const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
+  const openMenu = Boolean(anchorMenu);
+  const popoverID = openMenu ? "user-menu" : undefined;
+  const { logout } = useAuth();
+
   const { user: userContext } = useContext(StoreContext);
   const userCanEdit = () => {
     const isWriter = userContext.userState?.role === "writer";
@@ -42,7 +49,13 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
           )}
         </div>
         {isAdmin() && (
-          <div className="flex gap-[8px] items-center pl-[16px]">
+          <div
+            className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setAnchorMenu(e.currentTarget);
+            }}
+          >
             <img
               className="rounded-full bg-blue1 p-[4px] w-[25px] h-[25px]"
               src="/icon/profile.svg"
@@ -52,9 +65,15 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
           </div>
         )}
         {getWriterEvent() && (
-          <div className="flex items-center gap-[16px]">
+          <div className="flex items-center gap-[16px] ">
             <span className="text-gray5">สร้างข้อถกเถียงของ</span>
-            <div className="flex gap-[8px] items-center pl-[16px]">
+            <div
+              className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setAnchorMenu(e.currentTarget);
+              }}
+            >
               <img
                 className="rounded-full w-[25px] h-[25px]"
                 src={getWriterEvent()?.avatar_url}
@@ -64,6 +83,34 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
             </div>
           </div>
         )}
+        <Popover
+          id={popoverID}
+          open={openMenu}
+          anchorEl={anchorMenu}
+          onClose={() => setAnchorMenu(null)}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          classes={{ paper: "box-1" }}
+          disableAutoFocus
+          disableEnforceFocus
+          disableRestoreFocus
+        >
+          <button
+            className="p-[8px] bg-blue1"
+            onClick={() => {
+              logout();
+              setAnchorMenu(null);
+            }}
+          >
+            Logout
+          </button>
+        </Popover>
       </nav>
       <main
         className="mt-[64px] overflow-hidden"
