@@ -16,7 +16,8 @@ export const useConvertCommentToTopic = () => {
   const [error, setError] = useState<string | null>(null);
 
   const convertCommentToTopic = async (
-    comment: Comment
+    comment: Comment,
+    event_id: string
   ): Promise<TopicDB | null> => {
     const commentId = comment.id;
     setLoading(true);
@@ -45,6 +46,8 @@ export const useConvertCommentToTopic = () => {
           created_at: timeNow,
           updated_at: timeNow,
           notified_at: timeNow,
+          category: "ไม่ระบุ",
+          event_id: event_id,
         };
         await transaction.set(newTopicDocRef, topicPayload);
 
@@ -99,6 +102,8 @@ export const useConvertCommentToTopic = () => {
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,
+        category: "ไม่ระบุ",
+        event_id: event_id,
       };
     } catch (err) {
       console.error("Error converting comment to topic:", err);
@@ -133,6 +138,7 @@ export const useConvertCommentToTopic = () => {
           created_at: previousComment.created_at,
           updated_at: timeNow,
           notified_at: timeNow,
+          event_id: previousComment.event_id,
         };
 
         await transaction.set(newCommentDocRef, commentPayload);

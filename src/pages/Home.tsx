@@ -703,7 +703,9 @@ export default function Home() {
   }
 
   async function handleDropToAddTopic(draggedComment: Comment) {
-    const topic = await convertCommentToTopic(draggedComment);
+    const eventID = getCreatedByEvent()?.id;
+    if (!eventID) return;
+    const topic = await convertCommentToTopic(draggedComment, eventID);
     if (!topic) return;
     setPreviousMoveCommentEvent({
       comment: draggedComment,

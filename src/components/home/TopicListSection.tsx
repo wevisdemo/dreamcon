@@ -7,6 +7,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import Filter from "./Filter";
 import { TopicFilter } from "../../types/home";
 import { DreamConEvent } from "../../types/event";
+import { Tooltip } from "@mui/material";
 
 interface PropTypes {
   topics: Topic[];
@@ -88,30 +89,49 @@ export default function TopicListSection(props: PropTypes) {
       });
     }
   });
+
+  const addTopicDisable = () => {
+    return (
+      userContext.userState?.role === "admin" &&
+      props.topicFilter.selectedEvent === null
+    );
+  };
   return (
     <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
       {!onlyReadMode() && (
-        <Droppable id="add-topic" data={{ type: "convert-to-topic" }}>
+        <Droppable
+          disabled={addTopicDisable()}
+          id="add-topic"
+          data={{ type: "convert-to-topic" }}
+        >
           {(isOver) => (
-            <button
-              onMouseEnter={() => setHoveredAddTopic(true)}
-              onMouseLeave={() => setHoveredAddTopic(false)}
-              className={`flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white ${
-                isOver
-                  ? "border-blue7 border-[2px]"
-                  : "border-transparent border-[2px]"
-              }`}
-              onClick={handleAddTopic}
+            <Tooltip
+              title={addTopicDisable() ? "คุณต้องเลือกอีเวนต์ก่อน" : ""}
+              placement="bottom"
+              className="hover:cursor-pointer"
+              classes={{ tooltip: "tooltip-1" }}
             >
-              <img
-                className="w-[24px] h-[24px]"
-                src="/icon/plus.svg"
-                alt="plus-icon"
-              />
-              <span className="text-[16px] wv-bold wv-ibmplex">
-                เพิ่มข้อถกเถียงใหม่
-              </span>
-            </button>
+              <button
+                disabled={addTopicDisable()}
+                onMouseEnter={() => setHoveredAddTopic(true)}
+                onMouseLeave={() => setHoveredAddTopic(false)}
+                className={`flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white ${
+                  isOver
+                    ? "border-blue7 border-[2px]"
+                    : "border-transparent border-[2px]"
+                } ${addTopicDisable() ? "bg-gray3 !cursor-not-allowed" : ""}`}
+                onClick={handleAddTopic}
+              >
+                <img
+                  className="w-[24px] h-[24px]"
+                  src="/icon/plus.svg"
+                  alt="plus-icon"
+                />
+                <span className="text-[16px] wv-bold wv-ibmplex">
+                  เพิ่มข้อถกเถียงใหม่
+                </span>
+              </button>
+            </Tooltip>
           )}
         </Droppable>
       )}
