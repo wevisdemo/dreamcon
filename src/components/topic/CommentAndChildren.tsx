@@ -34,6 +34,7 @@ export default function CommentAndChildren(props: PropTypes) {
     selectedTopic,
     event: eventContext,
     user: userContext,
+    mode: modeContext,
   } = useContext(StoreContext);
 
   const { deleteCommentWithChildren } = useDeleteCommentWithChildren();
@@ -186,6 +187,7 @@ export default function CommentAndChildren(props: PropTypes) {
 
   // TODO: move to global
   const hasPermissionToEdit = () => {
+    if (modeContext.value === "view") return false;
     switch (userContext.userState?.role) {
       case "admin":
         return true;

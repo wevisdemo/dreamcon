@@ -16,12 +16,23 @@ interface PropTypes {
 
 export default function TopicSummary(props: PropTypes) {
   const [hovered, setHovered] = React.useState(false);
-  const { clipboard: clipboardContext } = useContext(StoreContext);
+  const {
+    clipboard: clipboardContext,
+    user: userContext,
+    mode: modeContext,
+  } = useContext(StoreContext);
 
   const getBorderClass = () => {
     if (props.isOver && !props.isSelected) return "border-dashed border-blue4";
     else if (props.isSelected) return "border-blue6";
     else return "border-transparent";
+  };
+
+  const readOnly = () => {
+    if (modeContext.value === "view") return true;
+    if (userContext.userState?.role === "user") return true;
+
+    return true;
   };
 
   useHotkeys("Meta+v, ctrl+v", () => {
@@ -69,7 +80,7 @@ export default function TopicSummary(props: PropTypes) {
         <p className="text-accent underline text-[13px]">
           {props.topic.comments.length || 0} ความคิดเห็น
         </p>
-        {!props.isSelected && (
+        {!props.isSelected && !readOnly() && (
           <button
             className="px-[12px] py-[6px] border-solid border-[1.5px] border-gray2 rounded-[48px] hover:bg-gray2"
             onClick={(e) => {

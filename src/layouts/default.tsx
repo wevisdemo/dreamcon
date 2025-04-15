@@ -13,11 +13,11 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
   const popoverID = openMenu ? "user-menu" : undefined;
   const { logout } = useAuth();
 
-  const { user: userContext } = useContext(StoreContext);
+  const { user: userContext, mode: modeContext } = useContext(StoreContext);
   const userCanEdit = () => {
     const isWriter = userContext.userState?.role === "writer";
     const isAdmin = userContext.userState?.role === "admin";
-    return isAdmin || isWriter;
+    return isAdmin || (isWriter && !isReadOnly());
   };
   const isAdmin = () => {
     return userContext.userState?.role === "admin";
@@ -27,6 +27,12 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
       return userContext.userState.event;
     }
     return null;
+  };
+
+  const isReadOnly = () => {
+    if (modeContext.value === "view") return true;
+    if (userContext.userState?.role === "user") return true;
+    return false;
   };
   return (
     <div>
@@ -48,7 +54,7 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
             </a>
           )}
         </div>
-        {isAdmin() && (
+        {isAdmin() && !isReadOnly() && (
           <div
             className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
             onClick={(e) => {
@@ -64,7 +70,7 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
             <span className="wv-bold">Admin</span>
           </div>
         )}
-        {getWriterEvent() && (
+        {getWriterEvent() && !isReadOnly() && (
           <div className="flex items-center gap-[16px] ">
             <span className="text-gray5">สร้างข้อถกเถียงของ</span>
             <div

@@ -25,7 +25,7 @@ export default function TopicCard(props: PropTypes) {
   const [newCommentText, setNewCommentText] = useState("");
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
-  const { user: userContext } = useContext(StoreContext);
+  const { user: userContext, mode: modeContext } = useContext(StoreContext);
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "topic-menu" : undefined;
@@ -103,6 +103,9 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const hasPermissionToEdit = () => {
+    if (modeContext.value === "view") {
+      return false;
+    }
     switch (userContext.userState?.role) {
       case "admin":
         return true;
@@ -228,66 +231,69 @@ export default function TopicCard(props: PropTypes) {
           </Tooltip>
         )}
       </div>
-
-      <div className="flex gap-[8px]">
-        <button
-          className={`py-[10px] ${
-            commentView === CommentView.AGREE
-              ? "bg-lightGreen"
-              : "bg-lightGreen/25"
-          } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
-          onClick={() => handleSelectCommentView(CommentView.AGREE)}
-        >
-          เห็นด้วย
-        </button>
-        <button
-          className={`py-[10px] ${
-            commentView === CommentView.PARTIAL_AGREE
-              ? "bg-lightYellow"
-              : "bg-lightYellow/25"
-          } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
-          onClick={() => handleSelectCommentView(CommentView.PARTIAL_AGREE)}
-        >
-          เห็นด้วยบ้าง
-        </button>
-        <button
-          className={`py-[10px] ${
-            commentView === CommentView.DISAGREE
-              ? "bg-lightRed"
-              : "bg-lightRed/25"
-          } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
+      {modeContext.value !== "view" && (
+        <>
+          <div className="flex gap-[8px]">
+            <button
+              className={`py-[10px] ${
+                commentView === CommentView.AGREE
+                  ? "bg-lightGreen"
+                  : "bg-lightGreen/25"
+              } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
+              onClick={() => handleSelectCommentView(CommentView.AGREE)}
+            >
+              เห็นด้วย
+            </button>
+            <button
+              className={`py-[10px] ${
+                commentView === CommentView.PARTIAL_AGREE
+                  ? "bg-lightYellow"
+                  : "bg-lightYellow/25"
+              } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
+              onClick={() => handleSelectCommentView(CommentView.PARTIAL_AGREE)}
+            >
+              เห็นด้วยบ้าง
+            </button>
+            <button
+              className={`py-[10px] ${
+                commentView === CommentView.DISAGREE
+                  ? "bg-lightRed"
+                  : "bg-lightRed/25"
+              } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
           `}
-          onClick={() => handleSelectCommentView(CommentView.DISAGREE)}
-        >
-          ไม่เห็นด้วย
-        </button>
-      </div>
-      {commentView && (
-        <div className="relative flex">
-          <textarea
-            className="w-full h-full p-[10px] text-[13px] bg-gray1 border-[1px] border-gray3 rounded-[4px] resize-none min-h-[52px] focus:outline-none "
-            name="add-comment-in-topic-card"
-            id="add-comment-in-topic-card"
-            value={newCommentText}
-            onChange={(e) => setNewCommentText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleAddComment();
-              }
-            }}
-            placeholder="เพราะว่า...(140ตัวอักษร)"
-            maxLength={140}
-          />
-          {canSubmit() && (
-            <img
-              className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
-              src="/icon/upload.svg"
-              alt="upload-icon"
-              onClick={handleAddComment}
-            />
+              onClick={() => handleSelectCommentView(CommentView.DISAGREE)}
+            >
+              ไม่เห็นด้วย
+            </button>
+          </div>
+          {commentView && (
+            <div className="relative flex">
+              <textarea
+                className="w-full h-full p-[10px] text-[13px] bg-gray1 border-[1px] border-gray3 rounded-[4px] resize-none min-h-[52px] focus:outline-none "
+                name="add-comment-in-topic-card"
+                id="add-comment-in-topic-card"
+                value={newCommentText}
+                onChange={(e) => setNewCommentText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleAddComment();
+                  }
+                }}
+                placeholder="เพราะว่า...(140ตัวอักษร)"
+                maxLength={140}
+              />
+              {canSubmit() && (
+                <img
+                  className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
+                  src="/icon/upload.svg"
+                  alt="upload-icon"
+                  onClick={handleAddComment}
+                />
+              )}
+            </div>
           )}
-        </div>
+        </>
       )}
     </div>
   );

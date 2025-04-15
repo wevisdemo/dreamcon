@@ -77,6 +77,7 @@ export default function Home() {
     event: eventContext,
     selectedTopic,
     pin: pinContext,
+    mode: modeContext,
   } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
   const { editTopic, loading: editTopicLoading } = useEditTopic();
@@ -126,6 +127,21 @@ export default function Home() {
     }
 
     setUserStoreFromToken();
+    manageMode();
+  };
+
+  const manageMode = () => {
+    const params = new URLSearchParams(location.search);
+    const mode = params.get("mode");
+    switch (mode) {
+      case "view":
+        modeContext.setValue("view");
+        break;
+      case "write":
+        modeContext.setValue("write");
+        break;
+    }
+    return;
   };
 
   // useEffect(() => {
