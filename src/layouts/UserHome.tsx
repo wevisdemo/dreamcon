@@ -1,14 +1,23 @@
 import Description from "../components/Description";
 import Footer from "../components/Footer";
 import Hero from "../components/Hero";
+import Nav from "../components/Nav";
 
-export default function UserHome() {
+export default function UserHome({
+  children,
+}: {
+  children: React.ReactNode;
+}): React.ReactElement<{ children: React.ReactNode }> {
   return (
     <div className="flex flex-col">
+      <Nav />
       <section id="hero" className="px-[24px] bg-[#BDE6FF]">
         <div className="max-w-[960px] w-full m-auto">
           <Hero />
         </div>
+      </section>
+      <section id="mini-card">
+        <div className="max-w-[960px] w-full m-auto">{children}</div>
       </section>
       <div className="bg-[#BDE6FF] h-[40px] flex items-end">
         <div
@@ -25,16 +34,11 @@ export default function UserHome() {
           <Description />
         </div>
       </section>
-      <section
-        id="mini-card"
-        className="px-[24px] py-[32px] md:py-[64px] bg-[#F8F8F8]"
-      >
-        <div className="max-w-[960px] w-full m-auto"></div>
-      </section>
-      <div className="bg-[#FFFFFF] h-[40px] flex relative pb-[24px]">
+
+      <div className="bg-[#FFFFFF] h-[40px] flex relative">
         <div
-          style={{ backgroundImage: "url('/icon/ellipse-2.svg')" }}
-          className="bg-repeat w-full h-[16px] absolute top-[-2px]"
+          style={{ backgroundImage: "url('/icon/ellipse.svg')" }}
+          className="bg-repeat w-full h-[16px] absolute rotate-180"
         />
       </div>
       <section className="py-[48px]">

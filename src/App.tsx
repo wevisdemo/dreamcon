@@ -50,7 +50,11 @@ function App() {
           />
           <Route
             path="/user-home"
-            element={<UserHome>{/* <div /> */}</UserHome>}
+            element={
+              <UserHome>
+                <Home />
+              </UserHome>
+            }
           />
         </Routes>
       </Router>
