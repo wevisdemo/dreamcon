@@ -74,6 +74,8 @@ export const useEvent = () => {
           ({
             id: doc.id,
             ...doc.data(),
+            created_at: doc.data()?.created_at.toDate(),
+            updated_at: doc.data()?.updated_at.toDate(),
           } as DreamConEvent)
       );
       // get topic counts
