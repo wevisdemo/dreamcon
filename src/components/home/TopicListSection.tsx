@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Topic } from "../../types/topic";
+import { LightWeightTopic, Topic } from "../../types/topic";
 import TopicWrapper from "./TopicWrapper";
 import { StoreContext } from "../../store";
 import { Droppable } from "../Droppable";
@@ -11,6 +11,7 @@ import { Tooltip } from "@mui/material";
 
 interface PropTypes {
   topics: Topic[];
+  lightWeightTopics: LightWeightTopic[];
   selectedTopic: Topic | null;
   setSelectedTopic: (topic: Topic) => void;
   events: DreamConEvent[];
@@ -96,6 +97,10 @@ export default function TopicListSection(props: PropTypes) {
       props.topicFilter.selectedEvent === null
     );
   };
+
+  const allTopicCount = () => {
+    return props.lightWeightTopics.length;
+  };
   return (
     <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
       {!onlyReadMode() && (
@@ -139,6 +144,7 @@ export default function TopicListSection(props: PropTypes) {
         events={props.events}
         filter={props.topicFilter}
         setFilter={props.setTopicFilter}
+        allTopicCount={allTopicCount()}
       />
       <TopicWrapper
         topics={displayTopics}

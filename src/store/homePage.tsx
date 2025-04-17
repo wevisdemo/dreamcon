@@ -5,7 +5,7 @@ import {
   initialModalCommentState,
   modalCommentReducer,
 } from "./modalComment";
-import { Topic } from "../types/topic";
+import { LightWeightTopic, Topic } from "../types/topic";
 import {
   initialModalTopicState,
   initialTopicModalStore,
@@ -21,6 +21,10 @@ export interface HomePageStore {
   modalCommentMainSection: CommentModalStore;
   modalTopicMainSection: TopicModalStore;
   modalCommentSideSection: CommentModalStore;
+  lightWeightTopics: {
+    state: LightWeightTopic[];
+    setState: React.Dispatch<React.SetStateAction<LightWeightTopic[]>>;
+  };
 }
 
 export const initialHomePageState: HomePageStore = {
@@ -31,6 +35,10 @@ export const initialHomePageState: HomePageStore = {
   modalCommentMainSection: initialCommentModalStore,
   modalTopicMainSection: initialTopicModalStore,
   modalCommentSideSection: initialCommentModalStore,
+  lightWeightTopics: {
+    state: [],
+    setState: () => [],
+  },
 };
 
 export const useHomePageStore = (): HomePageStore => {
@@ -49,6 +57,9 @@ export const useHomePageStore = (): HomePageStore => {
     modalCommentReducer,
     initialModalCommentState
   );
+  const [lightWeightTopics, setLightWeightTopics] = useState<
+    LightWeightTopic[]
+  >([]);
 
   return {
     selectedTopic: {
@@ -66,6 +77,10 @@ export const useHomePageStore = (): HomePageStore => {
     modalCommentSideSection: {
       state: modalCommentSideSection,
       dispatch: dispatchModalCommentSideSection,
+    },
+    lightWeightTopics: {
+      state: lightWeightTopics,
+      setState: setLightWeightTopics,
     },
   };
 };

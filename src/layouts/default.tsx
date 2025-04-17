@@ -10,7 +10,6 @@ const DefaultLayout: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { user: userContext, mode: modeContext } = useContext(StoreContext);
   const isReadOnly = () => {
-    console.log("modeContext.value", modeContext.value);
     if (modeContext.value === "view") return true;
     if (userContext.userState?.role === "user") return true;
     return false;

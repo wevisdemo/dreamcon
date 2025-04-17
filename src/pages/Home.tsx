@@ -57,6 +57,7 @@ import { DreamConEvent } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
 import { TopicFilter } from "../types/home";
 import ChainIcon from "../components/icon/ChainIcon";
+import { useTopic } from "../hooks/useTopic";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -109,11 +110,19 @@ export default function Home() {
     category: "ทั้งหมด",
     searchText: "",
   });
+  const { getLightWeightTopics } = useTopic();
   const [topicLink, setTopicLink] = useState<string>("");
 
   useEffect(() => {
     doToken();
+    fetchLightWeightTopics();
   }, []);
+
+  const fetchLightWeightTopics = async () => {
+    const topics = await getLightWeightTopics();
+    homePageContext.lightWeightTopics.setState(topics);
+    return topics;
+  };
 
   const doToken = async () => {
     const params = new URLSearchParams(location.search);
@@ -505,6 +514,7 @@ export default function Home() {
           >
             <TopicListSection
               topics={displayTopics}
+              lightWeightTopics={homePageContext.lightWeightTopics.state}
               selectedTopic={selectedTopic.value}
               setSelectedTopic={selectedTopic.setValue}
               events={events}

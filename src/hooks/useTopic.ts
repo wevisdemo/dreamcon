@@ -1,7 +1,13 @@
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  getCountFromServer,
+} from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../utils/firestore";
-import { Topic } from "../types/topic";
+import { LightWeightTopic, Topic } from "../types/topic";
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useTopic.ts
 
@@ -39,5 +45,41 @@ export const useTopic = () => {
     }
   };
 
-  return { getTopicByEventId, loading, error };
+  const getCommentLevel1Count = async (topicId: string): Promise<number> => {
+    const commentsCollection = collection(db, "comments");
+    const commentQuery = query(
+      commentsCollection,
+      where("parent_topic_id", "==", topicId),
+      where("parent_comment_ids", "==", [])
+    );
+    const snapshot = await getCountFromServer(commentQuery);
+    const count = snapshot.data().count;
+    return count;
+  };
+
+  const getLightWeightTopics = async (): Promise<LightWeightTopic[]> => {
+    try {
+      const topicsCollection = collection(db, "topics");
+      const snapshot = await getDocs(topicsCollection);
+      const topics = Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const data = doc.data();
+          const commentLv1Count = await getCommentLevel1Count(doc.id);
+          return {
+            id: doc.id,
+            title: data.title,
+            created_at: data.created_at.toDate(),
+            event_id: data.event_id,
+            comment_level1_count: commentLv1Count,
+          } as LightWeightTopic;
+        })
+      );
+      return topics;
+    } catch (err) {
+      console.error("Error fetching light weight topics: ", err);
+      return [];
+    }
+  };
+
+  return { getTopicByEventId, getLightWeightTopics, loading, error };
 };

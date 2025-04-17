@@ -10,6 +10,7 @@ import FilterEvent from "./FilterEvent";
 import { StoreContext } from "../../store";
 
 interface PropTypes {
+  allTopicCount: number;
   events: DreamConEvent[];
   filter: TopicFilter;
   setFilter: (filter: TopicFilter) => void;
@@ -62,7 +63,7 @@ export default function Filter(props: PropTypes) {
         <div className="relative">
           {props.filter.selectedEvent === null ? (
             <DefaultFilterEvent
-              count={99}
+              count={props.allTopicCount}
               onClick={() => handleEventChange(null)}
               isSelected
             />
@@ -82,7 +83,7 @@ export default function Filter(props: PropTypes) {
         <div className="flex gap-[16px] w-full overflow-scroll no-scrollbar">
           {props.filter.selectedEvent !== null && (
             <DefaultFilterEvent
-              count={99}
+              count={props.allTopicCount}
               onClick={() => handleEventChange(null)}
             />
           )}
