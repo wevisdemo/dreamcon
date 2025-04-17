@@ -4,6 +4,7 @@ import { Topic } from "../../types/topic";
 import TopicSummary from "./TopicSummary";
 import { StoreContext } from "../../store";
 import { Droppable } from "../Droppable";
+import EmptyTopic from "./EmptyTopic";
 
 interface PropTypes {
   topics: Topic[];
@@ -39,7 +40,9 @@ export default function TopicWrapper(props: PropTypes) {
     );
   };
 
-  return (
+  return props.topics.length === 0 ? (
+    <EmptyTopic />
+  ) : (
     <div className="w-full h-full flex justify-center">
       <Masonry columns={3} spacing={3}>
         {props.topics.map((topic) => (
