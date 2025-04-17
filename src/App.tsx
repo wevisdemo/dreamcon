@@ -7,7 +7,6 @@ import { StoreProvider } from "./store";
 import DefaultLayout from "./layouts/default";
 import AdminPage from "./pages/Admin";
 import LoginPage from "./pages/Login";
-import UserHome from "./layouts/UserHome";
 
 function App() {
   return (
@@ -46,14 +45,6 @@ function App() {
               <DefaultLayout>
                 <AdminPage />
               </DefaultLayout>
-            }
-          />
-          <Route
-            path="/user-home"
-            element={
-              <UserHome>
-                <Home />
-              </UserHome>
             }
           />
         </Routes>

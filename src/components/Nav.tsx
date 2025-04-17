@@ -43,7 +43,7 @@ export default function Nav(): ReactElement {
         />
         {userCanEdit() && (
           <a
-            href="/?mode=read"
+            href="/?mode=view"
             target="_blank"
             className="flex text-blue3 gap-[8px] items-center px-[16px] py-[5.5px] bg-blue1 rounded-[48px] font-bold"
           >
