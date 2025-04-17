@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import TopicTemplate from "../components/topic/TopicTemplate";
-import { Topic, TopicCategory, TopicDB } from "../types/topic";
+import { TopicCategory, TopicDB } from "../types/topic";
 import { AddOrEditCommentPayload, Comment } from "../types/comment";
 import { StoreContext } from "../store";
 import ModalComment from "../components/share/ModalComment";
@@ -45,6 +45,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useEvent } from "../hooks/useEvent";
 import { DreamConEvent } from "../types/event";
 import useAuth from "../hooks/useAuth";
+import ChainIcon from "../components/icon/ChainIcon";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
@@ -87,6 +88,7 @@ export default function TopicPage() {
   } = useMoveComment();
   const { getEvents, loading: eventLoading } = useEvent();
   const { setUserStoreFromToken } = useAuth();
+  const [topicLink, setTopicLink] = useState<string>("");
 
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
@@ -275,10 +277,6 @@ export default function TopicPage() {
     return;
   };
 
-  const getEventById = (eventId: string) => {
-    return eventContext.events.find((event) => event.id === eventId);
-  };
-
   const fetchEvents = async () => {
     const events = await getEvents();
     eventContext.setEvents(events);
@@ -308,6 +306,21 @@ export default function TopicPage() {
                 >
                   กลับหน้าหลัก
                 </a>
+              </div>
+              <div
+                className="flex gap-[4px] items-center hover:cursor-pointer"
+                onClick={async () => {
+                  const hostUrl = window.location.origin;
+                  const topicLink =
+                    hostUrl + "/topic/" + selectedTopic.value?.id;
+                  await navigator.clipboard.writeText(topicLink);
+                  setTopicLink(topicLink);
+                }}
+              >
+                <ChainIcon color={topicLink ? "#4999FA" : "#979797"} />
+                <span className={topicLink ? "text-[#4999FA]" : "text-gray5"}>
+                  {topicLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+                </span>
               </div>
             </div>
             <section className="py-[24px] overflow-scroll w-full flex justify-center">
