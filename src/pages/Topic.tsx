@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import TopicTemplate from "../components/topic/TopicTemplate";
-import { Topic, TopicDB } from "../types/topic";
+import { Topic, TopicCategory, TopicDB } from "../types/topic";
 import { AddOrEditCommentPayload, Comment } from "../types/comment";
 import { StoreContext } from "../store";
 import ModalComment from "../components/share/ModalComment";
@@ -42,11 +42,13 @@ import { useEditComment } from "../hooks/useEditComment";
 import FullPageLoader from "../components/FullPageLoader";
 import AlertPopup from "../components/AlertMoveComment";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useEvent } from "../hooks/useEvent";
+import { DreamConEvent } from "../types/event";
+import useAuth from "../hooks/useAuth";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
   const sensors = useSensors(useSensor(SmartPointerSensor));
-  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [showCopyAlert, setShowCopyAlert] = useState(false);
   const [showPasteAlert, setShowPasteAlert] = useState(false);
   const [previousMoveCommentEvent, setPreviousMoveCommentEvent] =
@@ -58,12 +60,21 @@ export default function TopicPage() {
     topicPage: topicPageContext,
     currentPage,
     clipboard: clipboardContext,
+    event: eventContext,
+    pin: pinContext,
+    user: userContext,
+    mode: modeContext,
+    selectedTopic,
   } = useContext(StoreContext);
+
   useEffect(() => {
     currentPage.setValue("topic");
+    fetchEvents();
+    doToken();
     const unsubscribe = subscribeTopic();
     return () => unsubscribe();
   }, []);
+
   const { editTopic, loading: editTopicLoading } = useEditTopic();
   const { addNewComment, loading: addNewCommentLoading } = useAddComment();
   const { editComment, loading: editCommentLoading } = useEditComment();
@@ -74,6 +85,8 @@ export default function TopicPage() {
     undoMoveCommentToComment,
     loading: moveCommentLoading,
   } = useMoveComment();
+  const { getEvents, loading: eventLoading } = useEvent();
+  const { setUserStoreFromToken } = useAuth();
 
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
@@ -87,7 +100,8 @@ export default function TopicPage() {
       addNewCommentLoading ||
       editCommentLoading ||
       deleteTopicLoading ||
-      moveCommentLoading
+      moveCommentLoading ||
+      eventLoading
     );
   };
 
@@ -132,7 +146,7 @@ export default function TopicPage() {
     })) as CommentDB[];
 
     // Convert the data into Topic format
-    setSelectedTopic(convertTopicDBToTopic(topic, comments));
+    selectedTopic.setValue(convertTopicDBToTopic(topic, comments));
     setFirstTimeLoading(false);
   };
 
@@ -242,6 +256,40 @@ export default function TopicPage() {
     setShowPasteAlert(false);
   };
 
+  const doToken = async () => {
+    setUserStoreFromToken();
+    manageMode();
+  };
+
+  const manageMode = () => {
+    const params = new URLSearchParams(location.search);
+    const mode = params.get("mode");
+    switch (mode) {
+      case "view":
+        modeContext.setValue("view");
+        break;
+      case "write":
+        modeContext.setValue("write");
+        break;
+    }
+    return;
+  };
+
+  const getEventById = (eventId: string) => {
+    return eventContext.events.find((event) => event.id === eventId);
+  };
+
+  const fetchEvents = async () => {
+    const events = await getEvents();
+    eventContext.setEvents(events);
+  };
+
+  const getCreatedByEvent = () => {
+    if (userContext.userState?.role === "writer") {
+      return userContext.userState?.event;
+    }
+  };
+
   return (
     <>
       <DndContext
@@ -250,7 +298,7 @@ export default function TopicPage() {
         sensors={sensors}
       >
         {isPageLoading() ? <FullPageLoader /> : null}
-        {selectedTopic ? (
+        {selectedTopic.value ? (
           <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center">
             <div className="w-full h-[32px] bg-gray2 flex justify-center items-center">
               <div className="w-full max-w-[920px] flex">
@@ -264,26 +312,46 @@ export default function TopicPage() {
             </div>
             <section className="py-[24px] overflow-scroll w-full flex justify-center">
               <TopicTemplate
-                topic={selectedTopic}
+                topic={selectedTopic.value}
+                onChangeTopicCategory={(newCategory) => {
+                  editTopic({
+                    id: selectedTopic.value?.id,
+                    title: selectedTopic.value?.title || "",
+                    event_id: selectedTopic.value?.event_id || "",
+                    category: newCategory as TopicCategory,
+                  });
+                }}
                 onChangeTopicTitle={(newTitle) => {
                   editTopic({
-                    id: selectedTopic.id,
+                    id: selectedTopic.value?.id,
                     title: newTitle,
+                    event_id: selectedTopic.value?.event_id || "",
+                    category: selectedTopic.value?.category as TopicCategory,
                   });
                 }}
                 onAddComment={(commentView, reason) => {
                   addNewComment({
-                    parent_topic_id: selectedTopic.id,
+                    parent_topic_id: selectedTopic.value?.id,
                     parent_comment_ids: [],
                     comment_view: commentView,
                     reason,
+                    event_id: getCreatedByEvent()?.id || "",
                   });
                 }}
-                onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.id)}
+                onPinTopic={() => {
+                  pinContext.pinTopic(selectedTopic.value?.id || "");
+                }}
+                onUnpinTopic={() => {
+                  pinContext.unpinTopic(selectedTopic.value?.id || "");
+                }}
+                onDeleteTopic={() =>
+                  handleOnDeleteTopic(selectedTopic.value?.id || "")
+                }
               />
             </section>
             <section className="absolute w-full h-content z-30 bg-transparent">
               <ModalComment
+                events={eventContext.events}
                 mode={topicPageContext.modalComment.state.mode}
                 defaultState={topicPageContext.modalComment.state.defaultState}
                 isOpen={topicPageContext.modalComment.state.isModalOpen}
@@ -299,6 +367,9 @@ export default function TopicPage() {
                   topicPageContext.modalComment.state.parentTopicId
                 }
                 onSubmit={handleOnSubmitComment}
+                createdByEvent={getCreatedByEvent() as DreamConEvent}
+                fromTopic={topicPageContext.modalComment.state.fromTopic}
+                fromComment={topicPageContext.modalComment.state.fromComment}
               />
             </section>
             <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
