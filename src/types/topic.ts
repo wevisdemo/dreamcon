@@ -55,3 +55,11 @@ export const topicCategories: TopicCategory[] = [
   "สสร.",
   "ไม่ระบุ",
 ];
+
+export interface LightWeightTopic {
+  id: string;
+  title: string;
+  created_at: Date;
+  event_id: string;
+  comment_level1_count: number;
+}
