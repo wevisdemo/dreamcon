@@ -315,7 +315,12 @@ export default function Home() {
 
   const redirectToTopicPage = () => {
     if (!selectedTopic.value) return;
-    window.location.href = `/topic/${selectedTopic.value.id}`;
+    const params = new URLSearchParams(location.search);
+    const hostUrl = window.location.origin;
+
+    window.location.href = `${hostUrl}/topic/${
+      selectedTopic.value.id
+    }?${params.toString()}`;
   };
 
   const buildFirestoreQueryFromFilter = (

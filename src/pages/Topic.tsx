@@ -92,7 +92,8 @@ export default function TopicPage() {
 
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
-    window.location.href = "/";
+    const params = new URLSearchParams(location.search);
+    window.location.href = `${location.pathname}?${params.toString()}`;
   };
 
   const isPageLoading = () => {
@@ -111,7 +112,8 @@ export default function TopicPage() {
     if (topicId) {
       fetchTopicById(topicId);
     } else {
-      window.location.href = "/";
+      const params = new URLSearchParams(location.search);
+      window.location.href = `${location.pathname}?${params.toString()}`;
     }
   }, [topicId]);
 
@@ -130,7 +132,8 @@ export default function TopicPage() {
     const topicSnapshot = await getDoc(topicRef);
     if (!topicSnapshot.exists()) {
       console.error("Topic not found");
-      window.location.href = "/";
+      const params = new URLSearchParams(location.search);
+      window.location.href = `${location.pathname}?${params.toString()}`;
       return null;
     }
     const topic = { id: topicSnapshot.id, ...topicSnapshot.data() } as TopicDB;
@@ -288,6 +291,13 @@ export default function TopicPage() {
     }
   };
 
+  const getHomeLink = () => {
+    // redirect to home with params
+    const params = new URLSearchParams(location.search);
+    const hostUrl = window.location.origin;
+    return `${hostUrl}/?${params.toString()}`;
+  };
+
   return (
     <>
       <DndContext
@@ -302,7 +312,7 @@ export default function TopicPage() {
               <div className="w-full max-w-[920px] flex">
                 <a
                   className="text-accent text-[13px] wv-ibmplex underline!"
-                  href="/"
+                  href={getHomeLink()}
                 >
                   กลับหน้าหลัก
                 </a>
