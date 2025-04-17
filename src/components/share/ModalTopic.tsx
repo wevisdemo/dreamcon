@@ -35,6 +35,7 @@ export default function ModalTopic(props: PropTypes) {
 
   const handleClose = () => {
     setText("");
+    setCategory("");
     props.onClose();
   };
 

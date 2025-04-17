@@ -34,7 +34,15 @@ export default function TopicListSection(props: PropTypes) {
       // regex to check if topic.title contains the search text
       const regex = new RegExp(props.topicFilter.searchText, "i");
       // sorted by filter
-      return regex.test(topic.title);
+      const isFilteredByEvent =
+        props.topicFilter.selectedEvent === null ||
+        topic.event_id === props.topicFilter.selectedEvent.id;
+      const isFilteredByCategory =
+        props.topicFilter.category === "ทั้งหมด" ||
+        topic.category === props.topicFilter.category;
+      return (
+        regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
+      );
     });
 
     // sort by latest or most-commented
@@ -141,6 +149,7 @@ export default function TopicListSection(props: PropTypes) {
         </Droppable>
       )}
       <Filter
+        lightWeightTopics={props.lightWeightTopics}
         events={props.events}
         filter={props.topicFilter}
         setFilter={props.setTopicFilter}

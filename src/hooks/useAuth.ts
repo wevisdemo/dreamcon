@@ -35,7 +35,6 @@ const useAuth = () => {
         throw new Error("Token has expired");
       }
       // Set the cookie with the token and expiration date
-      await logout();
       Cookies.set("authToken", newToken, { expires: expirationDate }); // Token will expire in 7 days
       // Set the token in the state
       setToken(newToken);
@@ -56,14 +55,12 @@ const useAuth = () => {
     Cookies.remove("authToken");
   };
 
+  const setUserStoreAsAdmin = () => {
+    userContext.setAdminRole();
+  };
+
   const setUserStoreFromToken = async () => {
     const token = getToken();
-    const adminAuth = await getAuth();
-    console.log("Admin Auth: ", adminAuth);
-    console.log("adminAuth.currentUser: ", adminAuth.currentUser?.email);
-    if (adminAuth.currentUser !== null) {
-      userContext.setAdminRole();
-    }
     if (token) {
       const writer = await getWriterByID(token);
       if (!writer) {
@@ -80,15 +77,19 @@ const useAuth = () => {
   };
 
   const loginAsAdmin = async (username: string, password: string) => {
-    await logout();
     await signInWithEmailAndPassword(auth, username, password);
   };
 
-  const logout = async () => {
-    clearToken();
+  const logoutAsAdmin = async () => {
     // logout from firebase auth
     const auth = await getAuth();
     await auth.signOut();
+    // clear user state
+    userContext.setUserRole();
+  };
+
+  const logoutAsWriter = async () => {
+    clearToken();
     // clear user state
     userContext.setUserRole();
   };
@@ -110,8 +111,10 @@ const useAuth = () => {
     getToken,
     clearToken,
     setUserStoreFromToken,
-    logout,
     loginAsAdmin,
+    logoutAsWriter,
+    logoutAsAdmin,
+    setUserStoreAsAdmin,
   };
 };
 

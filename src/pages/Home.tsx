@@ -159,12 +159,15 @@ export default function Home() {
 
   useEffect(() => {
     fetchTopics();
+    fetchEvents();
+    fetchLightWeightTopics();
   }, [topicFilter]);
 
   useEffect(() => {
     currentPage.setValue("home");
     fetchTopics();
     fetchEvents();
+    fetchLightWeightTopics();
 
     const unsubscribe = subscribeTopics();
     return () => {
@@ -249,6 +252,7 @@ export default function Home() {
 
   const fetchEvents = async () => {
     const events = await getEvents();
+    console.log("fetch event => ", events);
     setEvents(events);
     eventContext.setEvents(events);
   };
@@ -263,6 +267,8 @@ export default function Home() {
     const topicsQuery = query(collection(db, "topics"));
     const unsubscribe = onSnapshot(topicsQuery, () => {
       fetchTopics();
+      fetchLightWeightTopics();
+      fetchEvents();
     });
     return unsubscribe;
   };

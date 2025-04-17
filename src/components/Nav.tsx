@@ -10,7 +10,7 @@ export default function Nav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "user-menu" : undefined;
-  const { logout } = useAuth();
+  const { logoutAsAdmin, logoutAsWriter } = useAuth();
 
   const { user: userContext, mode: modeContext } = useContext(StoreContext);
   const userCanEdit = () => {
@@ -33,6 +33,15 @@ export default function Nav(): ReactElement {
     if (userContext.userState?.role === "user") return true;
     return false;
   };
+
+  const logout = () => {
+    if (isAdmin()) {
+      logoutAsAdmin();
+    } else if (userContext.userState?.role === "writer") {
+      logoutAsWriter();
+    }
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full h-[64px] bg-white flex items-center justify-between pl-[16px] pr-[48px] z-20">
       <div className="flex items-center gap-[24px]">

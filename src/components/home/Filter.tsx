@@ -8,9 +8,11 @@ import {
 import DefaultFilterEvent from "./DefaultFilterEvent";
 import FilterEvent from "./FilterEvent";
 import { StoreContext } from "../../store";
+import { LightWeightTopic } from "../../types/topic";
 
 interface PropTypes {
   allTopicCount: number;
+  lightWeightTopics: LightWeightTopic[];
   events: DreamConEvent[];
   filter: TopicFilter;
   setFilter: (filter: TopicFilter) => void;
@@ -57,6 +59,21 @@ export default function Filter(props: PropTypes) {
   const filteredEvents = (): DreamConEvent[] =>
     props.events.filter((event) => props.filter.selectedEvent?.id !== event.id);
 
+  // TODO: this is for temp fix, should be controller by fetch event
+  const getFreshFilteredEventData = (): DreamConEvent | null => {
+    const topicCount = props.lightWeightTopics.filter(
+      (topic) => topic.event_id === props.filter.selectedEvent?.id
+    ).length;
+
+    if (props.filter.selectedEvent !== null) {
+      return {
+        ...props.filter.selectedEvent,
+        topic_counts: topicCount,
+      };
+    }
+    return null;
+  };
+
   return (
     <div className="bg-white w-full rounded-[16px] py-[16px] flex flex-col gap-[16px]">
       <div className="flex items-center gap-[18px] w-full pl-[24px] mt-[12px]">
@@ -69,7 +86,7 @@ export default function Filter(props: PropTypes) {
             />
           ) : (
             <FilterEvent
-              event={props.filter.selectedEvent}
+              event={getFreshFilteredEventData()!}
               onClick={handleEventChange}
               isSelected
               isOwner={isEventOwner()}
