@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { DreamConEvent } from "../../types/event";
 import IconPen from "../icon/Pen";
+import ChainIcon from "../icon/ChainIcon";
 
 interface PropTypes {
   index: number;
@@ -11,6 +12,8 @@ interface PropTypes {
 }
 
 export default function EventCard(props: PropTypes) {
+  const [alreadyClickLink, setAlreadyClickLink] = useState<boolean>(false);
+
   return (
     <div className="bg-white px-[16px] py-[24px] rounded-[15px] max-w-[940px] w-full flex">
       {/* Left Section */}
@@ -90,14 +93,17 @@ export default function EventCard(props: PropTypes) {
           </button>
           <button
             className="flex gap-[8px] items-center justify-center py-[8px] bg-blue2 text-blue7 font-bold rounded-[8px]"
-            onClick={props.onClickShareLink}
+            onClick={() => {
+              setAlreadyClickLink(true);
+              props.onClickShareLink();
+            }}
           >
-            <img
-              className="w-[16px] h-[16px]"
-              src="/icon/chain.svg"
-              alt="chain-icon"
-            />
-            แชร์ลิงก์
+            <ChainIcon color={alreadyClickLink ? "#4999FA" : "#979797"} />
+            <span
+              className={alreadyClickLink ? "text-[#4999FA]" : "text-gray5"}
+            >
+              {alreadyClickLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+            </span>
           </button>
         </div>
       </div>

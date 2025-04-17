@@ -54,7 +54,7 @@ const AdminPage = () => {
     getEvents,
     loading: eventLoading,
   } = useEvent();
-  const { createWriter } = useWriter();
+  const { createWriter, loading: writerLoading } = useWriter();
 
   useEffect(() => {
     const auth = getAuth();
@@ -87,12 +87,19 @@ const AdminPage = () => {
   const handleCopyWriterLink = async (eventId: string) => {
     const writerID = await createWriter({ event_id: eventId });
     if (!writerID) {
-      alert("Failed to create writer link.");
       return;
     }
     const link = `${window.origin}/?writer=${writerID}`;
     navigator.clipboard.writeText(link);
-    alert("Writer link copied to clipboard!");
+  };
+
+  const handleJumpToHomePage = async (eventId: string) => {
+    const writerID = await createWriter({ event_id: eventId });
+    if (!writerID) {
+      return;
+    }
+    const link = `${window.origin}/?writer=${writerID}&event=${eventId}`;
+    window.location.href = link;
   };
 
   const handleCreateEvent = async (payload: AddOrEditEventPayload) => {
@@ -116,7 +123,7 @@ const AdminPage = () => {
   };
 
   const isPageLoading = () => {
-    return eventLoading;
+    return eventLoading || writerLoading;
   };
 
   return (
@@ -209,7 +216,9 @@ const AdminPage = () => {
                 key={event.id}
                 event={event}
                 onClickShareLink={() => handleCopyWriterLink(event.id)}
-                onClickCreateDebate={() => {}}
+                onClickCreateDebate={() => {
+                  handleJumpToHomePage(event.id);
+                }}
                 onClickEdit={() => {
                   setModalEvent({
                     ...modalEvent,
