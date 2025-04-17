@@ -18,6 +18,7 @@ interface PropTypes {
   onClickDelete: () => void;
   isOver?: boolean;
   canEdit: boolean;
+  canAddComment?: boolean;
 }
 export default function CommentCard(props: PropTypes) {
   const [hovered, setHovered] = useState(false);
@@ -32,6 +33,13 @@ export default function CommentCard(props: PropTypes) {
 
   const showOption = () => {
     if (!props.canEdit) return false;
+    if (hovered) return true;
+    if (openMenu) return true;
+    return false;
+  };
+
+  const showAddComment = () => {
+    if (!props.canAddComment) return false;
     if (hovered) return true;
     if (openMenu) return true;
     return false;
@@ -138,28 +146,28 @@ export default function CommentCard(props: PropTypes) {
           <span className="flex-1">{props.comment.reason}</span>
         </div>
         <div className="flex items-start justify-between w-[40px]">
+          {showAddComment() && (
+            <BubblePlusIcon
+              data-dndkit-disable-drag
+              color="#979797"
+              className="w-[18px] h-[18px]"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickAddComment();
+              }}
+            />
+          )}
           {showOption() && (
-            <>
-              <BubblePlusIcon
-                data-dndkit-disable-drag
-                color="#979797"
-                className="w-[18px] h-[18px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onClickAddComment();
-                }}
-              />
-              <img
-                data-dndkit-disable-drag
-                src="/icon/menu.svg"
-                alt="menu-icon"
-                className="w-[18px] h-[18px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClickMenu(e);
-                }}
-              />
-            </>
+            <img
+              data-dndkit-disable-drag
+              src="/icon/menu.svg"
+              alt="menu-icon"
+              className="w-[18px] h-[18px]"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClickMenu(e);
+              }}
+            />
           )}
         </div>
       </div>

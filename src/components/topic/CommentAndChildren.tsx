@@ -198,6 +198,12 @@ export default function CommentAndChildren(props: PropTypes) {
     }
   };
 
+  const canAddComment = () => {
+    if (modeContext.value === "view") return false;
+    if (userContext.userState?.role === "user") return false;
+    return true;
+  };
+
   return (
     <Draggable
       id={comment.id}
@@ -238,6 +244,7 @@ export default function CommentAndChildren(props: PropTypes) {
                 onClickEdit={() => handleEditComment(comment)}
                 isOver={isOver}
                 canEdit={hasPermissionToEdit()}
+                canAddComment={canAddComment()}
               />
             </>
           )}
