@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DreamConEvent } from "../../types/event";
 import IconPen from "../icon/Pen";
 import ChainIcon from "../icon/ChainIcon";
