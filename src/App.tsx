@@ -7,6 +7,7 @@ import { StoreProvider } from "./store";
 import AdminPage from "./pages/Admin";
 import LoginPage from "./pages/Login";
 import LandingPage from "./pages/Landing";
+import AboutPage from "./pages/About";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/admin/login" element={<LoginPage />} />
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/landing" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Router>
     </StoreProvider>

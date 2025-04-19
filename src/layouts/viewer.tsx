@@ -15,7 +15,7 @@ const ViewerLayout: React.FC<{
         {isReadOnly && (
           <section id="hero" className="px-[24px] bg-[#BDE6FF] w-full">
             <div className="max-w-[960px] w-full m-auto">
-              <Hero />
+              <Hero heroTitle="ข้อถกเถียงต่อยอด" />
             </div>
           </section>
         )}
