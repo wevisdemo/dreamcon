@@ -58,7 +58,7 @@ import { useEvent } from "../hooks/useEvent";
 import { TopicFilter } from "../types/home";
 import ChainIcon from "../components/icon/ChainIcon";
 import { useTopic } from "../hooks/useTopic";
-import DefaultLayout from "../layouts/default";
+import ViewerLayout from "../layouts/viewer";
 
 export default function AllTopic() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -474,7 +474,7 @@ export default function AllTopic() {
   // };
 
   return (
-    <DefaultLayout>
+    <ViewerLayout>
       <DndContext
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
@@ -532,7 +532,7 @@ export default function AllTopic() {
             </section>
             <section
               ref={observerRef}
-              className="p-[60px] w-full flex justify-center overflow-scroll relative"
+              className="p-[60px] w-full h-full flex justify-center overflow-scroll relative"
             >
               <TopicListSection
                 topics={displayTopics}
@@ -687,7 +687,7 @@ export default function AllTopic() {
           ) : null}
         </DragOverlay>
       </DndContext>
-    </DefaultLayout>
+    </ViewerLayout>
   );
 
   function handleDragStart(event: DragStartEvent) {

@@ -1,32 +1,33 @@
 import React from "react";
-import Nav from "../components/Nav";
 import Hero from "../components/Hero";
 import Description from "../components/Description";
 import Footer from "../components/Footer";
+import { usePermission } from "../hooks/usePermission";
+import DefaultLayout from "./default";
 
 const ViewerLayout: React.FC<{
-  isReadOnly?: boolean;
   children: React.ReactNode;
-}> = ({ isReadOnly = false, children }) => {
+}> = ({ children }) => {
+  const { isReadOnly } = usePermission();
   return (
-    <div className="flex flex-col w-screen">
-      <Nav />
-      <main className="mt-[64px]" style={{ height: "calc(100vh - 64px)" }}>
-        {isReadOnly && (
+    <DefaultLayout>
+      <>
+        {isReadOnly() && (
           <section id="hero" className="px-[24px] bg-[#BDE6FF] w-full">
             <div className="max-w-[960px] w-full m-auto">
               <Hero heroTitle="ข้อถกเถียงต่อยอด" />
             </div>
           </section>
         )}
-
         <section
           id="content"
-          className={`${isReadOnly ? "max-h-[656px]" : "h-full"}`}
+          className={`${
+            isReadOnly() ? "max-h-[656px] overflow-auto" : "h-full"
+          }`}
         >
           {children}
         </section>
-        {isReadOnly && (
+        {isReadOnly() && (
           <>
             <div className="bg-[#BDE6FF] h-[40px] flex items-end">
               <div
@@ -80,8 +81,8 @@ const ViewerLayout: React.FC<{
             </section>
           </>
         )}
-      </main>
-    </div>
+      </>
+    </DefaultLayout>
   );
 };
 

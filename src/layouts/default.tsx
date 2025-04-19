@@ -7,7 +7,7 @@ const DefaultLayout: React.FC<{
   return (
     <div className="flex flex-col w-screen h-screen">
       <Nav />
-      <main className="mt-[64px] min-h-screen h-full flex w-full">
+      <main className="pt-[64px] min-h-screen h-full flex w-full">
         {children}
         {/* <div className="w-full h-full bg-blue2"></div> */}
       </main>
