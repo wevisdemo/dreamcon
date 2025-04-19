@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useTopic } from "../hooks/useTopic";
-import TopicSummary from "../components/home/TopicSummary";
+import TopicSummary from "../components/allTopic/TopicSummary";
 import { Topic } from "../types/topic";
 import DefaultLayout from "../layouts/default";
 import Footer from "../components/Footer";

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import TopicListSection from "../components/home/TopicListSection";
+import TopicListSection from "../components/allTopic/TopicListSection";
 import TopicTemplate from "../components/topic/TopicTemplate";
 import ModalComment from "../components/share/ModalComment";
 import { StoreContext } from "../store";
@@ -60,7 +60,7 @@ import ChainIcon from "../components/icon/ChainIcon";
 import { useTopic } from "../hooks/useTopic";
 import DefaultLayout from "../layouts/default";
 
-export default function Home() {
+export default function AllTopic() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
   // const [itemLimit, setItemLimit] = useState(24);
   const [showCopyAlert, setShowCopyAlert] = useState(false);
