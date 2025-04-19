@@ -13,8 +13,12 @@ interface PropTypes {
 }
 
 export default function TopicWrapper(props: PropTypes) {
-  const { homePage: homePageContext, pin: pinContext } =
-    useContext(StoreContext);
+  const {
+    homePage: homePageContext,
+    pin: pinContext,
+    mode: modeContext,
+    user: userContext,
+  } = useContext(StoreContext);
   const handleAddComment = (topic: Topic) => {
     homePageContext.modalCommentMainSection.dispatch({
       type: "OPEN_MODAL",
@@ -25,6 +29,13 @@ export default function TopicWrapper(props: PropTypes) {
         fromTopic: topic,
       },
     });
+  };
+
+  const readOnly = () => {
+    if (modeContext.value === "view") return true;
+    if (userContext.userState?.role === "user") return true;
+
+    return true;
   };
   const handleSelectTopic = (topic: Topic) => {
     props.setSelectedTopic(topic);
@@ -59,6 +70,7 @@ export default function TopicWrapper(props: PropTypes) {
                 onAddComment={() => handleAddComment(topic)}
                 isOver={isOver}
                 isPinned={isTopicPinned(topic)}
+                isReadOnly={readOnly()}
               />
             )}
           </Droppable>

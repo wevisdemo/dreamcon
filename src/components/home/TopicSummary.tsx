@@ -12,27 +12,18 @@ interface PropTypes {
   onAddComment: () => void;
   isOver?: boolean;
   isPinned?: boolean;
+  isReadOnly?: boolean;
+  hideSideScreenIcon?: boolean;
 }
 
 export default function TopicSummary(props: PropTypes) {
   const [hovered, setHovered] = React.useState(false);
-  const {
-    clipboard: clipboardContext,
-    user: userContext,
-    mode: modeContext,
-  } = useContext(StoreContext);
+  const { clipboard: clipboardContext } = useContext(StoreContext);
 
   const getBorderClass = () => {
     if (props.isOver && !props.isSelected) return "border-dashed border-blue4";
     else if (props.isSelected) return "border-blue6";
     else return "border-transparent";
-  };
-
-  const readOnly = () => {
-    if (modeContext.value === "view") return true;
-    if (userContext.userState?.role === "user") return true;
-
-    return true;
   };
 
   useHotkeys("Meta+v, ctrl+v", () => {
@@ -63,13 +54,13 @@ export default function TopicSummary(props: PropTypes) {
           alt="icon-pin-blue"
         />
       )}
-      {hovered && !props.isSelected && (
+      {hovered && !props.isSelected && !props.hideSideScreenIcon && (
         <SideScreenIcon
           className="h-[24px] w-[24px] absolute top-[5px] right-[8px] hover:cursor-pointer"
           color="#D9D9D9"
         />
       )}
-      {props.isSelected && (
+      {props.isSelected && !props.hideSideScreenIcon && (
         <SideScreenIcon
           className="h-[24px] w-[24px] absolute top-[5px] right-[8px] hover:cursor-pointer"
           color="#2579F5"
@@ -80,7 +71,7 @@ export default function TopicSummary(props: PropTypes) {
         <p className="text-accent underline text-[13px]">
           {props.topic.comments.length || 0} ความคิดเห็น
         </p>
-        {!props.isSelected && !readOnly() && (
+        {!props.isSelected && !props.isReadOnly && (
           <button
             className="px-[12px] py-[6px] border-solid border-[1.5px] border-gray2 rounded-[48px] hover:bg-gray2"
             onClick={(e) => {

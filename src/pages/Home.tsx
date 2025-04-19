@@ -58,6 +58,7 @@ import { useEvent } from "../hooks/useEvent";
 import { TopicFilter } from "../types/home";
 import ChainIcon from "../components/icon/ChainIcon";
 import { useTopic } from "../hooks/useTopic";
+import DefaultLayout from "../layouts/default";
 
 export default function Home() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -465,214 +466,228 @@ export default function Home() {
     }
   };
 
+  // const isReadOnly = () => {
+  //   if (modeContext.value === "view") return true;
+  //   if (userContext.userState?.role === "user") return true;
+
+  //   return true;
+  // };
+
   return (
-    <DndContext
-      onDragEnd={handleDragEnd}
-      onDragStart={handleDragStart}
-      sensors={sensors}
-    >
-      {isPageLoading() ? <FullPageLoader /> : null}
-      <div className="min-w-screen flex h-full">
-        <section
-          className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
-        >
-          <section className="absolute w-full h-content z-30 bg-transparent">
-            <ModalComment
-              events={events}
-              mode={homePageContext.modalCommentMainSection.state.mode}
-              defaultState={
-                homePageContext.modalCommentMainSection.state.defaultState
-              }
-              isOpen={homePageContext.modalCommentMainSection.state.isModalOpen}
-              onClose={() => {
-                homePageContext.modalCommentMainSection.dispatch({
-                  type: "CLOSE_MODAL",
-                });
-              }}
-              parentCommentIds={
-                homePageContext.modalCommentMainSection.state.parentCommentIds
-              }
-              parentTopicId={
-                homePageContext.modalCommentMainSection.state.parentTopicId
-              }
-              createdByEvent={getCreatedByEvent() as DreamConEvent}
-              onSubmit={handleOnSubmitComment}
-              fromTopic={
-                homePageContext.modalCommentMainSection.state.fromTopic
-              }
-              fromComment={
-                homePageContext.modalCommentMainSection.state.fromComment
-              }
-            />
-            <ModalTopic
-              mode={homePageContext.modalTopicMainSection.state.mode}
-              defaultState={
-                homePageContext.modalTopicMainSection.state.defaultState
-              }
-              isOpen={homePageContext.modalTopicMainSection.state.isModalOpen}
-              onClose={() => {
-                homePageContext.modalTopicMainSection.dispatch({
-                  type: "CLOSE_MODAL",
-                });
-              }}
-              createdByEvent={getCreatedByEvent() as DreamConEvent}
-              onSubmit={handleOnSubmitTopic}
-            />
+    <DefaultLayout>
+      <DndContext
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        sensors={sensors}
+      >
+        {isPageLoading() ? <FullPageLoader /> : null}
+        <div className="min-w-screen flex h-full flex-1">
+          <section
+            className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
+          >
+            <section className="absolute w-full h-content z-30 bg-transparent">
+              <ModalComment
+                events={events}
+                mode={homePageContext.modalCommentMainSection.state.mode}
+                defaultState={
+                  homePageContext.modalCommentMainSection.state.defaultState
+                }
+                isOpen={
+                  homePageContext.modalCommentMainSection.state.isModalOpen
+                }
+                onClose={() => {
+                  homePageContext.modalCommentMainSection.dispatch({
+                    type: "CLOSE_MODAL",
+                  });
+                }}
+                parentCommentIds={
+                  homePageContext.modalCommentMainSection.state.parentCommentIds
+                }
+                parentTopicId={
+                  homePageContext.modalCommentMainSection.state.parentTopicId
+                }
+                createdByEvent={getCreatedByEvent() as DreamConEvent}
+                onSubmit={handleOnSubmitComment}
+                fromTopic={
+                  homePageContext.modalCommentMainSection.state.fromTopic
+                }
+                fromComment={
+                  homePageContext.modalCommentMainSection.state.fromComment
+                }
+              />
+              <ModalTopic
+                mode={homePageContext.modalTopicMainSection.state.mode}
+                defaultState={
+                  homePageContext.modalTopicMainSection.state.defaultState
+                }
+                isOpen={homePageContext.modalTopicMainSection.state.isModalOpen}
+                onClose={() => {
+                  homePageContext.modalTopicMainSection.dispatch({
+                    type: "CLOSE_MODAL",
+                  });
+                }}
+                createdByEvent={getCreatedByEvent() as DreamConEvent}
+                onSubmit={handleOnSubmitTopic}
+              />
+            </section>
+            <section
+              ref={observerRef}
+              className="p-[60px] w-full flex justify-center overflow-scroll relative"
+            >
+              <TopicListSection
+                topics={displayTopics}
+                lightWeightTopics={homePageContext.lightWeightTopics.state}
+                selectedTopic={selectedTopic.value}
+                setSelectedTopic={selectedTopic.setValue}
+                events={events}
+                topicFilter={topicFilter}
+                setTopicFilter={setTopicFilter}
+              />
+            </section>
+            <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
+              <AlertPopup
+                visible={showCopyAlert}
+                onClose={() => setShowCopyAlert(false)}
+                onUndo={() => handleUndoMoveComment()}
+                mode="copy"
+              />
+              <AlertPopup
+                visible={showPasteAlert}
+                onClose={() => setShowPasteAlert(false)}
+                onUndo={() => handleUndoMoveComment()}
+                mode="paste"
+              />
+            </div>
           </section>
           <section
-            ref={observerRef}
-            className="p-[60px] w-full flex justify-center overflow-scroll relative"
+            className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
           >
-            <TopicListSection
-              topics={displayTopics}
-              lightWeightTopics={homePageContext.lightWeightTopics.state}
-              selectedTopic={selectedTopic.value}
-              setSelectedTopic={selectedTopic.setValue}
-              events={events}
-              topicFilter={topicFilter}
-              setTopicFilter={setTopicFilter}
-            />
-          </section>
-          <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
-            <AlertPopup
-              visible={showCopyAlert}
-              onClose={() => setShowCopyAlert(false)}
-              onUndo={() => handleUndoMoveComment()}
-              mode="copy"
-            />
-            <AlertPopup
-              visible={showPasteAlert}
-              onClose={() => setShowPasteAlert(false)}
-              onUndo={() => handleUndoMoveComment()}
-              mode="paste"
-            />
-          </div>
-        </section>
-        <section
-          className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
-        >
-          <section className="absolute w-full h-content z-30 bg-transparent">
-            <ModalComment
-              events={events}
-              mode={homePageContext.modalCommentSideSection.state.mode}
-              defaultState={
-                homePageContext.modalCommentSideSection.state.defaultState
-              }
-              isOpen={homePageContext.modalCommentSideSection.state.isModalOpen}
-              onClose={() => {
-                homePageContext.modalCommentSideSection.dispatch({
-                  type: "CLOSE_MODAL",
-                });
-              }}
-              parentCommentIds={
-                homePageContext.modalCommentSideSection.state.parentCommentIds
-              }
-              parentTopicId={
-                homePageContext.modalCommentSideSection.state.parentTopicId
-              }
-              createdByEvent={getCreatedByEvent() as DreamConEvent}
-              fromTopic={
-                homePageContext.modalCommentSideSection.state.fromTopic
-              }
-              fromComment={
-                homePageContext.modalCommentSideSection.state.fromComment
-              }
-              onSubmit={handleOnSubmitComment}
-            />
-          </section>
-          <section className="w-full h-full">
-            <div className="w-full px-[10px] py-[4px] bg-gray2 flex justify-between items-center">
-              <div className="flex items-center gap-[10px]">
-                <button onClick={() => selectedTopic.setValue(null)}>
-                  <img
-                    className="w-[24px] h-[24px]"
-                    src="/icon/double-arrow-right.svg"
-                    alt="double-arrow-right-icon"
-                  />
-                </button>
-                <button onClick={redirectToTopicPage}>
-                  <img
-                    className="w-[24px] h-[24px]"
-                    src="/icon/expand-wide.svg"
-                    alt="expand-icon"
-                  />
-                </button>
-              </div>
-              <div
-                className="flex gap-[4px] items-center hover:cursor-pointer"
-                onClick={async () => {
-                  const hostUrl = window.location.origin;
-                  const topicLink =
-                    hostUrl + "/topic/" + selectedTopic.value?.id;
-                  await navigator.clipboard.writeText(topicLink);
-                  setTopicLink(topicLink);
+            <section className="absolute w-full h-content z-30 bg-transparent">
+              <ModalComment
+                events={events}
+                mode={homePageContext.modalCommentSideSection.state.mode}
+                defaultState={
+                  homePageContext.modalCommentSideSection.state.defaultState
+                }
+                isOpen={
+                  homePageContext.modalCommentSideSection.state.isModalOpen
+                }
+                onClose={() => {
+                  homePageContext.modalCommentSideSection.dispatch({
+                    type: "CLOSE_MODAL",
+                  });
                 }}
-              >
-                <ChainIcon color={topicLink ? "#4999FA" : "#979797"} />
-                <span className={topicLink ? "text-[#4999FA]" : "text-gray5"}>
-                  {topicLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
-                </span>
+                parentCommentIds={
+                  homePageContext.modalCommentSideSection.state.parentCommentIds
+                }
+                parentTopicId={
+                  homePageContext.modalCommentSideSection.state.parentTopicId
+                }
+                createdByEvent={getCreatedByEvent() as DreamConEvent}
+                fromTopic={
+                  homePageContext.modalCommentSideSection.state.fromTopic
+                }
+                fromComment={
+                  homePageContext.modalCommentSideSection.state.fromComment
+                }
+                onSubmit={handleOnSubmitComment}
+              />
+            </section>
+            <section className="w-full h-full">
+              <div className="w-full px-[10px] py-[4px] bg-gray2 flex justify-between items-center">
+                <div className="flex items-center gap-[10px]">
+                  <button onClick={() => selectedTopic.setValue(null)}>
+                    <img
+                      className="w-[24px] h-[24px]"
+                      src="/icon/double-arrow-right.svg"
+                      alt="double-arrow-right-icon"
+                    />
+                  </button>
+                  <button onClick={redirectToTopicPage}>
+                    <img
+                      className="w-[24px] h-[24px]"
+                      src="/icon/expand-wide.svg"
+                      alt="expand-icon"
+                    />
+                  </button>
+                </div>
+                <div
+                  className="flex gap-[4px] items-center hover:cursor-pointer"
+                  onClick={async () => {
+                    const hostUrl = window.location.origin;
+                    const topicLink =
+                      hostUrl + "/topic/" + selectedTopic.value?.id;
+                    await navigator.clipboard.writeText(topicLink);
+                    setTopicLink(topicLink);
+                  }}
+                >
+                  <ChainIcon color={topicLink ? "#4999FA" : "#979797"} />
+                  <span className={topicLink ? "text-[#4999FA]" : "text-gray5"}>
+                    {topicLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+                  </span>
+                </div>
               </div>
-            </div>
-            <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
-              {selectedTopic.value ? (
-                <TopicTemplate
-                  topic={selectedTopic.value}
-                  onAddComment={(commentView, reason) => {
-                    addNewComment({
-                      comment_view: commentView,
-                      reason,
-                      parent_topic_id: selectedTopic.value?.id,
-                      parent_comment_ids: [],
-                      event_id: getCreatedByEvent()?.id || "",
-                    });
-                  }}
-                  onChangeTopicTitle={(newTitle) => {
-                    editTopic({
-                      id: selectedTopic.value?.id,
-                      title: newTitle,
-                      event_id: selectedTopic.value?.event_id || "",
-                      category: selectedTopic.value?.category as TopicCategory,
-                    });
-                  }}
-                  onChangeTopicCategory={(newCategory) => {
-                    editTopic({
-                      id: selectedTopic.value?.id,
-                      title: selectedTopic.value?.title || "",
-                      event_id: selectedTopic.value?.event_id || "",
-                      category: newCategory as TopicCategory,
-                    });
-                  }}
-                  onDeleteTopic={() =>
-                    handleOnDeleteTopic(selectedTopic.value?.id || "")
-                  }
-                  onPinTopic={() => {
-                    pinContext.pinTopic(selectedTopic.value?.id || "");
-                  }}
-                  onUnpinTopic={() => {
-                    pinContext.unpinTopic(selectedTopic.value?.id || "");
-                  }}
-                />
-              ) : (
-                <div className=" w-full h-full" />
-              )}
-            </div>
+              <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
+                {selectedTopic.value ? (
+                  <TopicTemplate
+                    topic={selectedTopic.value}
+                    onAddComment={(commentView, reason) => {
+                      addNewComment({
+                        comment_view: commentView,
+                        reason,
+                        parent_topic_id: selectedTopic.value?.id,
+                        parent_comment_ids: [],
+                        event_id: getCreatedByEvent()?.id || "",
+                      });
+                    }}
+                    onChangeTopicTitle={(newTitle) => {
+                      editTopic({
+                        id: selectedTopic.value?.id,
+                        title: newTitle,
+                        event_id: selectedTopic.value?.event_id || "",
+                        category: selectedTopic.value
+                          ?.category as TopicCategory,
+                      });
+                    }}
+                    onChangeTopicCategory={(newCategory) => {
+                      editTopic({
+                        id: selectedTopic.value?.id,
+                        title: selectedTopic.value?.title || "",
+                        event_id: selectedTopic.value?.event_id || "",
+                        category: newCategory as TopicCategory,
+                      });
+                    }}
+                    onDeleteTopic={() =>
+                      handleOnDeleteTopic(selectedTopic.value?.id || "")
+                    }
+                    onPinTopic={() => {
+                      pinContext.pinTopic(selectedTopic.value?.id || "");
+                    }}
+                    onUnpinTopic={() => {
+                      pinContext.unpinTopic(selectedTopic.value?.id || "");
+                    }}
+                  />
+                ) : (
+                  <div className=" w-full h-full" />
+                )}
+              </div>
+            </section>
           </section>
-        </section>
-      </div>
-      <DragOverlay>
-        {draggedCommentProps ? (
-          <CommentAndChildren
-            comment={draggedCommentProps.comment}
-            previousComment={draggedCommentProps.previousComment}
-            nextComment={draggedCommentProps.nextComment}
-            level={draggedCommentProps.level}
-            isLastChildOfParent={draggedCommentProps.isLastChildOfParent}
-            parent={draggedCommentProps.parent}
-          />
-        ) : null}
-      </DragOverlay>
-    </DndContext>
+        </div>
+        <DragOverlay>
+          {draggedCommentProps ? (
+            <CommentAndChildren
+              comment={draggedCommentProps.comment}
+              previousComment={draggedCommentProps.previousComment}
+              nextComment={draggedCommentProps.nextComment}
+              level={draggedCommentProps.level}
+              isLastChildOfParent={draggedCommentProps.isLastChildOfParent}
+              parent={draggedCommentProps.parent}
+            />
+          ) : null}
+        </DragOverlay>
+      </DndContext>
+    </DefaultLayout>
   );
 
   function handleDragStart(event: DragStartEvent) {

@@ -13,7 +13,10 @@ export default function Footer(): ReactElement {
       <div className="flex flex-col md:flex-row justify-between space-y-[32px] md:space-y-0">
         <div className="flex flex-col md:justify-between space-y-[8px]">
           <span className="wv-ibmplex wv-bold">ติดต่อสอบถาม</span>
-          <a className="underline" href="mailto: contact@wevis.info">
+          <a
+            className="!underline !text-white"
+            href="mailto: contact@wevis.info"
+          >
             contact@wevis.info
           </a>
         </div>

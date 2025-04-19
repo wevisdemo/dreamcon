@@ -4,10 +4,14 @@ import {
   where,
   getDocs,
   getCountFromServer,
+  limit,
+  orderBy,
 } from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../utils/firestore";
 import { LightWeightTopic, Topic } from "../types/topic";
+import { CommentDB } from "../types/comment";
+import { convertTopicDBToTopic } from "../utils/mapping";
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useTopic.ts
 
@@ -81,5 +85,84 @@ export const useTopic = () => {
     }
   };
 
-  return { getTopicByEventId, getLightWeightTopics, loading, error };
+  const getTopicsByFilter = async (filter: {
+    limit: number;
+    orderBy: {
+      field: string;
+      direction: "asc" | "desc";
+    };
+  }): Promise<Topic[]> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const topicsCollection = collection(db, "topics");
+      const q = query(
+        topicsCollection,
+        orderBy(filter.orderBy.field, filter.orderBy.direction),
+        limit(filter.limit)
+      );
+      const snapshot = await getDocs(q);
+      if (snapshot.empty) {
+        return [];
+      }
+      const topics = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title,
+          comments: data.comments || [],
+          created_at: data.created_at.toDate(),
+          updated_at: data.updated_at.toDate(),
+          notified_at: data.notified_at.toDate(),
+        } as Topic;
+      });
+
+      const topicIds = topics.map((topic) => topic.id);
+
+      const commentsCollection = collection(db, "comments");
+
+      const commentsQuery = query(
+        commentsCollection,
+        where("parent_topic_id", "in", topicIds)
+      );
+      const commentsSnapshot = await getDocs(commentsQuery);
+      const commentsByTopic: Record<string, CommentDB[]> = {};
+      commentsSnapshot.forEach((doc) => {
+        const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
+        const topicId = commentDB.parent_topic_id;
+
+        if (!commentsByTopic[topicId]) {
+          commentsByTopic[topicId] = [];
+        }
+        commentsByTopic[topicId].push(commentDB);
+      });
+
+      // Map comments to topics
+      const fineTopics = topics
+        .map((topic) => {
+          const comments = commentsByTopic[topic.id] || [];
+          return convertTopicDBToTopic(topic, comments);
+        })
+        .sort((a, b) => {
+          return a.created_at > b.created_at ? -1 : 1;
+        });
+
+      return fineTopics;
+    } catch (err) {
+      console.error("Error fetching topics by filter: ", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return {
+    getTopicsByFilter,
+    getTopicByEventId,
+    getLightWeightTopics,
+    loading,
+    error,
+  };
 };
