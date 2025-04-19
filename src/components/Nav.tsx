@@ -1,9 +1,9 @@
 import { ReactElement, useContext, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { StoreContext } from "../store";
-import { DreamConEventDB } from "../types/event";
 import { Popover } from "@mui/material";
 import NewTabIcon from "./icon/NewTab";
+import { usePermission } from "../hooks/usePermission";
 
 // todo: if has some tabs later, we have to handle state
 export default function Nav(): ReactElement {
@@ -12,31 +12,9 @@ export default function Nav(): ReactElement {
   const popoverID = openMenu ? "user-menu" : undefined;
   const { logoutAsAdmin, logoutAsWriter } = useAuth();
 
-  const {
-    user: userContext,
-    mode: modeContext,
-    currentPage,
-  } = useContext(StoreContext);
-  const userCanEdit = () => {
-    const isWriter = userContext.userState?.role === "writer";
-    const isAdmin = userContext.userState?.role === "admin";
-    return isAdmin || (isWriter && !isReadOnly());
-  };
-  const isAdmin = () => {
-    return userContext.userState?.role === "admin";
-  };
-  const getWriterEvent = (): DreamConEventDB | null => {
-    if (userContext.userState?.role === "writer") {
-      return userContext.userState.event;
-    }
-    return null;
-  };
+  const { user: userContext, currentPage } = useContext(StoreContext);
 
-  const isReadOnly = () => {
-    if (modeContext.value === "view") return true;
-    if (userContext.userState?.role === "user") return true;
-    return false;
-  };
+  const { isReadOnly, userCanEdit, isAdmin, getWriterEvent } = usePermission();
 
   const logout = () => {
     if (isAdmin()) {
@@ -65,26 +43,28 @@ export default function Nav(): ReactElement {
           </a>
         )}
       </div>
-      <div className="flex ">
-        <a
-          className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
-            currentPage.value === "about" ? "bg-blue2" : ""
-          }`}
-          href="/about"
-        >
-          เกี่ยวกับโครงการ
-        </a>
-        <a
-          className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
-            currentPage.value === "all-topic" || currentPage.value === "topic"
-              ? "bg-blue2"
-              : ""
-          }`}
-          href="/topics"
-        >
-          ร่วมถกเถียง
-        </a>
-      </div>
+      {isReadOnly() && (
+        <div className="flex ">
+          <a
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+              currentPage.value === "about" ? "bg-blue2" : ""
+            }`}
+            href="/about"
+          >
+            เกี่ยวกับโครงการ
+          </a>
+          <a
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+              currentPage.value === "all-topic" || currentPage.value === "topic"
+                ? "bg-blue2"
+                : ""
+            }`}
+            href="/topics"
+          >
+            ร่วมถกเถียง
+          </a>
+        </div>
+      )}
       {isAdmin() && !isReadOnly() && (
         <div
           className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
