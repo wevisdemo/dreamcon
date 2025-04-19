@@ -3,8 +3,14 @@ import Footer from "../components/Footer";
 import Hero from "../components/Hero";
 import { externalEvents } from "../data/about";
 import ExternalEventCard from "../components/about/ExternalEventCard";
+import { useContext, useEffect } from "react";
+import { StoreContext } from "../store";
 
 export default function AboutPage() {
+  const { currentPage } = useContext(StoreContext);
+  useEffect(() => {
+    currentPage.setValue("about");
+  }, [currentPage]);
   return (
     <DefaultLayout>
       <div className="w-full">
@@ -13,7 +19,6 @@ export default function AboutPage() {
             <Hero heroTitle="เกี่ยวกับโครงการ" />
           </div>
         </section>
-
         <div className="bg-[#BDE6FF] h-[40px] flex items-end">
           <div
             style={{ backgroundImage: "url('/icon/ellipse.svg')" }}

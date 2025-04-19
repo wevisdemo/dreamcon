@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTopic } from "../hooks/useTopic";
 import TopicSummary from "../components/home/TopicSummary";
 import { Topic } from "../types/topic";
 import DefaultLayout from "../layouts/default";
 import Footer from "../components/Footer";
+import { StoreContext } from "../store";
 
 export default function LandingPage() {
+  const { currentPage } = useContext(StoreContext);
   const { getTopicsByFilter } = useTopic();
 
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -21,6 +23,8 @@ export default function LandingPage() {
       });
       setTopics(fetchedTopics);
     };
+
+    currentPage.setValue("home");
     fetchTopics();
   }, []);
 
@@ -202,7 +206,7 @@ export default function LandingPage() {
                     topic={topic}
                     isSelected={false}
                     onClick={() => {
-                      window.location.href = `/topic/${topic.id}`;
+                      window.location.href = `/topics/${topic.id}`;
                     }}
                     onAddComment={() => {}}
                     isOver={false}
@@ -215,7 +219,7 @@ export default function LandingPage() {
             </div>
             <a
               className="flex justify-between items-center gap-[8px] px-[16px] py-[10px] bg-blue6 w-fit rounded-[48px] m-auto"
-              href="/"
+              href="/topics"
             >
               <span className="text-[16px] wv-ibmplex font-semibold text-white">
                 ดูประเด็นทั้งหมด

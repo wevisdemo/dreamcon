@@ -322,7 +322,7 @@ export default function TopicPage() {
                 onClick={async () => {
                   const hostUrl = window.location.origin;
                   const topicLink =
-                    hostUrl + "/topic/" + selectedTopic.value?.id;
+                    hostUrl + "/topics/" + selectedTopic.value?.id;
                   await navigator.clipboard.writeText(topicLink);
                   setTopicLink(topicLink);
                 }}

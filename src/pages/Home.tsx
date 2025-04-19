@@ -165,7 +165,7 @@ export default function Home() {
   }, [topicFilter]);
 
   useEffect(() => {
-    currentPage.setValue("home");
+    currentPage.setValue("all-topic");
     fetchTopics();
     fetchEvents();
     fetchLightWeightTopics();
@@ -319,7 +319,7 @@ export default function Home() {
     const params = new URLSearchParams(location.search);
     const hostUrl = window.location.origin;
 
-    window.location.href = `${hostUrl}/topic/${
+    window.location.href = `${hostUrl}/topics/${
       selectedTopic.value.id
     }?${params.toString()}`;
   };
@@ -616,7 +616,7 @@ export default function Home() {
                   onClick={async () => {
                     const hostUrl = window.location.origin;
                     const topicLink =
-                      hostUrl + "/topic/" + selectedTopic.value?.id;
+                      hostUrl + "/topics/" + selectedTopic.value?.id;
                     await navigator.clipboard.writeText(topicLink);
                     setTopicLink(topicLink);
                   }}

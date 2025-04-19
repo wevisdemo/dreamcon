@@ -12,7 +12,11 @@ export default function Nav(): ReactElement {
   const popoverID = openMenu ? "user-menu" : undefined;
   const { logoutAsAdmin, logoutAsWriter } = useAuth();
 
-  const { user: userContext, mode: modeContext } = useContext(StoreContext);
+  const {
+    user: userContext,
+    mode: modeContext,
+    currentPage,
+  } = useContext(StoreContext);
   const userCanEdit = () => {
     const isWriter = userContext.userState?.role === "writer";
     const isAdmin = userContext.userState?.role === "admin";
@@ -60,6 +64,26 @@ export default function Nav(): ReactElement {
             <NewTabIcon className="h-[16px] w-[16px]" color="#95D0FF" />
           </a>
         )}
+      </div>
+      <div className="flex ">
+        <a
+          className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+            currentPage.value === "about" ? "bg-blue2" : ""
+          }`}
+          href="/about"
+        >
+          เกี่ยวกับโครงการ
+        </a>
+        <a
+          className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+            currentPage.value === "all-topic" || currentPage.value === "topic"
+              ? "bg-blue2"
+              : ""
+          }`}
+          href="/topics"
+        >
+          ร่วมถกเถียง
+        </a>
       </div>
       {isAdmin() && !isReadOnly() && (
         <div

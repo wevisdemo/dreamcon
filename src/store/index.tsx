@@ -30,8 +30,8 @@ interface State {
   topicPage: TopicPageStore;
   clipboard: ClipboardStore;
   currentPage: {
-    value: "home" | "topic";
-    setValue: (value: "home" | "topic") => void;
+    value: "home" | "all-topic" | "topic" | "about";
+    setValue: (value: "home" | "all-topic" | "topic" | "about") => void;
   };
   pin: PinStore;
   mode: {
@@ -65,7 +65,9 @@ const StoreContext = createContext<State>({
 });
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
-  const [currenPage, setCurrentPage] = React.useState<"home" | "topic">("home");
+  const [currenPage, setCurrentPage] = React.useState<
+    "home" | "all-topic" | "topic" | "about"
+  >("home");
   const [selectedTopic, setSelectedTopic] = React.useState<Topic | null>(null);
   const [mode, setMode] = React.useState<"view" | "write">("write");
   const userState = useUserStore();

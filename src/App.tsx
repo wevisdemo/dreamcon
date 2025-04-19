@@ -15,12 +15,12 @@ function App() {
       <Router>
         <Routes>
           {/* Route for listing all comments */}
-          <Route path="/" element={<Home />} />
+          <Route path="/topics" element={<Home />} />
           {/* Dynamic route for comment details */}
-          <Route path="/topic/:id" element={<Topic />} />
+          <Route path="/topics/:id" element={<Topic />} />
           <Route path="/admin/login" element={<LoginPage />} />
           <Route path="/admin" element={<AdminPage />} />
-          <Route path="/landing" element={<LandingPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
       </Router>

@@ -128,7 +128,7 @@ export default function CommentAndChildren(props: PropTypes) {
         payload,
       });
     }
-    if (currentPage.value === "home") {
+    if (currentPage.value === "all-topic") {
       homePageContext.modalCommentSideSection.dispatch({
         type: "OPEN_MODAL",
         payload,
@@ -151,7 +151,7 @@ export default function CommentAndChildren(props: PropTypes) {
         payload,
       });
     }
-    if (currentPage.value === "home") {
+    if (currentPage.value === "all-topic") {
       homePageContext.modalCommentSideSection.dispatch({
         type: "OPEN_MODAL",
         payload,
