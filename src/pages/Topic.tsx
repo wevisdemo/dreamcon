@@ -94,7 +94,8 @@ export default function TopicPage() {
   const handleOnDeleteTopic = async (topicId: string) => {
     await deleteTopicWithChildren(topicId);
     const params = new URLSearchParams(location.search);
-    window.location.href = `${location.pathname}?${params.toString()}`;
+    const hostUrl = window.location.origin;
+    window.location.href = `${hostUrl}/topics/?${params.toString()}`;
   };
 
   const isPageLoading = () => {
@@ -114,7 +115,8 @@ export default function TopicPage() {
       fetchTopicById(topicId);
     } else {
       const params = new URLSearchParams(location.search);
-      window.location.href = `${location.pathname}?${params.toString()}`;
+      const hostUrl = window.location.origin;
+      window.location.href = `${hostUrl}/topics/?${params.toString()}`;
     }
   }, [topicId]);
 
@@ -134,7 +136,8 @@ export default function TopicPage() {
     if (!topicSnapshot.exists()) {
       console.error("Topic not found");
       const params = new URLSearchParams(location.search);
-      window.location.href = `${location.pathname}?${params.toString()}`;
+      const hostUrl = window.location.origin;
+      window.location.href = `${hostUrl}/topics/?${params.toString()}`;
       return null;
     }
     const topic = { id: topicSnapshot.id, ...topicSnapshot.data() } as TopicDB;
@@ -296,7 +299,7 @@ export default function TopicPage() {
     // redirect to home with params
     const params = new URLSearchParams(location.search);
     const hostUrl = window.location.origin;
-    return `${hostUrl}/?${params.toString()}`;
+    return `${hostUrl}/topics/?${params.toString()}`;
   };
 
   return (

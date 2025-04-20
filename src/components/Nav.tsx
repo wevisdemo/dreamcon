@@ -10,18 +10,14 @@ export default function Nav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "user-menu" : undefined;
-  const { logoutAsAdmin, logoutAsWriter } = useAuth();
+  const { logoutAsWriter } = useAuth();
 
-  const { user: userContext, currentPage } = useContext(StoreContext);
+  const { currentPage } = useContext(StoreContext);
 
-  const { isReadOnly, userCanEdit, isAdmin, getWriterEvent } = usePermission();
+  const { isReadOnly, userCanEdit, getWriterEvent } = usePermission();
 
   const logout = () => {
-    if (isAdmin()) {
-      logoutAsAdmin();
-    } else if (userContext.userState?.role === "writer") {
-      logoutAsWriter();
-    }
+    logoutAsWriter();
   };
 
   return (
@@ -34,7 +30,7 @@ export default function Nav(): ReactElement {
         />
         {userCanEdit() && (
           <a
-            href="/?mode=view"
+            href="/topics/?mode=view"
             target="_blank"
             className="flex text-blue3 gap-[8px] items-center px-[16px] py-[5.5px] bg-blue1 rounded-[48px] font-bold"
           >
@@ -63,22 +59,6 @@ export default function Nav(): ReactElement {
           >
             ร่วมถกเถียง
           </a>
-        </div>
-      )}
-      {isAdmin() && !isReadOnly() && (
-        <div
-          className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            setAnchorMenu(e.currentTarget);
-          }}
-        >
-          <img
-            className="rounded-full bg-blue1 p-[4px] w-[25px] h-[25px]"
-            src="/icon/profile.svg"
-            alt={`avatar-event-admin`}
-          />
-          <span className="wv-bold">Admin</span>
         </div>
       )}
       {getWriterEvent() && !isReadOnly() && (

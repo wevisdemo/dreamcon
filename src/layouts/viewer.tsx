@@ -21,9 +21,7 @@ const ViewerLayout: React.FC<{
         )}
         <section
           id="content"
-          className={`${
-            isReadOnly() ? "max-h-[656px] overflow-auto" : "h-full"
-          }`}
+          className={`${isReadOnly() ? "max-h-[656px] h-full" : "h-full"}`}
         >
           {children}
         </section>

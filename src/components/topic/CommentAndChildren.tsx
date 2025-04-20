@@ -189,8 +189,6 @@ export default function CommentAndChildren(props: PropTypes) {
   const hasPermissionToEdit = () => {
     if (modeContext.value === "view") return false;
     switch (userContext.userState?.role) {
-      case "admin":
-        return true;
       case "writer":
         return props.comment.event_id === userContext.userState?.event.id;
       default:

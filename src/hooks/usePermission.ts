@@ -18,12 +18,9 @@ export const usePermission = () => {
   };
   const userCanEdit = () => {
     const isWriter = userContext.userState?.role === "writer";
-    const isAdmin = userContext.userState?.role === "admin";
-    return isAdmin || (isWriter && !isReadOnly());
+    return isWriter && !isReadOnly();
   };
-  const isAdmin = () => {
-    return userContext.userState?.role === "admin";
-  };
+
   const getWriterEvent = (): DreamConEventDB | null => {
     if (userContext.userState?.role === "writer") {
       return userContext.userState.event;
@@ -31,5 +28,5 @@ export const usePermission = () => {
     return null;
   };
 
-  return { isReadOnly, userCanEdit, isAdmin, getWriterEvent };
+  return { isReadOnly, userCanEdit, getWriterEvent };
 };

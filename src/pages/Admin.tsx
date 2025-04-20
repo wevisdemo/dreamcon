@@ -99,7 +99,7 @@ const AdminPage = () => {
     if (!writerID) {
       return;
     }
-    const link = `${window.origin}/?writer=${writerID}&event=${eventId}`;
+    const link = `${window.origin}/topics/?writer=${writerID}&event=${eventId}`;
     window.location.href = link;
   };
 
@@ -128,7 +128,7 @@ const AdminPage = () => {
   };
 
   return (
-    <DefaultLayout>
+    <DefaultLayout page="admin">
       {isPageLoading() ? <FullPageLoader /> : null}
       <div className="h-full w-screen bg-blue2 flex justify-center relative overflow-auto">
         <main className="max-w-[940px] w-full py-[32px] flex flex-col ">

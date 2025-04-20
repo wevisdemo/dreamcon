@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { useWriter } from "./useWriter";
 import { StoreContext } from "../store";
 import { useEvent } from "./useEvent";
 import {
   getAuth,
-  onAuthStateChanged,
+  // onAuthStateChanged,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../utils/firestore";
@@ -55,10 +55,6 @@ const useAuth = () => {
     Cookies.remove("authToken");
   };
 
-  const setUserStoreAsAdmin = () => {
-    userContext.setAdminRole();
-  };
-
   const setUserStoreFromToken = async () => {
     const token = getToken();
     if (token) {
@@ -94,16 +90,16 @@ const useAuth = () => {
     userContext.setUserRole();
   };
 
-  useEffect(() => {
-    const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        userContext.setAdminRole();
-      }
-    });
+  // useEffect(() => {
+  //   const auth = getAuth();
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       userContext.setAdminRole();
+  //     }
+  //   });
 
-    return () => unsubscribe();
-  }, []);
+  //   return () => unsubscribe();
+  // }, []);
 
   return {
     token,
@@ -114,7 +110,6 @@ const useAuth = () => {
     loginAsAdmin,
     logoutAsWriter,
     logoutAsAdmin,
-    setUserStoreAsAdmin,
   };
 };
 

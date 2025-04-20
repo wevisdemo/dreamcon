@@ -353,8 +353,6 @@ export default function AllTopic() {
         let eventID = "";
         if (userContext.userState?.role == "writer") {
           eventID = userContext.userState?.event.id;
-        } else if (userContext.userState?.role == "admin") {
-          eventID = topicFilter.selectedEvent?.id || "";
         }
         if (!eventID) return;
         await addNewTopic({ ...payload, event_id: eventID });
@@ -453,25 +451,11 @@ export default function AllTopic() {
     selectedTopic.setValue(null);
   };
 
-  const getEventById = (eventId: string) => {
-    return events.find((event) => event.id === eventId);
-  };
-
   const getCreatedByEvent = () => {
     if (userContext.userState?.role === "writer") {
       return userContext.userState?.event;
     }
-    if (userContext.userState?.role === "admin") {
-      return getEventById(topicFilter.selectedEvent?.id || "");
-    }
   };
-
-  // const isReadOnly = () => {
-  //   if (modeContext.value === "view") return true;
-  //   if (userContext.userState?.role === "user") return true;
-
-  //   return true;
-  // };
 
   return (
     <ViewerLayout>
@@ -481,7 +465,7 @@ export default function AllTopic() {
         sensors={sensors}
       >
         {isPageLoading() ? <FullPageLoader /> : null}
-        <div className="min-w-screen flex h-full flex-1">
+        <div className="min-w-screen flex h-full">
           <section
             className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
           >
