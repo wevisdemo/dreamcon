@@ -11,7 +11,7 @@ export default function DefaultFilterEvent(props: PropTypes) {
 
   return (
     <div
-      className="flex flex-col items-center"
+      className="flex flex-col items-center h-[112px] justify-end"
       onMouseEnter={() => {
         setHovered(true);
       }}

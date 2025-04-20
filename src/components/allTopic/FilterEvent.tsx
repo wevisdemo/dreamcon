@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DreamConEvent } from "../../types/event";
 import { Tooltip } from "@mui/material";
 import IconInfo from "../icon/Info";
@@ -9,14 +9,61 @@ interface PropTypes {
   onClick: (event: DreamConEvent) => void;
   isSelected?: boolean;
   isOwner?: boolean;
+  highlightedTopic?: string;
 }
 
 export default function FilterEvent(props: PropTypes) {
   const [hovered, setHovered] = useState(false);
+  const autoScrollRef = useRef<HTMLDivElement>(null);
+  const [shouldScroll, setShouldScroll] = useState(false);
+
+  useEffect(() => {
+    // check autoScrollRef.current width
+    if (!autoScrollRef.current) return;
+    const container = autoScrollRef.current;
+    const containerWidth = container.clientWidth;
+    const textWidth = container.scrollWidth;
+    if (textWidth > containerWidth) {
+      setShouldScroll(true);
+    } else {
+      setShouldScroll(false);
+    }
+  }, [autoScrollRef]);
+
+  useEffect(() => {
+    if (!shouldScroll) return;
+    if (!autoScrollRef.current) return;
+    const container = autoScrollRef.current;
+    let direction = 1;
+    let scrollAmount = 0;
+    const maxScroll = container.scrollWidth - container.clientWidth;
+
+    let interval: NodeJS.Timeout;
+
+    const startScrolling = () => {
+      clearInterval(interval); // clear any previous interval
+
+      const currentSpeed = direction === 1 ? 50 : 10;
+
+      interval = setInterval(() => {
+        scrollAmount += direction;
+        container.scrollLeft = scrollAmount;
+
+        if (scrollAmount >= maxScroll || scrollAmount <= 0) {
+          direction *= -1; // change direction
+          startScrolling(); // restart interval with new speed
+        }
+      }, currentSpeed);
+    };
+
+    startScrolling();
+
+    return () => clearInterval(interval);
+  }, [shouldScroll]);
 
   return (
     <div
-      className="flex items-center flex-col shrink-0"
+      className="flex items-center flex-col shrink-0 relative h-[112px] justify-end"
       onMouseEnter={() => {
         setHovered(true);
       }}
@@ -24,6 +71,31 @@ export default function FilterEvent(props: PropTypes) {
         setHovered(false);
       }}
     >
+      {!props.isSelected && props.highlightedTopic && !props.isOwner && (
+        <>
+          <div className="z-20 absolute w-[6px] h-[6px] rounded-full bg-white right-[6px] top-[24px] shadow-sm" />
+          <div
+            ref={autoScrollRef}
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+            className={`z-10 w-[84px] text-[8px] text-center absolute bg-white rounded-full right-[0px] top-[0px] py-[4px] ${
+              shouldScroll ? "px-[8px]" : ""
+            } shadow-sm rounded-full overflow-hidden`}
+          >
+            {props.highlightedTopic}
+          </div>
+        </>
+      )}
+      {!props.isSelected && props.isOwner && (
+        <>
+          <div className="z-20 absolute w-[6px] h-[6px] rounded-full bg-black right-[6px] top-[24px] shadow-sm" />
+          <div className="z-10 w-[84px] text-[8px] text-white text-center absolute bg-black rounded-full right-[0px] top-[0px] py-[4px] shadow-sm rounded-full overflow-hidden wv-ibmplex whitespace-nowrap">
+            วงสนทนาของคุณ
+          </div>
+        </>
+      )}
       <div
         className={`w-[75px] h-[75px] rounded-full cursor-pointer flex items-center justify-center relative overflow-hidden ${
           !props.isSelected && hovered ? "border-2 border-gray5" : ""

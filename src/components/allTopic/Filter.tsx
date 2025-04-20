@@ -49,9 +49,25 @@ export default function Filter(props: PropTypes) {
     });
   };
 
-  const isEventOwner = () => {
+  const getEventHighlightedTopic = (event: DreamConEvent) => {
+    const filteredTopics = props.lightWeightTopics.filter(
+      (topic) => topic.event_id === event.id && topic.comment_level1_count >= 10
+    );
+    if (filteredTopics.length > 0) {
+      return filteredTopics[0].title;
+    }
+    return undefined;
+  };
+
+  const isEventOwner = (targetEvent: DreamConEvent) => {
+    console.log("isEventOwner", userContext.userState?.role);
     if (userContext.userState?.role === "writer") {
-      return userContext.userState.event.id === props.filter.selectedEvent?.id;
+      console.log(
+        "isEventOwner",
+        userContext.userState?.event.id,
+        targetEvent.id
+      );
+      return userContext.userState.event.id === targetEvent.id;
     }
     return false;
   };
@@ -76,7 +92,7 @@ export default function Filter(props: PropTypes) {
 
   return (
     <div className="bg-white w-full rounded-[16px] py-[16px] flex flex-col gap-[16px]">
-      <div className="flex items-center gap-[18px] w-full pl-[24px] mt-[12px]">
+      <div className="flex items-center gap-[18px] w-full pl-[24px]">
         <div className="relative">
           {props.filter.selectedEvent === null ? (
             <DefaultFilterEvent
@@ -89,10 +105,10 @@ export default function Filter(props: PropTypes) {
               event={getFreshFilteredEventData()!}
               onClick={handleEventChange}
               isSelected
-              isOwner={isEventOwner()}
+              isOwner={isEventOwner(props.filter.selectedEvent)}
             />
           )}
-          <p className="absolute whitespace-nowrap text-[16px] text-white wv-bold wv-ibmplex px-[16px] py-[8px] top-[-40px] left-[-50%] bg-blue6 rounded-l-full rounded-tr-full shrink-0">
+          <p className="absolute whitespace-nowrap text-[16px] text-white wv-bold wv-ibmplex px-[16px] py-[8px] top-[-24px] left-[-50%] bg-blue6 rounded-l-full rounded-tr-full shrink-0">
             สำรวจข้อถกเถียง
           </p>
         </div>
@@ -106,9 +122,11 @@ export default function Filter(props: PropTypes) {
           )}
           {filteredEvents().map((event) => (
             <FilterEvent
+              isOwner={isEventOwner(event)}
               event={event}
               onClick={handleEventChange}
               key={`filter-event-${event.display_name}`}
+              highlightedTopic={getEventHighlightedTopic(event)}
             />
           ))}
         </div>
@@ -155,7 +173,7 @@ export default function Filter(props: PropTypes) {
             </button>
           </div>
         </div>
-        <div className="flex gap-[4px] items-center w-full overflow-scroll">
+        <div className="flex gap-[4px] items-center w-full overflow-x-scroll">
           <span className="text-blue7 text-nowrap">หัวข้อ:</span>
           <div className="flex overflow-scroll text-[13px] gap-[8px] no-scrollbar">
             {topicFilterCategories.map((category) => (
