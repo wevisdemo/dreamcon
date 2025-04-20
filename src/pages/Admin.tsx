@@ -7,6 +7,7 @@ import { AddOrEditEventPayload, DreamConEvent } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
 import { useWriter } from "../hooks/useWriter";
 import FullPageLoader from "../components/FullPageLoader";
+import DefaultLayout from "../layouts/default";
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -127,7 +128,7 @@ const AdminPage = () => {
   };
 
   return (
-    <>
+    <DefaultLayout>
       {isPageLoading() ? <FullPageLoader /> : null}
       <div className="h-full w-screen bg-blue2 flex justify-center relative overflow-auto">
         <main className="max-w-[940px] w-full py-[32px] flex flex-col ">
@@ -241,7 +242,7 @@ const AdminPage = () => {
           onSubmit={handleSubmitEvent}
         />
       </div>
-    </>
+    </DefaultLayout>
   );
 };
 

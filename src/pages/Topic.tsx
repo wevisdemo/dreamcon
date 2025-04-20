@@ -46,6 +46,7 @@ import { useEvent } from "../hooks/useEvent";
 import { DreamConEvent } from "../types/event";
 import useAuth from "../hooks/useAuth";
 import ChainIcon from "../components/icon/ChainIcon";
+import DefaultLayout from "../layouts/default";
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
@@ -299,7 +300,7 @@ export default function TopicPage() {
   };
 
   return (
-    <>
+    <DefaultLayout>
       <DndContext
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
@@ -426,6 +427,6 @@ export default function TopicPage() {
           ) : null}
         </DragOverlay>
       </DndContext>
-    </>
+    </DefaultLayout>
   );
 }
