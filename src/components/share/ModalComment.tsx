@@ -64,20 +64,6 @@ export default function ModalComment(props: PropTypes) {
     return null;
   };
 
-  const getCommentViewStyle =
-    "rounded-[48px] py-[10px] px-[16px] text-[13px] leading-[13px] border-[1px]";
-
-  const getCommentViewColor = (view: CommentView) => {
-    switch (view) {
-      case CommentView.AGREE:
-        return "#6AB193";
-      case CommentView.PARTIAL_AGREE:
-        return "#D29C13";
-      case CommentView.DISAGREE:
-        return "#CB3535";
-    }
-  };
-
   const onSubmit = () => {
     if (commentView && text) {
       switch (props.mode) {
@@ -118,22 +104,6 @@ export default function ModalComment(props: PropTypes) {
         return "lightRed";
     }
   };
-
-  const data = [
-    {
-      text: "เห็นด้วย",
-      color: getCommentViewColor(CommentView.AGREE),
-    },
-
-    {
-      text: "เห็นด้วยบางส่วน",
-      color: getCommentViewColor(CommentView.PARTIAL_AGREE),
-    },
-    {
-      text: "ไม่เห็นด้วย",
-      color: getCommentViewColor(CommentView.DISAGREE),
-    },
-  ];
 
   return (
     <div
@@ -187,21 +157,37 @@ export default function ModalComment(props: PropTypes) {
         <div className="p-[16px] flex flex-col space-y-[12px]">
           <p>คุณคิดอย่างไรกับข้อถกเถียงนี้</p>
           <div className="flex space-x-[8px]">
-            {data.map((item, index) => (
-              <button
-                key={index}
-                className={getCommentViewStyle}
-                style={{
-                  borderColor: item.color,
-                  color: commentView === item.text ? "#FFFFFF" : item.color,
-                  backgroundColor:
-                    commentView === item.text ? item.color : "transparent",
-                }}
-                onClick={() => setCommentView(item.text as CommentView)}
-              >
-                {item.text}
-              </button>
-            ))}
+            <button
+              className={`py-[10px] ${
+                commentView === CommentView.AGREE
+                  ? "bg-lightGreen"
+                  : "bg-lightGreen/25"
+              } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
+              onClick={() => setCommentView(CommentView.AGREE)}
+            >
+              เห็นด้วย
+            </button>
+            <button
+              className={`py-[10px] ${
+                commentView === CommentView.PARTIAL_AGREE
+                  ? "bg-lightYellow"
+                  : "bg-lightYellow/25"
+              } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
+              onClick={() => setCommentView(CommentView.PARTIAL_AGREE)}
+            >
+              เห็นด้วยบ้าง
+            </button>
+            <button
+              className={`py-[10px] ${
+                commentView === CommentView.DISAGREE
+                  ? "bg-lightRed"
+                  : "bg-lightRed/25"
+              } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
+          `}
+              onClick={() => setCommentView(CommentView.DISAGREE)}
+            >
+              ไม่เห็นด้วย
+            </button>
           </div>
           <div className="w-full rounded-[5px] border border-[1px] border-gray1 overflow-hidden">
             <div className="px-[10px] py-[8px] bg-gray2 flex gap-[4px]">
