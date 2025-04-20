@@ -34,8 +34,7 @@ export default function TopicWrapper(props: PropTypes) {
   const readOnly = () => {
     if (modeContext.value === "view") return true;
     if (userContext.userState?.role === "user") return true;
-
-    return true;
+    return false;
   };
   const handleSelectTopic = (topic: Topic) => {
     props.setSelectedTopic(topic);
