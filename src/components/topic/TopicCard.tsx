@@ -107,8 +107,6 @@ export default function TopicCard(props: PropTypes) {
       return false;
     }
     switch (userContext.userState?.role) {
-      case "admin":
-        return true;
       case "writer":
         return props.topic.event_id === userContext.userState?.event.id;
       default:
