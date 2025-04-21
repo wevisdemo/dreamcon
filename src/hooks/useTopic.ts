@@ -72,6 +72,7 @@ export const useTopic = () => {
           return {
             id: doc.id,
             title: data.title,
+            category: data.category,
             created_at: data.created_at.toDate(),
             event_id: data.event_id,
             comment_level1_count: commentLv1Count,

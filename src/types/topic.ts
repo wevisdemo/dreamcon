@@ -59,6 +59,7 @@ export const topicCategories: TopicCategory[] = [
 export interface LightWeightTopic {
   id: string;
   title: string;
+  category: string;
   created_at: Date;
   event_id: string;
   comment_level1_count: number;

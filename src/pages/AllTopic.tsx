@@ -274,6 +274,54 @@ export default function AllTopic() {
     setReadyToFetchParams(true);
   };
 
+  // const getQueryTopicIds = (
+  //   lightWeightTopics: LightWeightTopic[],
+  //   topicFilter: TopicFilter,
+  //   limit: number,
+  //   pinList: string[]
+  // ) => {
+  //   const filteredTopic = lightWeightTopics.filter((topic) => {
+  //     // regex to check if topic.title contains the search text
+  //     const regex = new RegExp(topicFilter.searchText, "i");
+  //     // sorted by filter
+  //     const isFilteredByEvent =
+  //       topicFilter.selectedEvent === null ||
+  //       topic.event_id === topicFilter.selectedEvent.id;
+  //     const isFilteredByCategory =
+  //       topicFilter.category === "ทั้งหมด" ||
+  //       topic.category === topicFilter.category;
+  //     return (
+  //       regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
+  //     );
+  //   });
+  //   // sort by latest or most-commented
+  //   filteredTopic
+  //     .sort((a, b) => {
+  //       if (topicFilter.sortedBy === "latest") {
+  //         return (
+  //           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  //         );
+  //       } else if (topicFilter.sortedBy === "most-commented") {
+  //         return b.comment_level1_count - a.comment_level1_count;
+  //       }
+  //       return 0;
+  //     })
+  //     // sort pinned topics to the top
+  //     .sort((a, b) => {
+  //       const aPinnedIndex = pinList.indexOf(a.id);
+  //       const bPinnedIndex = pinList.indexOf(b.id);
+  //       if (aPinnedIndex !== -1 && bPinnedIndex === -1) {
+  //         return -1;
+  //       } else if (aPinnedIndex === -1 && bPinnedIndex !== -1) {
+  //         return 1;
+  //       } else {
+  //         return 0;
+  //       }
+  //     });
+  //   const topicIds = filteredTopic.map((topic) => topic.id);
+  //   return topicIds.slice(0, limit);
+  // };
+
   // const fetchMoreTopics = async () => {
   //   if (displayTopics.length < itemLimit) return;
   //   const limitCount = itemLimit + 12;
