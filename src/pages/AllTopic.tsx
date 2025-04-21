@@ -113,11 +113,13 @@ export default function AllTopic() {
   });
   const { getLightWeightTopics } = useTopic();
   const [topicLink, setTopicLink] = useState<string>("");
+  const [readyToFetchParams, setReadyToFetchParams] = useState(false);
 
   useEffect(() => {
-    doToken();
-    fetchLightWeightTopics();
-  }, []);
+    if (readyToFetchParams) {
+      doToken();
+    }
+  }, [readyToFetchParams]);
 
   const fetchLightWeightTopics = async () => {
     const topics = await getLightWeightTopics();
@@ -138,6 +140,18 @@ export default function AllTopic() {
 
     setUserStoreFromToken();
     manageMode();
+    manageEvent();
+  };
+
+  const manageEvent = () => {
+    const params = new URLSearchParams(location.search);
+    const eventID = params.get("event");
+    if (eventID) {
+      const event = events.find((event) => event.id === eventID);
+      if (event) {
+        setTopicFilter({ ...topicFilter, selectedEvent: event });
+      }
+    }
   };
 
   const manageMode = () => {
@@ -256,6 +270,8 @@ export default function AllTopic() {
     console.log("fetch event => ", events);
     setEvents(events);
     eventContext.setEvents(events);
+
+    setReadyToFetchParams(true);
   };
 
   // const fetchMoreTopics = async () => {
