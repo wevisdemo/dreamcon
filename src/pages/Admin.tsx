@@ -90,7 +90,7 @@ const AdminPage = () => {
     if (!writerID) {
       return;
     }
-    const link = `${window.origin}/?writer=${writerID}`;
+    const link = `${window.origin}/topics/?writer=${writerID}`;
     navigator.clipboard.writeText(link);
   };
 

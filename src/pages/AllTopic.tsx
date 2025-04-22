@@ -22,24 +22,21 @@ import {
 } from "../types/dragAndDrop";
 import CommentAndChildren from "../components/topic/CommentAndChildren";
 import {
+  LightWeightTopic,
   ModalTopicPayload,
   Topic,
   TopicCategory,
-  TopicDB,
 } from "../types/topic";
 import {
   collection,
-  getDocs,
-  where,
   query,
   onSnapshot,
   Unsubscribe,
   // limit,
   // orderBy,
-  QueryConstraint,
 } from "firebase/firestore";
 import { db } from "../utils/firestore";
-import { AddOrEditCommentPayload, CommentDB, Comment } from "../types/comment";
+import { AddOrEditCommentPayload, Comment } from "../types/comment";
 import { useAddTopic } from "../hooks/useAddTopic";
 import { useEditTopic } from "../hooks/useEditTopic";
 import { useAddComment } from "../hooks/useAddComment";
@@ -47,7 +44,6 @@ import { useEditComment } from "../hooks/useEditComment";
 import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
 import { useMoveComment } from "../hooks/useMoveComment";
 import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
-import { convertTopicDBToTopic } from "../utils/mapping";
 import FullPageLoader from "../components/FullPageLoader";
 import AlertPopup from "../components/AlertMoveComment";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -62,7 +58,7 @@ import ViewerLayout from "../layouts/viewer";
 
 export default function AllTopic() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
-  // const [itemLimit, setItemLimit] = useState(24);
+  const [itemLimit, setItemLimit] = useState(12);
   const [showCopyAlert, setShowCopyAlert] = useState(false);
   const [showPasteAlert, setShowPasteAlert] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
@@ -111,7 +107,7 @@ export default function AllTopic() {
     category: "ทั้งหมด",
     searchText: "",
   });
-  const { getLightWeightTopics } = useTopic();
+  const { getLightWeightTopics, getTopicByIds } = useTopic();
   const [topicLink, setTopicLink] = useState<string>("");
   const [readyToFetchParams, setReadyToFetchParams] = useState(false);
 
@@ -172,15 +168,38 @@ export default function AllTopic() {
   //   fetchTopics();
   // }, [itemLimit]);
 
+  const fetchTopic2 = async () => {
+    const query = getQueryTopicIds(
+      homePageContext.lightWeightTopics.state,
+      topicFilter,
+      itemLimit,
+      pinContext.pinnedTopics
+    );
+    const topics = await getTopicByIds(query);
+    setDisplayTopics(topics);
+    setFirstTimeLoading(false);
+    return topics;
+  };
+
   useEffect(() => {
-    fetchTopics();
+    fetchTopic2();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    homePageContext.lightWeightTopics.state,
+    itemLimit,
+    topicFilter,
+    pinContext.pinnedTopics,
+  ]);
+
+  useEffect(() => {
+    // fetchTopics();
     fetchEvents();
     fetchLightWeightTopics();
   }, [topicFilter]);
 
   useEffect(() => {
     currentPage.setValue("all-topic");
-    fetchTopics();
+    // fetchTopics();
     fetchEvents();
     fetchLightWeightTopics();
 
@@ -190,13 +209,13 @@ export default function AllTopic() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   observerRef.current?.addEventListener("scroll", handleScroll);
+  useEffect(() => {
+    observerRef.current?.addEventListener("scroll", handleScroll);
 
-  //   return () => {
-  //     observerRef.current?.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [displayTopics]);
+    return () => {
+      observerRef.current?.removeEventListener("scroll", handleScroll);
+    };
+  }, [displayTopics]);
 
   useEffect(() => {
     clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
@@ -237,13 +256,13 @@ export default function AllTopic() {
     setShowPasteAlert(false);
   };
 
-  // const handleScroll = () => {
-  //   if (!observerRef.current) return;
-  //   const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
-  //   if (scrollTop + clientHeight >= scrollHeight - 10) {
-  //     fetchMoreTopics(); // Load more topics when scrolled to bottom
-  //   }
-  // };
+  const handleScroll = () => {
+    if (!observerRef.current) return;
+    const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
+    if (scrollTop + clientHeight >= scrollHeight - 10) {
+      fetchMoreTopics(); // Load more topics when scrolled to bottom
+    }
+  };
 
   const subscribeCopyComment = () => {
     setShowPasteAlert(false);
@@ -274,64 +293,64 @@ export default function AllTopic() {
     setReadyToFetchParams(true);
   };
 
-  // const getQueryTopicIds = (
-  //   lightWeightTopics: LightWeightTopic[],
-  //   topicFilter: TopicFilter,
-  //   limit: number,
-  //   pinList: string[]
-  // ) => {
-  //   const filteredTopic = lightWeightTopics.filter((topic) => {
-  //     // regex to check if topic.title contains the search text
-  //     const regex = new RegExp(topicFilter.searchText, "i");
-  //     // sorted by filter
-  //     const isFilteredByEvent =
-  //       topicFilter.selectedEvent === null ||
-  //       topic.event_id === topicFilter.selectedEvent.id;
-  //     const isFilteredByCategory =
-  //       topicFilter.category === "ทั้งหมด" ||
-  //       topic.category === topicFilter.category;
-  //     return (
-  //       regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
-  //     );
-  //   });
-  //   // sort by latest or most-commented
-  //   filteredTopic
-  //     .sort((a, b) => {
-  //       if (topicFilter.sortedBy === "latest") {
-  //         return (
-  //           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  //         );
-  //       } else if (topicFilter.sortedBy === "most-commented") {
-  //         return b.comment_level1_count - a.comment_level1_count;
-  //       }
-  //       return 0;
-  //     })
-  //     // sort pinned topics to the top
-  //     .sort((a, b) => {
-  //       const aPinnedIndex = pinList.indexOf(a.id);
-  //       const bPinnedIndex = pinList.indexOf(b.id);
-  //       if (aPinnedIndex !== -1 && bPinnedIndex === -1) {
-  //         return -1;
-  //       } else if (aPinnedIndex === -1 && bPinnedIndex !== -1) {
-  //         return 1;
-  //       } else {
-  //         return 0;
-  //       }
-  //     });
-  //   const topicIds = filteredTopic.map((topic) => topic.id);
-  //   return topicIds.slice(0, limit);
-  // };
+  const getQueryTopicIds = (
+    lightWeightTopics: LightWeightTopic[],
+    topicFilter: TopicFilter,
+    limit: number,
+    pinList: string[]
+  ) => {
+    const filteredTopic = lightWeightTopics.filter((topic) => {
+      // regex to check if topic.title contains the search text
+      const regex = new RegExp(topicFilter.searchText, "i");
+      // sorted by filter
+      const isFilteredByEvent =
+        topicFilter.selectedEvent === null ||
+        topic.event_id === topicFilter.selectedEvent.id;
+      const isFilteredByCategory =
+        topicFilter.category === "ทั้งหมด" ||
+        topic.category === topicFilter.category;
+      return (
+        regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
+      );
+    });
+    // sort by latest or most-commented
+    filteredTopic
+      .sort((a, b) => {
+        if (topicFilter.sortedBy === "latest") {
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+        } else if (topicFilter.sortedBy === "most-commented") {
+          return b.comment_level1_count - a.comment_level1_count;
+        }
+        return 0;
+      })
+      // sort pinned topics to the top
+      .sort((a, b) => {
+        const aPinnedIndex = pinList.indexOf(a.id);
+        const bPinnedIndex = pinList.indexOf(b.id);
+        if (aPinnedIndex !== -1 && bPinnedIndex === -1) {
+          return -1;
+        } else if (aPinnedIndex === -1 && bPinnedIndex !== -1) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+    const topicIds = filteredTopic.map((topic) => topic.id);
+    return topicIds.slice(0, limit);
+  };
 
-  // const fetchMoreTopics = async () => {
-  //   if (displayTopics.length < itemLimit) return;
-  //   const limitCount = itemLimit + 12;
-  //   setItemLimit(limitCount);
-  // };
+  const fetchMoreTopics = async () => {
+    if (displayTopics.length < itemLimit) return;
+    const limitCount = itemLimit + 12;
+    setItemLimit(limitCount);
+  };
 
   const subscribeTopics = (): Unsubscribe => {
     const topicsQuery = query(collection(db, "topics"));
     const unsubscribe = onSnapshot(topicsQuery, () => {
-      fetchTopics();
+      // fetchTopics();
       fetchLightWeightTopics();
       fetchEvents();
     });
@@ -388,25 +407,6 @@ export default function AllTopic() {
     }?${params.toString()}`;
   };
 
-  const buildFirestoreQueryFromFilter = (
-    filter: TopicFilter
-  ): QueryConstraint[] => {
-    const { selectedEvent, category } = filter;
-    const queryChain: QueryConstraint[] = [];
-    if (selectedEvent) {
-      queryChain.push(where("event_id", "==", selectedEvent.id));
-    }
-    if (category !== "ทั้งหมด") {
-      queryChain.push(where("category", "==", category));
-    }
-
-    // TODO: search by title later
-    // if (searchText) {
-    //   queryRef = query(queryRef, where("title", ">=", searchText), where("title", "<=", searchText + "\uf8ff"));
-    // }
-    return queryChain;
-  };
-
   const handleOnSubmitTopic = async (
     mode: "create" | "edit",
     payload: ModalTopicPayload
@@ -433,57 +433,6 @@ export default function AllTopic() {
 
         break;
     }
-  };
-  const fetchTopics = async () => {
-    // const limitCount = itemLimit;
-    const topicsCollection = collection(db, "topics");
-    const commentsCollection = collection(db, "comments");
-    const filterQurey = buildFirestoreQueryFromFilter(topicFilter);
-    const topicQuery = query(
-      topicsCollection,
-      ...filterQurey
-      // limit(limitCount),
-      // orderBy("created_at", "desc")
-    );
-    const topicsSnapshot = await getDocs(topicQuery);
-    const topics = topicsSnapshot.docs.map((doc) => {
-      return { id: doc.id, ...doc.data() } as TopicDB;
-    });
-    if (!topics.length) {
-      setDisplayTopics([]);
-      setFirstTimeLoading(false);
-      return;
-    }
-    const topicIds = topics.map((topic) => topic.id);
-
-    const commentsQuery = query(
-      commentsCollection,
-      where("parent_topic_id", "in", topicIds)
-    );
-    const commentsSnapshot = await getDocs(commentsQuery);
-    const commentsByTopic: Record<string, CommentDB[]> = {};
-    commentsSnapshot.forEach((doc) => {
-      const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
-      const topicId = commentDB.parent_topic_id;
-
-      if (!commentsByTopic[topicId]) {
-        commentsByTopic[topicId] = [];
-      }
-      commentsByTopic[topicId].push(commentDB);
-    });
-
-    // Map comments to topics
-    const fineTopics = topics
-      .map((topic) => {
-        const comments = commentsByTopic[topic.id] || [];
-        return convertTopicDBToTopic(topic, comments);
-      })
-      .sort((a, b) => {
-        return a.created_at > b.created_at ? -1 : 1;
-      });
-
-    setFirstTimeLoading(false);
-    setDisplayTopics(fineTopics);
   };
 
   const refreshSelectedTopicFromDisplayTopic = (topics: Topic[]) => {
@@ -796,7 +745,7 @@ export default function AllTopic() {
       droppableData: { type: "convert-to-topic" },
       initialTopic: topic,
     });
-    fetchTopics();
+    // fetchTopics();
     setShowCopyAlert(false);
     setShowPasteAlert(true);
   }
