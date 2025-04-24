@@ -91,56 +91,20 @@ export const useTopic = () => {
     setLoading(true);
     setError(null);
     const topicIdsList = topicIds;
+    if (topicIdsList.length === 0) {
+      setLoading(false);
+      return [];
+    }
+    const chunkSize = 30;
+    const chunks = [];
+    for (let i = 0; i < topicIdsList.length; i += chunkSize) {
+      chunks.push(topicIdsList.slice(i, i + chunkSize));
+    }
     try {
-      const topicsCollection = collection(db, "topics");
-
-      const q = query(
-        topicsCollection,
-        where(documentId(), "in", topicIdsList)
+      const results = await Promise.all(
+        chunks.map((chunk) => getSeparatedTopicsByIds(chunk))
       );
-      const snapshot = await getDocs(q);
-      if (snapshot.empty) {
-        return [];
-      }
-      const topics = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          ...doc.data(),
-          id: doc.id,
-          created_at: data.created_at.toDate(),
-          updated_at: data.updated_at.toDate(),
-          notified_at: data.notified_at.toDate(),
-        } as TopicDB;
-      });
-      const topicIds = topics.map((topic) => topic.id);
-      const commentsCollection = collection(db, "comments");
-      const commentsQuery = query(
-        commentsCollection,
-        where("parent_topic_id", "in", topicIds)
-      );
-
-      const commentsSnapshot = await getDocs(commentsQuery);
-      const commentsByTopic: Record<string, CommentDB[]> = {};
-
-      commentsSnapshot.forEach((doc) => {
-        const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
-        const topicId = commentDB.parent_topic_id;
-
-        if (!commentsByTopic[topicId]) {
-          commentsByTopic[topicId] = [];
-        }
-        commentsByTopic[topicId].push(commentDB);
-      });
-      // Map comments to topics
-      const fineTopics = topics
-        .map((topic) => {
-          const comments = commentsByTopic[topic.id] || [];
-          return convertTopicDBToTopic(topic, comments);
-        })
-        .sort((a, b) => {
-          return a.created_at > b.created_at ? -1 : 1;
-        });
-      return fineTopics;
+      return results.flat();
     } catch (err) {
       console.error("Error fetching topics by ids: ", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred");
@@ -148,6 +112,57 @@ export const useTopic = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const getSeparatedTopicsByIds = async (
+    topicIdsList: string[]
+  ): Promise<Topic[]> => {
+    const topicsCollection = collection(db, "topics");
+
+    const q = query(topicsCollection, where(documentId(), "in", topicIdsList));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+      return [];
+    }
+    const topics = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        ...doc.data(),
+        id: doc.id,
+        created_at: data.created_at.toDate(),
+        updated_at: data.updated_at.toDate(),
+        notified_at: data.notified_at.toDate(),
+      } as TopicDB;
+    });
+    const topicIds = topics.map((topic) => topic.id);
+    const commentsCollection = collection(db, "comments");
+    const commentsQuery = query(
+      commentsCollection,
+      where("parent_topic_id", "in", topicIds)
+    );
+
+    const commentsSnapshot = await getDocs(commentsQuery);
+    const commentsByTopic: Record<string, CommentDB[]> = {};
+
+    commentsSnapshot.forEach((doc) => {
+      const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
+      const topicId = commentDB.parent_topic_id;
+
+      if (!commentsByTopic[topicId]) {
+        commentsByTopic[topicId] = [];
+      }
+      commentsByTopic[topicId].push(commentDB);
+    });
+    // Map comments to topics
+    const fineTopics = topics
+      .map((topic) => {
+        const comments = commentsByTopic[topic.id] || [];
+        return convertTopicDBToTopic(topic, comments);
+      })
+      .sort((a, b) => {
+        return a.created_at > b.created_at ? -1 : 1;
+      });
+    return fineTopics;
   };
 
   const getTopicsByFilter = async (filter: {

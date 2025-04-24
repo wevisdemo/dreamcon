@@ -164,10 +164,6 @@ export default function AllTopic() {
     return;
   };
 
-  // useEffect(() => {
-  //   fetchTopics();
-  // }, [itemLimit]);
-
   const fetchTopic2 = async (
     lightWeightTopics: LightWeightTopic[],
     itemLimit: number,
@@ -202,17 +198,6 @@ export default function AllTopic() {
   };
 
   useEffect(() => {
-    fetchTopic2(
-      homePageContext.lightWeightTopics.state,
-      itemLimit,
-      topicFilter,
-      pinContext.pinnedTopics
-    );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [homePageContext.lightWeightTopics.state]);
-
-  useEffect(() => {
     refreshTopicsWithLoading(
       homePageContext.lightWeightTopics.state,
       itemLimit,
@@ -235,7 +220,8 @@ export default function AllTopic() {
     currentPage.setValue("all-topic");
     await fetchEvents();
     const topicLW = await fetchLightWeightTopics();
-    await fetchTopic2(topicLW, itemLimit, topicFilter, pinContext.pinnedTopics);
+    const pinnedTopics = pinContext.getPinnedTopics();
+    await fetchTopic2(topicLW, itemLimit, topicFilter, pinnedTopics);
     setFirstTimeLoading(false);
   };
 
@@ -378,8 +364,14 @@ export default function AllTopic() {
 
   const subscribeTopics = (): Unsubscribe => {
     const topicsQuery = query(collection(db, "topics"));
-    const unsubscribe = onSnapshot(topicsQuery, () => {
-      fetchLightWeightTopics();
+    const unsubscribe = onSnapshot(topicsQuery, async () => {
+      const lightWeightTopics = await fetchLightWeightTopics();
+      fetchTopic2(
+        lightWeightTopics,
+        itemLimit,
+        topicFilter,
+        pinContext.pinnedTopics
+      );
     });
     return unsubscribe;
   };

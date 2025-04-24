@@ -6,12 +6,14 @@ export interface PinStore {
   pinnedTopics: string[];
   pinTopic: (topicId: string) => void;
   unpinTopic: (topicId: string) => void;
+  getPinnedTopics: () => string[];
 }
 
 export const initialPinStore: PinStore = {
   pinnedTopics: [],
   pinTopic: () => {},
   unpinTopic: () => {},
+  getPinnedTopics: () => [],
 };
 
 const LOCAL_STORAGE_KEY = "pinned_topics";
@@ -33,6 +35,15 @@ export const usePinStore = (): PinStore => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(pinnedTopics));
   }, [pinnedTopics, isFirstLoad]);
 
+  const getPinnedTopics = () => {
+    const storedTopics = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (storedTopics) {
+      const list = JSON.parse(storedTopics);
+      return list;
+    }
+    return [];
+  };
+
   // Pin a topic
   const pinTopic = (topicId: string) => {
     if (!pinnedTopics.includes(topicId)) {
@@ -49,5 +60,6 @@ export const usePinStore = (): PinStore => {
     pinnedTopics,
     pinTopic,
     unpinTopic,
+    getPinnedTopics,
   };
 };
