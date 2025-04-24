@@ -168,46 +168,76 @@ export default function AllTopic() {
   //   fetchTopics();
   // }, [itemLimit]);
 
-  const fetchTopic2 = async () => {
+  const fetchTopic2 = async (
+    lightWeightTopics: LightWeightTopic[],
+    itemLimit: number,
+    topicFilter: TopicFilter,
+    pinnedIDs: string[]
+  ) => {
     const query = getQueryTopicIds(
-      homePageContext.lightWeightTopics.state,
+      lightWeightTopics,
       topicFilter,
       itemLimit,
-      pinContext.pinnedTopics
+      pinnedIDs
     );
+    if (query.length === 0) {
+      setDisplayTopics([]);
+      return [];
+    }
     const topics = await getTopicByIds(query);
     setDisplayTopics(topics);
-    setFirstTimeLoading(false);
+    // setFirstTimeLoading(false);
     return topics;
   };
 
+  const refreshTopicsWithLoading = async (
+    lightWeightTopics: LightWeightTopic[],
+    itemLimit: number,
+    topicFilter: TopicFilter,
+    pinnedIDs: string[]
+  ) => {
+    setFirstTimeLoading(true);
+    await fetchTopic2(lightWeightTopics, itemLimit, topicFilter, pinnedIDs);
+    setFirstTimeLoading(false);
+  };
+
   useEffect(() => {
-    fetchTopic2();
+    fetchTopic2(
+      homePageContext.lightWeightTopics.state,
+      itemLimit,
+      topicFilter,
+      pinContext.pinnedTopics
+    );
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    homePageContext.lightWeightTopics.state,
-    itemLimit,
-    topicFilter,
-    pinContext.pinnedTopics,
-  ]);
+  }, [homePageContext.lightWeightTopics.state]);
 
   useEffect(() => {
-    // fetchTopics();
-    fetchEvents();
-    fetchLightWeightTopics();
-  }, [topicFilter]);
+    refreshTopicsWithLoading(
+      homePageContext.lightWeightTopics.state,
+      itemLimit,
+      topicFilter,
+      pinContext.pinnedTopics
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemLimit, topicFilter, pinContext.pinnedTopics]);
 
   useEffect(() => {
-    currentPage.setValue("all-topic");
-    // fetchTopics();
-    fetchEvents();
-    fetchLightWeightTopics();
-
+    fetchFirstTime();
     const unsubscribe = subscribeTopics();
     return () => {
       unsubscribe();
     };
   }, []);
+
+  const fetchFirstTime = async () => {
+    currentPage.setValue("all-topic");
+    await fetchEvents();
+    const topicLW = await fetchLightWeightTopics();
+    await fetchTopic2(topicLW, itemLimit, topicFilter, pinContext.pinnedTopics);
+    setFirstTimeLoading(false);
+  };
 
   useEffect(() => {
     observerRef.current?.addEventListener("scroll", handleScroll);
@@ -286,7 +316,6 @@ export default function AllTopic() {
 
   const fetchEvents = async () => {
     const events = await getEvents();
-    console.log("fetch event => ", events);
     setEvents(events);
     eventContext.setEvents(events);
 
@@ -350,9 +379,7 @@ export default function AllTopic() {
   const subscribeTopics = (): Unsubscribe => {
     const topicsQuery = query(collection(db, "topics"));
     const unsubscribe = onSnapshot(topicsQuery, () => {
-      // fetchTopics();
       fetchLightWeightTopics();
-      fetchEvents();
     });
     return unsubscribe;
   };

@@ -43,8 +43,6 @@ export default function LoginPage() {
       console.error("Error signing in:", error);
       // Handle error (e.g., show an error message)
     }
-
-    console.log(username, password);
   };
   const validateInputs = (
     username: string,

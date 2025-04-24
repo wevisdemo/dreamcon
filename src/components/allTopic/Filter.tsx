@@ -60,13 +60,7 @@ export default function Filter(props: PropTypes) {
   };
 
   const isEventOwner = (targetEvent: DreamConEvent) => {
-    console.log("isEventOwner", userContext.userState?.role);
     if (userContext.userState?.role === "writer") {
-      console.log(
-        "isEventOwner",
-        userContext.userState?.event.id,
-        targetEvent.id
-      );
       return userContext.userState.event.id === targetEvent.id;
     }
     return false;

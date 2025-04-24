@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { db } from "../utils/firestore";
 import {
   doc,
@@ -10,12 +10,10 @@ import {
 } from "firebase/firestore";
 import { Comment } from "../types/comment";
 import { Topic } from "../types/topic";
-import { StoreContext } from "../store";
 
 export const useMoveComment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user: userContext } = useContext(StoreContext);
 
   const commentsCollection = collection(db, "comments");
 
@@ -43,9 +41,6 @@ export const useMoveComment = () => {
 
     setLoading(true);
     setError(null);
-
-    console.log("userContext => ", userContext.userState);
-
     try {
       await runTransaction(db, async (transaction) => {
         // Step 1: Fetch the target comment
