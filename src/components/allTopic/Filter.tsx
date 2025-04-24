@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DreamConEvent } from "../../types/event";
 import {
   TopicFilter,
@@ -20,6 +20,8 @@ interface PropTypes {
 
 export default function Filter(props: PropTypes) {
   const { user: userContext } = useContext(StoreContext);
+  const [searchText, setSearchText] = useState<string>("");
+  const [debouncedValue, setDebouncedValue] = useState(searchText);
 
   const handleEventChange = (event: DreamConEvent | null) => {
     props.setFilter({
@@ -42,11 +44,25 @@ export default function Filter(props: PropTypes) {
     });
   };
 
-  const handleSearchTextChange = (text: string) => {
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(searchText);
+    }, 500); // delay in ms
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchText]);
+
+  useEffect(() => {
     props.setFilter({
       ...props.filter,
-      searchText: text,
+      searchText: debouncedValue,
     });
+  }, [debouncedValue]);
+
+  const handleSearchTextChange = (text: string) => {
+    setSearchText(text);
   };
 
   const getEventHighlightedTopic = (event: DreamConEvent) => {
@@ -190,7 +206,7 @@ export default function Filter(props: PropTypes) {
             type="text"
             placeholder="ค้นหา"
             className="bg-white w-[150px] border border-blue3 outline-none px-[8px] py-[6px] rounded-[48px]"
-            value={props.filter.searchText}
+            value={searchText}
             onChange={(e) => {
               handleSearchTextChange(e.target.value);
             }}
