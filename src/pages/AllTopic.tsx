@@ -210,9 +210,11 @@ export default function AllTopic() {
 
   useEffect(() => {
     fetchFirstTime();
-    const unsubscribe = subscribeTopics();
+    const unsubscribeTopic = subscribeTopics();
+    const unsubscribeEvent = subscribeEvents();
     return () => {
-      unsubscribe();
+      unsubscribeTopic();
+      unsubscribeEvent();
     };
   }, []);
 
@@ -372,6 +374,14 @@ export default function AllTopic() {
         topicFilter,
         pinContext.pinnedTopics
       );
+    });
+    return unsubscribe;
+  };
+
+  const subscribeEvents = (): Unsubscribe => {
+    const eventsQuery = query(collection(db, "events"));
+    const unsubscribe = onSnapshot(eventsQuery, () => {
+      fetchEvents();
     });
     return unsubscribe;
   };

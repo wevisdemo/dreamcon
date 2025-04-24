@@ -4,9 +4,6 @@ import {
   runTransaction,
   getDocs,
   getDoc,
-  getCountFromServer,
-  query,
-  where,
 } from "firebase/firestore";
 import {
   AddOrEditEventPayload,
@@ -80,15 +77,19 @@ export const useEvent = () => {
       );
       // get topic counts
       const topicsCollection = collection(db, "topics");
-      for (const event of events) {
-        const queryChain = query(
-          topicsCollection,
-          where("event_id", "==", event.id)
-        );
-        const topicsSnapshot = await getCountFromServer(queryChain);
-        const count = topicsSnapshot.data().count;
-        event.topic_counts = count;
-      }
+      const topicCountsMap: Record<string, number> = {};
+      const topicsSnapshot = await getDocs(topicsCollection);
+
+      topicsSnapshot.docs.forEach((doc) => {
+        const topic = doc.data();
+        if (topic.event_id) {
+          topicCountsMap[topic.event_id] =
+            (topicCountsMap[topic.event_id] || 0) + 1;
+        }
+      });
+      events.forEach((event) => {
+        event.topic_counts = topicCountsMap[event.id] || 0;
+      });
 
       return events;
     } catch (err) {
