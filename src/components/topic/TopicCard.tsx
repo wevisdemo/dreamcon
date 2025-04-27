@@ -7,6 +7,7 @@ import { Popover } from "@mui/material";
 import MenuPopover from "../share/MenuPopover";
 import Dropdown from "../share/Dropdown";
 import { StoreContext } from "../../store";
+import { usePermission } from "../../hooks/usePermission";
 
 interface PropTypes {
   topic: Topic;
@@ -26,6 +27,7 @@ export default function TopicCard(props: PropTypes) {
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const { user: userContext, mode: modeContext } = useContext(StoreContext);
+  const { isReadOnly } = usePermission();
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "topic-menu" : undefined;
@@ -229,7 +231,7 @@ export default function TopicCard(props: PropTypes) {
           </Tooltip>
         )}
       </div>
-      {modeContext.value !== "view" && (
+      {!isReadOnly() && (
         <>
           <div className="flex gap-[8px]">
             <button
