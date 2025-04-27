@@ -23,6 +23,7 @@ export default function ModalTopic(props: PropTypes) {
 
   useEffect(() => {
     setText(props.defaultState?.title || "");
+    setCategory((props.defaultState?.category as TopicCategory) || "");
   }, [props.defaultState]);
 
   if (!props.isOpen) return null;
@@ -40,20 +41,19 @@ export default function ModalTopic(props: PropTypes) {
   };
 
   const onSubmit = () => {
-    if (!category) return;
     switch (props.mode) {
       case "create":
         props.onSubmit(props.mode, {
           title: text,
           event_id: props.defaultState?.event_id,
-          category,
+          category: category === "" ? "ไม่ระบุ" : category,
         });
         break;
       case "edit":
         props.onSubmit(props.mode, {
           id: props.defaultState?.id,
           title: text,
-          category: category,
+          category: category === "" ? "ไม่ระบุ" : category,
           event_id: props.defaultState?.event_id,
         });
         break;
@@ -62,7 +62,7 @@ export default function ModalTopic(props: PropTypes) {
   };
 
   const canSubmit = () => {
-    return text !== "" && category !== "";
+    return text !== "";
   };
 
   return (
