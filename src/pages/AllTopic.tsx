@@ -331,6 +331,10 @@ export default function AllTopic() {
 
   const fetchEvents = async () => {
     const events = await getEvents();
+    events.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
     setEvents(events);
     eventContext.setEvents(events);
 
