@@ -47,7 +47,7 @@ import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
 import FullPageLoader from "../components/FullPageLoader";
 import AlertPopup from "../components/AlertMoveComment";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { DreamConEvent } from "../types/event";
 import { useEvent } from "../hooks/useEvent";
@@ -99,7 +99,6 @@ export default function AllTopic() {
   const [firstTimeLoading, setFirstTimeLoading] = useState(true);
   const { loginFromToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
   const [events, setEvents] = useState<DreamConEvent[]>([]);
   const [topicFilter, setTopicFilter] = useState<TopicFilter>({
     selectedEvent: null,
@@ -130,7 +129,7 @@ export default function AllTopic() {
     if (writerToken) {
       await loginFromToken(writerToken);
       params.delete("writer");
-      navigate(`${location.pathname}?${params.toString()}`, { replace: true });
+      window.location.href = `${location.pathname}?${params.toString()}`;
       return;
     }
 
