@@ -55,6 +55,7 @@ import { TopicFilter } from "../types/home";
 import ChainIcon from "../components/icon/ChainIcon";
 import { useTopic } from "../hooks/useTopic";
 import ViewerLayout from "../layouts/viewer";
+import { usePermission } from "../hooks/usePermission";
 
 export default function AllTopic() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -109,6 +110,7 @@ export default function AllTopic() {
   const { getLightWeightTopics, getTopicByIds } = useTopic();
   const [topicLink, setTopicLink] = useState<string>("");
   const [readyToFetchParams, setReadyToFetchParams] = useState(false);
+  const { isReadOnly } = usePermission();
 
   useEffect(() => {
     if (readyToFetchParams) {
@@ -237,7 +239,10 @@ export default function AllTopic() {
     currentPage.setValue("all-topic");
     await fetchEvents();
     const topicLW = await fetchLightWeightTopics();
-    const pinnedTopics = pinContext.getPinnedTopics();
+    let pinnedTopics: string[] = [];
+    if (!isReadOnly) {
+      pinnedTopics = pinContext.getPinnedTopics();
+    }
     await fetchTopic2(topicLW, itemLimit, topicFilter, pinnedTopics);
     setFirstTimeLoading(false);
   };
