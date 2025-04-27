@@ -120,6 +120,10 @@ export default function TopicPage() {
     }
   }, [topicId]);
 
+  useEffect(() => {
+    manageMode();
+  }, [userContext.userState]);
+
   const subscribeTopic = (): Unsubscribe => {
     const topicRef = doc(db, `topics/${topicId}`);
     return onSnapshot(topicRef, () => {
@@ -277,10 +281,13 @@ export default function TopicPage() {
       case "view":
         modeContext.setValue("view");
         break;
-      case "write":
-        modeContext.setValue("write");
-        break;
+      default: {
+        if (userContext.userState?.role === "writer") {
+          modeContext.setValue("write");
+        }
+      }
     }
+
     return;
   };
 

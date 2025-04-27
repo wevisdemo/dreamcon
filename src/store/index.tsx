@@ -59,7 +59,7 @@ const StoreContext = createContext<State>({
   },
   pin: initialPinStore,
   mode: {
-    value: "write",
+    value: "view",
     setValue: () => {},
   },
 });
@@ -69,7 +69,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     "home" | "all-topic" | "topic" | "about"
   >("home");
   const [selectedTopic, setSelectedTopic] = React.useState<Topic | null>(null);
-  const [mode, setMode] = React.useState<"view" | "write">("write");
+  const [mode, setMode] = React.useState<"view" | "write">("view");
   const userState = useUserStore();
   const homePageState = useHomePageStore();
   const topicPageState = useTopicPageStore();

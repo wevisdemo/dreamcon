@@ -118,6 +118,10 @@ export default function AllTopic() {
     }
   }, [readyToFetchParams]);
 
+  useEffect(() => {
+    manageMode();
+  }, [userContext.userState]);
+
   const fetchLightWeightTopics = async () => {
     const topics = await getLightWeightTopics();
     homePageContext.lightWeightTopics.setState(topics);
@@ -158,10 +162,13 @@ export default function AllTopic() {
       case "view":
         modeContext.setValue("view");
         break;
-      case "write":
-        modeContext.setValue("write");
-        break;
+      default: {
+        if (userContext.userState?.role === "writer") {
+          modeContext.setValue("write");
+        }
+      }
     }
+
     return;
   };
 

@@ -7,6 +7,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import Filter from "./Filter";
 import { TopicFilter } from "../../types/home";
 import { DreamConEvent } from "../../types/event";
+import { usePermission } from "../../hooks/usePermission";
 
 interface PropTypes {
   topics: Topic[];
@@ -23,11 +24,10 @@ export default function TopicListSection(props: PropTypes) {
     homePage: homePageContext,
     clipboard: clipboardContext,
     pin: pinContext,
-    mode: modeContext,
-    user: userContext,
   } = useContext(StoreContext);
   const [hoveredAddTopic, setHoveredAddTopic] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
+  const { isReadOnly } = usePermission();
   useEffect(() => {
     const filteredTopics = props.topics.filter((topic) => {
       // regex to check if topic.title contains the search text
@@ -84,12 +84,6 @@ export default function TopicListSection(props: PropTypes) {
     });
   };
 
-  const onlyReadMode = () => {
-    return (
-      userContext.userState?.role === "user" || modeContext.value === "view"
-    );
-  };
-
   useHotkeys("Meta+v, ctrl+v", () => {
     if (hoveredAddTopic) {
       clipboardContext.emitMoveComment({
@@ -103,7 +97,7 @@ export default function TopicListSection(props: PropTypes) {
   };
   return (
     <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
-      {!onlyReadMode() && (
+      {!isReadOnly() && (
         <Droppable id="add-topic" data={{ type: "convert-to-topic" }}>
           {(isOver) => (
             <button
