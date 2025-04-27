@@ -130,8 +130,20 @@ const AdminPage = () => {
       alert("Failed to fetch events.");
       return;
     }
-    setEvents(events);
-    setDisplayEvents(events);
+    // sort by created_at latest first
+    events.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    const fileEvents = events.map((event, index) => {
+      return {
+        ...event,
+        index: index + 1,
+      };
+    });
+
+    setEvents(fileEvents);
+    setDisplayEvents(fileEvents);
   };
 
   const isPageLoading = () => {
@@ -222,9 +234,9 @@ const AdminPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-[32px] pb-[32px]">
-            {displayEvents.map((event, index) => (
+            {displayEvents.map((event) => (
               <EventCard
-                index={index + 1}
+                index={event.index}
                 key={event.id}
                 event={event}
                 onClickShareLink={() => handleCopyWriterLink(event.id)}
