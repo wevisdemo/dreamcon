@@ -138,7 +138,11 @@ export default function CommentCard(props: PropTypes) {
         aria-describedby={popoverID}
         className={`p-[10px] ${roundedClass()} text[13px] flex justify-between border-[2px] ${
           props.isOver ? "border-dashed border-blue4" : "border-transparent"
-        } hover:border-blue6 hover:cursor-pointer`}
+        } ${
+          hovered && props.canEdit
+            ? "hover:border-blue6 hover:cursor-pointer"
+            : ""
+        } `}
         style={{ backgroundColor: props.bgColor }}
       >
         <div className="flex flex-1 gap-[10px]">
