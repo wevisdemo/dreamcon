@@ -1,4 +1,12 @@
-import { collection, doc, getDoc, runTransaction } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  runTransaction,
+  where,
+} from "firebase/firestore";
 import { useState } from "react";
 import { db } from "../utils/firestore";
 import {
@@ -32,10 +40,46 @@ export const useWriter = () => {
       return {
         ...data,
         created_at: data.created_at.toDate(),
-        expired_at: data.expired_at.toDate(),
+        expired_at: data.expired_at ? data.expired_at.toDate() : undefined,
       } as Writer;
     } catch (err) {
       console.error("Error fetching writer document: ", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getPermanentWriterByEventID = async (
+    eventId: string
+  ): Promise<Writer | null> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const writersCollection = collection(db, "writers");
+      const writerQuery = query(
+        writersCollection,
+        where("event_id", "==", eventId),
+        where("is_permanent", "==", true)
+      );
+      const snapshot = await getDocs(writerQuery);
+      const writers = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          created_at: data.created_at.toDate(),
+        } as Writer;
+      });
+
+      if (writers.length === 0) {
+        return null;
+      }
+      return writers[0];
+    } catch (err) {
+      console.error("Error fetching permanent writer document: ", err);
       setError(err instanceof Error ? err.message : "Unknown error occurred");
       return null;
     } finally {
@@ -62,11 +106,25 @@ export const useWriter = () => {
       const expiredAt = new Date();
       expiredAt.setDate(timeNow.getDate() + 1); // Set expiration to 7 days from now
 
-      const writerDBPayload: CreateWriterDBPayload = {
+      let writerDBPayload: CreateWriterDBPayload = {
         event_id: payload.event_id,
         created_at: timeNow,
-        expired_at: expiredAt,
       };
+
+      if (payload.is_permanent) {
+        writerDBPayload = {
+          ...writerDBPayload,
+          is_permanent: payload.is_permanent,
+        };
+      } else {
+        const timeNow = new Date();
+        const expiredAt = new Date();
+        expiredAt.setDate(timeNow.getDate() + 1); // Set expiration to 7 days from now
+        writerDBPayload = {
+          ...writerDBPayload,
+          expired_at: expiredAt,
+        };
+      }
 
       await runTransaction(db, async (transaction) => {
         const eventSnapshot = await transaction.get(eventDocRef);
@@ -75,7 +133,7 @@ export const useWriter = () => {
           return;
         }
         const docRef = doc(writersCollection);
-        transaction.set(docRef, writerDBPayload);
+        await transaction.set(docRef, writerDBPayload);
 
         console.log("Writer document created with ID: ", docRef.id);
         id = docRef.id;
@@ -89,5 +147,11 @@ export const useWriter = () => {
     return id;
   };
 
-  return { createWriter, getWriterByID, loading, error };
+  return {
+    createWriter,
+    getPermanentWriterByEventID,
+    getWriterByID,
+    loading,
+    error,
+  };
 };

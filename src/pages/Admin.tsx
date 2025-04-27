@@ -55,7 +55,11 @@ const AdminPage = () => {
     getEvents,
     loading: eventLoading,
   } = useEvent();
-  const { createWriter, loading: writerLoading } = useWriter();
+  const {
+    createWriter,
+    loading: writerLoading,
+    getPermanentWriterByEventID,
+  } = useWriter();
 
   useEffect(() => {
     const auth = getAuth();
@@ -95,10 +99,17 @@ const AdminPage = () => {
   };
 
   const handleJumpToHomePage = async (eventId: string) => {
-    const writerID = await createWriter({ event_id: eventId });
+    let writerID = "";
+    const permanentWriter = await getPermanentWriterByEventID(eventId);
+    if (!permanentWriter) {
+      writerID = await createWriter({ event_id: eventId, is_permanent: true });
+    } else {
+      writerID = permanentWriter.id;
+    }
     if (!writerID) {
       return;
     }
+
     const link = `${window.origin}/topics/?writer=${writerID}&event=${eventId}`;
     window.location.href = link;
   };

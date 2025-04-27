@@ -20,7 +20,9 @@ const useAuth = () => {
     try {
       const writer = await getWriterByID(newToken);
       if (!writer) {
-        alert("token หมดอายุโปรดติดต่อ admin เพื่อขอ token ใหม่");
+        alert(
+          "This invite link may have expired. Please request a new one to continue."
+        );
         throw new Error("Writer not found for the given ID");
       }
       const event = await getEventByID(writer.event_id);
@@ -28,16 +30,24 @@ const useAuth = () => {
         throw new Error("Event not found for the given ID");
       }
 
-      const { expired_at } = writer;
-      const expirationDate = expired_at;
-      console.log("Expiration Date: ", writer, event);
-      const currentDate = new Date();
-      if (expirationDate < currentDate) {
-        alert("token หมดอายุโปรดติดต่อ admin เพื่อขอ token ใหม่");
-        throw new Error("Token has expired");
+      const { expired_at, is_permanent } = writer;
+      if (!is_permanent && expired_at) {
+        const expirationDate = expired_at;
+        console.log("Expiration Date: ", writer, event);
+        const currentDate = new Date();
+        if (expirationDate < currentDate) {
+          alert(
+            "This invite link may have expired. Please request a new one to continue."
+          );
+          throw new Error("Token has expired");
+        }
+        // Set the cookie with the token and expiration date
+        Cookies.set("authToken", newToken, { expires: expirationDate }); // Token will expire in 1 day
+      } else {
+        // Set the cookie with the token without expiration date
+        Cookies.set("authToken", newToken);
       }
-      // Set the cookie with the token and expiration date
-      Cookies.set("authToken", newToken, { expires: expirationDate }); // Token will expire in 7 days
+
       // Set the token in the state
       setToken(newToken);
       setUserStoreFromToken();
