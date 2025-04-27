@@ -23,11 +23,22 @@ export default function Nav(): ReactElement {
   return (
     <nav className="fixed top-0 left-0 w-full h-[64px] bg-white flex items-center justify-between pl-[16px] pr-[48px] z-40">
       <div className="flex items-center gap-[24px]">
-        <img
-          className="h-[40px]"
-          src="/dreamcon-logo-blue.png"
-          alt="dreamcon-logo"
-        />
+        {isReadOnly() ? (
+          <a href="/">
+            <img
+              className="h-[40px]"
+              src="/dreamcon-logo-blue.png"
+              alt="dreamcon-logo"
+            />
+          </a>
+        ) : (
+          <img
+            className="h-[40px]"
+            src="/dreamcon-logo-blue.png"
+            alt="dreamcon-logo"
+          />
+        )}
+
         {userCanEdit() && (
           <a
             href="/topics/?mode=view"
