@@ -236,7 +236,7 @@ const AdminPage = () => {
           <div className="flex flex-col gap-[32px] pb-[32px]">
             {displayEvents.map((event) => (
               <EventCard
-                index={event.index}
+                index={event.index || 0}
                 key={event.id}
                 event={event}
                 onClickShareLink={() => handleCopyWriterLink(event.id)}

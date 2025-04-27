@@ -13,7 +13,7 @@ export interface DreamConEvent {
   topic_counts: number;
   created_at: Date;
   updated_at: Date;
-  index: number; // use only in admin page
+  index?: number; // use only in admin page
 }
 
 export const defaultAddOrEditEventPayload: AddOrEditEventPayload = {
