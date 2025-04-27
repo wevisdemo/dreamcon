@@ -198,7 +198,7 @@ export default function ModalComment(props: PropTypes) {
             <div className="w-full bg-gray1 relative">
               <TextareaAutosize
                 id="topic-title-text-area"
-                className="w-full bg-gray1 p-[10px] text-gray5 resize-none overflow-hidden focus:outline-none"
+                className="w-full bg-gray1 p-[10px] text-black resize-none overflow-hidden focus:outline-none"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 autoFocus
