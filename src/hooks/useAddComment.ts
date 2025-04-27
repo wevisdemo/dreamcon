@@ -20,6 +20,12 @@ export const useAddComment = () => {
       return;
     }
 
+    if (!payload.event_id) {
+      setError("No event_id found in Add New Comment Payload");
+      setLoading(false);
+      return;
+    }
+
     try {
       const commentsCollection = collection(db, "comments");
       const timeNow = new Date();
