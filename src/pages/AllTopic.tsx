@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import TopicListSection from "../components/allTopic/TopicListSection";
 import TopicTemplate from "../components/topic/TopicTemplate";
 import ModalComment from "../components/share/ModalComment";
@@ -196,6 +196,22 @@ export default function AllTopic() {
     setFirstTimeLoading(false);
   };
 
+  const fetchTopicAfterSubscribe = useCallback(async () => {
+    const lightWeightTopics = await fetchLightWeightTopics();
+    fetchTopic2(
+      lightWeightTopics,
+      itemLimit,
+      topicFilter,
+      pinContext.pinnedTopics
+    );
+  }, [itemLimit, topicFilter, pinContext.pinnedTopics]);
+
+  const latestFunctionRef = useRef(fetchTopicAfterSubscribe);
+
+  useEffect(() => {
+    latestFunctionRef.current = fetchTopicAfterSubscribe;
+  }, [fetchTopicAfterSubscribe]);
+
   useEffect(() => {
     refreshTopicsWithLoading(
       homePageContext.lightWeightTopics.state,
@@ -366,13 +382,7 @@ export default function AllTopic() {
   const subscribeTopics = (): Unsubscribe => {
     const topicsQuery = query(collection(db, "topics"));
     const unsubscribe = onSnapshot(topicsQuery, async () => {
-      const lightWeightTopics = await fetchLightWeightTopics();
-      fetchTopic2(
-        lightWeightTopics,
-        itemLimit,
-        topicFilter,
-        pinContext.pinnedTopics
-      );
+      await latestFunctionRef.current();
     });
     return unsubscribe;
   };
