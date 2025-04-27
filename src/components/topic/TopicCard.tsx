@@ -22,7 +22,9 @@ interface PropTypes {
 
 export default function TopicCard(props: PropTypes) {
   const [topicTitle, setTopicTitle] = useState<string>(props.topic.title);
-  const [commentView, setCommentView] = useState<null | CommentView>(null);
+  const [commentView, setCommentView] = useState<null | CommentView>(
+    CommentView.AGREE
+  );
   const [newCommentText, setNewCommentText] = useState("");
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
@@ -69,7 +71,7 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const resetNewCommentText = () => {
-    setCommentView(null);
+    setCommentView(CommentView.AGREE);
     setNewCommentText("");
   };
 

@@ -25,10 +25,12 @@ interface PropTypes {
 
 export default function ModalComment(props: PropTypes) {
   const [text, setText] = useState<string>("");
-  const [commentView, setCommentView] = useState<CommentView | null>(null);
+  const [commentView, setCommentView] = useState<CommentView | null>(
+    CommentView.AGREE
+  );
   useEffect(() => {
     setText(props.defaultState?.reason || "");
-    setCommentView(props.defaultState?.comment_view || null);
+    setCommentView(props.defaultState?.comment_view || CommentView.AGREE);
   }, [props.defaultState]);
   if (!props.isOpen) return null;
 
@@ -40,7 +42,7 @@ export default function ModalComment(props: PropTypes) {
 
   const handleClose = () => {
     setText("");
-    setCommentView(null);
+    setCommentView(CommentView.AGREE);
     props.onClose();
   };
 
