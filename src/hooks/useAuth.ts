@@ -20,9 +20,8 @@ const useAuth = () => {
     try {
       const writer = await getWriterByID(newToken);
       if (!writer) {
-        alert(
-          "This invite link may have expired. Please request a new one to continue."
-        );
+        console.error("Writer not found for the given ID");
+        window.location.href = "/token-expired";
         throw new Error("Writer not found for the given ID");
       }
       const event = await getEventByID(writer.event_id);
@@ -36,9 +35,8 @@ const useAuth = () => {
         console.log("Expiration Date: ", writer, event);
         const currentDate = new Date();
         if (expirationDate < currentDate) {
-          alert(
-            "This invite link may have expired. Please request a new one to continue."
-          );
+          console.error("Token has expired");
+          window.location.href = "/token-expired";
           throw new Error("Token has expired");
         }
         // Set the cookie with the token and expiration date
@@ -54,6 +52,7 @@ const useAuth = () => {
     } catch (error) {
       console.error("Error fetching writer document: ", error);
       logoutAsWriter();
+      throw new Error("Error fetching writer document");
     }
   };
 

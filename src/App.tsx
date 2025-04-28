@@ -8,6 +8,7 @@ import AdminPage from "./pages/Admin";
 import LoginPage from "./pages/Login";
 import LandingPage from "./pages/Landing";
 import AboutPage from "./pages/About";
+import TokenExpiredPage from "./pages/TokenExpired";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/admin" element={<AdminPage />} />
           <Route path="/" element={<LandingPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/token-expired" element={<TokenExpiredPage />} />
         </Routes>
       </Router>
     </StoreProvider>

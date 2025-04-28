@@ -133,10 +133,15 @@ export default function AllTopic() {
     const writerToken = params.get("writer");
 
     if (writerToken) {
-      await loginFromToken(writerToken);
-      params.delete("writer");
-      window.location.href = `${location.pathname}?${params.toString()}`;
-      return;
+      try {
+        await loginFromToken(writerToken);
+        params.delete("writer");
+        window.location.href = `${location.pathname}?${params.toString()}`;
+        return;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        // do nothing
+      }
     }
 
     setUserStoreFromToken();
