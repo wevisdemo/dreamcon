@@ -23,7 +23,7 @@ export default function Nav(): ReactElement {
   return (
     <nav className="fixed top-0 left-0 w-full h-[64px] bg-white flex items-center justify-between pl-[16px] pr-[48px] z-40">
       <div className="flex items-center gap-[24px]">
-        {isReadOnly() ? (
+        {isReadOnly() && (
           <a href="/">
             <img
               className="h-[40px]"
@@ -31,21 +31,15 @@ export default function Nav(): ReactElement {
               alt="dreamcon-logo"
             />
           </a>
-        ) : (
-          <img
-            className="h-[40px]"
-            src="/dreamcon-logo-blue.png"
-            alt="dreamcon-logo"
-          />
         )}
 
         {userCanEdit() && (
           <a
             href="/topics/?mode=view"
             target="_blank"
-            className="flex text-blue3 gap-[8px] items-center px-[16px] py-[5.5px] bg-blue1 rounded-[48px] font-bold"
+            className="flex text-blue3 gap-[8px] items-center px-[16px] py-[5.5px] bg-blue1 rounded-[48px] font-bold ml-[24px]"
           >
-            <span>view site</span>
+            <span>preview</span>
             <NewTabIcon className="h-[16px] w-[16px]" color="#95D0FF" />
           </a>
         )}
