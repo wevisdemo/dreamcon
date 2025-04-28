@@ -23,10 +23,18 @@ export default function Filter(props: PropTypes) {
   const { user: userContext } = useContext(StoreContext);
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedValue, setDebouncedValue] = useState(searchText);
-  const ref = useRef<HTMLDivElement>(null!); // Ensure ref is a MutableRefObject<HTMLDivElement>
-  const { events } = useDraggable(ref);
-  const [showGradientRight, setShowGradientRight] = useState(true);
-  const [showGradientLeft, setShowGradientLeft] = useState(false);
+  const eventFilterRef = useRef<HTMLDivElement>(null!);
+  const { events: eventFilterEvents } = useDraggable(eventFilterRef);
+  const categoryRef = useRef<HTMLDivElement>(null!);
+  const { events: categoryEvents } = useDraggable(categoryRef);
+  const [showEventGradient, setShowEventGradient] = useState<{
+    left: boolean;
+    right: boolean;
+  }>({ left: false, right: true });
+  const [showCategoryGradient, setShowCategoryGradient] = useState<{
+    left: boolean;
+    right: boolean;
+  }>({ left: false, right: true });
 
   const handleEventChange = (event: DreamConEvent | null) => {
     props.setFilter({
@@ -107,23 +115,23 @@ export default function Filter(props: PropTypes) {
 
   useEffect(() => {
     const handleScroll = () => {
-      const maxWidth = ref.current?.scrollWidth;
-      const containerWidth = ref.current?.clientWidth;
-      const scrollLeft = ref.current?.scrollLeft;
+      const maxWidth = eventFilterRef.current?.scrollWidth;
+      const containerWidth = eventFilterRef.current?.clientWidth;
+      const scrollLeft = eventFilterRef.current?.scrollLeft;
       if (maxWidth - containerWidth - scrollLeft > 10) {
-        setShowGradientRight(true);
+        setShowEventGradient((curr) => ({ ...curr, right: true }));
       } else {
-        setShowGradientRight(false);
+        setShowEventGradient((curr) => ({ ...curr, right: false }));
       }
 
       if (scrollLeft > 10) {
-        setShowGradientLeft(true);
+        setShowEventGradient((curr) => ({ ...curr, left: true }));
       } else {
-        setShowGradientLeft(false);
+        setShowEventGradient((curr) => ({ ...curr, left: false }));
       }
     };
 
-    const currentRef = ref.current;
+    const currentRef = eventFilterRef.current;
     if (currentRef) {
       currentRef.addEventListener("scroll", handleScroll);
     }
@@ -133,7 +141,37 @@ export default function Filter(props: PropTypes) {
         currentRef.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [ref]);
+  }, [eventFilterRef]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxWidth = categoryRef.current?.scrollWidth;
+      const containerWidth = categoryRef.current?.clientWidth;
+      const scrollLeft = categoryRef.current?.scrollLeft;
+      if (maxWidth - containerWidth - scrollLeft > 10) {
+        setShowCategoryGradient((curr) => ({ ...curr, right: true }));
+      } else {
+        setShowCategoryGradient((curr) => ({ ...curr, right: false }));
+      }
+
+      if (scrollLeft > 10) {
+        setShowCategoryGradient((curr) => ({ ...curr, left: true }));
+      } else {
+        setShowCategoryGradient((curr) => ({ ...curr, left: false }));
+      }
+    };
+
+    const currentRef = categoryRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [categoryRef]);
 
   return (
     <div className="bg-white w-full rounded-[16px] py-[16px] flex flex-col gap-[16px]">
@@ -161,18 +199,18 @@ export default function Filter(props: PropTypes) {
         <div className="relative overflow-hidden w-full]">
           <div
             className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
-              showGradientRight ? "opacity-100" : "opacity-0"
+              showEventGradient.right ? "opacity-100" : "opacity-0"
             } transition-opacity duration-300`}
           />
           <div
             className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
-              showGradientLeft ? "opacity-100" : "opacity-0"
+              showEventGradient.left ? "opacity-100" : "opacity-0"
             } transition-opacity duration-300`}
           />
           <div
             className="flex gap-[16px] w-full overflow-scroll no-scrollbar relative"
-            {...events}
-            ref={ref}
+            {...eventFilterEvents}
+            ref={eventFilterRef}
           >
             {props.filter.selectedEvent !== null && (
               <DefaultFilterEvent
@@ -234,22 +272,39 @@ export default function Filter(props: PropTypes) {
             </button>
           </div>
         </div>
+
         <div className="flex gap-[4px] items-center w-full overflow-x-scroll">
           <span className="text-blue7 text-nowrap">หัวข้อ:</span>
-          <div className="flex overflow-scroll text-[13px] gap-[8px] no-scrollbar">
-            {topicFilterCategories.map((category) => (
-              <button
-                key={category}
-                className={`whitespace-nowrap px-[12px] py-[6px] border-solid border-[1.5px] rounded-[48px] ${
-                  props.filter.category === category
-                    ? "bg-blue6 text-white"
-                    : "border-blue3 text-blue3"
-                }`}
-                onClick={() => handleCategoryChange(category)}
-              >
-                {category}
-              </button>
-            ))}
+          <div className="relative overflow-hidden w-full]">
+            <div
+              className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
+                showCategoryGradient.right ? "opacity-100" : "opacity-0"
+              } transition-opacity duration-300`}
+            />
+            <div
+              className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
+                showCategoryGradient.left ? "opacity-100" : "opacity-0"
+              } transition-opacity duration-300`}
+            />
+            <div
+              className="flex overflow-scroll text-[13px] gap-[8px] no-scrollbar"
+              {...categoryEvents}
+              ref={categoryRef}
+            >
+              {topicFilterCategories.map((category) => (
+                <button
+                  key={category}
+                  className={`whitespace-nowrap px-[12px] py-[6px] border-solid border-[1.5px] rounded-[48px] ${
+                    props.filter.category === category
+                      ? "bg-blue6 text-white"
+                      : "border-blue3 text-blue3"
+                  }`}
+                  onClick={() => handleCategoryChange(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
         <div className="relative w-[150px]">
