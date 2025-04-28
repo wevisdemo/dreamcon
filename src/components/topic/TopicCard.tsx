@@ -133,51 +133,55 @@ export default function TopicCard(props: PropTypes) {
           </div>
         )}
 
-        <img
-          className="w-[18px] h-[18px] hover:cursor-pointer"
-          src="/icon/menu.svg"
-          alt="menu-icon"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleClickMenu(e);
-          }}
-        />
-        <Popover
-          id={popoverID}
-          open={openMenu}
-          anchorEl={anchorMenu}
-          onClose={handleCloseMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "right",
-          }}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          classes={{ paper: "box-1" }}
-          disableAutoFocus
-          disableEnforceFocus
-          disableRestoreFocus
-        >
-          <MenuPopover
-            hasPin
-            isPinned={props.isPinned}
-            canEdit={hasPermissionToEdit()}
-            onClickDelete={() => {
-              handleDeleteTopic();
-            }}
-            onClickEdit={() => {
-              handleClickEditInMenu();
-            }}
-            onClickPin={() => {
-              handlePinTopic();
-            }}
-            onClickUnpin={() => {
-              handleUnpinTopic();
-            }}
-          />
-        </Popover>
+        {!isReadOnly() && (
+          <>
+            <img
+              className="w-[18px] h-[18px] hover:cursor-pointer"
+              src="/icon/menu.svg"
+              alt="menu-icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClickMenu(e);
+              }}
+            />
+            <Popover
+              id={popoverID}
+              open={openMenu}
+              anchorEl={anchorMenu}
+              onClose={handleCloseMenu}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              classes={{ paper: "box-1" }}
+              disableAutoFocus
+              disableEnforceFocus
+              disableRestoreFocus
+            >
+              <MenuPopover
+                hasPin
+                isPinned={props.isPinned}
+                canEdit={hasPermissionToEdit()}
+                onClickDelete={() => {
+                  handleDeleteTopic();
+                }}
+                onClickEdit={() => {
+                  handleClickEditInMenu();
+                }}
+                onClickPin={() => {
+                  handlePinTopic();
+                }}
+                onClickUnpin={() => {
+                  handleUnpinTopic();
+                }}
+              />
+            </Popover>
+          </>
+        )}
       </div>
       <div className="relative w-full">
         {isEditingMode ? (
