@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { DreamConEvent } from "../../types/event";
 import {
   TopicFilter,
@@ -9,6 +9,7 @@ import DefaultFilterEvent from "./DefaultFilterEvent";
 import FilterEvent from "./FilterEvent";
 import { StoreContext } from "../../store";
 import { LightWeightTopic } from "../../types/topic";
+import { useDraggable } from "react-use-draggable-scroll";
 
 interface PropTypes {
   allTopicCount: number;
@@ -22,6 +23,10 @@ export default function Filter(props: PropTypes) {
   const { user: userContext } = useContext(StoreContext);
   const [searchText, setSearchText] = useState<string>("");
   const [debouncedValue, setDebouncedValue] = useState(searchText);
+  const ref = useRef<HTMLDivElement>(null!); // Ensure ref is a MutableRefObject<HTMLDivElement>
+  const { events } = useDraggable(ref);
+  const [showGradientRight, setShowGradientRight] = useState(true);
+  const [showGradientLeft, setShowGradientLeft] = useState(false);
 
   const handleEventChange = (event: DreamConEvent | null) => {
     props.setFilter({
@@ -100,6 +105,36 @@ export default function Filter(props: PropTypes) {
     return null;
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxWidth = ref.current?.scrollWidth;
+      const containerWidth = ref.current?.clientWidth;
+      const scrollLeft = ref.current?.scrollLeft;
+      if (maxWidth - containerWidth - scrollLeft > 10) {
+        setShowGradientRight(true);
+      } else {
+        setShowGradientRight(false);
+      }
+
+      if (scrollLeft > 10) {
+        setShowGradientLeft(true);
+      } else {
+        setShowGradientLeft(false);
+      }
+    };
+
+    const currentRef = ref.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [ref]);
+
   return (
     <div className="bg-white w-full rounded-[16px] py-[16px] flex flex-col gap-[16px]">
       <div className="flex items-center gap-[18px] w-full pl-[24px]">
@@ -123,22 +158,38 @@ export default function Filter(props: PropTypes) {
           </p>
         </div>
         <div className="w-[12px] h-[12px] bg-blue2 rounded-full shrink-0" />
-        <div className="flex gap-[16px] w-full overflow-scroll no-scrollbar">
-          {props.filter.selectedEvent !== null && (
-            <DefaultFilterEvent
-              count={props.allTopicCount}
-              onClick={() => handleEventChange(null)}
-            />
-          )}
-          {filteredEvents().map((event) => (
-            <FilterEvent
-              isOwner={isEventOwner(event)}
-              event={event}
-              onClick={handleEventChange}
-              key={`filter-event-${event.display_name}`}
-              highlightedTopic={getEventHighlightedTopic(event)}
-            />
-          ))}
+        <div className="relative overflow-hidden w-full]">
+          <div
+            className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
+              showGradientRight ? "opacity-100" : "opacity-0"
+            } transition-opacity duration-300`}
+          />
+          <div
+            className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
+              showGradientLeft ? "opacity-100" : "opacity-0"
+            } transition-opacity duration-300`}
+          />
+          <div
+            className="flex gap-[16px] w-full overflow-scroll no-scrollbar relative"
+            {...events}
+            ref={ref}
+          >
+            {props.filter.selectedEvent !== null && (
+              <DefaultFilterEvent
+                count={props.allTopicCount}
+                onClick={() => handleEventChange(null)}
+              />
+            )}
+            {filteredEvents().map((event) => (
+              <FilterEvent
+                isOwner={isEventOwner(event)}
+                event={event}
+                onClick={handleEventChange}
+                key={`filter-event-${event.display_name}`}
+                highlightedTopic={getEventHighlightedTopic(event)}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <div className="flex gap-[12px] items-center justify-between w-full px-[24px]">

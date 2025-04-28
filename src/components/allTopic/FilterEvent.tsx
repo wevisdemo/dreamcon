@@ -97,8 +97,8 @@ export default function FilterEvent(props: PropTypes) {
         </>
       )}
       <div
-        className={`w-[75px] h-[75px] rounded-full cursor-pointer flex items-center justify-center relative overflow-hidden ${
-          !props.isSelected && hovered ? "border-2 border-gray5" : ""
+        className={`w-[75px] h-[75px] rounded-full cursor-pointer flex items-center justify-center relative overflow-hidden border-2 ${
+          !props.isSelected && hovered ? "border-gray5" : "border-transparent"
         }`}
         onClick={() => props.onClick(props.event)}
       >
@@ -110,7 +110,7 @@ export default function FilterEvent(props: PropTypes) {
         <img
           src={props.event.avatar_url}
           alt={`Avatar of ${props.event.display_name}`}
-          className={`w-[75px] h-[75px] `}
+          className={`w-[75px] h-[75px] pointer-events-none`}
         />
       </div>
 
