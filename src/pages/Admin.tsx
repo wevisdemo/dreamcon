@@ -130,11 +130,12 @@ const AdminPage = () => {
       alert("Failed to fetch events.");
       return;
     }
-    // sort by created_at latest first
-    events.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    // sort by created_at asc
+    events.sort((a, b) => {
+      return (
+        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+    });
     const fileEvents = events.map((event, index) => {
       return {
         ...event,
