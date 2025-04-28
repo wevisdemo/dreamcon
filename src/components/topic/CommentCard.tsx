@@ -107,7 +107,7 @@ export default function CommentCard(props: PropTypes) {
       {hovered && props.canEdit && (
         <Tooltip
           title={
-            <div className="flex flex-col font-[400]">
+            <div className="flex flex-col font-[400] wv-ibmplexlooped">
               <span>
                 <span className="wv-bold">ลาก</span> เพื่อย้าย
               </span>

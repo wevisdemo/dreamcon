@@ -10,7 +10,7 @@ interface PropTypes {
 
 export default function MenuPopover(props: PropTypes) {
   return (
-    <div className="w-[180px] flex flex-col gap-[1px] bg-white rounded-[8px] border-[1px] overflow-hidden border-gray3">
+    <div className="w-[180px] flex flex-col gap-[1px] bg-white rounded-[8px] border-[1px] overflow-hidden border-gray3 wv-ibmplexlooped">
       {props.canEdit && (
         <div
           className="w-full flex items-center px-[16px] py-[12px] gap-[8px] hover:bg-gray1 hover:cursor-pointer"
@@ -25,7 +25,7 @@ export default function MenuPopover(props: PropTypes) {
           />
           <span
             style={{ pointerEvents: "none" }}
-            className="text-black text-[13px]"
+            className="text-black text-[13px] "
           >
             แก้ไข
           </span>
