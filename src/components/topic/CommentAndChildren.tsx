@@ -31,7 +31,7 @@ export default function CommentAndChildren(props: PropTypes) {
     homePage: homePageContext,
     topicPage: topicPageContext,
     currentPage,
-    selectedTopic,
+    // selectedTopic,
     event: eventContext,
     user: userContext,
     mode: modeContext,
@@ -57,14 +57,16 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const isRoundedTL = (previousComment: Comment | null): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent(props.comment) !== null) return true;
+    if (showHeaderEvent(props.comment, props.parent.event_id) !== null)
+      return true;
     if ((previousComment?.comments.length || 0) > 0) return true;
     return false;
   };
 
   const isRoundedTR = (): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent(props.comment) !== null) return true;
+    if (showHeaderEvent(props.comment, props.parent.event_id) !== null)
+      return true;
     return false;
   };
 
@@ -75,7 +77,8 @@ export default function CommentAndChildren(props: PropTypes) {
     if (props.level === 1) return true;
     if (nextComment === null) return true;
     if (nextComment !== null) {
-      if (showHeaderEvent(nextComment) !== null) return true;
+      if (showHeaderEvent(nextComment, props.parent.event_id) !== null)
+        return true;
     }
     if ((currentComment.comments.length || 0) > 0) return true;
     return false;
@@ -86,9 +89,21 @@ export default function CommentAndChildren(props: PropTypes) {
     nextComment: Comment | null
   ): boolean => {
     if (nextComment !== null) {
-      if (showHeaderEvent(nextComment) !== null) return true;
+      if (showHeaderEvent(nextComment, props.parent.event_id) !== null)
+        return true;
     }
-    return isLastUltimateLastChild(currentComment, nextComment);
+    return (
+      isLastUltimateLastChild(currentComment, nextComment) ||
+      hasNoSameEventChildren(currentComment)
+    );
+  };
+
+  const hasNoSameEventChildren = (comment: Comment): boolean => {
+    if (comment.comments.length === 0) return true;
+    const hasSameEventChildren = comment.comments.some(
+      (childComment) => childComment.event_id === comment.event_id
+    );
+    return !hasSameEventChildren;
   };
 
   const getCardBGColor = (comment: Comment): string => {
@@ -170,15 +185,15 @@ export default function CommentAndChildren(props: PropTypes) {
     };
   };
 
-  const showHeaderEvent = (comment: Comment): DreamConEvent | null => {
-    if (selectedTopic) {
-      const isNotOwnerEvent =
-        selectedTopic.value?.event_id !== comment.event_id;
-
+  const showHeaderEvent = (
+    comment: Comment,
+    parentEventID: string
+  ): DreamConEvent | null => {
+    if (comment.event_id !== parentEventID) {
       const event = eventContext.events.find(
         (event) => event.id === comment.event_id
       );
-      if (isNotOwnerEvent && event) {
+      if (event) {
         return event;
       }
     }
@@ -202,6 +217,18 @@ export default function CommentAndChildren(props: PropTypes) {
     return true;
   };
 
+  const sortedChildrenComments = (comment: Comment): Comment[] => {
+    return comment.comments.sort((a, b) => {
+      if (a.event_id === comment.event_id && b.event_id !== comment.event_id) {
+        return -1;
+      }
+      if (a.event_id !== comment.event_id && b.event_id === comment.event_id) {
+        return 1;
+      }
+      return 0;
+    });
+  };
+
   return (
     <Draggable
       id={comment.id}
@@ -215,17 +242,24 @@ export default function CommentAndChildren(props: PropTypes) {
         >
           {(isOver) => (
             <>
-              {showHeaderEvent(props.comment) && (
+              {showHeaderEvent(props.comment, props.parent.event_id) && (
                 <div className="flex gap-[8px] items-center text-[10px] pl-[4px] my-[4px]">
                   <img
                     className="rounded-full w-[25px] h-[25px]"
-                    src={showHeaderEvent(props.comment)?.avatar_url}
+                    src={
+                      showHeaderEvent(props.comment, props.parent.event_id)
+                        ?.avatar_url
+                    }
                     alt={`avatar-event-${
-                      showHeaderEvent(props.comment)?.display_name
+                      showHeaderEvent(props.comment, props.parent.event_id)
+                        ?.display_name
                     }`}
                   />
                   <span className="wv-bold">
-                    {showHeaderEvent(props.comment)?.display_name}
+                    {
+                      showHeaderEvent(props.comment, props.parent.event_id)
+                        ?.display_name
+                    }
                   </span>
                   <span>เพิ่มข้อถกเถียงต่อยอด</span>
                 </div>
@@ -247,10 +281,10 @@ export default function CommentAndChildren(props: PropTypes) {
             </>
           )}
         </Droppable>
-        {comment.comments.length > 0 && (
+        {sortedChildrenComments(props.comment).length > 0 && (
           <div className="ml-[35px]">
             <CommentWrapper
-              comments={comment.comments}
+              comments={sortedChildrenComments(props.comment)}
               level={props.level + 1}
               isLastChildOfParent={
                 (props.isLastChildOfParent && nextComment === null) ||
