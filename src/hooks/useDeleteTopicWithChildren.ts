@@ -8,14 +8,31 @@ import {
   getDocs,
   runTransaction,
 } from "firebase/firestore";
+import { usePermission } from "./usePermission";
+import { Topic } from "../types/topic";
 
 export const useDeleteTopicWithChildren = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isWriterOwner, getWriterEvent } = usePermission();
 
-  const deleteTopicWithChildren = async (topicId: string) => {
+  const deleteTopicWithChildren = async (topic: Topic) => {
+    const topicId = topic.id;
     if (!topicId) {
       setError("No topic ID provided for deletion");
+      return;
+    }
+
+    const writerEvent = getWriterEvent();
+    if (!writerEvent) {
+      setError("No writer event found");
+      setLoading(false);
+      return;
+    }
+
+    if (!isWriterOwner(topic.event_id)) {
+      setError("You do not have permission to edit this comment");
+      setLoading(false);
       return;
     }
 

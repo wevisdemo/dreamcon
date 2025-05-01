@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../utils/firestore"; // ✅ Correct Firestore import
+import { db } from "../utils/firestore";
 import { AddOrEditTopicPayload, UpdateTopicDBPayload } from "../types/topic";
+import { usePermission } from "./usePermission";
 
 export const useEditTopic = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isWriterOwner, getWriterEvent } = usePermission();
 
   const editTopic = async (payload: AddOrEditTopicPayload) => {
     setLoading(true);
@@ -17,6 +19,19 @@ export const useEditTopic = () => {
       return;
     }
 
+    const writerEvent = getWriterEvent();
+    if (!writerEvent) {
+      setError("No writer event found");
+      setLoading(false);
+      return;
+    }
+
+    if (!isWriterOwner(payload.event_id)) {
+      setError("You do not have permission to edit this comment");
+      setLoading(false);
+      return;
+    }
+
     try {
       const topicDocRef = doc(db, `topics/${payload.id}`);
 
@@ -24,7 +39,7 @@ export const useEditTopic = () => {
       const TopicDBPayload: UpdateTopicDBPayload = {
         title: payload.title,
         category: payload.category,
-        event_id: payload.event_id,
+        event_id: writerEvent.id,
         updated_at: timeNow,
         notified_at: timeNow,
       };

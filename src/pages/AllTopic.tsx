@@ -518,8 +518,9 @@ export default function AllTopic() {
     }
   };
 
-  const handleOnDeleteTopic = async (topicId: string) => {
-    await deleteTopicWithChildren(topicId);
+  const handleOnDeleteTopic = async (topic: Topic | null) => {
+    if (!topic) return;
+    await deleteTopicWithChildren(topic);
     selectedTopic.setValue(null);
   };
 
@@ -714,7 +715,7 @@ export default function AllTopic() {
                       });
                     }}
                     onDeleteTopic={() =>
-                      handleOnDeleteTopic(selectedTopic.value?.id || "")
+                      handleOnDeleteTopic(selectedTopic.value || null)
                     }
                     onPinTopic={() => {
                       pinContext.pinTopic(selectedTopic.value?.id || "");
