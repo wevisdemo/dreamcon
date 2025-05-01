@@ -76,6 +76,7 @@ export default function ModalComment(props: PropTypes) {
             reason: text,
             parent_comment_ids: props.defaultState?.parent_comment_ids,
             parent_topic_id: props.defaultState?.parent_topic_id,
+            event_id: props.createdByEvent.id,
           });
           break;
         case "create":

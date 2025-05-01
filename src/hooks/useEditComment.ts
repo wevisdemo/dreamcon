@@ -5,10 +5,12 @@ import {
   AddOrEditCommentPayload,
   UpdateCommentDBPayload,
 } from "../types/comment";
+import { usePermission } from "./usePermission";
 
 export const useEditComment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isWriterOwner, getWriterEvent } = usePermission();
 
   const editComment = async (payload: AddOrEditCommentPayload) => {
     setLoading(true);
@@ -26,6 +28,19 @@ export const useEditComment = () => {
       return;
     }
 
+    const writerEvent = getWriterEvent();
+    if (!writerEvent) {
+      setError("No writer event found");
+      setLoading(false);
+      return;
+    }
+
+    if (!isWriterOwner(payload.event_id)) {
+      setError("You do not have permission to edit this comment");
+      setLoading(false);
+      return;
+    }
+
     try {
       const timeNow = new Date();
       const CommentDBPayload: UpdateCommentDBPayload = {
@@ -33,6 +48,7 @@ export const useEditComment = () => {
         reason: payload.reason,
         updated_at: timeNow,
         notified_at: timeNow,
+        event_id: writerEvent.id, // use event from writer because in firebase rule will validate again
       };
 
       const commentDocRef = doc(db, `comments/${payload.id}`);

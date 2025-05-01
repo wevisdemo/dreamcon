@@ -9,15 +9,22 @@ import {
   runTransaction,
 } from "firebase/firestore";
 import { Comment } from "../types/comment";
+import { usePermission } from "./usePermission";
 
 export const useDeleteCommentWithChildren = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { isWriterOwner } = usePermission();
 
   const deleteCommentWithChildren = async (comment: Comment) => {
     const commentId = comment.id;
     if (!commentId) {
       setError("No comment ID provided for deletion");
+      return;
+    }
+    const isOwner = isWriterOwner(comment.event_id);
+    if (!isOwner) {
+      setError("You do not have permission to delete this comment");
       return;
     }
 

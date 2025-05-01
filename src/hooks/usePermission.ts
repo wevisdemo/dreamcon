@@ -28,5 +28,12 @@ export const usePermission = () => {
     return null;
   };
 
-  return { isReadOnly, userCanEdit, getWriterEvent };
+  const isWriterOwner = (eventId: string): boolean => {
+    if (userContext.userState?.role === "writer") {
+      return userContext.userState.event.id === eventId;
+    }
+    return false;
+  };
+
+  return { isReadOnly, userCanEdit, getWriterEvent, isWriterOwner };
 };
