@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import TopicTemplate from "../components/topic/TopicTemplate";
-import { TopicCategory, TopicDB } from "../types/topic";
+import { Topic, TopicCategory, TopicDB } from "../types/topic";
 import { AddOrEditCommentPayload, Comment } from "../types/comment";
 import { StoreContext } from "../store";
 import ModalComment from "../components/share/ModalComment";
@@ -91,8 +91,9 @@ export default function TopicPage() {
   const { setUserStoreFromToken } = useAuth();
   const [topicLink, setTopicLink] = useState<string>("");
 
-  const handleOnDeleteTopic = async (topicId: string) => {
-    await deleteTopicWithChildren(topicId);
+  const handleOnDeleteTopic = async (topic: Topic | null) => {
+    if (!topic) return;
+    await deleteTopicWithChildren(topic);
     const params = new URLSearchParams(location.search);
     const hostUrl = window.location.origin;
     window.location.href = `${hostUrl}/topics/?${params.toString()}`;
@@ -378,9 +379,7 @@ export default function TopicPage() {
                 onUnpinTopic={() => {
                   pinContext.unpinTopic(selectedTopic.value?.id || "");
                 }}
-                onDeleteTopic={() =>
-                  handleOnDeleteTopic(selectedTopic.value?.id || "")
-                }
+                onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.value)}
               />
             </section>
             <section className="absolute w-full h-content z-30 bg-transparent">
