@@ -6,10 +6,13 @@ import { StoreContext } from "../store";
 import ModalTopic from "../components/share/ModalTopic";
 import { SmartPointerSensor } from "../utils/SmartSenson";
 import {
+  CollisionDetection,
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  pointerWithin,
+  rectIntersection,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -530,9 +533,19 @@ export default function AllTopic() {
     }
   };
 
+  const collisionDetectionPointer: CollisionDetection = (args) => {
+    const pointerCollisions = pointerWithin(args);
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+
+    return rectIntersection(args);
+  };
+
   return (
     <ViewerLayout>
       <DndContext
+        collisionDetection={collisionDetectionPointer}
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
         sensors={sensors}

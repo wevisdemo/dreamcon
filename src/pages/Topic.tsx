@@ -22,10 +22,13 @@ import { db } from "../utils/firestore";
 import { CommentDB } from "../types/comment";
 import { convertTopicDBToTopic } from "../utils/mapping";
 import {
+  CollisionDetection,
   DndContext,
   DragEndEvent,
   DragOverlay,
   DragStartEvent,
+  pointerWithin,
+  rectIntersection,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -310,9 +313,19 @@ export default function TopicPage() {
     return `${hostUrl}/topics/?${params.toString()}`;
   };
 
+  const collisionDetectionPointer: CollisionDetection = (args) => {
+    const pointerCollisions = pointerWithin(args);
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+
+    return rectIntersection(args);
+  };
+
   return (
     <DefaultLayout>
       <DndContext
+        collisionDetection={collisionDetectionPointer}
         onDragEnd={handleDragEnd}
         onDragStart={handleDragStart}
         sensors={sensors}
