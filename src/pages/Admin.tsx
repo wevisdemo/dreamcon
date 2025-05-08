@@ -65,7 +65,7 @@ const AdminPage = () => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (!user) {
-        navigate("/admin/login");
+        navigate("/admin/login", { replace: true });
       }
     });
 

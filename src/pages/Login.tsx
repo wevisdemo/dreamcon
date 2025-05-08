@@ -15,7 +15,7 @@ export default function LoginPage() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        navigate("/admin");
+        navigate("/admin", { replace: true });
       }
     });
 
@@ -38,7 +38,7 @@ export default function LoginPage() {
         throw new Error("Invalid inputs");
       }
       loginAsAdmin(username, password);
-      navigate("/admin");
+      navigate("/admin", { replace: true });
     } catch (error) {
       console.error("Error signing in:", error);
       // Handle error (e.g., show an error message)
