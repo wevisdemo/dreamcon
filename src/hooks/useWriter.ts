@@ -103,8 +103,6 @@ export const useWriter = () => {
 
       const writersCollection = collection(db, "writers");
       const timeNow = new Date();
-      const expiredAt = new Date();
-      expiredAt.setDate(timeNow.getDate() + 1); // Set expiration to 7 days from now
 
       let writerDBPayload: CreateWriterDBPayload = {
         event_id: payload.event_id,
@@ -117,9 +115,8 @@ export const useWriter = () => {
           is_permanent: payload.is_permanent,
         };
       } else {
-        const timeNow = new Date();
         const expiredAt = new Date();
-        expiredAt.setDate(timeNow.getDate() + 1); // Set expiration to 7 days from now
+        expiredAt.setDate(timeNow.getDate() + 7); // Set expiration to 7 days from now
         writerDBPayload = {
           ...writerDBPayload,
           expired_at: expiredAt,
@@ -130,12 +127,10 @@ export const useWriter = () => {
         const eventSnapshot = await transaction.get(eventDocRef);
         if (!eventSnapshot.exists()) {
           throw new Error("Event not found for the given event_id");
-          return;
         }
         const docRef = doc(writersCollection);
         await transaction.set(docRef, writerDBPayload);
 
-        console.log("Writer document created with ID: ", docRef.id);
         id = docRef.id;
       });
     } catch (err) {
