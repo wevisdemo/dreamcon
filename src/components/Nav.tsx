@@ -10,7 +10,7 @@ export default function Nav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? "user-menu" : undefined;
-  const { logoutAsWriter } = useAuth();
+  const { logoutAsWriter, logoutAsAdmin } = useAuth();
 
   const { currentPage } = useContext(StoreContext);
 
@@ -18,6 +18,7 @@ export default function Nav(): ReactElement {
 
   const logout = () => {
     logoutAsWriter();
+    logoutAsAdmin();
   };
 
   return (
@@ -47,19 +48,17 @@ export default function Nav(): ReactElement {
       {isReadOnly() && (
         <div className="flex ">
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
-              currentPage.value === "about" ? "bg-blue2" : ""
-            }`}
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${currentPage.value === "about" ? "bg-blue2" : ""
+              }`}
             href="/about"
           >
             เกี่ยวกับโครงการ
           </a>
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
-              currentPage.value === "all-topic" || currentPage.value === "topic"
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${currentPage.value === "all-topic" || currentPage.value === "topic"
                 ? "bg-blue2"
                 : ""
-            }`}
+              }`}
             href="/topics"
           >
             ร่วมถกเถียง
