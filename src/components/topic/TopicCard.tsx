@@ -186,23 +186,37 @@ export default function TopicCard(props: PropTypes) {
       <div className="relative w-full">
         {isEditingMode ? (
           <>
-            <TextareaAutosize
-              id="topic-title-text-area"
-              className="w-full p-[10px] wv-ibmplex text-[20px] wv-bold resize-none overflow-hidden"
-              value={topicTitle}
-              onChange={(e) => {
-                setTopicTitle(e.target.value);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handlerSubmitTopicTitle();
-                }
-              }}
-              autoFocus
-              maxLength={140}
-            />
-            <span className="absolute bottom-[10px] right-[10px]  text-[10px] text-gray5">
+            <div className="relative  w-full">
+              <TextareaAutosize
+                id="topic-title-text-area"
+                className="w-full p-[10px] wv-ibmplex text-[20px] wv-bold resize-none overflow-hidden"
+                value={topicTitle}
+                onChange={(e) => {
+                  setTopicTitle(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handlerSubmitTopicTitle();
+                  }
+                }}
+                autoFocus
+                maxLength={140}
+              />
+              <div className="absolute bottom-[10px] right-[10px] flex gap-[8px]">
+                <span className="wv-ibmplex text-gray5 font-semibold underline hover:cursor-pointer" onClick={() => {
+                  resetEditTopic();
+                }}>ยกเลิก</span>
+                <img
+                  className="w-[18px] h-[18px] hover:cursor-pointer"
+                  src="/icon/upload.svg"
+                  alt="upload-icon"
+                  onClick={handlerSubmitTopicTitle}
+                />
+
+              </div>
+            </div>
+            <span className=" text-[10px] text-gray5">
               {topicTitle.length}/140
             </span>
           </>
@@ -241,31 +255,28 @@ export default function TopicCard(props: PropTypes) {
         <>
           <div className="flex gap-[8px]">
             <button
-              className={`py-[10px] ${
-                commentView === CommentView.AGREE
-                  ? "bg-lightGreen"
-                  : "bg-lightGreen/25"
-              } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
+              className={`py-[10px] ${commentView === CommentView.AGREE
+                ? "bg-lightGreen"
+                : "bg-lightGreen/25"
+                } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
               onClick={() => handleSelectCommentView(CommentView.AGREE)}
             >
               เห็นด้วย
             </button>
             <button
-              className={`py-[10px] ${
-                commentView === CommentView.PARTIAL_AGREE
-                  ? "bg-lightYellow"
-                  : "bg-lightYellow/25"
-              } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
+              className={`py-[10px] ${commentView === CommentView.PARTIAL_AGREE
+                ? "bg-lightYellow"
+                : "bg-lightYellow/25"
+                } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
               onClick={() => handleSelectCommentView(CommentView.PARTIAL_AGREE)}
             >
               เห็นด้วยบ้าง
             </button>
             <button
-              className={`py-[10px] ${
-                commentView === CommentView.DISAGREE
-                  ? "bg-lightRed"
-                  : "bg-lightRed/25"
-              } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
+              className={`py-[10px] ${commentView === CommentView.DISAGREE
+                ? "bg-lightRed"
+                : "bg-lightRed/25"
+                } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
           `}
               onClick={() => handleSelectCommentView(CommentView.DISAGREE)}
             >
