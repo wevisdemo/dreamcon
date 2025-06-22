@@ -3,27 +3,27 @@ import {
   Topic,
   topicCategories,
   TopicCategory,
-} from "../../types/topic";
-import React, { useEffect, useState } from "react";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import Dropdown from "./Dropdown";
-import { DreamConEvent } from "../../types/event";
+} from '../../types/topic';
+import React, { useEffect, useState } from 'react';
+import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+import Dropdown from './Dropdown';
+import { DreamConEvent } from '../../types/event';
 interface PropTypes {
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   createdByEvent: DreamConEvent;
   defaultState?: Topic;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (mode: "create" | "edit", payload: ModalTopicPayload) => void;
+  onSubmit: (mode: 'create' | 'edit', payload: ModalTopicPayload) => void;
 }
 
 export default function ModalTopic(props: PropTypes) {
-  const [text, setText] = useState<string>("");
-  const [category, setCategory] = useState<TopicCategory | "">("");
+  const [text, setText] = useState<string>('');
+  const [category, setCategory] = useState<TopicCategory | ''>('');
 
   useEffect(() => {
-    setText(props.defaultState?.title || "");
-    setCategory((props.defaultState?.category as TopicCategory) || "");
+    setText(props.defaultState?.title || '');
+    setCategory((props.defaultState?.category as TopicCategory) || '');
   }, [props.defaultState]);
 
   if (!props.isOpen) return null;
@@ -35,25 +35,25 @@ export default function ModalTopic(props: PropTypes) {
   };
 
   const handleClose = () => {
-    setText("");
-    setCategory("");
+    setText('');
+    setCategory('');
     props.onClose();
   };
 
   const onSubmit = () => {
     switch (props.mode) {
-      case "create":
+      case 'create':
         props.onSubmit(props.mode, {
           title: text,
           event_id: props.defaultState?.event_id,
-          category: category === "" ? "ไม่ระบุ" : category,
+          category: category === '' ? 'ไม่ระบุ' : category,
         });
         break;
-      case "edit":
+      case 'edit':
         props.onSubmit(props.mode, {
           id: props.defaultState?.id,
           title: text,
-          category: category === "" ? "ไม่ระบุ" : category,
+          category: category === '' ? 'ไม่ระบุ' : category,
           event_id: props.defaultState?.event_id,
         });
         break;
@@ -62,7 +62,7 @@ export default function ModalTopic(props: PropTypes) {
   };
 
   const canSubmit = () => {
-    return text !== "";
+    return text !== '';
   };
 
   return (
@@ -73,14 +73,14 @@ export default function ModalTopic(props: PropTypes) {
       <div className="w-full md:max-w-[480px] bg-white md:rounded-lg shadow-lg">
         <div className="flex justify-between items-center p-[16px] mt-[8px] border-solid border-b-[1px] border-[#D4D4D4] relative">
           <Dropdown
-            onSelect={(v) => setCategory(v as TopicCategory)}
+            onSelect={v => setCategory(v as TopicCategory)}
             options={topicCategories}
             placeholder="เลือกหัวข้อ"
           />
           <p className="absolute wv-ibmplex text-[16px] text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%]  translate-x-[-50%] bg-white px-[8px]">
-            {props.mode === "create"
-              ? "เพิ่มข้อถกเถียงใหม่"
-              : "แก้ไขข้อถกเถียง"}
+            {props.mode === 'create'
+              ? 'เพิ่มข้อถกเถียงใหม่'
+              : 'แก้ไขข้อถกเถียง'}
           </p>
 
           <div
@@ -111,7 +111,7 @@ export default function ModalTopic(props: PropTypes) {
                 id="topic-title-text-area"
                 className="w-full bg-gray1 p-[10px] text-black resize-none overflow-hidden focus:outline-none"
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={e => setText(e.target.value)}
                 autoFocus
                 maxLength={140}
                 placeholder="ข้อถกเถียงควรประกอบด้วยเหตุผลและข้อสรุป (140 ตัวอักษร)"

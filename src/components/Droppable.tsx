@@ -1,6 +1,6 @@
-import React from "react";
-import { useDroppable } from "@dnd-kit/core";
-import { DroppableData } from "../types/dragAndDrop";
+import React from 'react';
+import { useDroppable } from '@dnd-kit/core';
+import { DroppableData } from '../types/dragAndDrop';
 
 interface DroppableProps {
   id: string;

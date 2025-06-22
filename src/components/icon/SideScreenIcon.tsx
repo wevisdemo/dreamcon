@@ -15,7 +15,7 @@ export default function SideScreenIcon(props: PropTypes) {
     >
       <mask
         id="mask0_2197_7663"
-        style={{ maskType: "alpha" }}
+        style={{ maskType: 'alpha' }}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"
@@ -31,7 +31,7 @@ export default function SideScreenIcon(props: PropTypes) {
           width="16"
           height="12"
           rx="1.6"
-          stroke={props.color || "#2579F5"}
+          stroke={props.color || '#2579F5'}
           strokeWidth="1.6"
         />
         <rect
@@ -40,7 +40,7 @@ export default function SideScreenIcon(props: PropTypes) {
           width="6.4"
           height="8.8"
           rx="0.8"
-          fill={props.color || "#2579F5"}
+          fill={props.color || '#2579F5'}
         />
       </g>
     </svg>

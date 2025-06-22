@@ -1,4 +1,4 @@
-import { Comment } from "./comment";
+import { Comment } from './comment';
 
 export interface Topic {
   id: string;
@@ -21,9 +21,9 @@ export interface TopicDB {
   notified_at: Date;
 }
 
-export type CreateTopicDBPayload = Omit<TopicDB, "id">;
+export type CreateTopicDBPayload = Omit<TopicDB, 'id'>;
 
-export type UpdateTopicDBPayload = Omit<TopicDB, "created_at" | "id">;
+export type UpdateTopicDBPayload = Omit<TopicDB, 'created_at' | 'id'>;
 
 export interface AddOrEditTopicPayload {
   id?: string;
@@ -40,20 +40,20 @@ export interface ModalTopicPayload {
 }
 
 export type TopicCategory =
-  | "สิทธิเสรีภาพ"
-  | "รัฐสภา"
-  | "ศาล รธน."
-  | "การปกครองส่วนท้องถิ่น"
-  | "สสร."
-  | "ไม่ระบุ";
+  | 'สิทธิเสรีภาพ'
+  | 'รัฐสภา'
+  | 'ศาล รธน.'
+  | 'การปกครองส่วนท้องถิ่น'
+  | 'สสร.'
+  | 'ไม่ระบุ';
 
 export const topicCategories: TopicCategory[] = [
-  "สิทธิเสรีภาพ",
-  "รัฐสภา",
-  "ศาล รธน.",
-  "การปกครองส่วนท้องถิ่น",
-  "สสร.",
-  "ไม่ระบุ",
+  'สิทธิเสรีภาพ',
+  'รัฐสภา',
+  'ศาล รธน.',
+  'การปกครองส่วนท้องถิ่น',
+  'สสร.',
+  'ไม่ระบุ',
 ];
 
 export interface LightWeightTopic {

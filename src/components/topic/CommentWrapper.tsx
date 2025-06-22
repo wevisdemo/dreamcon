@@ -1,6 +1,6 @@
-import { Comment } from "../../types/comment";
-import { Topic } from "../../types/topic";
-import CommentAndChildren from "./CommentAndChildren";
+import { Comment } from '../../types/comment';
+import { Topic } from '../../types/topic';
+import CommentAndChildren from './CommentAndChildren';
 
 interface PropTypes {
   comments: Comment[];
@@ -23,7 +23,7 @@ export default function CommentWrapper(props: PropTypes) {
   return (
     <div
       className={`comment-wrapper flex flex-col ${
-        props.level === 1 ? "gap-[16px] mt-[10px]" : ""
+        props.level === 1 ? 'gap-[16px] mt-[10px]' : ''
       }`}
     >
       {props.comments.map((comment, index) => {

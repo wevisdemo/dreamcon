@@ -1,11 +1,11 @@
-import { useContext, useState } from "react";
-import { Comment, CommentView } from "../../types/comment";
-import BubblePlusIcon from "../icon/BubblePlusIcon";
-import Popover from "@mui/material/Popover";
-import MenuPopover from "../share/MenuPopover";
-import { useHotkeys } from "react-hotkeys-hook";
-import { StoreContext } from "../../store";
-import Tooltip from "@mui/material/Tooltip";
+import { useContext, useState } from 'react';
+import { Comment, CommentView } from '../../types/comment';
+import BubblePlusIcon from '../icon/BubblePlusIcon';
+import Popover from '@mui/material/Popover';
+import MenuPopover from '../share/MenuPopover';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { StoreContext } from '../../store';
+import Tooltip from '@mui/material/Tooltip';
 interface PropTypes {
   comment: Comment;
   bgColor: string;
@@ -29,7 +29,7 @@ export default function CommentCard(props: PropTypes) {
   const { clipboard: clipboardContext } = useContext(StoreContext);
 
   const openMenu = Boolean(anchorMenu);
-  const popoverID = openMenu ? "comment-menu" : undefined;
+  const popoverID = openMenu ? 'comment-menu' : undefined;
 
   const showOption = () => {
     if (!props.canEdit) return false;
@@ -66,33 +66,33 @@ export default function CommentCard(props: PropTypes) {
   const viewColor = () => {
     switch (props.comment.comment_view) {
       case CommentView.AGREE:
-        return "lightGreen";
+        return 'lightGreen';
       case CommentView.PARTIAL_AGREE:
-        return "lightYellow";
+        return 'lightYellow';
       case CommentView.DISAGREE:
-        return "lightRed";
+        return 'lightRed';
     }
   };
 
   const roundedClass = () => {
-    let classes = "";
-    if (props.roundedTl) classes += "rounded-tl-[16px] ";
-    if (props.roundedTr) classes += "rounded-tr-[16px] ";
-    if (props.roundedBl) classes += "rounded-bl-[16px] ";
-    if (props.roundedBr) classes += "rounded-br-[16px] ";
+    let classes = '';
+    if (props.roundedTl) classes += 'rounded-tl-[16px] ';
+    if (props.roundedTr) classes += 'rounded-tr-[16px] ';
+    if (props.roundedBl) classes += 'rounded-bl-[16px] ';
+    if (props.roundedBr) classes += 'rounded-br-[16px] ';
     return classes;
   };
 
-  useHotkeys("Meta+x, ctrl+x", () => {
+  useHotkeys('Meta+x, ctrl+x', () => {
     if (hovered) {
       clipboardContext.emitCopyComment(props.comment);
     }
   });
 
-  useHotkeys("Meta+v, ctrl+v", () => {
+  useHotkeys('Meta+v, ctrl+v', () => {
     if (hovered) {
       clipboardContext.emitMoveComment({
-        type: "comment",
+        type: 'comment',
         comment: props.comment,
       });
     }
@@ -123,10 +123,10 @@ export default function CommentCard(props: PropTypes) {
           }
           placement="bottom-start"
           className="hover:cursor-pointer"
-          classes={{ tooltip: "tooltip-1" }}
+          classes={{ tooltip: 'tooltip-1' }}
         >
           <img
-            style={{ transform: "translate(0, -50%)" }}
+            style={{ transform: 'translate(0, -50%)' }}
             className="absolute left-[-24px] top-[50%] w-[24px] h-[24px]"
             src="/icon/six-dot.svg"
             alt="six-dot-icon"
@@ -137,11 +137,11 @@ export default function CommentCard(props: PropTypes) {
       <div
         aria-describedby={popoverID}
         className={`p-[10px] ${roundedClass()} text[13px] flex justify-between border-[2px] ${
-          props.isOver ? "border-dashed border-blue4" : "border-transparent"
+          props.isOver ? 'border-dashed border-blue4' : 'border-transparent'
         } ${
           hovered && props.canEdit
-            ? "hover:border-blue6 hover:cursor-pointer"
-            : ""
+            ? 'hover:border-blue6 hover:cursor-pointer'
+            : ''
         } `}
         style={{ backgroundColor: props.bgColor }}
       >
@@ -155,7 +155,7 @@ export default function CommentCard(props: PropTypes) {
               data-dndkit-disable-drag
               color="#979797"
               className="w-[18px] h-[18px]"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onClickAddComment();
               }}
@@ -167,7 +167,7 @@ export default function CommentCard(props: PropTypes) {
               src="/icon/menu.svg"
               alt="menu-icon"
               className="w-[18px] h-[18px]"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleClickMenu(e);
               }}
@@ -181,14 +181,14 @@ export default function CommentCard(props: PropTypes) {
         anchorEl={anchorMenu}
         onClose={handleCloseMenu}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right',
         }}
-        classes={{ paper: "box-1" }}
+        classes={{ paper: 'box-1' }}
         disableAutoFocus
         disableEnforceFocus
         disableRestoreFocus

@@ -1,15 +1,15 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { DreamConEvent } from "../../types/event";
+import { useContext, useEffect, useRef, useState } from 'react';
+import { DreamConEvent } from '../../types/event';
 import {
   TopicFilter,
   topicFilterCategories,
   TopicFilterCategory,
-} from "../../types/home";
-import DefaultFilterEvent from "./DefaultFilterEvent";
-import FilterEvent from "./FilterEvent";
-import { StoreContext } from "../../store";
-import { LightWeightTopic } from "../../types/topic";
-import { useDraggable } from "react-use-draggable-scroll";
+} from '../../types/home';
+import DefaultFilterEvent from './DefaultFilterEvent';
+import FilterEvent from './FilterEvent';
+import { StoreContext } from '../../store';
+import { LightWeightTopic } from '../../types/topic';
+import { useDraggable } from 'react-use-draggable-scroll';
 
 interface PropTypes {
   allTopicCount: number;
@@ -21,7 +21,7 @@ interface PropTypes {
 
 export default function Filter(props: PropTypes) {
   const { user: userContext } = useContext(StoreContext);
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
   const [debouncedValue, setDebouncedValue] = useState(searchText);
   const eventFilterRef = useRef<HTMLDivElement>(null!);
   const { events: eventFilterEvents } = useDraggable(eventFilterRef);
@@ -43,7 +43,7 @@ export default function Filter(props: PropTypes) {
     });
   };
 
-  const handleSortChange = (sort: "latest" | "most-commented") => {
+  const handleSortChange = (sort: 'latest' | 'most-commented') => {
     props.setFilter({
       ...props.filter,
       sortedBy: sort,
@@ -80,7 +80,7 @@ export default function Filter(props: PropTypes) {
 
   const getEventHighlightedTopic = (event: DreamConEvent) => {
     const filteredTopics = props.lightWeightTopics.filter(
-      (topic) => topic.event_id === event.id && topic.comment_level1_count >= 10
+      topic => topic.event_id === event.id && topic.comment_level1_count >= 10
     );
     if (filteredTopics.length > 0) {
       return filteredTopics[0].title;
@@ -89,19 +89,19 @@ export default function Filter(props: PropTypes) {
   };
 
   const isEventOwner = (targetEvent: DreamConEvent) => {
-    if (userContext.userState?.role === "writer") {
+    if (userContext.userState?.role === 'writer') {
       return userContext.userState.event.id === targetEvent.id;
     }
     return false;
   };
 
   const filteredEvents = (): DreamConEvent[] =>
-    props.events.filter((event) => props.filter.selectedEvent?.id !== event.id);
+    props.events.filter(event => props.filter.selectedEvent?.id !== event.id);
 
   // TODO: this is for temp fix, should be controller by fetch event
   const getFreshFilteredEventData = (): DreamConEvent | null => {
     const topicCount = props.lightWeightTopics.filter(
-      (topic) => topic.event_id === props.filter.selectedEvent?.id
+      topic => topic.event_id === props.filter.selectedEvent?.id
     ).length;
 
     if (props.filter.selectedEvent !== null) {
@@ -119,26 +119,26 @@ export default function Filter(props: PropTypes) {
       const containerWidth = eventFilterRef.current?.clientWidth;
       const scrollLeft = eventFilterRef.current?.scrollLeft;
       if (maxWidth - containerWidth - scrollLeft > 10) {
-        setShowEventGradient((curr) => ({ ...curr, right: true }));
+        setShowEventGradient(curr => ({ ...curr, right: true }));
       } else {
-        setShowEventGradient((curr) => ({ ...curr, right: false }));
+        setShowEventGradient(curr => ({ ...curr, right: false }));
       }
 
       if (scrollLeft > 10) {
-        setShowEventGradient((curr) => ({ ...curr, left: true }));
+        setShowEventGradient(curr => ({ ...curr, left: true }));
       } else {
-        setShowEventGradient((curr) => ({ ...curr, left: false }));
+        setShowEventGradient(curr => ({ ...curr, left: false }));
       }
     };
 
     const currentRef = eventFilterRef.current;
     if (currentRef) {
-      currentRef.addEventListener("scroll", handleScroll);
+      currentRef.addEventListener('scroll', handleScroll);
     }
 
     return () => {
       if (currentRef) {
-        currentRef.removeEventListener("scroll", handleScroll);
+        currentRef.removeEventListener('scroll', handleScroll);
       }
     };
   }, [eventFilterRef]);
@@ -149,26 +149,26 @@ export default function Filter(props: PropTypes) {
       const containerWidth = categoryRef.current?.clientWidth;
       const scrollLeft = categoryRef.current?.scrollLeft;
       if (maxWidth - containerWidth - scrollLeft > 10) {
-        setShowCategoryGradient((curr) => ({ ...curr, right: true }));
+        setShowCategoryGradient(curr => ({ ...curr, right: true }));
       } else {
-        setShowCategoryGradient((curr) => ({ ...curr, right: false }));
+        setShowCategoryGradient(curr => ({ ...curr, right: false }));
       }
 
       if (scrollLeft > 10) {
-        setShowCategoryGradient((curr) => ({ ...curr, left: true }));
+        setShowCategoryGradient(curr => ({ ...curr, left: true }));
       } else {
-        setShowCategoryGradient((curr) => ({ ...curr, left: false }));
+        setShowCategoryGradient(curr => ({ ...curr, left: false }));
       }
     };
 
     const currentRef = categoryRef.current;
     if (currentRef) {
-      currentRef.addEventListener("scroll", handleScroll);
+      currentRef.addEventListener('scroll', handleScroll);
     }
 
     return () => {
       if (currentRef) {
-        currentRef.removeEventListener("scroll", handleScroll);
+        currentRef.removeEventListener('scroll', handleScroll);
       }
     };
   }, [categoryRef]);
@@ -199,12 +199,12 @@ export default function Filter(props: PropTypes) {
         <div className="relative overflow-hidden w-full]">
           <div
             className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
-              showEventGradient.right ? "opacity-100" : "opacity-0"
+              showEventGradient.right ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-300`}
           />
           <div
             className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
-              showEventGradient.left ? "opacity-100" : "opacity-0"
+              showEventGradient.left ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-300`}
           />
           <div
@@ -218,7 +218,7 @@ export default function Filter(props: PropTypes) {
                 onClick={() => handleEventChange(null)}
               />
             )}
-            {filteredEvents().map((event) => (
+            {filteredEvents().map(event => (
               <FilterEvent
                 isOwner={isEventOwner(event)}
                 event={event}
@@ -237,36 +237,36 @@ export default function Filter(props: PropTypes) {
             <button
               style={{
                 backgroundColor:
-                  props.filter.sortedBy === "most-commented"
-                    ? "#2579F5"
-                    : "transparent",
+                  props.filter.sortedBy === 'most-commented'
+                    ? '#2579F5'
+                    : 'transparent',
                 color:
-                  props.filter.sortedBy === "most-commented"
-                    ? "#FFFFFF"
-                    : "#95D0FF",
+                  props.filter.sortedBy === 'most-commented'
+                    ? '#FFFFFF'
+                    : '#95D0FF',
                 borderColor:
-                  props.filter.sortedBy === "most-commented"
-                    ? "#1C4CD3"
-                    : "#95D0FF",
+                  props.filter.sortedBy === 'most-commented'
+                    ? '#1C4CD3'
+                    : '#95D0FF',
               }}
               className="w-full py-[6px] rounded-l-[48px] border-[1px] border-solid"
-              onClick={() => handleSortChange("most-commented")}
+              onClick={() => handleSortChange('most-commented')}
             >
               มากที่สุด
             </button>
             <button
               style={{
                 backgroundColor:
-                  props.filter.sortedBy === "latest"
-                    ? "#2579F5"
-                    : "transparent",
+                  props.filter.sortedBy === 'latest'
+                    ? '#2579F5'
+                    : 'transparent',
                 color:
-                  props.filter.sortedBy === "latest" ? "#FFFFFF" : "#95D0FF",
+                  props.filter.sortedBy === 'latest' ? '#FFFFFF' : '#95D0FF',
                 borderColor:
-                  props.filter.sortedBy === "latest" ? "#1C4CD3" : "#95D0FF",
+                  props.filter.sortedBy === 'latest' ? '#1C4CD3' : '#95D0FF',
               }}
               className="w-full py-[6px] rounded-r-[48px] border-[1px] border-solid"
-              onClick={() => handleSortChange("latest")}
+              onClick={() => handleSortChange('latest')}
             >
               ล่าสุด
             </button>
@@ -278,12 +278,12 @@ export default function Filter(props: PropTypes) {
           <div className="relative overflow-hidden w-full]">
             <div
               className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
-                showCategoryGradient.right ? "opacity-100" : "opacity-0"
+                showCategoryGradient.right ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
             />
             <div
               className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
-                showCategoryGradient.left ? "opacity-100" : "opacity-0"
+                showCategoryGradient.left ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
             />
             <div
@@ -291,13 +291,13 @@ export default function Filter(props: PropTypes) {
               {...categoryEvents}
               ref={categoryRef}
             >
-              {topicFilterCategories.map((category) => (
+              {topicFilterCategories.map(category => (
                 <button
                   key={category}
                   className={`whitespace-nowrap px-[12px] py-[6px] border-solid border-[1.5px] rounded-[48px] ${
                     props.filter.category === category
-                      ? "bg-blue6 text-white"
-                      : "border-blue3 text-blue3"
+                      ? 'bg-blue6 text-white'
+                      : 'border-blue3 text-blue3'
                   }`}
                   onClick={() => handleCategoryChange(category)}
                 >
@@ -313,7 +313,7 @@ export default function Filter(props: PropTypes) {
             placeholder="ค้นหา"
             className="bg-white w-[150px] border border-blue3 outline-none px-[8px] py-[6px] rounded-[48px]"
             value={searchText}
-            onChange={(e) => {
+            onChange={e => {
               handleSearchTextChange(e.target.value);
             }}
           />

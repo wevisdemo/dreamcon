@@ -1,10 +1,10 @@
-import { useReducer } from "react";
+import { useReducer } from 'react';
 import {
   CommentModalStore,
   initialCommentModalStore,
   initialModalCommentState,
   modalCommentReducer,
-} from "./modalComment";
+} from './modalComment';
 
 export interface TopicPageStore {
   modalComment: CommentModalStore;

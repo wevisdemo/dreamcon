@@ -1,23 +1,23 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  --color-lightGreen: #CCFFCB;
-  --color-lightRed: #FFD6D3;
-  --color-lightYellow: #FFFA8D;
-  --color-accent: #2579F5;
-  --color-blue1: #E7F7FF;
-  --color-blue2: #BDE6FF;
-  --color-blue3: #95D0FF;
-  --color-blue4: #6EB7FE;
-  --color-blue6: #2579F5;
-  --color-blue7: #1C4CD3;
-  --color-gray1: #F8F8F8;
-  --color-gray2: #E8E8E8;
-  --color-gray3: #D4D4D4;
+  --color-lightGreen: #ccffcb;
+  --color-lightRed: #ffd6d3;
+  --color-lightYellow: #fffa8d;
+  --color-accent: #2579f5;
+  --color-blue1: #e7f7ff;
+  --color-blue2: #bde6ff;
+  --color-blue3: #95d0ff;
+  --color-blue4: #6eb7fe;
+  --color-blue6: #2579f5;
+  --color-blue7: #1c4cd3;
+  --color-gray1: #f8f8f8;
+  --color-gray2: #e8e8e8;
+  --color-gray3: #d4d4d4;
   --color-gray5: #979797;
-  --color-gray7: #6E6E6E;
+  --color-gray7: #6e6e6e;
   --color-gray8: #454343;
-  --color-green3: #D2FED6;
+  --color-green3: #d2fed6;
 }
 
 .box-1 {
@@ -25,11 +25,11 @@
   box-shadow: none !important;
 }
 
-.tooltip-1{
+.tooltip-1 {
   background-color: #454343 !important;
 }
 
-.tooltip-2{
+.tooltip-2 {
   background-color: #fff !important;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1) !important;
   border-radius: 8px !important;
@@ -42,6 +42,6 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

@@ -1,15 +1,15 @@
-import { ReactElement, useContext, useState } from "react";
-import useAuth from "../hooks/useAuth";
-import { StoreContext } from "../store";
-import { Popover } from "@mui/material";
-import NewTabIcon from "./icon/NewTab";
-import { usePermission } from "../hooks/usePermission";
+import { ReactElement, useContext, useState } from 'react';
+import useAuth from '../hooks/useAuth';
+import { StoreContext } from '../store';
+import { Popover } from '@mui/material';
+import NewTabIcon from './icon/NewTab';
+import { usePermission } from '../hooks/usePermission';
 
 // todo: if has some tabs later, we have to handle state
 export default function Nav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);
-  const popoverID = openMenu ? "user-menu" : undefined;
+  const popoverID = openMenu ? 'user-menu' : undefined;
   const { logoutAsWriter, logoutAsAdmin } = useAuth();
 
   const { currentPage } = useContext(StoreContext);
@@ -48,17 +48,19 @@ export default function Nav(): ReactElement {
       {isReadOnly() && (
         <div className="flex ">
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${currentPage.value === "about" ? "bg-blue2" : ""
-              }`}
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+              currentPage.value === 'about' ? 'bg-blue2' : ''
+            }`}
             href="/about"
           >
             เกี่ยวกับโครงการ
           </a>
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${currentPage.value === "all-topic" || currentPage.value === "topic"
-                ? "bg-blue2"
-                : ""
-              }`}
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+              currentPage.value === 'all-topic' || currentPage.value === 'topic'
+                ? 'bg-blue2'
+                : ''
+            }`}
             href="/topics"
           >
             ร่วมถกเถียง
@@ -70,7 +72,7 @@ export default function Nav(): ReactElement {
           <span className="text-gray5">สร้างข้อถกเถียงของ</span>
           <div
             className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               setAnchorMenu(e.currentTarget);
             }}
@@ -90,14 +92,14 @@ export default function Nav(): ReactElement {
         anchorEl={anchorMenu}
         onClose={() => setAnchorMenu(null)}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right',
         }}
-        classes={{ paper: "box-1" }}
+        classes={{ paper: 'box-1' }}
         disableAutoFocus
         disableEnforceFocus
         disableRestoreFocus

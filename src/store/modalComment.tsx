@@ -1,18 +1,18 @@
-import { Comment } from "../types/comment";
-import { Topic } from "../types/topic";
+import { Comment } from '../types/comment';
+import { Topic } from '../types/topic';
 
 export interface ModalCommentState {
   isModalOpen: boolean;
   defaultState?: Comment;
   parentTopicId?: string;
   parentCommentIds?: string[];
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   fromTopic?: Topic;
   fromComment?: Comment;
 }
 
 export interface ActionCreateCommentPayload {
-  mode: "create";
+  mode: 'create';
   parentTopicId: string;
   parentCommentIds: string[];
   fromTopic?: Topic;
@@ -20,20 +20,20 @@ export interface ActionCreateCommentPayload {
 }
 
 export interface ActionEditCommentPayload {
-  mode: "edit";
+  mode: 'edit';
   defaultState: Comment;
 }
 
 export type ModalCommentAction =
   | {
-      type: "OPEN_MODAL";
+      type: 'OPEN_MODAL';
       payload: ActionCreateCommentPayload | ActionEditCommentPayload;
     }
-  | { type: "CLOSE_MODAL" };
+  | { type: 'CLOSE_MODAL' };
 
 export const initialModalCommentState: ModalCommentState = {
   isModalOpen: false,
-  mode: "create",
+  mode: 'create',
 };
 
 export const modalCommentReducer = (
@@ -41,14 +41,14 @@ export const modalCommentReducer = (
   action: ModalCommentAction
 ): ModalCommentState => {
   switch (action.type) {
-    case "OPEN_MODAL": {
+    case 'OPEN_MODAL': {
       return {
         ...state,
         isModalOpen: true,
         ...action.payload,
       };
     }
-    case "CLOSE_MODAL":
+    case 'CLOSE_MODAL':
       return { ...state, isModalOpen: false, defaultState: undefined };
     default:
       return state;

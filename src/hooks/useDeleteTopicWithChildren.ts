@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { db } from "../utils/firestore";
+import { useState } from 'react';
+import { db } from '../utils/firestore';
 import {
   doc,
   collection,
@@ -7,9 +7,9 @@ import {
   where,
   getDocs,
   runTransaction,
-} from "firebase/firestore";
-import { usePermission } from "./usePermission";
-import { Topic } from "../types/topic";
+} from 'firebase/firestore';
+import { usePermission } from './usePermission';
+import { Topic } from '../types/topic';
 
 export const useDeleteTopicWithChildren = () => {
   const [loading, setLoading] = useState(false);
@@ -19,19 +19,19 @@ export const useDeleteTopicWithChildren = () => {
   const deleteTopicWithChildren = async (topic: Topic) => {
     const topicId = topic.id;
     if (!topicId) {
-      setError("No topic ID provided for deletion");
+      setError('No topic ID provided for deletion');
       return;
     }
 
     const writerEvent = getWriterEvent();
     if (!writerEvent) {
-      setError("No writer event found");
+      setError('No writer event found');
       setLoading(false);
       return;
     }
 
     if (!isWriterOwner(topic.event_id)) {
-      setError("You do not have permission to edit this comment");
+      setError('You do not have permission to edit this comment');
       setLoading(false);
       return;
     }
@@ -40,18 +40,18 @@ export const useDeleteTopicWithChildren = () => {
     setError(null);
 
     try {
-      await runTransaction(db, async (transaction) => {
-        const commentsCollection = collection(db, "comments");
+      await runTransaction(db, async transaction => {
+        const commentsCollection = collection(db, 'comments');
 
         // Step 1: Find comments with this topic ID
         const commentsQuery = query(
           commentsCollection,
-          where("parent_topic_id", "==", topicId)
+          where('parent_topic_id', '==', topicId)
         );
         const commentsSnapshot = await getDocs(commentsQuery);
 
         // Step 2: Delete all related comments in the transaction
-        commentsSnapshot.docs.forEach((docSnapshot) => {
+        commentsSnapshot.docs.forEach(docSnapshot => {
           const commentRef = doc(db, `comments/${docSnapshot.id}`);
           transaction.delete(commentRef);
         });
@@ -62,12 +62,12 @@ export const useDeleteTopicWithChildren = () => {
       });
 
       console.log(
-        "Topic and all related comments deleted successfully:",
+        'Topic and all related comments deleted successfully:',
         topicId
       );
     } catch (err) {
-      console.error("Error deleting topic:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error deleting topic:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }

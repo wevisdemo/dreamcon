@@ -1,5 +1,5 @@
-import type { PointerEvent } from "react";
-import { PointerSensor } from "@dnd-kit/core";
+import type { PointerEvent } from 'react';
+import { PointerSensor } from '@dnd-kit/core';
 
 /**
  * An extended "PointerSensor" that prevent some
@@ -8,7 +8,7 @@ import { PointerSensor } from "@dnd-kit/core";
 export class SmartPointerSensor extends PointerSensor {
   static activators = [
     {
-      eventName: "onPointerDown" as const,
+      eventName: 'onPointerDown' as const,
       handler: ({ nativeEvent: event }: PointerEvent) => {
         if (
           !event.isPrimary ||
@@ -25,10 +25,10 @@ export class SmartPointerSensor extends PointerSensor {
 }
 
 function isInteractiveElement(element: Element | null) {
-  if (element?.attributes.getNamedItem("data-dndkit-disable-drag")) {
+  if (element?.attributes.getNamedItem('data-dndkit-disable-drag')) {
     return true;
   }
-  if (element?.classList.contains("MuiBackdrop-root")) {
+  if (element?.classList.contains('MuiBackdrop-root')) {
     return true;
   }
 

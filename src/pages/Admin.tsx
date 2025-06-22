@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import EventCard from "../components/admin/EventCard";
-import { useNavigate } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import ModalEvent from "../components/admin/ModalEvent";
-import { AddOrEditEventPayload, DreamConEvent } from "../types/event";
-import { useEvent } from "../hooks/useEvent";
-import { useWriter } from "../hooks/useWriter";
-import FullPageLoader from "../components/FullPageLoader";
-import DefaultLayout from "../layouts/default";
+import { useEffect, useState } from 'react';
+import EventCard from '../components/admin/EventCard';
+import { useNavigate } from 'react-router-dom';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import ModalEvent from '../components/admin/ModalEvent';
+import { AddOrEditEventPayload, DreamConEvent } from '../types/event';
+import { useEvent } from '../hooks/useEvent';
+import { useWriter } from '../hooks/useWriter';
+import FullPageLoader from '../components/FullPageLoader';
+import DefaultLayout from '../layouts/default';
 
 const AdminPage = () => {
   enum RoomSortOption {
@@ -15,20 +15,20 @@ const AdminPage = () => {
     POPULAR,
   }
   const [sortBy, setSortBy] = useState<RoomSortOption>(RoomSortOption.LATEST);
-  const [searchText, setSearchText] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>('');
   const [modalEvent, setModalEvent] = useState<{
     isOpen: boolean;
-    mode: "create" | "edit";
+    mode: 'create' | 'edit';
     defaultState?: DreamConEvent;
-  }>({ isOpen: false, mode: "create" });
+  }>({ isOpen: false, mode: 'create' });
   const [events, setEvents] = useState<DreamConEvent[]>([]);
   const [displayEvents, setDisplayEvents] = useState<DreamConEvent[]>([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const regex = new RegExp(searchText, "i");
-    const filteredEvents = events.filter((event) => {
+    const regex = new RegExp(searchText, 'i');
+    const filteredEvents = events.filter(event => {
       return regex.test(event.display_name);
     });
     switch (sortBy) {
@@ -63,9 +63,9 @@ const AdminPage = () => {
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, user => {
       if (!user) {
-        navigate("/admin/login", { replace: true });
+        navigate('/admin/login', { replace: true });
       }
     });
 
@@ -77,15 +77,15 @@ const AdminPage = () => {
   }, []);
 
   const handleSubmitEvent = async (
-    mode: "create" | "edit",
+    mode: 'create' | 'edit',
     payload: AddOrEditEventPayload
   ) => {
-    if (mode === "edit") {
+    if (mode === 'edit') {
       await handleEditEvent(payload);
     } else {
       await handleCreateEvent(payload);
     }
-    setModalEvent({ defaultState: undefined, mode: "create", isOpen: false });
+    setModalEvent({ defaultState: undefined, mode: 'create', isOpen: false });
     fetchEvents();
   };
 
@@ -99,7 +99,7 @@ const AdminPage = () => {
   };
 
   const handleJumpToHomePage = async (eventId: string) => {
-    let writerID = "";
+    let writerID = '';
     const permanentWriter = await getPermanentWriterByEventID(eventId);
     if (!permanentWriter) {
       writerID = await createWriter({ event_id: eventId, is_permanent: true });
@@ -127,7 +127,7 @@ const AdminPage = () => {
   const fetchEvents = async () => {
     const events = await getEvents();
     if (!events) {
-      alert("Failed to fetch events.");
+      alert('Failed to fetch events.');
       return;
     }
     // sort by created_at asc
@@ -190,10 +190,10 @@ const AdminPage = () => {
                   style={{
                     backgroundColor:
                       sortBy === RoomSortOption.LATEST
-                        ? "#1C4CD3"
-                        : "transparent",
+                        ? '#1C4CD3'
+                        : 'transparent',
                     color:
-                      sortBy === RoomSortOption.LATEST ? "#FFFFFF" : "#1C4CD3",
+                      sortBy === RoomSortOption.LATEST ? '#FFFFFF' : '#1C4CD3',
                   }}
                   className="w-full py-[6px] rounded-l-[48px] border-[1px] border-solid border-[#1C4CD3] "
                   onClick={() => setSortBy(RoomSortOption.LATEST)}
@@ -204,10 +204,10 @@ const AdminPage = () => {
                   style={{
                     backgroundColor:
                       sortBy === RoomSortOption.POPULAR
-                        ? "#1C4CD3"
-                        : "transparent",
+                        ? '#1C4CD3'
+                        : 'transparent',
                     color:
-                      sortBy === RoomSortOption.POPULAR ? "#FFFFFF" : "#1C4CD3",
+                      sortBy === RoomSortOption.POPULAR ? '#FFFFFF' : '#1C4CD3',
                   }}
                   className="w-full py-[6px] rounded-r-[48px] border-[1px] border-solid border-[#1C4CD3] "
                   onClick={() => setSortBy(RoomSortOption.POPULAR)}
@@ -218,7 +218,7 @@ const AdminPage = () => {
             </div>
             <div className="relative w-full">
               <input
-                onChange={(e) => {
+                onChange={e => {
                   setSearchText(e.target.value);
                 }}
                 value={searchText}
@@ -235,7 +235,7 @@ const AdminPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-[32px] pb-[32px]">
-            {displayEvents.map((event) => (
+            {displayEvents.map(event => (
               <EventCard
                 index={event.index || 0}
                 key={event.id}
@@ -248,7 +248,7 @@ const AdminPage = () => {
                   setModalEvent({
                     ...modalEvent,
                     isOpen: true,
-                    mode: "edit",
+                    mode: 'edit',
                     defaultState: event,
                   });
                 }}

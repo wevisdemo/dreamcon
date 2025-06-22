@@ -1,6 +1,6 @@
-import React from "react";
-import Nav from "../components/Nav";
-import AdminNav from "../components/AdminNav";
+import React from 'react';
+import Nav from '../components/Nav';
+import AdminNav from '../components/AdminNav';
 
 const DefaultLayout: React.FC<{
   page?: string;
@@ -8,9 +8,9 @@ const DefaultLayout: React.FC<{
 }> = ({ page, children }) => {
   const getNav = (page: string | undefined) => {
     switch (page) {
-      case "admin":
+      case 'admin':
         return <AdminNav />;
-      case "viewer":
+      case 'viewer':
         return <Nav />;
       default:
         return <Nav />;

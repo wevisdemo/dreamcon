@@ -6,7 +6,7 @@ export interface Writer {
   expired_at?: Date;
 }
 
-export type CreateWriterDBPayload = Omit<Writer, "id">;
+export type CreateWriterDBPayload = Omit<Writer, 'id'>;
 
 export interface CreateWritePayload {
   event_id: string;

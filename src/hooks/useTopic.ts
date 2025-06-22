@@ -7,12 +7,12 @@ import {
   limit,
   orderBy,
   documentId,
-} from "firebase/firestore";
-import { useState } from "react";
-import { db } from "../utils/firestore";
-import { LightWeightTopic, Topic, TopicDB } from "../types/topic";
-import { CommentDB } from "../types/comment";
-import { convertTopicDBToTopic } from "../utils/mapping";
+} from 'firebase/firestore';
+import { useState } from 'react';
+import { db } from '../utils/firestore';
+import { LightWeightTopic, Topic, TopicDB } from '../types/topic';
+import { CommentDB } from '../types/comment';
+import { convertTopicDBToTopic } from '../utils/mapping';
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useTopic.ts
 
@@ -25,10 +25,10 @@ export const useTopic = () => {
     setError(null);
 
     try {
-      const topicsCollection = collection(db, "topics");
-      const q = query(topicsCollection, where("event_id", "==", eventId));
+      const topicsCollection = collection(db, 'topics');
+      const q = query(topicsCollection, where('event_id', '==', eventId));
       const snapshot = await getDocs(q);
-      const topics = snapshot.docs.map((doc) => {
+      const topics = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -42,8 +42,8 @@ export const useTopic = () => {
 
       return topics;
     } catch (err) {
-      console.error("Error fetching topics: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching topics: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return [];
     } finally {
       setLoading(false);
@@ -51,11 +51,11 @@ export const useTopic = () => {
   };
 
   const getCommentLevel1Count = async (topicId: string): Promise<number> => {
-    const commentsCollection = collection(db, "comments");
+    const commentsCollection = collection(db, 'comments');
     const commentQuery = query(
       commentsCollection,
-      where("parent_topic_id", "==", topicId),
-      where("parent_comment_ids", "==", [])
+      where('parent_topic_id', '==', topicId),
+      where('parent_comment_ids', '==', [])
     );
     const snapshot = await getCountFromServer(commentQuery);
     const count = snapshot.data().count;
@@ -64,10 +64,10 @@ export const useTopic = () => {
 
   const getLightWeightTopics = async (): Promise<LightWeightTopic[]> => {
     try {
-      const topicsCollection = collection(db, "topics");
+      const topicsCollection = collection(db, 'topics');
       const snapshot = await getDocs(topicsCollection);
       const topics = Promise.all(
-        snapshot.docs.map(async (doc) => {
+        snapshot.docs.map(async doc => {
           const data = doc.data();
           const commentLv1Count = await getCommentLevel1Count(doc.id);
           return {
@@ -82,7 +82,7 @@ export const useTopic = () => {
       );
       return topics;
     } catch (err) {
-      console.error("Error fetching light weight topics: ", err);
+      console.error('Error fetching light weight topics: ', err);
       return [];
     }
   };
@@ -102,12 +102,12 @@ export const useTopic = () => {
     }
     try {
       const results = await Promise.all(
-        chunks.map((chunk) => getSeparatedTopicsByIds(chunk))
+        chunks.map(chunk => getSeparatedTopicsByIds(chunk))
       );
       return results.flat();
     } catch (err) {
-      console.error("Error fetching topics by ids: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching topics by ids: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return [];
     } finally {
       setLoading(false);
@@ -117,14 +117,14 @@ export const useTopic = () => {
   const getSeparatedTopicsByIds = async (
     topicIdsList: string[]
   ): Promise<Topic[]> => {
-    const topicsCollection = collection(db, "topics");
+    const topicsCollection = collection(db, 'topics');
 
-    const q = query(topicsCollection, where(documentId(), "in", topicIdsList));
+    const q = query(topicsCollection, where(documentId(), 'in', topicIdsList));
     const snapshot = await getDocs(q);
     if (snapshot.empty) {
       return [];
     }
-    const topics = snapshot.docs.map((doc) => {
+    const topics = snapshot.docs.map(doc => {
       const data = doc.data();
       return {
         ...doc.data(),
@@ -134,17 +134,17 @@ export const useTopic = () => {
         notified_at: data.notified_at.toDate(),
       } as TopicDB;
     });
-    const topicIds = topics.map((topic) => topic.id);
-    const commentsCollection = collection(db, "comments");
+    const topicIds = topics.map(topic => topic.id);
+    const commentsCollection = collection(db, 'comments');
     const commentsQuery = query(
       commentsCollection,
-      where("parent_topic_id", "in", topicIds)
+      where('parent_topic_id', 'in', topicIds)
     );
 
     const commentsSnapshot = await getDocs(commentsQuery);
     const commentsByTopic: Record<string, CommentDB[]> = {};
 
-    commentsSnapshot.forEach((doc) => {
+    commentsSnapshot.forEach(doc => {
       const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
       const topicId = commentDB.parent_topic_id;
 
@@ -155,7 +155,7 @@ export const useTopic = () => {
     });
     // Map comments to topics
     const fineTopics = topics
-      .map((topic) => {
+      .map(topic => {
         const comments = commentsByTopic[topic.id] || [];
         return convertTopicDBToTopic(topic, comments);
       })
@@ -169,14 +169,14 @@ export const useTopic = () => {
     limit: number;
     orderBy: {
       field: string;
-      direction: "asc" | "desc";
+      direction: 'asc' | 'desc';
     };
   }): Promise<Topic[]> => {
     setLoading(true);
     setError(null);
 
     try {
-      const topicsCollection = collection(db, "topics");
+      const topicsCollection = collection(db, 'topics');
       const q = query(
         topicsCollection,
         orderBy(filter.orderBy.field, filter.orderBy.direction),
@@ -186,7 +186,7 @@ export const useTopic = () => {
       if (snapshot.empty) {
         return [];
       }
-      const topics = snapshot.docs.map((doc) => {
+      const topics = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -198,17 +198,17 @@ export const useTopic = () => {
         } as Topic;
       });
 
-      const topicIds = topics.map((topic) => topic.id);
+      const topicIds = topics.map(topic => topic.id);
 
-      const commentsCollection = collection(db, "comments");
+      const commentsCollection = collection(db, 'comments');
 
       const commentsQuery = query(
         commentsCollection,
-        where("parent_topic_id", "in", topicIds)
+        where('parent_topic_id', 'in', topicIds)
       );
       const commentsSnapshot = await getDocs(commentsQuery);
       const commentsByTopic: Record<string, CommentDB[]> = {};
-      commentsSnapshot.forEach((doc) => {
+      commentsSnapshot.forEach(doc => {
         const commentDB = { id: doc.id, ...doc.data() } as CommentDB;
         const topicId = commentDB.parent_topic_id;
 
@@ -220,7 +220,7 @@ export const useTopic = () => {
 
       // Map comments to topics
       const fineTopics = topics
-        .map((topic) => {
+        .map(topic => {
           const comments = commentsByTopic[topic.id] || [];
           return convertTopicDBToTopic(topic, comments);
         })
@@ -230,8 +230,8 @@ export const useTopic = () => {
 
       return fineTopics;
     } catch (err) {
-      console.error("Error fetching topics by filter: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching topics by filter: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return [];
     } finally {
       setLoading(false);

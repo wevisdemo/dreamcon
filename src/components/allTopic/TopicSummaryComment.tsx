@@ -1,4 +1,4 @@
-import { Comment, CommentView } from "../../types/comment";
+import { Comment, CommentView } from '../../types/comment';
 
 interface PropTypes {
   comments: Comment[];
@@ -6,7 +6,7 @@ interface PropTypes {
 
 export default function TopicSummaryComment(props: PropTypes) {
   const getCommentsByView = (view: CommentView) => {
-    return props.comments.filter((comment) => comment.comment_view === view);
+    return props.comments.filter(comment => comment.comment_view === view);
   };
   const getHeightOfCommentsCount = (count: number): number => {
     const baseNumber = 24;

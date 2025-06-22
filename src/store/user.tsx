@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { DreamConEventDB } from "../types/event";
-import { Writer } from "../types/writer";
+import { useState } from 'react';
+import { DreamConEventDB } from '../types/event';
+import { Writer } from '../types/writer';
 
 export type UserState = WriterRoleState | UserRoleState;
 
 export interface WriterRoleState {
-  role: "writer";
+  role: 'writer';
   writer: Writer;
   event: DreamConEventDB;
 }
 
 export interface UserRoleState {
-  role: "user";
+  role: 'user';
 }
 
 export interface UserStore {
@@ -22,7 +22,7 @@ export interface UserStore {
 
 export const initialUserStore: UserStore = {
   userState: {
-    role: "user",
+    role: 'user',
   } as UserState,
   setWriterRole: () => {},
   setUserRole: () => {},
@@ -32,11 +32,11 @@ export const useUserStore = () => {
   const [userState, setUserState] = useState<UserState | null>(null);
 
   const setWriterRole = (writer: Writer, event: DreamConEventDB) => {
-    setUserState({ role: "writer", writer, event });
+    setUserState({ role: 'writer', writer, event });
   };
 
   const setUserRole = () => {
-    setUserState({ role: "user" });
+    setUserState({ role: 'user' });
   };
 
   return {

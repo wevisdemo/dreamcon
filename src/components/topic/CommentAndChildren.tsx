@@ -1,18 +1,18 @@
-import { useContext } from "react";
+import { useContext } from 'react';
 import {
   ActionCreateCommentPayload,
   ActionEditCommentPayload,
-} from "../../store/modalComment";
-import { Comment } from "../../types/comment";
-import { Draggable } from "../Draggable";
-import CommentCard from "./CommentCard";
-import CommentWrapper from "./CommentWrapper";
-import { StoreContext } from "../../store";
-import { Topic } from "../../types/topic";
-import { DraggableCommentProps } from "../../types/dragAndDrop";
-import { Droppable } from "../Droppable";
-import { useDeleteCommentWithChildren } from "../../hooks/useDeleteCommentWithChildren";
-import { DreamConEvent } from "../../types/event";
+} from '../../store/modalComment';
+import { Comment } from '../../types/comment';
+import { Draggable } from '../Draggable';
+import CommentCard from './CommentCard';
+import CommentWrapper from './CommentWrapper';
+import { StoreContext } from '../../store';
+import { Topic } from '../../types/topic';
+import { DraggableCommentProps } from '../../types/dragAndDrop';
+import { Droppable } from '../Droppable';
+import { useDeleteCommentWithChildren } from '../../hooks/useDeleteCommentWithChildren';
+import { DreamConEvent } from '../../types/event';
 
 interface PropTypes {
   comment: Comment;
@@ -101,7 +101,7 @@ export default function CommentAndChildren(props: PropTypes) {
   const hasNoSameEventChildren = (comment: Comment): boolean => {
     if (comment.comments.length === 0) return true;
     const hasSameEventChildren = comment.comments.some(
-      (childComment) => childComment.event_id === comment.event_id
+      childComment => childComment.event_id === comment.event_id
     );
     return !hasSameEventChildren;
   };
@@ -111,41 +111,41 @@ export default function CommentAndChildren(props: PropTypes) {
     if (hasChildren) {
       switch (props.level % 3) {
         case 0:
-          return "#FFFFFF";
+          return '#FFFFFF';
         case 1:
-          return "#f5fbff";
+          return '#f5fbff';
         case 2:
-          return "#cae8ff";
+          return '#cae8ff';
       }
     } else {
       switch (props.level % 3) {
         case 0:
-          return "#cae8ff";
+          return '#cae8ff';
         case 1:
-          return "#FFFFFF";
+          return '#FFFFFF';
         case 2:
-          return "#f5fbff";
+          return '#f5fbff';
       }
     }
-    return "#FFFFFF";
+    return '#FFFFFF';
   };
 
   const handleAddComment = (comment: Comment) => {
     const payload: ActionCreateCommentPayload = {
-      mode: "create",
+      mode: 'create',
       parentTopicId: comment.parent_topic_id,
       parentCommentIds: [...comment.parent_comment_ids, comment.id],
       fromComment: comment,
     };
-    if (currentPage.value === "topic") {
+    if (currentPage.value === 'topic') {
       topicPageContext.modalComment.dispatch({
-        type: "OPEN_MODAL",
+        type: 'OPEN_MODAL',
         payload,
       });
     }
-    if (currentPage.value === "all-topic") {
+    if (currentPage.value === 'all-topic') {
       homePageContext.modalCommentSideSection.dispatch({
-        type: "OPEN_MODAL",
+        type: 'OPEN_MODAL',
         payload,
       });
     }
@@ -157,18 +157,18 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const handleEditComment = (comment: Comment) => {
     const payload: ActionEditCommentPayload = {
-      mode: "edit",
+      mode: 'edit',
       defaultState: comment,
     };
-    if (currentPage.value === "topic") {
+    if (currentPage.value === 'topic') {
       topicPageContext.modalComment.dispatch({
-        type: "OPEN_MODAL",
+        type: 'OPEN_MODAL',
         payload,
       });
     }
-    if (currentPage.value === "all-topic") {
+    if (currentPage.value === 'all-topic') {
       homePageContext.modalCommentSideSection.dispatch({
-        type: "OPEN_MODAL",
+        type: 'OPEN_MODAL',
         payload,
       });
     }
@@ -191,7 +191,7 @@ export default function CommentAndChildren(props: PropTypes) {
   ): DreamConEvent | null => {
     if (comment.event_id !== parentEventID) {
       const event = eventContext.events.find(
-        (event) => event.id === comment.event_id
+        event => event.id === comment.event_id
       );
       if (event) {
         return event;
@@ -202,9 +202,9 @@ export default function CommentAndChildren(props: PropTypes) {
 
   // TODO: move to global
   const hasPermissionToEdit = () => {
-    if (modeContext.value === "view") return false;
+    if (modeContext.value === 'view') return false;
     switch (userContext.userState?.role) {
-      case "writer":
+      case 'writer':
         return props.comment.event_id === userContext.userState?.event.id;
       default:
         return false;
@@ -212,8 +212,8 @@ export default function CommentAndChildren(props: PropTypes) {
   };
 
   const canAddComment = () => {
-    if (modeContext.value === "view") return false;
-    if (userContext.userState?.role === "user") return false;
+    if (modeContext.value === 'view') return false;
+    if (userContext.userState?.role === 'user') return false;
     return true;
   };
 
@@ -238,9 +238,9 @@ export default function CommentAndChildren(props: PropTypes) {
       <div className="w-full flex flex-col">
         <Droppable
           id={`droppable-comment-${comment.id}`}
-          data={{ type: "comment", comment }}
+          data={{ type: 'comment', comment }}
         >
-          {(isOver) => (
+          {isOver => (
             <>
               {showHeaderEvent(props.comment, props.parent.event_id) && (
                 <div className="flex gap-[8px] items-center text-[10px] pl-[4px] my-[4px]">

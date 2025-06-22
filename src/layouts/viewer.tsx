@@ -1,9 +1,9 @@
-import React from "react";
-import Hero from "../components/Hero";
-import Description from "../components/Description";
-import Footer from "../components/Footer";
-import { usePermission } from "../hooks/usePermission";
-import DefaultLayout from "./default";
+import React from 'react';
+import Hero from '../components/Hero';
+import Description from '../components/Description';
+import Footer from '../components/Footer';
+import { usePermission } from '../hooks/usePermission';
+import DefaultLayout from './default';
 
 const ViewerLayout: React.FC<{
   children: React.ReactNode;
@@ -21,7 +21,7 @@ const ViewerLayout: React.FC<{
         )}
         <section
           id="content"
-          className={`${isReadOnly() ? "max-h-[656px] h-full" : "h-full"}`}
+          className={`${isReadOnly() ? 'max-h-[656px] h-full' : 'h-full'}`}
         >
           {children}
         </section>

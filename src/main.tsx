@@ -1,16 +1,16 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
-import { BASE_URL } from "./const/app";
-import { HelmetProvider, Helmet } from "@dr.pogodin/react-helmet";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.tsx';
+import { BASE_URL } from './const/app';
+import { HelmetProvider, Helmet } from '@dr.pogodin/react-helmet';
 
-const ogTitle = "DreamCon";
-const ogDescription = "พาความฝันของพวกเรา มาสร้างอนาคตประเทศไทยไปด้วยกัน";
-const ogImage = new URL("/og.png", BASE_URL).href;
-const ogUrl = new URL("", BASE_URL).href;
+const ogTitle = 'DreamCon';
+const ogDescription = 'พาความฝันของพวกเรา มาสร้างอนาคตประเทศไทยไปด้วยกัน';
+const ogImage = new URL('/og.png', BASE_URL).href;
+const ogUrl = new URL('', BASE_URL).href;
 
-createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
       <Helmet>

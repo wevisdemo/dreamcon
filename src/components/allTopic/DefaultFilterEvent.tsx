@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 interface PropTypes {
   onClick: () => void;
@@ -21,9 +21,9 @@ export default function DefaultFilterEvent(props: PropTypes) {
     >
       <div
         className={`w-[75px] h-[75px] rounded-full cursor-pointer flex items-center justify-center ${
-          !props.isSelected && hovered ? "border-2 border-gray8" : ""
+          !props.isSelected && hovered ? 'border-2 border-gray8' : ''
         } ${
-          props.isSelected ? "bg-blue6 text-white" : "bg-blue1 text-[#4999FA]"
+          props.isSelected ? 'bg-blue6 text-white' : 'bg-blue1 text-[#4999FA]'
         }`}
         onClick={() => props.onClick()}
       >
@@ -31,7 +31,7 @@ export default function DefaultFilterEvent(props: PropTypes) {
       </div>
       <p
         className={`text-[10px] text-gray5 px-[5px] py-[3px] text-center whitespace-nowrap ${
-          props.isSelected ? "bg-blue6 rounded-full text-white wv-semibold" : ""
+          props.isSelected ? 'bg-blue6 rounded-full text-white wv-semibold' : ''
         }`}
       >
         จากทุกวงสนทนา

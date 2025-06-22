@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { DreamConEvent } from "../../types/event";
-import { Tooltip } from "@mui/material";
-import IconInfo from "../icon/Info";
-import TooltipEventInfo from "./TooltipEventInfo";
+import { useEffect, useRef, useState } from 'react';
+import { DreamConEvent } from '../../types/event';
+import { Tooltip } from '@mui/material';
+import IconInfo from '../icon/Info';
+import TooltipEventInfo from './TooltipEventInfo';
 
 interface PropTypes {
   event: DreamConEvent;
@@ -77,11 +77,11 @@ export default function FilterEvent(props: PropTypes) {
           <div
             ref={autoScrollRef}
             style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
             }}
             className={`z-10 w-[84px] text-[8px] text-center absolute bg-white rounded-full right-[0px] top-[0px] py-[4px] ${
-              shouldScroll ? "px-[8px]" : ""
+              shouldScroll ? 'px-[8px]' : ''
             } shadow-sm rounded-full overflow-hidden`}
           >
             {props.highlightedTopic}
@@ -98,7 +98,7 @@ export default function FilterEvent(props: PropTypes) {
       )}
       <div
         className={`w-[75px] h-[75px] rounded-full cursor-pointer flex items-center justify-center relative overflow-hidden border-2 ${
-          !props.isSelected && hovered ? "border-gray5" : "border-transparent"
+          !props.isSelected && hovered ? 'border-gray5' : 'border-transparent'
         }`}
         onClick={() => props.onClick(props.event)}
       >
@@ -118,12 +118,12 @@ export default function FilterEvent(props: PropTypes) {
         <p
           className={`text-[10px] text-gray5 px-[5px] py-[3px] text-center ${
             props.isSelected
-              ? "bg-blue6 rounded-full text-white wv-semibold whitespace-nowrap"
-              : "truncate w-[75px]"
+              ? 'bg-blue6 rounded-full text-white wv-semibold whitespace-nowrap'
+              : 'truncate w-[75px]'
           }`}
         >
           {props.isOwner && props.isSelected
-            ? "วงสนทนาของคุณ"
+            ? 'วงสนทนาของคุณ'
             : props.event.display_name}
         </p>
         {hovered && (!props.isSelected || !props.isOwner) && (
@@ -136,7 +136,7 @@ export default function FilterEvent(props: PropTypes) {
             }
             placement="bottom"
             className="hover:cursor-pointer"
-            classes={{ tooltip: "tooltip-2" }}
+            classes={{ tooltip: 'tooltip-2' }}
           >
             <div className="absolute w-[10px] h-[10px] right-[-5px] top-[50%] translate-y-[-50%] ">
               <IconInfo className="w-[10px] h-[10px]" />

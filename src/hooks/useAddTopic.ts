@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../utils/firestore"; // Adjust based on your file structure
-import { AddOrEditTopicPayload, CreateTopicDBPayload } from "../types/topic";
+import { useState } from 'react';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../utils/firestore'; // Adjust based on your file structure
+import { AddOrEditTopicPayload, CreateTopicDBPayload } from '../types/topic';
 
 export const useAddTopic = () => {
   const [loading, setLoading] = useState(false);
@@ -12,10 +12,10 @@ export const useAddTopic = () => {
     setError(null);
 
     try {
-      const topicsCollection = collection(db, "topics");
+      const topicsCollection = collection(db, 'topics');
 
       if (!payload.event_id) {
-        setError("No event_id found in Add New Topic Payload");
+        setError('No event_id found in Add New Topic Payload');
         setLoading(false);
         return;
       }
@@ -31,10 +31,10 @@ export const useAddTopic = () => {
       };
 
       const docRef = await addDoc(topicsCollection, TopicDBPayload);
-      console.log("Document written with ID:", docRef.id);
+      console.log('Document written with ID:', docRef.id);
     } catch (err) {
-      console.error("Error adding document:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error adding document:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }

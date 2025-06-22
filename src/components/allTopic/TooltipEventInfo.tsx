@@ -1,4 +1,4 @@
-import { DreamConEvent } from "../../types/event";
+import { DreamConEvent } from '../../types/event';
 
 interface PropTypes {
   event: DreamConEvent;
@@ -30,19 +30,19 @@ export default function TooltipEventInfo(props: PropTypes) {
           <p className="text-[10px] mt-[8px]">{props.event.description}</p>
           <ul className="text-[8px] text-gray7 flex flex-col gap-[2px]">
             <li className="flex items-center gap-[8px]">
-              <img src="/icon/location.svg" alt="location-icon" /> ที่{" "}
+              <img src="/icon/location.svg" alt="location-icon" /> ที่{' '}
               {props.event.location}
             </li>
             <li className="flex items-center gap-[8px]">
-              <img src="/icon/clock.svg" alt="clock-icon" /> จัดขึ้นวันที่{" "}
+              <img src="/icon/clock.svg" alt="clock-icon" /> จัดขึ้นวันที่{' '}
               {props.event.date}
             </li>
             <li className="flex items-center gap-[8px]">
-              <img src="/icon/target.svg" alt="target-icon" /> กลุ่มเป้าหมาย:{" "}
+              <img src="/icon/target.svg" alt="target-icon" /> กลุ่มเป้าหมาย:{' '}
               {props.event.target_group}
             </li>
             <li className="flex items-center gap-[8px]">
-              <img src="/icon/participant.svg" alt="participant-icon" />{" "}
+              <img src="/icon/participant.svg" alt="participant-icon" />{' '}
               จำนวนผู้เข้าร่วม: {props.event.participants} คน
             </li>
           </ul>

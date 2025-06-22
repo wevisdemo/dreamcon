@@ -23,17 +23,17 @@ export interface CommentDB {
   notified_at: Date;
 }
 
-export type CreateCommentDBPayload = Omit<CommentDB, "id">;
+export type CreateCommentDBPayload = Omit<CommentDB, 'id'>;
 
 export type UpdateCommentDBPayload = Omit<
   CommentDB,
-  "created_at" | "id" | "parent_topic_id" | "parent_comment_ids"
+  'created_at' | 'id' | 'parent_topic_id' | 'parent_comment_ids'
 >;
 
 export enum CommentView {
-  AGREE = "เห็นด้วย",
-  PARTIAL_AGREE = "เห็นด้วยบางส่วน",
-  DISAGREE = "ไม่เห็นด้วย",
+  AGREE = 'เห็นด้วย',
+  PARTIAL_AGREE = 'เห็นด้วยบางส่วน',
+  DISAGREE = 'ไม่เห็นด้วย',
 }
 
 export interface AddOrEditCommentPayload {

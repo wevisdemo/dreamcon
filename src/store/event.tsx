@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { DreamConEvent } from "../types/event";
+import { useState } from 'react';
+import { DreamConEvent } from '../types/event';
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/store/event.tsx
 

@@ -15,7 +15,7 @@ export default function IconPen(props: IconProps) {
     >
       <mask
         id="mask0_2122_19141"
-        style={{ maskType: "alpha" }}
+        style={{ maskType: 'alpha' }}
         maskUnits="userSpaceOnUse"
         x="0"
         y="0"

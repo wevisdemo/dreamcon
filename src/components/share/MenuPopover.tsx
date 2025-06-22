@@ -18,13 +18,13 @@ export default function MenuPopover(props: PropTypes) {
           onClick={props.onClickEdit}
         >
           <img
-            style={{ pointerEvents: "none" }}
+            style={{ pointerEvents: 'none' }}
             className="w-[16px] h-[16px]"
             src="/icon/pen.svg"
             alt="pen-icon"
           />
           <span
-            style={{ pointerEvents: "none" }}
+            style={{ pointerEvents: 'none' }}
             className="text-black text-[13px] "
           >
             แก้ไข
@@ -45,16 +45,16 @@ export default function MenuPopover(props: PropTypes) {
           }}
         >
           <img
-            style={{ pointerEvents: "none" }}
+            style={{ pointerEvents: 'none' }}
             className="w-[20px] h-[20px]"
-            src={props.isPinned ? "/icon/unpin.svg" : "/icon/pin.svg"}
+            src={props.isPinned ? '/icon/unpin.svg' : '/icon/pin.svg'}
             alt="pin-icon"
           />
           <span
-            style={{ pointerEvents: "none" }}
+            style={{ pointerEvents: 'none' }}
             className="text-black text-[13px]"
           >
-            {props.isPinned ? "ถอนหมุด" : "ปักหมุด"}
+            {props.isPinned ? 'ถอนหมุด' : 'ปักหมุด'}
           </span>
         </div>
       )}
@@ -66,13 +66,13 @@ export default function MenuPopover(props: PropTypes) {
           onClick={props.onClickDelete}
         >
           <img
-            style={{ pointerEvents: "none" }}
+            style={{ pointerEvents: 'none' }}
             className="w-[16px] h-[16px]"
             src="/icon/bin.svg"
             alt="bin-icon"
           />
           <span
-            style={{ pointerEvents: "none" }}
+            style={{ pointerEvents: 'none' }}
             className="text-[#B30000] text-[13px]"
           >
             ลบ

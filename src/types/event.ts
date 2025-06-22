@@ -17,16 +17,16 @@ export interface DreamConEvent {
 }
 
 export const defaultAddOrEditEventPayload: AddOrEditEventPayload = {
-  display_name: "",
-  avatar_url: "",
-  title_en: "",
-  title_th: "",
-  description: "",
-  location: "",
-  date: "",
-  target_group: "",
+  display_name: '',
+  avatar_url: '',
+  title_en: '',
+  title_th: '',
+  description: '',
+  location: '',
+  date: '',
+  target_group: '',
   participants: null,
-  news_link: "",
+  news_link: '',
 };
 
 export interface AddOrEditEventPayload {
@@ -43,11 +43,11 @@ export interface AddOrEditEventPayload {
   news_link: string;
 }
 
-export type CreateEventDBPayload = Omit<DreamConEvent, "id" | "topic_counts">;
+export type CreateEventDBPayload = Omit<DreamConEvent, 'id' | 'topic_counts'>;
 
 export type UpdateEventDBPayload = Omit<
   DreamConEvent,
-  "id" | "topic_counts" | "created_at"
+  'id' | 'topic_counts' | 'created_at'
 >;
 
-export type DreamConEventDB = Omit<DreamConEvent, "topic_counts">;
+export type DreamConEventDB = Omit<DreamConEvent, 'topic_counts'>;

@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import { StoreContext } from "../../store";
-import { CommentView } from "../../types/comment";
-import { Topic, TopicCategory } from "../../types/topic";
-import CommentWrapper from "./CommentWrapper";
-import TopicCard from "./TopicCard";
-import { DreamConEvent } from "../../types/event";
+import { useContext } from 'react';
+import { StoreContext } from '../../store';
+import { CommentView } from '../../types/comment';
+import { Topic, TopicCategory } from '../../types/topic';
+import CommentWrapper from './CommentWrapper';
+import TopicCard from './TopicCard';
+import { DreamConEvent } from '../../types/event';
 
 interface PropTypes {
   topic: Topic;
@@ -20,7 +20,7 @@ export default function TopicTemplate(props: PropTypes) {
   const { event: eventContext, pin: pinContext } = useContext(StoreContext);
   const getCommentsByView = (view: CommentView) => {
     return props.topic.comments.filter(
-      (comment) => comment.comment_view === view
+      comment => comment.comment_view === view
     );
   };
 
@@ -30,7 +30,7 @@ export default function TopicTemplate(props: PropTypes) {
 
   const getOwnerEvent = (): DreamConEvent | null => {
     const event = eventContext.events.find(
-      (event) => event.id === props.topic.event_id
+      event => event.id === props.topic.event_id
     );
     if (event) {
       return event;
@@ -41,7 +41,7 @@ export default function TopicTemplate(props: PropTypes) {
   // TODO: duplicated
   const isTopicPinned = (topic: Topic) => {
     return pinContext.pinnedTopics.some(
-      (pinnedTopic) => pinnedTopic === topic.id
+      pinnedTopic => pinnedTopic === topic.id
     );
   };
 
@@ -102,7 +102,7 @@ export default function TopicTemplate(props: PropTypes) {
           <div className="view-wrapper">
             <div className="relative">
               <p className="relative bg-lightYellow px-[10px] py-[4px] w-fit rounded-[16px] text[13px] z-10">
-                {getCommentsByView(CommentView.PARTIAL_AGREE).length}{" "}
+                {getCommentsByView(CommentView.PARTIAL_AGREE).length}{' '}
                 เห็นด้วยบางส่วน
               </p>
               <div className="absolute w-[40px] left-[-24px] bottom-[50%] rounded-bl-[16px] border-solid border-l-[2px] border-b-[2px] border-blue3 h-[1000vh]"></div>

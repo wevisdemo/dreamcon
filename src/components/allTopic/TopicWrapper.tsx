@@ -1,10 +1,10 @@
-import { useContext } from "react";
-import Masonry from "@mui/lab/Masonry";
-import { Topic } from "../../types/topic";
-import TopicSummary from "./TopicSummary";
-import { StoreContext } from "../../store";
-import { Droppable } from "../Droppable";
-import EmptyTopic from "./EmptyTopic";
+import { useContext } from 'react';
+import Masonry from '@mui/lab/Masonry';
+import { Topic } from '../../types/topic';
+import TopicSummary from './TopicSummary';
+import { StoreContext } from '../../store';
+import { Droppable } from '../Droppable';
+import EmptyTopic from './EmptyTopic';
 
 interface PropTypes {
   topics: Topic[];
@@ -21,9 +21,9 @@ export default function TopicWrapper(props: PropTypes) {
   } = useContext(StoreContext);
   const handleAddComment = (topic: Topic) => {
     homePageContext.modalCommentMainSection.dispatch({
-      type: "OPEN_MODAL",
+      type: 'OPEN_MODAL',
       payload: {
-        mode: "create",
+        mode: 'create',
         parentTopicId: topic.id,
         parentCommentIds: [],
         fromTopic: topic,
@@ -32,8 +32,8 @@ export default function TopicWrapper(props: PropTypes) {
   };
 
   const readOnly = () => {
-    if (modeContext.value === "view") return true;
-    if (userContext.userState?.role === "user") return true;
+    if (modeContext.value === 'view') return true;
+    if (userContext.userState?.role === 'user') return true;
     return false;
   };
   const handleSelectTopic = (topic: Topic) => {
@@ -46,7 +46,7 @@ export default function TopicWrapper(props: PropTypes) {
 
   const isTopicPinned = (topic: Topic) => {
     return pinContext.pinnedTopics.some(
-      (pinnedTopic) => pinnedTopic === topic.id
+      pinnedTopic => pinnedTopic === topic.id
     );
   };
 
@@ -55,13 +55,13 @@ export default function TopicWrapper(props: PropTypes) {
   ) : (
     <div className="w-full h-full flex justify-center">
       <Masonry columns={3} spacing={3}>
-        {props.topics.map((topic) => (
+        {props.topics.map(topic => (
           <Droppable
             id={`droppable-topic-${topic.id}`}
             key={topic.id}
-            data={{ type: "topic", topic }}
+            data={{ type: 'topic', topic }}
           >
-            {(isOver) => (
+            {isOver => (
               <TopicSummary
                 topic={topic}
                 isSelected={isSelected(topic)}

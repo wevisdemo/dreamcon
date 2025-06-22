@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
-import { Topic } from "../../types/topic";
-import TopicSummaryComment from "./TopicSummaryComment";
-import SideScreenIcon from "../icon/SideScreenIcon";
-import { useHotkeys } from "react-hotkeys-hook";
-import { StoreContext } from "../../store";
+import React, { useContext } from 'react';
+import { Topic } from '../../types/topic';
+import TopicSummaryComment from './TopicSummaryComment';
+import SideScreenIcon from '../icon/SideScreenIcon';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { StoreContext } from '../../store';
 
 interface PropTypes {
   topic: Topic;
@@ -21,15 +21,15 @@ export default function TopicSummary(props: PropTypes) {
   const { clipboard: clipboardContext } = useContext(StoreContext);
 
   const getBorderClass = () => {
-    if (props.isOver && !props.isSelected) return "border-dashed border-blue4";
-    else if (props.isSelected) return "border-blue6";
-    else return "border-transparent";
+    if (props.isOver && !props.isSelected) return 'border-dashed border-blue4';
+    else if (props.isSelected) return 'border-blue6';
+    else return 'border-transparent';
   };
 
-  useHotkeys("Meta+v, ctrl+v", () => {
+  useHotkeys('Meta+v, ctrl+v', () => {
     if (hovered) {
       clipboardContext.emitMoveComment({
-        type: "topic",
+        type: 'topic',
         topic: props.topic,
       });
     }
@@ -38,7 +38,7 @@ export default function TopicSummary(props: PropTypes) {
   return (
     <div
       className={`bg-white rounded-[16px] p-[24px] relative flex flex-col gap-[16px] border-[2px] ${
-        hovered && !props.isSelected ? "hover:drop-shadow-xl" : ""
+        hovered && !props.isSelected ? 'hover:drop-shadow-xl' : ''
       }
       ${getBorderClass()} hover:cursor-pointer`}
       onMouseEnter={() => setHovered(true)}
@@ -74,7 +74,7 @@ export default function TopicSummary(props: PropTypes) {
         {!props.isSelected && !props.isReadOnly && (
           <button
             className="px-[12px] py-[6px] border-solid border-[1.5px] border-gray2 rounded-[48px] hover:bg-gray2"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               props.onAddComment();
             }}

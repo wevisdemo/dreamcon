@@ -6,14 +6,14 @@ import {
   query,
   runTransaction,
   where,
-} from "firebase/firestore";
-import { useState } from "react";
-import { db } from "../utils/firestore";
+} from 'firebase/firestore';
+import { useState } from 'react';
+import { db } from '../utils/firestore';
 import {
   CreateWritePayload,
   CreateWriterDBPayload,
   Writer,
-} from "../types/writer";
+} from '../types/writer';
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useWriter.ts
 
@@ -26,15 +26,15 @@ export const useWriter = () => {
     setError(null);
 
     try {
-      const writerDocRef = doc(db, "writers", id);
+      const writerDocRef = doc(db, 'writers', id);
       const writerSnapshot = await getDoc(writerDocRef);
 
       if (!writerSnapshot.exists()) {
-        throw new Error("Writer not found for the given ID");
+        throw new Error('Writer not found for the given ID');
       }
       const data = writerSnapshot.data();
       if (!data) {
-        throw new Error("Writer data is empty");
+        throw new Error('Writer data is empty');
       }
 
       return {
@@ -43,8 +43,8 @@ export const useWriter = () => {
         expired_at: data.expired_at ? data.expired_at.toDate() : undefined,
       } as Writer;
     } catch (err) {
-      console.error("Error fetching writer document: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching writer document: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return null;
     } finally {
       setLoading(false);
@@ -58,14 +58,14 @@ export const useWriter = () => {
     setError(null);
 
     try {
-      const writersCollection = collection(db, "writers");
+      const writersCollection = collection(db, 'writers');
       const writerQuery = query(
         writersCollection,
-        where("event_id", "==", eventId),
-        where("is_permanent", "==", true)
+        where('event_id', '==', eventId),
+        where('is_permanent', '==', true)
       );
       const snapshot = await getDocs(writerQuery);
-      const writers = snapshot.docs.map((doc) => {
+      const writers = snapshot.docs.map(doc => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -79,8 +79,8 @@ export const useWriter = () => {
       }
       return writers[0];
     } catch (err) {
-      console.error("Error fetching permanent writer document: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching permanent writer document: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return null;
     } finally {
       setLoading(false);
@@ -90,18 +90,18 @@ export const useWriter = () => {
   const createWriter = async (payload: CreateWritePayload): Promise<string> => {
     setLoading(true);
     setError(null);
-    let id = "";
+    let id = '';
 
     if (!payload.event_id) {
-      setError("No event_id found in Create Write Payload");
+      setError('No event_id found in Create Write Payload');
       setLoading(false);
-      return "";
+      return '';
     }
 
     try {
-      const eventDocRef = doc(db, "events", payload.event_id);
+      const eventDocRef = doc(db, 'events', payload.event_id);
 
-      const writersCollection = collection(db, "writers");
+      const writersCollection = collection(db, 'writers');
       const timeNow = new Date();
 
       let writerDBPayload: CreateWriterDBPayload = {
@@ -123,10 +123,10 @@ export const useWriter = () => {
         };
       }
 
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         const eventSnapshot = await transaction.get(eventDocRef);
         if (!eventSnapshot.exists()) {
-          throw new Error("Event not found for the given event_id");
+          throw new Error('Event not found for the given event_id');
         }
         const docRef = doc(writersCollection);
         await transaction.set(docRef, writerDBPayload);
@@ -134,8 +134,8 @@ export const useWriter = () => {
         id = docRef.id;
       });
     } catch (err) {
-      console.error("Error creating writer document: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error creating writer document: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }

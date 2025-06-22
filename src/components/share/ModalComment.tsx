@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   AddOrEditCommentPayload,
   Comment,
   CommentView,
-} from "../../types/comment";
-import { DreamConEvent } from "../../types/event";
-import { Topic } from "../../types/topic";
-import { TextareaAutosize } from "@mui/material";
+} from '../../types/comment';
+import { DreamConEvent } from '../../types/event';
+import { Topic } from '../../types/topic';
+import { TextareaAutosize } from '@mui/material';
 
 // TODO: refactor to reduce props
 interface PropTypes {
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   defaultState?: Comment;
   isOpen: boolean;
   createdByEvent: DreamConEvent;
@@ -18,18 +18,18 @@ interface PropTypes {
   fromTopic?: Topic;
   fromComment?: Comment;
   onClose: () => void;
-  onSubmit: (mode: "create" | "edit", payload: AddOrEditCommentPayload) => void;
+  onSubmit: (mode: 'create' | 'edit', payload: AddOrEditCommentPayload) => void;
   parentTopicId?: string;
   parentCommentIds?: string[];
 }
 
 export default function ModalComment(props: PropTypes) {
-  const [text, setText] = useState<string>("");
+  const [text, setText] = useState<string>('');
   const [commentView, setCommentView] = useState<CommentView | null>(
     CommentView.AGREE
   );
   useEffect(() => {
-    setText(props.defaultState?.reason || "");
+    setText(props.defaultState?.reason || '');
     setCommentView(props.defaultState?.comment_view || CommentView.AGREE);
   }, [props.defaultState]);
   if (!props.isOpen) return null;
@@ -41,7 +41,7 @@ export default function ModalComment(props: PropTypes) {
   };
 
   const handleClose = () => {
-    setText("");
+    setText('');
     setCommentView(CommentView.AGREE);
     props.onClose();
   };
@@ -49,7 +49,7 @@ export default function ModalComment(props: PropTypes) {
   const getParentEvent = (): DreamConEvent | null => {
     if (props.fromTopic) {
       const event = props.events.find(
-        (event) => event.id === props.fromTopic?.event_id
+        event => event.id === props.fromTopic?.event_id
       );
       if (event) {
         return event;
@@ -57,7 +57,7 @@ export default function ModalComment(props: PropTypes) {
     }
     if (props.fromComment) {
       const event = props.events.find(
-        (event) => event.id === props.fromComment?.event_id
+        event => event.id === props.fromComment?.event_id
       );
       if (event) {
         return event;
@@ -69,7 +69,7 @@ export default function ModalComment(props: PropTypes) {
   const onSubmit = () => {
     if (commentView && text) {
       switch (props.mode) {
-        case "edit":
+        case 'edit':
           props.onSubmit(props.mode, {
             id: props.defaultState?.id,
             comment_view: commentView,
@@ -79,7 +79,7 @@ export default function ModalComment(props: PropTypes) {
             event_id: props.createdByEvent.id,
           });
           break;
-        case "create":
+        case 'create':
           props.onSubmit(props.mode, {
             comment_view: commentView,
             reason: text,
@@ -94,17 +94,17 @@ export default function ModalComment(props: PropTypes) {
   };
 
   const canSubmit = () => {
-    return text !== "" && commentView !== null;
+    return text !== '' && commentView !== null;
   };
 
   const viewColor = (comment: Comment) => {
     switch (comment.comment_view) {
       case CommentView.AGREE:
-        return "lightGreen";
+        return 'lightGreen';
       case CommentView.PARTIAL_AGREE:
-        return "lightYellow";
+        return 'lightYellow';
       case CommentView.DISAGREE:
-        return "lightRed";
+        return 'lightRed';
     }
   };
 
@@ -117,9 +117,9 @@ export default function ModalComment(props: PropTypes) {
         <div className="flex flex-col gap-[12px] bg-gray1 p-[16px] border-solid border-b-[1px] border-[#D4D4D4]">
           <div className="flex justify-end items-center mt-[8px] relative">
             <p className="absolute wv-ibmplex text-[16px] text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] px-[8px]">
-              {props.mode === "create"
-                ? "เพิ่มข้อถกเถียงต่อยอด"
-                : "แก้ไขข้อถกเถียงต่อยอด"}
+              {props.mode === 'create'
+                ? 'เพิ่มข้อถกเถียงต่อยอด'
+                : 'แก้ไขข้อถกเถียงต่อยอด'}
             </p>
 
             <div
@@ -129,7 +129,7 @@ export default function ModalComment(props: PropTypes) {
               ยกเลิก
             </div>
           </div>
-          {props.mode === "create" && (
+          {props.mode === 'create' && (
             <>
               <div className="flex gap-[8px] items-center">
                 <img
@@ -163,8 +163,8 @@ export default function ModalComment(props: PropTypes) {
             <button
               className={`py-[10px] ${
                 commentView === CommentView.AGREE
-                  ? "bg-lightGreen"
-                  : "bg-lightGreen/25"
+                  ? 'bg-lightGreen'
+                  : 'bg-lightGreen/25'
               } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
               onClick={() => setCommentView(CommentView.AGREE)}
             >
@@ -173,8 +173,8 @@ export default function ModalComment(props: PropTypes) {
             <button
               className={`py-[10px] ${
                 commentView === CommentView.PARTIAL_AGREE
-                  ? "bg-lightYellow"
-                  : "bg-lightYellow/25"
+                  ? 'bg-lightYellow'
+                  : 'bg-lightYellow/25'
               } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
               onClick={() => setCommentView(CommentView.PARTIAL_AGREE)}
             >
@@ -183,8 +183,8 @@ export default function ModalComment(props: PropTypes) {
             <button
               className={`py-[10px] ${
                 commentView === CommentView.DISAGREE
-                  ? "bg-lightRed"
-                  : "bg-lightRed/25"
+                  ? 'bg-lightRed'
+                  : 'bg-lightRed/25'
               } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
           `}
               onClick={() => setCommentView(CommentView.DISAGREE)}
@@ -203,7 +203,7 @@ export default function ModalComment(props: PropTypes) {
                 id="topic-title-text-area"
                 className="w-full bg-gray1 p-[10px] text-black resize-none overflow-hidden focus:outline-none"
                 value={text}
-                onChange={(e) => setText(e.target.value)}
+                onChange={e => setText(e.target.value)}
                 autoFocus
                 maxLength={140}
                 placeholder="เพราะว่า...(140ตัวอักษร)"

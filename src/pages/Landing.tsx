@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import { useTopic } from "../hooks/useTopic";
-import TopicSummary from "../components/allTopic/TopicSummary";
-import { Topic } from "../types/topic";
-import DefaultLayout from "../layouts/default";
-import Footer from "../components/Footer";
-import { StoreContext } from "../store";
+import { useContext, useEffect, useState } from 'react';
+import { useTopic } from '../hooks/useTopic';
+import TopicSummary from '../components/allTopic/TopicSummary';
+import { Topic } from '../types/topic';
+import DefaultLayout from '../layouts/default';
+import Footer from '../components/Footer';
+import { StoreContext } from '../store';
 
 export default function LandingPage() {
   const { currentPage } = useContext(StoreContext);
@@ -17,14 +17,14 @@ export default function LandingPage() {
       const fetchedTopics = await getTopicsByFilter({
         limit: 3,
         orderBy: {
-          direction: "desc",
-          field: "created_at",
+          direction: 'desc',
+          field: 'created_at',
         },
       });
       setTopics(fetchedTopics);
     };
 
-    currentPage.setValue("home");
+    currentPage.setValue('home');
     fetchTopics();
   }, []);
 
@@ -81,7 +81,7 @@ export default function LandingPage() {
               className="h-[24px] w-[24px]"
             />
             <p className="text-[16px] text-center">
-              <span className="wv-bold">Dream Constitution</span>{" "}
+              <span className="wv-bold">Dream Constitution</span>{' '}
               <span>
                 โครงการรวบรวมความคิดเห็นของคนไทยเพื่อเป็นศูนย์รวมไอเดียในการร่างรัฐธรรมนูญฉบับประชาชน
               </span>
@@ -202,7 +202,7 @@ export default function LandingPage() {
               {topics.map((topic, index) => (
                 <div>
                   <TopicSummary
-                    key={"topic-" + index}
+                    key={'topic-' + index}
                     topic={topic}
                     isSelected={false}
                     onClick={() => {

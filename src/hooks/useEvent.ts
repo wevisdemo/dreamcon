@@ -4,15 +4,15 @@ import {
   runTransaction,
   getDocs,
   getDoc,
-} from "firebase/firestore";
+} from 'firebase/firestore';
 import {
   AddOrEditEventPayload,
   CreateEventDBPayload,
   DreamConEvent,
   DreamConEventDB,
-} from "../types/event";
-import { db } from "../utils/firestore";
-import { useState } from "react";
+} from '../types/event';
+import { db } from '../utils/firestore';
+import { useState } from 'react';
 
 export const useEvent = () => {
   const [loading, setLoading] = useState(false);
@@ -22,13 +22,13 @@ export const useEvent = () => {
     setError(null);
 
     if (!payload.display_name) {
-      setError("No display_name found in Add New Event Payload");
+      setError('No display_name found in Add New Event Payload');
       setLoading(false);
       return;
     }
 
     try {
-      const eventsCollection = collection(db, "events");
+      const eventsCollection = collection(db, 'events');
       const timeNow = new Date();
       const eventDBPayload: CreateEventDBPayload = {
         display_name: payload.display_name,
@@ -45,15 +45,15 @@ export const useEvent = () => {
         updated_at: timeNow,
       };
 
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         const docRef = doc(eventsCollection);
         transaction.set(docRef, eventDBPayload);
 
-        console.log("Document written with ID: ", docRef.id);
+        console.log('Document written with ID: ', docRef.id);
       });
     } catch (err) {
-      console.error("Error adding document: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error adding document: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -64,37 +64,37 @@ export const useEvent = () => {
     setError(null);
 
     try {
-      const eventsCollection = collection(db, "events");
+      const eventsCollection = collection(db, 'events');
       const snapshot = await getDocs(eventsCollection);
       const events = snapshot.docs.map(
-        (doc) =>
+        doc =>
           ({
             id: doc.id,
             ...doc.data(),
             created_at: doc.data()?.created_at.toDate(),
             updated_at: doc.data()?.updated_at.toDate(),
-          } as DreamConEvent)
+          }) as DreamConEvent
       );
       // get topic counts
-      const topicsCollection = collection(db, "topics");
+      const topicsCollection = collection(db, 'topics');
       const topicCountsMap: Record<string, number> = {};
       const topicsSnapshot = await getDocs(topicsCollection);
 
-      topicsSnapshot.docs.forEach((doc) => {
+      topicsSnapshot.docs.forEach(doc => {
         const topic = doc.data();
         if (topic.event_id) {
           topicCountsMap[topic.event_id] =
             (topicCountsMap[topic.event_id] || 0) + 1;
         }
       });
-      events.forEach((event) => {
+      events.forEach(event => {
         event.topic_counts = topicCountsMap[event.id] || 0;
       });
 
       return events;
     } catch (err) {
-      console.error("Error fetching documents: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching documents: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return [];
     } finally {
       setLoading(false);
@@ -106,26 +106,26 @@ export const useEvent = () => {
     setError(null);
 
     if (!id) {
-      setError("No event ID provided for editing");
+      setError('No event ID provided for editing');
       setLoading(false);
       return;
     }
 
     try {
-      const eventDocRef = doc(db, "events", id);
+      const eventDocRef = doc(db, 'events', id);
       const timeNow = new Date();
       const updatedPayload = {
         ...payload,
         updated_at: timeNow,
       };
 
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         transaction.update(eventDocRef, updatedPayload);
-        console.log("Document updated with ID: ", id);
+        console.log('Document updated with ID: ', id);
       });
     } catch (err) {
-      console.error("Error updating document: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error updating document: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -136,17 +136,17 @@ export const useEvent = () => {
     setError(null);
 
     if (!id) {
-      setError("No event ID provided");
+      setError('No event ID provided');
       setLoading(false);
       return null;
     }
 
     try {
-      const eventDocRef = doc(db, "events", id);
+      const eventDocRef = doc(db, 'events', id);
       const docSnapshot = await getDoc(eventDocRef);
 
       if (!docSnapshot.exists()) {
-        setError("Event not found");
+        setError('Event not found');
         return null;
       }
 
@@ -157,8 +157,8 @@ export const useEvent = () => {
         updated_at: docSnapshot.data()?.updated_at.toDate(),
       } as DreamConEventDB;
     } catch (err) {
-      console.error("Error fetching document: ", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error fetching document: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return null;
     } finally {
       setLoading(false);

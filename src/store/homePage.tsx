@@ -1,17 +1,17 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState } from 'react';
 import {
   CommentModalStore,
   initialCommentModalStore,
   initialModalCommentState,
   modalCommentReducer,
-} from "./modalComment";
-import { LightWeightTopic, Topic } from "../types/topic";
+} from './modalComment';
+import { LightWeightTopic, Topic } from '../types/topic';
 import {
   initialModalTopicState,
   initialTopicModalStore,
   TopicModalStore,
   modalTopicReducer,
-} from "./modalTopic";
+} from './modalTopic';
 
 export interface HomePageStore {
   selectedTopic: {

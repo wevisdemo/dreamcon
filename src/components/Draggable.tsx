@@ -1,6 +1,6 @@
-import React from "react";
-import { useDraggable } from "@dnd-kit/core";
-import { DraggableCommentProps } from "../types/dragAndDrop";
+import React from 'react';
+import { useDraggable } from '@dnd-kit/core';
+import { DraggableCommentProps } from '../types/dragAndDrop';
 
 interface DraggableProps {
   id: string;

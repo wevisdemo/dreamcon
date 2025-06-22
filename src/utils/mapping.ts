@@ -1,5 +1,5 @@
-import { CommentDB, Comment } from "../types/comment";
-import { Topic, TopicDB } from "../types/topic";
+import { CommentDB, Comment } from '../types/comment';
+import { Topic, TopicDB } from '../types/topic';
 
 export const convertTopicDBToTopic = (
   topicDB: TopicDB,
@@ -22,7 +22,7 @@ export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
   const commentMap: Map<string, Comment> = new Map();
 
   // Convert CommentDB objects to Comment and store in map
-  commentDBList.forEach((commentDB) => {
+  commentDBList.forEach(commentDB => {
     commentMap.set(commentDB.id, {
       ...commentDB,
       comments: [],
@@ -31,7 +31,7 @@ export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
 
   const rootComments: Comment[] = [];
 
-  commentDBList.forEach((commentDB) => {
+  commentDBList.forEach(commentDB => {
     const comment = commentMap.get(commentDB.id);
     if (!comment) return;
 

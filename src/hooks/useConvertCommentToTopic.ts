@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { db } from "../utils/firestore";
+import { useState } from 'react';
+import { db } from '../utils/firestore';
 import {
   doc,
   collection,
@@ -7,9 +7,9 @@ import {
   where,
   getDocs,
   runTransaction,
-} from "firebase/firestore";
-import { CreateTopicDBPayload, TopicDB } from "../types/topic";
-import { Comment, CreateCommentDBPayload } from "../types/comment";
+} from 'firebase/firestore';
+import { CreateTopicDBPayload, TopicDB } from '../types/topic';
+import { Comment, CreateCommentDBPayload } from '../types/comment';
 
 export const useConvertCommentToTopic = () => {
   const [loading, setLoading] = useState(false);
@@ -23,18 +23,18 @@ export const useConvertCommentToTopic = () => {
     setLoading(true);
     setError(null);
 
-    let newTopicId = "";
+    let newTopicId = '';
     const timeNow = new Date();
 
     try {
-      await runTransaction(db, async (transaction) => {
-        const commentsCollection = collection(db, "comments");
-        const topicsCollection = collection(db, "topics");
+      await runTransaction(db, async transaction => {
+        const commentsCollection = collection(db, 'comments');
+        const topicsCollection = collection(db, 'topics');
 
         // Step 1: Fetch the target comment
         const targetCommentRef = doc(db, `comments/${commentId}`);
         const targetCommentSnap = await transaction.get(targetCommentRef);
-        if (!targetCommentSnap.exists()) throw new Error("Comment not found");
+        if (!targetCommentSnap.exists()) throw new Error('Comment not found');
 
         const targetCommentData = targetCommentSnap.data();
 
@@ -46,7 +46,7 @@ export const useConvertCommentToTopic = () => {
           created_at: timeNow,
           updated_at: timeNow,
           notified_at: timeNow,
-          category: "ไม่ระบุ",
+          category: 'ไม่ระบุ',
           event_id: event_id,
         };
         await transaction.set(newTopicDocRef, topicPayload);
@@ -55,10 +55,10 @@ export const useConvertCommentToTopic = () => {
         const fetchChildComments = async (parentId: string) => {
           const childCommentsQuery = query(
             commentsCollection,
-            where("parent_comment_ids", "array-contains", parentId)
+            where('parent_comment_ids', 'array-contains', parentId)
           );
           const childCommentsSnapshot = await getDocs(childCommentsQuery);
-          return childCommentsSnapshot.docs.map((doc) => ({
+          return childCommentsSnapshot.docs.map(doc => ({
             id: doc.id,
             parent_comment_ids: doc.data().parent_comment_ids,
           }));
@@ -102,12 +102,12 @@ export const useConvertCommentToTopic = () => {
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,
-        category: "ไม่ระบุ",
+        category: 'ไม่ระบุ',
         event_id: event_id,
       };
     } catch (err) {
-      console.error("Error converting comment to topic:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error converting comment to topic:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return null;
     } finally {
       setLoading(false);
@@ -124,8 +124,8 @@ export const useConvertCommentToTopic = () => {
     // !! known issue: not handling if former parent topic or comment is deleted
 
     try {
-      await runTransaction(db, async (transaction) => {
-        const commentsCollection = collection(db, "comments");
+      await runTransaction(db, async transaction => {
+        const commentsCollection = collection(db, 'comments');
 
         // Step 1: Create a new comment using the topic title as the reason
         const newCommentDocRef = doc(db, `comments/${previousComment.id}`);
@@ -147,10 +147,10 @@ export const useConvertCommentToTopic = () => {
         const fetchChildComments = async (topicParentId: string) => {
           const childCommentsQuery = query(
             commentsCollection,
-            where("parent_topic_id", "==", topicParentId)
+            where('parent_topic_id', '==', topicParentId)
           );
           const childCommentsSnapshot = await getDocs(childCommentsQuery);
-          return childCommentsSnapshot.docs.map((doc) => ({
+          return childCommentsSnapshot.docs.map(doc => ({
             id: doc.id,
             parent_comment_ids: doc.data().parent_comment_ids,
           }));
@@ -201,8 +201,8 @@ export const useConvertCommentToTopic = () => {
         `undo convert comment ${previousComment.id} to topic ${topic.id} successfully.`
       );
     } catch (err) {
-      console.error("Error undo converting comment to topic:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error undo converting comment to topic:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }

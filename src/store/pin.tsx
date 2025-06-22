@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/store/pin.tsx
 
@@ -16,7 +16,7 @@ export const initialPinStore: PinStore = {
   getPinnedTopics: () => [],
 };
 
-const LOCAL_STORAGE_KEY = "pinned_topics";
+const LOCAL_STORAGE_KEY = 'pinned_topics';
 
 export const usePinStore = (): PinStore => {
   const [pinnedTopics, setPinnedTopics] = useState<string[]>([]);
@@ -47,13 +47,13 @@ export const usePinStore = (): PinStore => {
   // Pin a topic
   const pinTopic = (topicId: string) => {
     if (!pinnedTopics.includes(topicId)) {
-      setPinnedTopics((prev) => [...prev, topicId]);
+      setPinnedTopics(prev => [...prev, topicId]);
     }
   };
 
   // Unpin a topic
   const unpinTopic = (topicId: string) => {
-    setPinnedTopics((prev) => prev.filter((id) => id !== topicId));
+    setPinnedTopics(prev => prev.filter(id => id !== topicId));
   };
 
   return {

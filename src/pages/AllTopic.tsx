@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import TopicListSection from "../components/allTopic/TopicListSection";
-import TopicTemplate from "../components/topic/TopicTemplate";
-import ModalComment from "../components/share/ModalComment";
-import { StoreContext } from "../store";
-import ModalTopic from "../components/share/ModalTopic";
-import { SmartPointerSensor } from "../utils/SmartSenson";
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import TopicListSection from '../components/allTopic/TopicListSection';
+import TopicTemplate from '../components/topic/TopicTemplate';
+import ModalComment from '../components/share/ModalComment';
+import { StoreContext } from '../store';
+import ModalTopic from '../components/share/ModalTopic';
+import { SmartPointerSensor } from '../utils/SmartSenson';
 import {
   CollisionDetection,
   DndContext,
@@ -15,21 +15,21 @@ import {
   rectIntersection,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   DraggableCommentProps,
   DroppableData,
   DroppableDataComment,
   DroppableDataTopic,
   MoveCommentEvent,
-} from "../types/dragAndDrop";
-import CommentAndChildren from "../components/topic/CommentAndChildren";
+} from '../types/dragAndDrop';
+import CommentAndChildren from '../components/topic/CommentAndChildren';
 import {
   LightWeightTopic,
   ModalTopicPayload,
   Topic,
   TopicCategory,
-} from "../types/topic";
+} from '../types/topic';
 import {
   collection,
   query,
@@ -37,28 +37,28 @@ import {
   Unsubscribe,
   // limit,
   // orderBy,
-} from "firebase/firestore";
-import { db } from "../utils/firestore";
-import { AddOrEditCommentPayload, Comment } from "../types/comment";
-import { useAddTopic } from "../hooks/useAddTopic";
-import { useEditTopic } from "../hooks/useEditTopic";
-import { useAddComment } from "../hooks/useAddComment";
-import { useEditComment } from "../hooks/useEditComment";
-import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
-import { useMoveComment } from "../hooks/useMoveComment";
-import { useConvertCommentToTopic } from "../hooks/useConvertCommentToTopic";
-import FullPageLoader from "../components/FullPageLoader";
-import AlertPopup from "../components/AlertMoveComment";
-import { useHotkeys } from "react-hotkeys-hook";
-import { useLocation } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import { DreamConEvent } from "../types/event";
-import { useEvent } from "../hooks/useEvent";
-import { TopicFilter } from "../types/home";
-import ChainIcon from "../components/icon/ChainIcon";
-import { useTopic } from "../hooks/useTopic";
-import ViewerLayout from "../layouts/viewer";
-import { usePermission } from "../hooks/usePermission";
+} from 'firebase/firestore';
+import { db } from '../utils/firestore';
+import { AddOrEditCommentPayload, Comment } from '../types/comment';
+import { useAddTopic } from '../hooks/useAddTopic';
+import { useEditTopic } from '../hooks/useEditTopic';
+import { useAddComment } from '../hooks/useAddComment';
+import { useEditComment } from '../hooks/useEditComment';
+import { useDeleteTopicWithChildren } from '../hooks/useDeleteTopicWithChildren';
+import { useMoveComment } from '../hooks/useMoveComment';
+import { useConvertCommentToTopic } from '../hooks/useConvertCommentToTopic';
+import FullPageLoader from '../components/FullPageLoader';
+import AlertPopup from '../components/AlertMoveComment';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { useLocation } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { DreamConEvent } from '../types/event';
+import { useEvent } from '../hooks/useEvent';
+import { TopicFilter } from '../types/home';
+import ChainIcon from '../components/icon/ChainIcon';
+import { useTopic } from '../hooks/useTopic';
+import ViewerLayout from '../layouts/viewer';
+import { usePermission } from '../hooks/usePermission';
 
 export default function AllTopic() {
   const sensors = useSensors(useSensor(SmartPointerSensor));
@@ -106,12 +106,12 @@ export default function AllTopic() {
   const [events, setEvents] = useState<DreamConEvent[]>([]);
   const [topicFilter, setTopicFilter] = useState<TopicFilter>({
     selectedEvent: null,
-    sortedBy: "latest",
-    category: "ทั้งหมด",
-    searchText: "",
+    sortedBy: 'latest',
+    category: 'ทั้งหมด',
+    searchText: '',
   });
   const { getLightWeightTopics, getTopicByIds } = useTopic();
-  const [topicLink, setTopicLink] = useState<string>("");
+  const [topicLink, setTopicLink] = useState<string>('');
   const [readyToFetchParams, setReadyToFetchParams] = useState(false);
   const { isReadOnly } = usePermission();
 
@@ -133,12 +133,12 @@ export default function AllTopic() {
 
   const doToken = async () => {
     const params = new URLSearchParams(location.search);
-    const writerToken = params.get("writer");
+    const writerToken = params.get('writer');
 
     if (writerToken) {
       try {
         await loginFromToken(writerToken);
-        params.delete("writer");
+        params.delete('writer');
         window.location.href = `${location.pathname}?${params.toString()}`;
         return;
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -154,9 +154,9 @@ export default function AllTopic() {
 
   const manageEvent = () => {
     const params = new URLSearchParams(location.search);
-    const eventID = params.get("event");
+    const eventID = params.get('event');
     if (eventID) {
-      const event = events.find((event) => event.id === eventID);
+      const event = events.find(event => event.id === eventID);
       if (event) {
         setTopicFilter({ ...topicFilter, selectedEvent: event });
       }
@@ -165,14 +165,14 @@ export default function AllTopic() {
 
   const manageMode = () => {
     const params = new URLSearchParams(location.search);
-    const mode = params.get("mode");
+    const mode = params.get('mode');
     switch (mode) {
-      case "view":
-        modeContext.setValue("view");
+      case 'view':
+        modeContext.setValue('view');
         break;
       default: {
-        if (userContext.userState?.role === "writer") {
-          modeContext.setValue("write");
+        if (userContext.userState?.role === 'writer') {
+          modeContext.setValue('write');
         }
       }
     }
@@ -251,7 +251,7 @@ export default function AllTopic() {
   }, []);
 
   const fetchFirstTime = async () => {
-    currentPage.setValue("all-topic");
+    currentPage.setValue('all-topic');
     await fetchEvents();
     const topicLW = await fetchLightWeightTopics();
     let pinnedTopics: string[] = [];
@@ -263,10 +263,10 @@ export default function AllTopic() {
   };
 
   useEffect(() => {
-    observerRef.current?.addEventListener("scroll", handleScroll);
+    observerRef.current?.addEventListener('scroll', handleScroll);
 
     return () => {
-      observerRef.current?.removeEventListener("scroll", handleScroll);
+      observerRef.current?.removeEventListener('scroll', handleScroll);
     };
   }, [displayTopics]);
 
@@ -282,7 +282,7 @@ export default function AllTopic() {
     refreshSelectedTopicFromDisplayTopic(displayTopics);
   }, [displayTopics]);
 
-  useHotkeys("Meta+z, ctrl+z", () => {
+  useHotkeys('Meta+z, ctrl+z', () => {
     handleUndoMoveComment();
   });
 
@@ -290,17 +290,17 @@ export default function AllTopic() {
     if (!previousMoveCommentEvent) return;
     const { comment, droppableData } = previousMoveCommentEvent;
     switch (droppableData.type) {
-      case "convert-to-topic": {
+      case 'convert-to-topic': {
         if (!previousMoveCommentEvent.initialTopic) return;
         const topic = previousMoveCommentEvent.initialTopic;
         await undoConvertCommentToTopic(comment, topic);
         break;
       }
-      case "topic": {
+      case 'topic': {
         await undoMoveCommentToTopic(comment, droppableData.topic);
         break;
       }
-      case "comment": {
+      case 'comment': {
         await undoMoveCommentToComment(comment);
         break;
       }
@@ -355,15 +355,15 @@ export default function AllTopic() {
     limit: number,
     pinList: string[]
   ) => {
-    const filteredTopic = lightWeightTopics.filter((topic) => {
+    const filteredTopic = lightWeightTopics.filter(topic => {
       // regex to check if topic.title contains the search text
-      const regex = new RegExp(topicFilter.searchText, "i");
+      const regex = new RegExp(topicFilter.searchText, 'i');
       // sorted by filter
       const isFilteredByEvent =
         topicFilter.selectedEvent === null ||
         topic.event_id === topicFilter.selectedEvent.id;
       const isFilteredByCategory =
-        topicFilter.category === "ทั้งหมด" ||
+        topicFilter.category === 'ทั้งหมด' ||
         topic.category === topicFilter.category;
       return (
         regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
@@ -372,11 +372,11 @@ export default function AllTopic() {
     // sort by latest or most-commented
     filteredTopic
       .sort((a, b) => {
-        if (topicFilter.sortedBy === "latest") {
+        if (topicFilter.sortedBy === 'latest') {
           return (
             new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
           );
-        } else if (topicFilter.sortedBy === "most-commented") {
+        } else if (topicFilter.sortedBy === 'most-commented') {
           return b.comment_level1_count - a.comment_level1_count;
         }
         return 0;
@@ -393,7 +393,7 @@ export default function AllTopic() {
           return 0;
         }
       });
-    const topicIds = filteredTopic.map((topic) => topic.id);
+    const topicIds = filteredTopic.map(topic => topic.id);
     return topicIds.slice(0, limit);
   };
 
@@ -404,7 +404,7 @@ export default function AllTopic() {
   };
 
   const subscribeTopics = (): Unsubscribe => {
-    const topicsQuery = query(collection(db, "topics"));
+    const topicsQuery = query(collection(db, 'topics'));
     const unsubscribe = onSnapshot(topicsQuery, async () => {
       await latestFunctionRef.current();
     });
@@ -412,7 +412,7 @@ export default function AllTopic() {
   };
 
   const subscribeEvents = (): Unsubscribe => {
-    const eventsQuery = query(collection(db, "events"));
+    const eventsQuery = query(collection(db, 'events'));
     const unsubscribe = onSnapshot(eventsQuery, () => {
       fetchEvents();
     });
@@ -433,30 +433,30 @@ export default function AllTopic() {
     const { type } = droppableData;
     setPreviousMoveCommentEvent({ comment: copiedComment, droppableData });
     switch (type) {
-      case "topic": {
+      case 'topic': {
         const destinationTopic = (droppableData as DroppableDataTopic).topic;
         handleDropToTopic(copiedComment, destinationTopic);
         break;
       }
-      case "comment": {
+      case 'comment': {
         const destinationComment = (droppableData as DroppableDataComment)
           .comment;
         handleDropToComment(copiedComment, destinationComment);
         break;
       }
-      case "convert-to-topic": {
+      case 'convert-to-topic': {
         handleDropToAddTopic(copiedComment);
       }
     }
   };
 
   const getMainSectionWidth = () => {
-    return selectedTopic.value ? "w-[60%]" : "w-full";
+    return selectedTopic.value ? 'w-[60%]' : 'w-full';
   };
   const getSideSectionWidth = () => {
     return selectedTopic.value
-      ? "w-[40%] overflow-hidden"
-      : "w-0 overflow-hidden";
+      ? 'w-[40%] overflow-hidden'
+      : 'w-0 overflow-hidden';
   };
 
   const redirectToTopicPage = () => {
@@ -470,21 +470,21 @@ export default function AllTopic() {
   };
 
   const handleOnSubmitTopic = async (
-    mode: "create" | "edit",
+    mode: 'create' | 'edit',
     payload: ModalTopicPayload
   ) => {
     switch (mode) {
-      case "create": {
+      case 'create': {
         // TODO: validate
-        let eventID = "";
-        if (userContext.userState?.role == "writer") {
+        let eventID = '';
+        if (userContext.userState?.role == 'writer') {
           eventID = userContext.userState?.event.id;
         }
         if (!eventID) return;
         await addNewTopic({ ...payload, event_id: eventID });
         break;
       }
-      case "edit":
+      case 'edit':
         if (!payload.event_id) return;
         await editTopic({
           id: payload.id,
@@ -499,7 +499,7 @@ export default function AllTopic() {
 
   const refreshSelectedTopicFromDisplayTopic = (topics: Topic[]) => {
     if (!selectedTopic) return;
-    const topic = topics.find((topic) => topic.id === selectedTopic.value?.id);
+    const topic = topics.find(topic => topic.id === selectedTopic.value?.id);
     if (!topic) {
       selectedTopic.setValue(null);
     } else {
@@ -508,14 +508,14 @@ export default function AllTopic() {
   };
 
   const handleOnSubmitComment = async (
-    mode: "create" | "edit",
+    mode: 'create' | 'edit',
     payload: AddOrEditCommentPayload
   ) => {
     switch (mode) {
-      case "create":
+      case 'create':
         await addNewComment(payload);
         break;
-      case "edit":
+      case 'edit':
         await editComment(payload);
         break;
     }
@@ -528,12 +528,12 @@ export default function AllTopic() {
   };
 
   const getCreatedByEvent = () => {
-    if (userContext.userState?.role === "writer") {
+    if (userContext.userState?.role === 'writer') {
       return userContext.userState?.event;
     }
   };
 
-  const collisionDetectionPointer: CollisionDetection = (args) => {
+  const collisionDetectionPointer: CollisionDetection = args => {
     const pointerCollisions = pointerWithin(args);
     if (pointerCollisions.length > 0) {
       return pointerCollisions;
@@ -567,7 +567,7 @@ export default function AllTopic() {
                 }
                 onClose={() => {
                   homePageContext.modalCommentMainSection.dispatch({
-                    type: "CLOSE_MODAL",
+                    type: 'CLOSE_MODAL',
                   });
                 }}
                 parentCommentIds={
@@ -593,7 +593,7 @@ export default function AllTopic() {
                 isOpen={homePageContext.modalTopicMainSection.state.isModalOpen}
                 onClose={() => {
                   homePageContext.modalTopicMainSection.dispatch({
-                    type: "CLOSE_MODAL",
+                    type: 'CLOSE_MODAL',
                   });
                 }}
                 createdByEvent={getCreatedByEvent() as DreamConEvent}
@@ -644,7 +644,7 @@ export default function AllTopic() {
                 }
                 onClose={() => {
                   homePageContext.modalCommentSideSection.dispatch({
-                    type: "CLOSE_MODAL",
+                    type: 'CLOSE_MODAL',
                   });
                 }}
                 parentCommentIds={
@@ -686,14 +686,14 @@ export default function AllTopic() {
                   onClick={async () => {
                     const hostUrl = window.location.origin;
                     const topicLink =
-                      hostUrl + "/topics/" + selectedTopic.value?.id;
+                      hostUrl + '/topics/' + selectedTopic.value?.id;
                     await navigator.clipboard.writeText(topicLink);
                     setTopicLink(topicLink);
                   }}
                 >
-                  <ChainIcon color={topicLink ? "#4999FA" : "#979797"} />
-                  <span className={topicLink ? "text-[#4999FA]" : "text-gray5"}>
-                    {topicLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+                  <ChainIcon color={topicLink ? '#4999FA' : '#979797'} />
+                  <span className={topicLink ? 'text-[#4999FA]' : 'text-gray5'}>
+                    {topicLink ? 'คัดลอกแล้ว!' : 'แชร์ลิงก์'}
                   </span>
                 </div>
               </div>
@@ -707,23 +707,23 @@ export default function AllTopic() {
                         reason,
                         parent_topic_id: selectedTopic.value?.id,
                         parent_comment_ids: [],
-                        event_id: getCreatedByEvent()?.id || "",
+                        event_id: getCreatedByEvent()?.id || '',
                       });
                     }}
-                    onChangeTopicTitle={(newTitle) => {
+                    onChangeTopicTitle={newTitle => {
                       editTopic({
                         id: selectedTopic.value?.id,
                         title: newTitle,
-                        event_id: selectedTopic.value?.event_id || "",
+                        event_id: selectedTopic.value?.event_id || '',
                         category: selectedTopic.value
                           ?.category as TopicCategory,
                       });
                     }}
-                    onChangeTopicCategory={(newCategory) => {
+                    onChangeTopicCategory={newCategory => {
                       editTopic({
                         id: selectedTopic.value?.id,
-                        title: selectedTopic.value?.title || "",
-                        event_id: selectedTopic.value?.event_id || "",
+                        title: selectedTopic.value?.title || '',
+                        event_id: selectedTopic.value?.event_id || '',
                         category: newCategory as TopicCategory,
                       });
                     }}
@@ -731,10 +731,10 @@ export default function AllTopic() {
                       handleOnDeleteTopic(selectedTopic.value || null)
                     }
                     onPinTopic={() => {
-                      pinContext.pinTopic(selectedTopic.value?.id || "");
+                      pinContext.pinTopic(selectedTopic.value?.id || '');
                     }}
                     onUnpinTopic={() => {
-                      pinContext.unpinTopic(selectedTopic.value?.id || "");
+                      pinContext.unpinTopic(selectedTopic.value?.id || '');
                     }}
                   />
                 ) : (
@@ -815,7 +815,7 @@ export default function AllTopic() {
     if (!topic) return;
     setPreviousMoveCommentEvent({
       comment: draggedComment,
-      droppableData: { type: "convert-to-topic" },
+      droppableData: { type: 'convert-to-topic' },
       initialTopic: topic,
     });
     // fetchTopics();

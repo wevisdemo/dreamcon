@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
-import { Comment } from "../types/comment";
-import { DroppableData } from "../types/dragAndDrop";
+import { useCallback, useState } from 'react';
+import { Comment } from '../types/comment';
+import { DroppableData } from '../types/dragAndDrop';
 
 export interface ClipboardStore {
   setComment: (comment: Comment) => void;

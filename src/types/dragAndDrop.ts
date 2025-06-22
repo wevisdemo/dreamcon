@@ -1,5 +1,5 @@
-import { Topic, TopicDB } from "./topic";
-import { Comment } from "./comment";
+import { Topic, TopicDB } from './topic';
+import { Comment } from './comment';
 
 export interface DraggableCommentProps {
   comment: Comment;
@@ -16,17 +16,17 @@ export type DroppableData =
   | DroppableConvertToTopic;
 
 export interface DroppableDataTopic {
-  type: "topic";
+  type: 'topic';
   topic: Topic;
 }
 
 export interface DroppableDataComment {
-  type: "comment";
+  type: 'comment';
   comment: Comment;
 }
 
 export interface DroppableConvertToTopic {
-  type: "convert-to-topic";
+  type: 'convert-to-topic';
 }
 
 export interface MoveCommentEvent {

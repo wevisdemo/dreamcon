@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import { LightWeightTopic, Topic } from "../../types/topic";
-import TopicWrapper from "./TopicWrapper";
-import { StoreContext } from "../../store";
-import { Droppable } from "../Droppable";
-import { useHotkeys } from "react-hotkeys-hook";
-import Filter from "./Filter";
-import { TopicFilter } from "../../types/home";
-import { DreamConEvent } from "../../types/event";
-import { usePermission } from "../../hooks/usePermission";
+import { useContext, useEffect, useState } from 'react';
+import { LightWeightTopic, Topic } from '../../types/topic';
+import TopicWrapper from './TopicWrapper';
+import { StoreContext } from '../../store';
+import { Droppable } from '../Droppable';
+import { useHotkeys } from 'react-hotkeys-hook';
+import Filter from './Filter';
+import { TopicFilter } from '../../types/home';
+import { DreamConEvent } from '../../types/event';
+import { usePermission } from '../../hooks/usePermission';
 
 interface PropTypes {
   topics: Topic[];
@@ -29,15 +29,15 @@ export default function TopicListSection(props: PropTypes) {
   const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   const { isReadOnly } = usePermission();
   useEffect(() => {
-    const filteredTopics = props.topics.filter((topic) => {
+    const filteredTopics = props.topics.filter(topic => {
       // regex to check if topic.title contains the search text
-      const regex = new RegExp(props.topicFilter.searchText, "i");
+      const regex = new RegExp(props.topicFilter.searchText, 'i');
       // sorted by filter
       const isFilteredByEvent =
         props.topicFilter.selectedEvent === null ||
         topic.event_id === props.topicFilter.selectedEvent.id;
       const isFilteredByCategory =
-        props.topicFilter.category === "ทั้งหมด" ||
+        props.topicFilter.category === 'ทั้งหมด' ||
         topic.category === props.topicFilter.category;
       return (
         regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
@@ -45,13 +45,13 @@ export default function TopicListSection(props: PropTypes) {
     });
 
     // sort by latest or most-commented
-    if (props.topicFilter.sortedBy === "latest") {
+    if (props.topicFilter.sortedBy === 'latest') {
       filteredTopics.sort((a, b) => {
         return (
           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         );
       });
-    } else if (props.topicFilter.sortedBy === "most-commented") {
+    } else if (props.topicFilter.sortedBy === 'most-commented') {
       filteredTopics.sort((a, b) => {
         return b.comments.length - a.comments.length;
       });
@@ -77,17 +77,17 @@ export default function TopicListSection(props: PropTypes) {
 
   const handleAddTopic = () => {
     homePageContext.modalTopicMainSection.dispatch({
-      type: "OPEN_MODAL",
+      type: 'OPEN_MODAL',
       payload: {
-        mode: "create",
+        mode: 'create',
       },
     });
   };
 
-  useHotkeys("Meta+v, ctrl+v", () => {
+  useHotkeys('Meta+v, ctrl+v', () => {
     if (hoveredAddTopic) {
       clipboardContext.emitMoveComment({
-        type: "convert-to-topic",
+        type: 'convert-to-topic',
       });
     }
   });
@@ -104,15 +104,15 @@ export default function TopicListSection(props: PropTypes) {
             src="/logo/dream-con-logo-white.svg"
             alt="dreamcon-logo"
           />
-          <Droppable id="add-topic" data={{ type: "convert-to-topic" }}>
-            {(isOver) => (
+          <Droppable id="add-topic" data={{ type: 'convert-to-topic' }}>
+            {isOver => (
               <button
                 onMouseEnter={() => setHoveredAddTopic(true)}
                 onMouseLeave={() => setHoveredAddTopic(false)}
                 className={`flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white ${
                   isOver
-                    ? "border-blue7 border-[2px]"
-                    : "border-transparent border-[2px]"
+                    ? 'border-blue7 border-[2px]'
+                    : 'border-transparent border-[2px]'
                 }`}
                 onClick={handleAddTopic}
               >

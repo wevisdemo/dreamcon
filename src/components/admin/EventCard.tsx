@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { DreamConEvent } from "../../types/event";
-import IconPen from "../icon/Pen";
-import ChainIcon from "../icon/ChainIcon";
+import { useState } from 'react';
+import { DreamConEvent } from '../../types/event';
+import IconPen from '../icon/Pen';
+import ChainIcon from '../icon/ChainIcon';
 
 interface PropTypes {
   index: number;
@@ -49,26 +49,26 @@ export default function EventCard(props: PropTypes) {
             <p className="text-[10px] mt-[8px]">{props.event.description}</p>
             <ul className="text-[8px] text-gray7 text-gray-600 flex flex-col gap-[2px]">
               <li className="flex items-center gap-[8px]">
-                <img src="/icon/location.svg" alt="location-icon" /> ที่{" "}
+                <img src="/icon/location.svg" alt="location-icon" /> ที่{' '}
                 {props.event.location}
               </li>
               <li className="flex items-center gap-[8px]">
-                <img src="/icon/clock.svg" alt="clock-icon" /> จัดขึ้นวันที่{" "}
+                <img src="/icon/clock.svg" alt="clock-icon" /> จัดขึ้นวันที่{' '}
                 {props.event.date}
               </li>
               <li className="flex items-center gap-[8px]">
-                <img src="/icon/target.svg" alt="target-icon" /> กลุ่มเป้าหมาย:{" "}
+                <img src="/icon/target.svg" alt="target-icon" /> กลุ่มเป้าหมาย:{' '}
                 {props.event.target_group}
               </li>
               <li className="flex items-center gap-[8px]">
-                <img src="/icon/participant.svg" alt="participant-icon" />{" "}
+                <img src="/icon/participant.svg" alt="participant-icon" />{' '}
                 จำนวนผู้เข้าร่วม: {props.event.participants} คน
               </li>
             </ul>
           </div>
 
           <p className="flex gap-[4px] text-blue7 text-[10px]">
-            ลิงก์ข่าว{" "}
+            ลิงก์ข่าว{' '}
             <a href={props.event.news_link} className="underline ">
               {props.event.news_link}
             </a>
@@ -98,11 +98,11 @@ export default function EventCard(props: PropTypes) {
               props.onClickShareLink();
             }}
           >
-            <ChainIcon color={alreadyClickLink ? "#4999FA" : "#979797"} />
+            <ChainIcon color={alreadyClickLink ? '#4999FA' : '#979797'} />
             <span
-              className={alreadyClickLink ? "text-[#4999FA]" : "text-gray5"}
+              className={alreadyClickLink ? 'text-[#4999FA]' : 'text-gray5'}
             >
-              {alreadyClickLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+              {alreadyClickLink ? 'คัดลอกแล้ว!' : 'แชร์ลิงก์'}
             </span>
           </button>
         </div>

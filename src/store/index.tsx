@@ -1,23 +1,23 @@
-import React, { createContext, ReactNode } from "react";
+import React, { createContext, ReactNode } from 'react';
 import {
   HomePageStore,
   initialHomePageState,
   useHomePageStore,
-} from "./homePage";
+} from './homePage';
 import {
   initialTopicPageState,
   TopicPageStore,
   useTopicPageStore,
-} from "./topicPage";
+} from './topicPage';
 import {
   ClipboardStore,
   initialClipboardStore,
   useClipboardStore,
-} from "./clipboard";
-import { initialUserStore, UserStore, useUserStore } from "./user";
-import { EventStore, useEventStore } from "./event";
-import { Topic } from "../types/topic";
-import { PinStore, initialPinStore, usePinStore } from "./pin";
+} from './clipboard';
+import { initialUserStore, UserStore, useUserStore } from './user';
+import { EventStore, useEventStore } from './event';
+import { Topic } from '../types/topic';
+import { PinStore, initialPinStore, usePinStore } from './pin';
 
 interface State {
   user: UserStore;
@@ -30,13 +30,13 @@ interface State {
   topicPage: TopicPageStore;
   clipboard: ClipboardStore;
   currentPage: {
-    value: "home" | "all-topic" | "topic" | "about";
-    setValue: (value: "home" | "all-topic" | "topic" | "about") => void;
+    value: 'home' | 'all-topic' | 'topic' | 'about';
+    setValue: (value: 'home' | 'all-topic' | 'topic' | 'about') => void;
   };
   pin: PinStore;
   mode: {
-    value: "view" | "write";
-    setValue: (value: "view" | "write") => void;
+    value: 'view' | 'write';
+    setValue: (value: 'view' | 'write') => void;
   };
 }
 
@@ -54,22 +54,22 @@ const StoreContext = createContext<State>({
   topicPage: initialTopicPageState,
   clipboard: initialClipboardStore,
   currentPage: {
-    value: "home",
+    value: 'home',
     setValue: () => {},
   },
   pin: initialPinStore,
   mode: {
-    value: "view",
+    value: 'view',
     setValue: () => {},
   },
 });
 
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [currenPage, setCurrentPage] = React.useState<
-    "home" | "all-topic" | "topic" | "about"
-  >("home");
+    'home' | 'all-topic' | 'topic' | 'about'
+  >('home');
   const [selectedTopic, setSelectedTopic] = React.useState<Topic | null>(null);
-  const [mode, setMode] = React.useState<"view" | "write">("view");
+  const [mode, setMode] = React.useState<'view' | 'write'>('view');
   const userState = useUserStore();
   const homePageState = useHomePageStore();
   const topicPageState = useTopicPageStore();

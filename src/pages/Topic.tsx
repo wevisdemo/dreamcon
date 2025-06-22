@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from "react";
-import TopicTemplate from "../components/topic/TopicTemplate";
-import { Topic, TopicCategory, TopicDB } from "../types/topic";
-import { AddOrEditCommentPayload, Comment } from "../types/comment";
-import { StoreContext } from "../store";
-import ModalComment from "../components/share/ModalComment";
-import { useEditTopic } from "../hooks/useEditTopic";
-import { useDeleteTopicWithChildren } from "../hooks/useDeleteTopicWithChildren";
-import { useAddComment } from "../hooks/useAddComment";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from 'react';
+import TopicTemplate from '../components/topic/TopicTemplate';
+import { Topic, TopicCategory, TopicDB } from '../types/topic';
+import { AddOrEditCommentPayload, Comment } from '../types/comment';
+import { StoreContext } from '../store';
+import ModalComment from '../components/share/ModalComment';
+import { useEditTopic } from '../hooks/useEditTopic';
+import { useDeleteTopicWithChildren } from '../hooks/useDeleteTopicWithChildren';
+import { useAddComment } from '../hooks/useAddComment';
+import { useParams } from 'react-router-dom';
 import {
   collection,
   doc,
@@ -17,10 +17,10 @@ import {
   query,
   Unsubscribe,
   where,
-} from "firebase/firestore";
-import { db } from "../utils/firestore";
-import { CommentDB } from "../types/comment";
-import { convertTopicDBToTopic } from "../utils/mapping";
+} from 'firebase/firestore';
+import { db } from '../utils/firestore';
+import { CommentDB } from '../types/comment';
+import { convertTopicDBToTopic } from '../utils/mapping';
 import {
   CollisionDetection,
   DndContext,
@@ -31,25 +31,25 @@ import {
   rectIntersection,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import CommentAndChildren from "../components/topic/CommentAndChildren";
+} from '@dnd-kit/core';
+import CommentAndChildren from '../components/topic/CommentAndChildren';
 import {
   DraggableCommentProps,
   DroppableData,
   DroppableDataComment,
   MoveCommentEvent,
-} from "../types/dragAndDrop";
-import { useMoveComment } from "../hooks/useMoveComment";
-import { SmartPointerSensor } from "../utils/SmartSenson";
-import { useEditComment } from "../hooks/useEditComment";
-import FullPageLoader from "../components/FullPageLoader";
-import AlertPopup from "../components/AlertMoveComment";
-import { useHotkeys } from "react-hotkeys-hook";
-import { useEvent } from "../hooks/useEvent";
-import { DreamConEvent } from "../types/event";
-import useAuth from "../hooks/useAuth";
-import ChainIcon from "../components/icon/ChainIcon";
-import DefaultLayout from "../layouts/default";
+} from '../types/dragAndDrop';
+import { useMoveComment } from '../hooks/useMoveComment';
+import { SmartPointerSensor } from '../utils/SmartSenson';
+import { useEditComment } from '../hooks/useEditComment';
+import FullPageLoader from '../components/FullPageLoader';
+import AlertPopup from '../components/AlertMoveComment';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { useEvent } from '../hooks/useEvent';
+import { DreamConEvent } from '../types/event';
+import useAuth from '../hooks/useAuth';
+import ChainIcon from '../components/icon/ChainIcon';
+import DefaultLayout from '../layouts/default';
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
@@ -73,7 +73,7 @@ export default function TopicPage() {
   } = useContext(StoreContext);
 
   useEffect(() => {
-    currentPage.setValue("topic");
+    currentPage.setValue('topic');
     fetchEvents();
     doToken();
     const unsubscribe = subscribeTopic();
@@ -92,7 +92,7 @@ export default function TopicPage() {
   } = useMoveComment();
   const { getEvents, loading: eventLoading } = useEvent();
   const { setUserStoreFromToken } = useAuth();
-  const [topicLink, setTopicLink] = useState<string>("");
+  const [topicLink, setTopicLink] = useState<string>('');
 
   const handleOnDeleteTopic = async (topic: Topic | null) => {
     if (!topic) return;
@@ -136,13 +136,13 @@ export default function TopicPage() {
   };
 
   const fetchTopicById = async (topicId: string) => {
-    const topicRef = doc(db, "topics", topicId);
-    const commentsCollection = collection(db, "comments");
+    const topicRef = doc(db, 'topics', topicId);
+    const commentsCollection = collection(db, 'comments');
 
     // Fetch the topic
     const topicSnapshot = await getDoc(topicRef);
     if (!topicSnapshot.exists()) {
-      console.error("Topic not found");
+      console.error('Topic not found');
       const params = new URLSearchParams(location.search);
       const hostUrl = window.location.origin;
       window.location.href = `${hostUrl}/topics/?${params.toString()}`;
@@ -153,11 +153,11 @@ export default function TopicPage() {
     // Fetch comments related to this topic
     const commentsQuery = query(
       commentsCollection,
-      where("parent_topic_id", "==", topicId)
+      where('parent_topic_id', '==', topicId)
     );
     const commentsSnapshot = await getDocs(commentsQuery);
 
-    const comments: CommentDB[] = commentsSnapshot.docs.map((doc) => ({
+    const comments: CommentDB[] = commentsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     })) as CommentDB[];
@@ -206,14 +206,14 @@ export default function TopicPage() {
   }
 
   const handleOnSubmitComment = async (
-    mode: "create" | "edit",
+    mode: 'create' | 'edit',
     payload: AddOrEditCommentPayload
   ) => {
     switch (mode) {
-      case "create":
+      case 'create':
         await addNewComment(payload);
         break;
-      case "edit":
+      case 'edit':
         await editComment(payload);
         break;
     }
@@ -233,7 +233,7 @@ export default function TopicPage() {
   ) => {
     setPreviousMoveCommentEvent({ comment: copiedComment, droppableData });
     switch (droppableData.type) {
-      case "comment": {
+      case 'comment': {
         const destinationComment = (droppableData as DroppableDataComment)
           .comment;
         await handleDropToComment(copiedComment, destinationComment);
@@ -256,7 +256,7 @@ export default function TopicPage() {
     setPreviousMoveCommentEvent(null);
   };
 
-  useHotkeys("Meta+z, ctrl+z", () => {
+  useHotkeys('Meta+z, ctrl+z', () => {
     handleUndoMoveComment();
   });
 
@@ -264,7 +264,7 @@ export default function TopicPage() {
     if (!previousMoveCommentEvent) return;
     const { comment, droppableData } = previousMoveCommentEvent;
     switch (droppableData.type) {
-      case "comment": {
+      case 'comment': {
         await undoMoveCommentToComment(comment);
         break;
       }
@@ -280,14 +280,14 @@ export default function TopicPage() {
 
   const manageMode = () => {
     const params = new URLSearchParams(location.search);
-    const mode = params.get("mode");
+    const mode = params.get('mode');
     switch (mode) {
-      case "view":
-        modeContext.setValue("view");
+      case 'view':
+        modeContext.setValue('view');
         break;
       default: {
-        if (userContext.userState?.role === "writer") {
-          modeContext.setValue("write");
+        if (userContext.userState?.role === 'writer') {
+          modeContext.setValue('write');
         }
       }
     }
@@ -301,7 +301,7 @@ export default function TopicPage() {
   };
 
   const getCreatedByEvent = () => {
-    if (userContext.userState?.role === "writer") {
+    if (userContext.userState?.role === 'writer') {
       return userContext.userState?.event;
     }
   };
@@ -313,7 +313,7 @@ export default function TopicPage() {
     return `${hostUrl}/topics/?${params.toString()}`;
   };
 
-  const collisionDetectionPointer: CollisionDetection = (args) => {
+  const collisionDetectionPointer: CollisionDetection = args => {
     const pointerCollisions = pointerWithin(args);
     if (pointerCollisions.length > 0) {
       return pointerCollisions;
@@ -347,33 +347,33 @@ export default function TopicPage() {
                 onClick={async () => {
                   const hostUrl = window.location.origin;
                   const topicLink =
-                    hostUrl + "/topics/" + selectedTopic.value?.id;
+                    hostUrl + '/topics/' + selectedTopic.value?.id;
                   await navigator.clipboard.writeText(topicLink);
                   setTopicLink(topicLink);
                 }}
               >
-                <ChainIcon color={topicLink ? "#4999FA" : "#979797"} />
-                <span className={topicLink ? "text-[#4999FA]" : "text-gray5"}>
-                  {topicLink ? "คัดลอกแล้ว!" : "แชร์ลิงก์"}
+                <ChainIcon color={topicLink ? '#4999FA' : '#979797'} />
+                <span className={topicLink ? 'text-[#4999FA]' : 'text-gray5'}>
+                  {topicLink ? 'คัดลอกแล้ว!' : 'แชร์ลิงก์'}
                 </span>
               </div>
             </div>
             <section className="py-[24px] overflow-scroll w-full flex justify-center">
               <TopicTemplate
                 topic={selectedTopic.value}
-                onChangeTopicCategory={(newCategory) => {
+                onChangeTopicCategory={newCategory => {
                   editTopic({
                     id: selectedTopic.value?.id,
-                    title: selectedTopic.value?.title || "",
-                    event_id: selectedTopic.value?.event_id || "",
+                    title: selectedTopic.value?.title || '',
+                    event_id: selectedTopic.value?.event_id || '',
                     category: newCategory as TopicCategory,
                   });
                 }}
-                onChangeTopicTitle={(newTitle) => {
+                onChangeTopicTitle={newTitle => {
                   editTopic({
                     id: selectedTopic.value?.id,
                     title: newTitle,
-                    event_id: selectedTopic.value?.event_id || "",
+                    event_id: selectedTopic.value?.event_id || '',
                     category: selectedTopic.value?.category as TopicCategory,
                   });
                 }}
@@ -383,14 +383,14 @@ export default function TopicPage() {
                     parent_comment_ids: [],
                     comment_view: commentView,
                     reason,
-                    event_id: getCreatedByEvent()?.id || "",
+                    event_id: getCreatedByEvent()?.id || '',
                   });
                 }}
                 onPinTopic={() => {
-                  pinContext.pinTopic(selectedTopic.value?.id || "");
+                  pinContext.pinTopic(selectedTopic.value?.id || '');
                 }}
                 onUnpinTopic={() => {
-                  pinContext.unpinTopic(selectedTopic.value?.id || "");
+                  pinContext.unpinTopic(selectedTopic.value?.id || '');
                 }}
                 onDeleteTopic={() => handleOnDeleteTopic(selectedTopic.value)}
               />
@@ -403,7 +403,7 @@ export default function TopicPage() {
                 isOpen={topicPageContext.modalComment.state.isModalOpen}
                 onClose={() => {
                   topicPageContext.modalComment.dispatch({
-                    type: "CLOSE_MODAL",
+                    type: 'CLOSE_MODAL',
                   });
                 }}
                 parentCommentIds={

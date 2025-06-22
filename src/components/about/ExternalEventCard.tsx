@@ -1,4 +1,4 @@
-import { ExternalEvent } from "../../types/about";
+import { ExternalEvent } from '../../types/about';
 
 interface PropsType {
   event: ExternalEvent;

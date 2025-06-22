@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { db } from "../utils/firestore";
+import { useState } from 'react';
+import { db } from '../utils/firestore';
 import {
   doc,
   collection,
@@ -7,23 +7,23 @@ import {
   where,
   getDocs,
   runTransaction,
-} from "firebase/firestore";
-import { Comment } from "../types/comment";
-import { Topic } from "../types/topic";
+} from 'firebase/firestore';
+import { Comment } from '../types/comment';
+import { Topic } from '../types/topic';
 
 export const useMoveComment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const commentsCollection = collection(db, "comments");
+  const commentsCollection = collection(db, 'comments');
 
   const fetchChildComments = async (parentId: string) => {
     const childCommentsQuery = query(
       commentsCollection,
-      where("parent_comment_ids", "array-contains", parentId)
+      where('parent_comment_ids', 'array-contains', parentId)
     );
     const childCommentsSnapshot = await getDocs(childCommentsQuery);
-    return childCommentsSnapshot.docs.map((doc) => ({
+    return childCommentsSnapshot.docs.map(doc => ({
       id: doc.id,
       parent_comment_ids: doc.data().parent_comment_ids,
     }));
@@ -35,25 +35,25 @@ export const useMoveComment = () => {
   ) => {
     const commentId = comment.id;
     if (!commentId || !newParentId) {
-      setError("Missing comment ID or new parent ID");
+      setError('Missing comment ID or new parent ID');
       return;
     }
 
     setLoading(true);
     setError(null);
     try {
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         // Step 1: Fetch the target comment
         const targetCommentRef = doc(db, `comments/${commentId}`);
         const targetCommentSnap = await transaction.get(targetCommentRef);
         if (!targetCommentSnap.exists())
-          throw new Error("Target comment not found");
+          throw new Error('Target comment not found');
 
         // Step 2: Fetch the new parent comment
         const newParentCommentRef = doc(db, `comments/${newParentId}`);
         const newParentSnap = await transaction.get(newParentCommentRef);
         if (!newParentSnap.exists())
-          throw new Error("New parent comment not found");
+          throw new Error('New parent comment not found');
 
         const newParentData = newParentSnap.data();
 
@@ -95,10 +95,10 @@ export const useMoveComment = () => {
         }
       });
 
-      console.log("Comment moved successfully:", commentId);
+      console.log('Comment moved successfully:', commentId);
     } catch (err) {
-      console.error("Error moving comment:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error moving comment:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -106,7 +106,7 @@ export const useMoveComment = () => {
 
   const moveCommentToTopic = async (commentId: string, newTopicId: string) => {
     if (!commentId || !newTopicId) {
-      setError("Missing comment ID or new topic ID");
+      setError('Missing comment ID or new topic ID');
       return;
     }
 
@@ -114,12 +114,12 @@ export const useMoveComment = () => {
     setError(null);
 
     try {
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         // Step 1: Fetch the target comment
         const targetCommentRef = doc(db, `comments/${commentId}`);
         const targetCommentSnap = await transaction.get(targetCommentRef);
         if (!targetCommentSnap.exists())
-          throw new Error("Target comment not found");
+          throw new Error('Target comment not found');
 
         // Step 2: Update the target comment
         transaction.update(targetCommentRef, {
@@ -159,8 +159,8 @@ export const useMoveComment = () => {
         `Comment ${commentId} moved to topic ${newTopicId} successfully.`
       );
     } catch (err) {
-      console.error("Error moving comment to topic:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error moving comment to topic:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -173,7 +173,7 @@ export const useMoveComment = () => {
     // !! known issue: not handling if former parent topic or comment is deleted
 
     try {
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         // Step 1: Update the target comment
         const targetCommentRef = doc(db, `comments/${previousComment.id}`);
         transaction.update(targetCommentRef, {
@@ -185,10 +185,10 @@ export const useMoveComment = () => {
         const fetchChildComments = async (parentId: string) => {
           const childCommentsQuery = query(
             commentsCollection,
-            where("parent_comment_ids", "array-contains", parentId)
+            where('parent_comment_ids', 'array-contains', parentId)
           );
           const childCommentsSnapshot = await getDocs(childCommentsQuery);
-          return childCommentsSnapshot.docs.map((doc) => ({
+          return childCommentsSnapshot.docs.map(doc => ({
             id: doc.id,
             parent_comment_ids: doc.data().parent_comment_ids,
           }));
@@ -229,8 +229,8 @@ export const useMoveComment = () => {
         });
       });
     } catch (err) {
-      console.error("Error undo moving comment to topic:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error undo moving comment to topic:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return null;
     } finally {
       setLoading(false);
@@ -247,7 +247,7 @@ export const useMoveComment = () => {
     // !! known issue: not handling if former parent topic or comment is deleted
 
     try {
-      await runTransaction(db, async (transaction) => {
+      await runTransaction(db, async transaction => {
         // Step 1: Update the target comment
         const targetCommentRef = doc(db, `comments/${previousComment.id}`);
         transaction.update(targetCommentRef, {
@@ -259,10 +259,10 @@ export const useMoveComment = () => {
         const fetchChildComments = async (parentId: string) => {
           const childCommentsQuery = query(
             commentsCollection,
-            where("parent_comment_ids", "array-contains", parentId)
+            where('parent_comment_ids', 'array-contains', parentId)
           );
           const childCommentsSnapshot = await getDocs(childCommentsQuery);
-          return childCommentsSnapshot.docs.map((doc) => ({
+          return childCommentsSnapshot.docs.map(doc => ({
             id: doc.id,
             parent_comment_ids: doc.data().parent_comment_ids,
           }));
@@ -309,8 +309,8 @@ export const useMoveComment = () => {
         });
       });
     } catch (err) {
-      console.error("Error undo moving comment to topic:", err);
-      setError(err instanceof Error ? err.message : "Unknown error occurred");
+      console.error('Error undo moving comment to topic:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
       return null;
     } finally {
       setLoading(false);

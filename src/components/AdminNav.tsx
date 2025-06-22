@@ -1,14 +1,14 @@
-import { ReactElement, useState } from "react";
-import useAuth from "../hooks/useAuth";
-import { Popover } from "@mui/material";
-import NewTabIcon from "./icon/NewTab";
-import { usePermission } from "../hooks/usePermission";
+import { ReactElement, useState } from 'react';
+import useAuth from '../hooks/useAuth';
+import { Popover } from '@mui/material';
+import NewTabIcon from './icon/NewTab';
+import { usePermission } from '../hooks/usePermission';
 
 // todo: if has some tabs later, we have to handle state
 export default function AdminNav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);
-  const popoverID = openMenu ? "user-menu" : undefined;
+  const popoverID = openMenu ? 'user-menu' : undefined;
   const { logoutAsAdmin } = useAuth();
 
   const { userCanEdit } = usePermission();
@@ -39,7 +39,7 @@ export default function AdminNav(): ReactElement {
 
       <div
         className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           setAnchorMenu(e.currentTarget);
         }}
@@ -57,14 +57,14 @@ export default function AdminNav(): ReactElement {
         anchorEl={anchorMenu}
         onClose={() => setAnchorMenu(null)}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right',
         }}
-        classes={{ paper: "box-1" }}
+        classes={{ paper: 'box-1' }}
         disableAutoFocus
         disableEnforceFocus
         disableRestoreFocus

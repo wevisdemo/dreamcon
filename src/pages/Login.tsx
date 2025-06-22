@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { auth } from "../utils/firestore";
-import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { useEffect, useState } from 'react';
+import { auth } from '../utils/firestore';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 export default function LoginPage() {
   const [validInputs, setValidInputs] = useState<{
@@ -13,9 +13,9 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
-        navigate("/admin", { replace: true });
+        navigate('/admin', { replace: true });
       }
     });
 
@@ -25,22 +25,22 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const username = (
-      e.currentTarget.elements.namedItem("username") as HTMLInputElement
+      e.currentTarget.elements.namedItem('username') as HTMLInputElement
     ).value;
     const password = (
-      e.currentTarget.elements.namedItem("password") as HTMLInputElement
+      e.currentTarget.elements.namedItem('password') as HTMLInputElement
     ).value;
     const [validUsername, validPassword] = validateInputs(username, password);
     setValidInputs({ username: validUsername, password: validPassword });
 
     try {
       if (!validUsername || !validPassword) {
-        throw new Error("Invalid inputs");
+        throw new Error('Invalid inputs');
       }
       loginAsAdmin(username, password);
-      navigate("/admin", { replace: true });
+      navigate('/admin', { replace: true });
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error('Error signing in:', error);
       // Handle error (e.g., show an error message)
     }
   };
@@ -71,7 +71,7 @@ export default function LoginPage() {
         <div className="">
           <div
             className={`w-[364px] py-[16px] px-[20px] flex items-center bg-blue1 rounded-[10px] gap-[8px] ${
-              validInputs.username ? "" : "border-2 border-red-500"
+              validInputs.username ? '' : 'border-2 border-red-500'
             }`}
           >
             <img
@@ -84,8 +84,8 @@ export default function LoginPage() {
               name="username"
               placeholder="Username"
               className="border-none outline-none flex-1 placeholder:text-[#1C1C1C]"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
+              onKeyDown={e => {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   const passwordInput = document.querySelector(
                     'input[name="password"]'
@@ -99,7 +99,7 @@ export default function LoginPage() {
         <div className="">
           <div
             className={`w-[364px] py-[16px] px-[20px] flex items-center bg-blue1 rounded-[10px] gap-[8px] ${
-              validInputs.password ? "" : "border-2 border-red-500"
+              validInputs.password ? '' : 'border-2 border-red-500'
             }`}
           >
             <img
