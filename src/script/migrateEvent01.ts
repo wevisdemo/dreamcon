@@ -7,7 +7,7 @@ const { db } = initDB();
 const events: AddOrEditEventPayload[] = [
   {
     display_name: 'Dream Con x The Active',
-    avatar_url: 'https://example.com/avatar1.png',
+    avatar_url: '/avatar/1.png',
     title_en: 'Dream Con x The Active',
     title_th: 'ร้อยเหตุผล ร่วมสนทนา ร่างรัฐธรรมนูญฉบับประชาชน',
     description: '',
@@ -20,7 +20,7 @@ const events: AddOrEditEventPayload[] = [
   },
   {
     display_name: 'TIJ Youth Dialogue',
-    avatar_url: 'https://example.com/avatar1.png',
+    avatar_url: '/avatar/1.png',
     title_en: 'Youth Dialogue on Dream Constitution',
     title_th: '-',
     description: '',

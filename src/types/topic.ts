@@ -46,7 +46,11 @@ export type TopicCategory =
   | 'ศาล รธน.'
   | 'การปกครองส่วนท้องถิ่น'
   | 'สสร.'
-  | 'ไม่ระบุ';
+  | 'ไม่ระบุ'
+  | 'สิ่งแวดล้อม'
+  | 'การศึกษา'
+  | 'สวัสดิการ'
+  | 'อื่น ๆ';
 
 export const topicCategories: TopicCategory[] = [
   'สิทธิเสรีภาพ',
@@ -55,7 +59,13 @@ export const topicCategories: TopicCategory[] = [
   'การปกครองส่วนท้องถิ่น',
   'สสร.',
   'ไม่ระบุ',
+  'สิ่งแวดล้อม',
+  'การศึกษา',
+  'สวัสดิการ',
+  'อื่น ๆ',
 ];
+
+// gcloud firestore export gs://my-project-test-269510.appspot.com --collection-ids='topics','collections'
 
 export interface LightWeightTopic {
   id: string;
