@@ -13,6 +13,7 @@ export interface Comment {
 
 export interface CommentDB {
   id: string;
+  ref_id?: string; // optional for legacy comments
   comment_view: CommentView;
   reason: string;
   parent_comment_ids: string[];
