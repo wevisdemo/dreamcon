@@ -13,6 +13,7 @@ export interface Topic {
 
 export interface TopicDB {
   id: string;
+  ref_id?: string; // reference to ID in Google Sheets
   title: string;
   category: string;
   event_id: string;
