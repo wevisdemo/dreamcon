@@ -1,50 +1,39 @@
-# React + TypeScript + Vite
+# Dream Constitution
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## About
+Dream Constitution is a project that gathers the opinions of Thai people to serve as a hub of ideas for drafting a people's constitution.  
+Because the constitution may sometimes feel distant, we invite everyone to share their diverse dreams and ideas, weaving them into a single story. These ideas will then be passed on to those responsible for drafting the new constitution, so it can truly reflect the will of the people.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## URL
+| Environment        | URL    | 
+|-------------|------------|
+| Production     | https://dreamcon.wevis.info/   | 
 
-## Expanding the ESLint configuration
+## Stack
+- [React.js](https://react.dev/) version 19.0.0
+- [TailwindCSS](https://tailwindcss.com/docs)
+- [Firebase](https://console.firebase.google.com/) Firestore Database as a backend
+    
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+# Installation
 
-- Configure the top-level `parserOptions` property like this:
+## ENV
+| Variable        | Description    | 
+|-------------|------------|
+| VITE_FIREBASE_CONFIG     | Firebase config. We use this for connecting with database   | 
+| VITE_BASE_URL     | Base url. For development, we usually set with http://localhost:5173 | 
+| BASE_URL     | Base url. For development, we usually set with http://localhost:5173 | 
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Prerequisites
+- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+
+## Command
+- install package dependencies with 
+``` 
+npm install 
 ```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+- for development 
+```
+npm run dev
 ```
