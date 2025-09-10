@@ -96,7 +96,7 @@ export default function ModalEvent(props: PropTypes) {
 
   return (
     <div
-      className="absolute w-full h-full inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed w-full h-full inset-0 bg-black/50 flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
       <div className="w-full h-auto max-w-[830px] bg-white md:rounded-lg shadow-lg">
@@ -105,7 +105,7 @@ export default function ModalEvent(props: PropTypes) {
             {props.mode === 'edit' ? 'แก้ไขข้อมูลวงสนทนา' : 'เพิ่มวงสนทนาใหม่'}
           </h2>
           <button
-            className="text-accent text-[13px] text-gray5 wv-ibmplex underline absolute right-[16px]"
+            className="text-[13px] text-gray5 wv-ibmplex underline absolute right-[16px]"
             onClick={handleClose}
           >
             ยกเลิก
@@ -181,7 +181,7 @@ export default function ModalEvent(props: PropTypes) {
               onChange={e =>
                 setPayload({ ...payload, description: e.target.value })
               }
-              className="w-full p-[10px] bg-gray1 border border-gray3 rounded-lg focus:outline-none resize-none"
+              className="w-full p-[10px] bg-gray1 border border-gray3 rounded-lg focus:outline-none resize-none h-48"
               placeholder="กรอกคำอธิบาย"
             ></textarea>
           </div>
@@ -224,7 +224,7 @@ export default function ModalEvent(props: PropTypes) {
                 </span>
                 <input
                   type="date"
-                  className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+                  className="w-full px-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
                   onChange={e =>
                     setPayload({ ...payload, date: e.target.value })
                   }
@@ -233,7 +233,6 @@ export default function ModalEvent(props: PropTypes) {
                       ? payload.date
                       : new Date().toISOString().split('T')[0]
                   }
-                  placeholder="กรอกวันที่จัด"
                 />
               </div>
             </div>
@@ -241,7 +240,7 @@ export default function ModalEvent(props: PropTypes) {
               <label className="block text-blue7 mb-[12px]">
                 จำนวนผู้เข้าร่วม
               </label>
-              <div className="flex gap-[10px]">
+              <div className="flex gap-[10px] items-center">
                 <input
                   type="number"
                   className="w-[70px] p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
