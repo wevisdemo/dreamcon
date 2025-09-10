@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { DreamConEvent } from '../../types/event';
 import {
   TopicFilter,
@@ -95,8 +95,13 @@ export default function Filter(props: PropTypes) {
     return false;
   };
 
-  const filteredEvents = (): DreamConEvent[] =>
-    props.events.filter(event => props.filter.selectedEvent?.id !== event.id);
+  const filteredEvents = useMemo<DreamConEvent[]>(
+    () =>
+      props.events
+        .filter(event => props.filter.selectedEvent?.id !== event.id)
+        .sort((a, z) => z.date.localeCompare(a.date)),
+    [props.events, props.filter.selectedEvent]
+  );
 
   // TODO: this is for temp fix, should be controller by fetch event
   const getFreshFilteredEventData = (): DreamConEvent | null => {
@@ -218,7 +223,7 @@ export default function Filter(props: PropTypes) {
                 onClick={() => handleEventChange(null)}
               />
             )}
-            {filteredEvents().map(event => (
+            {filteredEvents.map(event => (
               <FilterEvent
                 isOwner={isEventOwner(event)}
                 event={event}
