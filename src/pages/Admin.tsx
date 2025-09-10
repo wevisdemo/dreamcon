@@ -9,12 +9,16 @@ import { useWriter } from '../hooks/useWriter';
 import FullPageLoader from '../components/FullPageLoader';
 import DefaultLayout from '../layouts/default';
 
+enum RoomSortOption {
+  LATEST_EVENT,
+  LATEST_CREATED,
+  POPULAR,
+}
+
 const AdminPage = () => {
-  enum RoomSortOption {
-    LATEST,
-    POPULAR,
-  }
-  const [sortBy, setSortBy] = useState<RoomSortOption>(RoomSortOption.LATEST);
+  const [sortBy, setSortBy] = useState<RoomSortOption>(
+    RoomSortOption.LATEST_EVENT
+  );
   const [searchText, setSearchText] = useState<string>('');
   const [modalEvent, setModalEvent] = useState<{
     isOpen: boolean;
@@ -32,12 +36,15 @@ const AdminPage = () => {
       return regex.test(event.display_name);
     });
     switch (sortBy) {
-      case RoomSortOption.LATEST:
+      case RoomSortOption.LATEST_EVENT:
+        setDisplayEvents(
+          [...filteredEvents].sort((a, b) => b.date.localeCompare(a.date))
+        );
+        break;
+      case RoomSortOption.LATEST_CREATED:
         setDisplayEvents(
           [...filteredEvents].sort(
-            (a, b) =>
-              new Date(b.created_at).getTime() -
-              new Date(a.created_at).getTime()
+            (a, b) => b.created_at.getTime() - a.created_at.getTime()
           )
         );
         break;
@@ -130,21 +137,9 @@ const AdminPage = () => {
       alert('Failed to fetch events.');
       return;
     }
-    // sort by created_at asc
-    events.sort((a, b) => {
-      return (
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-      );
-    });
-    const fileEvents = events.map((event, index) => {
-      return {
-        ...event,
-        index: index + 1,
-      };
-    });
 
-    setEvents(fileEvents);
-    setDisplayEvents(fileEvents);
+    setEvents(events);
+    setDisplayEvents(events);
   };
 
   const isPageLoading = () => {
@@ -155,8 +150,8 @@ const AdminPage = () => {
     <DefaultLayout page="admin">
       {isPageLoading() ? <FullPageLoader /> : null}
       <div className="h-full w-screen bg-blue2 flex justify-center relative overflow-auto">
-        <main className="max-w-[940px] w-full py-[32px] flex flex-col ">
-          <div className="flex justify-center gap-[12px] items-center mb-4 mb-[32px]">
+        <main className="max-w-[940px] w-full py-[32px] flex flex-col">
+          <div className="flex justify-center gap-[12px] items-center mb-4">
             <div className="flex flex-col items-center">
               <div className="relative flex flex-col items-center wv-ibmplex text-center">
                 <div className=" top-0 bg-white w-full px-[16px] py-[8px] rounded-l-[20px] rounded-tr-[20px] text-blue7 text-[16px] font-bold">
@@ -185,18 +180,36 @@ const AdminPage = () => {
           <div className="flex justify-between items-center mb-4 gap-[30px] text-[13px]">
             <div className="flex gap-[4px] items-center">
               <span className="text-blue7 text-nowrap">เรียงลำดับ:</span>
-              <div className="flex w-[300px] text-[13px]">
+              <div className="flex w-lg text-[13px]">
                 <button
                   style={{
                     backgroundColor:
-                      sortBy === RoomSortOption.LATEST
+                      sortBy === RoomSortOption.LATEST_EVENT
                         ? '#1C4CD3'
                         : 'transparent',
                     color:
-                      sortBy === RoomSortOption.LATEST ? '#FFFFFF' : '#1C4CD3',
+                      sortBy === RoomSortOption.LATEST_EVENT
+                        ? '#FFFFFF'
+                        : '#1C4CD3',
                   }}
                   className="w-full py-[6px] rounded-l-[48px] border-[1px] border-solid border-[#1C4CD3] "
-                  onClick={() => setSortBy(RoomSortOption.LATEST)}
+                  onClick={() => setSortBy(RoomSortOption.LATEST_EVENT)}
+                >
+                  วันที่จัดล่าสุด
+                </button>
+                <button
+                  style={{
+                    backgroundColor:
+                      sortBy === RoomSortOption.LATEST_CREATED
+                        ? '#1C4CD3'
+                        : 'transparent',
+                    color:
+                      sortBy === RoomSortOption.LATEST_CREATED
+                        ? '#FFFFFF'
+                        : '#1C4CD3',
+                  }}
+                  className="w-full py-[6px] border-y-[1px] border-solid border-[#1C4CD3] "
+                  onClick={() => setSortBy(RoomSortOption.LATEST_CREATED)}
                 >
                   เพิ่มล่าสุด
                 </button>
@@ -235,9 +248,9 @@ const AdminPage = () => {
             </div>
           </div>
           <div className="flex flex-col gap-[32px] pb-[32px]">
-            {displayEvents.map(event => (
+            {displayEvents.map((event, i) => (
               <EventCard
-                index={event.index || 0}
+                index={i + 1}
                 key={event.id}
                 event={event}
                 onClickShareLink={() => handleCopyWriterLink(event.id)}
