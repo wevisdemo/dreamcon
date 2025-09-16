@@ -164,9 +164,7 @@ export default function LandingPage() {
             <h2 className="text-[31px] md:text-[39px] wv-ibmplex font-semibold ">
               ความคืบหน้าตอนนี้
             </h2>
-            <p className="text-blue7">
-              อัปเดตล่าสุดวันที่ วันที่ 20 เม.ย. 2568
-            </p>
+            <p className="text-blue7">อัปเดตล่าสุดวันที่ วันที่ 16 ก.ย. 2568</p>
             <div className="flex flex-col md:flex-row gap-[24px] md:gap-[40px] mt-[24px]">
               <img
                 className="w-full max-w-[460px]"
