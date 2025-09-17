@@ -111,10 +111,10 @@ export default function LandingPage() {
               <div className="w-full flex justify-center relative">
                 <div className="w-[63.75%] max-w-[612px] h-[2px] bg-blue6 relative">
                   <div className="absolute flex justify-between w-full items-center top-[-6px]">
-                    <div className="w-[16px] h-[16px] bg-blue6 rounded-full"></div>
-                    <div className="w-[12px] h-[12px] bg-blue2 border-[2px] border-blue6 rounded-full"></div>
-                    <div className="w-[12px] h-[12px] bg-blue2 border-[2px] border-blue6 rounded-full"></div>
-                    <div className="w-[12px] h-[12px] bg-blue2 border-[2px] border-blue6 rounded-full"></div>
+                    <div className="size-3 bg-blue6 rounded-full"></div>
+                    <div className="size-3 bg-blue6 rounded-full"></div>
+                    <div className="size-4 bg-blue6 rounded-full"></div>
+                    <div className="size-3 bg-blue2 border-[2px] border-blue6 rounded-full"></div>
                   </div>
                 </div>
               </div>
