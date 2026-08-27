@@ -78,6 +78,7 @@ export default function TopicPage() {
     doToken();
     const unsubscribe = subscribeTopic();
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount; the cleanup unsubscribes
   }, []);
 
   const { editTopic, loading: editTopicLoading } = useEditTopic();
@@ -122,10 +123,12 @@ export default function TopicPage() {
       const hostUrl = window.location.origin;
       window.location.href = `${hostUrl}/topics/?${params.toString()}`;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refetch only when the route param changes
   }, [topicId]);
 
   useEffect(() => {
     manageMode();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-evaluate mode only when the signed-in user changes
   }, [userContext.userState]);
 
   const subscribeTopic = (): Unsubscribe => {
@@ -244,10 +247,12 @@ export default function TopicPage() {
 
   useEffect(() => {
     clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-subscribe only when the store callback identity changes
   }, [clipboardContext.subscribeMoveComment]);
 
   useEffect(() => {
     clipboardContext.subscribeCopyComment(subscribeCopyComment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-subscribe only when the store callback identity changes
   }, [clipboardContext.subscribeCopyComment]);
 
   const subscribeCopyComment = () => {

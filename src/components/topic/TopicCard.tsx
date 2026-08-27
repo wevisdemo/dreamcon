@@ -37,6 +37,7 @@ export default function TopicCard(props: PropTypes) {
   useEffect(() => {
     resetNewCommentText();
     resetEditTopic();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reset form state only when a different topic is rendered
   }, [props.topic]);
 
   const handleClickMenu = (event: React.MouseEvent<HTMLImageElement>) => {

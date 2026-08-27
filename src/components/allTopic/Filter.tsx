@@ -72,6 +72,7 @@ export default function Filter(props: PropTypes) {
       ...props.filter,
       searchText: debouncedValue,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- push up only when the debounced text settles; depending on props.filter would loop, as setFilter replaces it
   }, [debouncedValue]);
 
   const handleSearchTextChange = (text: string) => {

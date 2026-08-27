@@ -119,10 +119,12 @@ export default function AllTopic() {
     if (readyToFetchParams) {
       doToken();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- run the token flow only once params become available
   }, [readyToFetchParams]);
 
   useEffect(() => {
     manageMode();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-evaluate mode only when the signed-in user changes
   }, [userContext.userState]);
 
   const fetchLightWeightTopics = async () => {
@@ -221,6 +223,7 @@ export default function AllTopic() {
       topicFilter,
       pinContext.pinnedTopics
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchers are redefined every render; re-create only when the query inputs change
   }, [itemLimit, topicFilter, pinContext.pinnedTopics]);
 
   const latestFunctionRef = useRef(fetchTopicAfterSubscribe);
@@ -248,6 +251,7 @@ export default function AllTopic() {
       unsubscribeTopic();
       unsubscribeEvent();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- subscribe once on mount; the cleanup unsubscribes
   }, []);
 
   const fetchFirstTime = async () => {
@@ -263,23 +267,28 @@ export default function AllTopic() {
   };
 
   useEffect(() => {
-    observerRef.current?.addEventListener('scroll', handleScroll);
+    const observer = observerRef.current;
+    observer?.addEventListener('scroll', handleScroll);
 
     return () => {
-      observerRef.current?.removeEventListener('scroll', handleScroll);
+      observer?.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-attach only when the rendered list changes; handleScroll is redefined every render
   }, [displayTopics]);
 
   useEffect(() => {
     clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-subscribe only when the store callback identity changes
   }, [clipboardContext.subscribeMoveComment]);
 
   useEffect(() => {
     clipboardContext.subscribeCopyComment(subscribeCopyComment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-subscribe only when the store callback identity changes
   }, [clipboardContext.subscribeCopyComment]);
 
   useEffect(() => {
     refreshSelectedTopicFromDisplayTopic(displayTopics);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh only when the rendered list changes
   }, [displayTopics]);
 
   useHotkeys('Meta+z, ctrl+z', () => {

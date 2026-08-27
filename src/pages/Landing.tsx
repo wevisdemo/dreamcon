@@ -26,6 +26,7 @@ export default function LandingPage() {
 
     currentPage.setValue('home');
     fetchTopics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch once on mount
   }, []);
 
   return (

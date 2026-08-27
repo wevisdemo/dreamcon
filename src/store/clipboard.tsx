@@ -45,7 +45,7 @@ export const useClipboardStore = (): ClipboardStore => {
         copyCallback(comment);
       }
     },
-    [currentComment, copyCallback]
+    [copyCallback]
   );
 
   const subscribeCopyComment = useCallback((cb: (comment: Comment) => void) => {

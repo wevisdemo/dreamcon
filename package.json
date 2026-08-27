@@ -9,9 +9,9 @@
     "emulators": "firebase emulators:exec --project demo-dreamcon --ui \"pnpm seed:emulator && node -e 'setInterval(() => {}, 1 << 30)'\"",
     "seed:emulator": "tsx src/script/seedEmulator.ts",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\""
+    "lint": "eslint --fix .",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "prepare": "husky"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -52,6 +52,8 @@
     "eslint-plugin-react-refresh": "^0.4.18",
     "firebase-tools": "^15.28.1",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
     "postcss": "^8.5.2",
     "prettier": "^3.5.3",
     "tailwindcss": "^4.0.6",

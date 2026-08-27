@@ -54,7 +54,9 @@ function normalizeComment(
   return doc;
 }
 
-function toCsvRow(obj: Record<string, unknown>): Record<string, string | number | boolean | null> {
+function toCsvRow(
+  obj: Record<string, unknown>
+): Record<string, string | number | boolean | null> {
   const row: Record<string, string | number | boolean | null> = {};
   for (const [k, v] of Object.entries(obj)) {
     row[k] = toCsvValue(v);
