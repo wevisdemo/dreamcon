@@ -4,7 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "firebase emulators:exec --project demo-dreamcon --ui \"pnpm seed:emulator && vite\"",
+    "dev:prod": "VITE_USE_FIREBASE_EMULATOR=false vite",
+    "emulators": "firebase emulators:exec --project demo-dreamcon --ui \"pnpm seed:emulator && node -e 'setInterval(() => {}, 1 << 30)'\"",
+    "seed:emulator": "tsx src/script/seedEmulator.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -33,6 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/d3-dsv": "^3.0.7",
     "@types/dotenv": "^6.1.1",
     "@types/js-cookie": "^3.0.6",
     "@types/react": "^19.0.8",
@@ -46,6 +50,7 @@
     "eslint-plugin-prettier": "^5.5.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
+    "firebase-tools": "^15.28.1",
     "globals": "^15.14.0",
     "postcss": "^8.5.2",
     "prettier": "^3.5.3",

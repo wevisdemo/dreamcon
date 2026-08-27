@@ -25,3 +25,6 @@ out
 *.sw?
 
 .env
+
+# Firebase emulator
+*-debug.log
