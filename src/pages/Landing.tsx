@@ -197,10 +197,9 @@ export default function LandingPage() {
               และยังมีอีกหลายเรื่องให้สำรวจหรือสร้างประเด็นใหม่ได้
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-[24px]">
-              {topics.map((topic, index) => (
-                <div>
+              {topics.map(topic => (
+                <div key={topic.id}>
                   <TopicSummary
-                    key={'topic-' + index}
                     topic={topic}
                     isSelected={false}
                     onClick={() => {

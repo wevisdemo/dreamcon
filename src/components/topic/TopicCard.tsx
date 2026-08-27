@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { CommentView } from '../../types/comment';
 import { Topic, topicCategories, TopicCategory } from '../../types/topic';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Tooltip from '@mui/material/Tooltip';
 import { Popover } from '@mui/material';
 import MenuPopover from '../share/MenuPopover';

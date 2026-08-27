@@ -5,7 +5,7 @@ import {
   TopicCategory,
 } from '../../types/topic';
 import React, { useEffect, useState } from 'react';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Dropdown from './Dropdown';
 import { DreamConEvent } from '../../types/event';
 interface PropTypes {
