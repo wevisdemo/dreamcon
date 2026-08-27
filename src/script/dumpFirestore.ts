@@ -1,4 +1,5 @@
 import { collection, getDocs } from 'firebase/firestore';
+import { csvFormat } from 'd3-dsv';
 import { initDB } from './firestore';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -29,18 +30,57 @@ function serializeValue(value: unknown): unknown {
   return value;
 }
 
+function toCsvValue(value: unknown): string | number | boolean | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+  if (typeof value === 'boolean' || typeof value === 'number') {
+    return value;
+  }
+  if (typeof value === 'string') {
+    return value;
+  }
+  return JSON.stringify(value);
+}
+
+function normalizeComment(
+  doc: Record<string, unknown>
+): Record<string, unknown> {
+  const parentCommentIds = doc['parent_comment_ids'];
+  if (Array.isArray(parentCommentIds) && parentCommentIds.length > 0) {
+    doc['parent_comment_id'] = parentCommentIds[0];
+  }
+  delete doc['parent_comment_ids'];
+  return doc;
+}
+
+function toCsvRow(obj: Record<string, unknown>): Record<string, string | number | boolean | null> {
+  const row: Record<string, string | number | boolean | null> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    row[k] = toCsvValue(v);
+  }
+  return row;
+}
+
 async function dumpCollection(name: string) {
   const colRef = collection(db, name);
   const snapshot = await getDocs(colRef);
 
-  const docs = snapshot.docs.map(docSnap => ({
-    id: docSnap.id,
-    ...(serializeValue(docSnap.data()) as Record<string, unknown>),
-  }));
+  const docs = snapshot.docs.map(docSnap => {
+    let data: Record<string, unknown> = {
+      id: docSnap.id,
+      ...(serializeValue(docSnap.data()) as Record<string, unknown>),
+    };
+    if (name === 'comments') {
+      data = normalizeComment(data);
+    }
+    return data;
+  });
 
-  const filePath = path.join(OUTPUT_DIR, `${name}.json`);
+  const rows = docs.map(toCsvRow);
+  const filePath = path.join(OUTPUT_DIR, `${name}.csv`);
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(docs, null, 2));
+  fs.writeFileSync(filePath, csvFormat(rows));
 
   console.log(`Dumped ${docs.length} docs from "${name}" -> ${filePath}`);
 }
