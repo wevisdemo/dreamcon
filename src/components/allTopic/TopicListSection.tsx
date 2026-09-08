@@ -127,6 +127,18 @@ export default function TopicListSection(props: PropTypes) {
               </button>
             )}
           </Droppable>
+          <div className="flex flex-col items-center gap-[4px] max-w-[600px] text-center text-blue7 text-[13px] wv-ibmplex">
+            <img
+              className="w-[16px] h-[16px]"
+              src="/icon/warning.svg"
+              alt="warning-icon"
+            />
+            <p>
+              ก่อนเพิ่มข้อถกเถียงใหม่ ควรตรวจสอบข้อถกเถียงที่มีอยู่ก่อน
+              หากพบประเด็นเดียวกัน ให้เพิ่มวงสนทนาของคุณในข้อถกเถียงนั้น หรือ
+              เพิ่มความคิดเห็นต่อยอด
+            </p>
+          </div>
         </>
       )}
       <Filter
