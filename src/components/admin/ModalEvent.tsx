@@ -67,8 +67,8 @@ export default function ModalEvent(props: PropTypes) {
 
   const getConfirmStyle = () =>
     validatePayload(payload)
-      ? 'rounded-[48px] py-[10px] px-[16px] bg-[#2579F5] text-16 text-white wv-ibmplex wv-bold leading-[19px] shadow-md'
-      : 'rounded-[48px] py-[10px] px-[16px] bg-[#E8E8E8] text-16 text-[#979797] wv-ibmplex wv-bold leading-[19px]';
+      ? 'rounded-[48px] py-[10px] px-[16px] bg-[#2579F5] text-button text-white wv-ibmplex wv-bold shadow-md'
+      : 'rounded-[48px] py-[10px] px-[16px] bg-[#E8E8E8] text-button text-[#979797] wv-ibmplex wv-bold';
 
   const onSubmit = () => {
     switch (props.mode) {
@@ -101,11 +101,11 @@ export default function ModalEvent(props: PropTypes) {
     >
       <div className="w-full h-auto max-w-[830px] bg-white md:rounded-lg shadow-lg">
         <div className="flex items-center px-[16px] pt-[24px] pb-[16px] border-solid border-b-[1px] border-gray3 relative">
-          <h2 className="text-[16px] text-blue7 wv-ibmplex wv-bold flex-1 w-full text-center">
+          <h2 className="heading-5 text-blue7 wv-ibmplex wv-bold flex-1 w-full text-center">
             {props.mode === 'edit' ? 'แก้ไขข้อมูลวงสนทนา' : 'เพิ่มวงสนทนาใหม่'}
           </h2>
           <button
-            className="text-[13px] text-gray5 wv-ibmplex underline absolute right-[16px]"
+            className="text-label text-gray5 wv-ibmplex underline absolute right-[16px]"
             onClick={handleClose}
           >
             ยกเลิก

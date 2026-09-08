@@ -6,8 +6,8 @@ export default function TokenExpiredPage() {
         src="/logo/dream-con-logo-white.svg"
         alt="dreamcon-logo"
       />
-      <h2 className="wv-ibmplex text-[39px] font-bold">Invite Link Expired</h2>
-      <p className="text-[20px]">
+      <h2 className="wv-ibmplex heading-2 font-bold">Invite Link Expired</h2>
+      <p className="text-b1">
         This invite link may have expired <br /> You can{' '}
         <span className="font-bold">
           request a new link to continue editing

@@ -107,7 +107,7 @@ export default function CommentCard(props: PropTypes) {
       {hovered && props.canEdit && (
         <Tooltip
           title={
-            <div className="flex flex-col font-[400] wv-ibmplexlooped">
+            <div className="flex flex-col font-normal wv-ibmplexlooped">
               <span>
                 <span className="wv-bold">ลาก</span> เพื่อย้าย
               </span>
@@ -136,7 +136,7 @@ export default function CommentCard(props: PropTypes) {
 
       <div
         aria-describedby={popoverID}
-        className={`p-[10px] ${roundedClass()} text[13px] flex justify-between border-[2px] ${
+        className={`p-[10px] ${roundedClass()} text-b3 flex justify-between border-[2px] ${
           props.isOver ? 'border-dashed border-blue4' : 'border-transparent'
         } ${
           hovered && props.canEdit

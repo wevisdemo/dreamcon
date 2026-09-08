@@ -24,7 +24,7 @@ export default function TopicSummaryComment(props: PropTypes) {
           }}
         >
           <div className="w-[12px] h-full rounded-[48px] bg-lightGreen"></div>
-          <p className="text-[13px] text-gray5 flex gap-[8px]">
+          <p className="text-label text-gray5 flex gap-[8px]">
             <span>{getCommentsByView(CommentView.AGREE).length}</span>
             <span>เห็นด้วย..</span>
           </p>
@@ -40,7 +40,7 @@ export default function TopicSummaryComment(props: PropTypes) {
           }}
         >
           <div className="w-[12px] h-full rounded-[48px] bg-lightYellow"></div>
-          <p className="text-[13px] text-gray5 flex gap-[8px]">
+          <p className="text-label text-gray5 flex gap-[8px]">
             <span>{getCommentsByView(CommentView.PARTIAL_AGREE).length}</span>
             <span>เห็นด้วยบางส่วน..</span>
           </p>
@@ -56,7 +56,7 @@ export default function TopicSummaryComment(props: PropTypes) {
           }}
         >
           <div className="w-[12px] h-full rounded-[48px] bg-lightRed"></div>
-          <p className="text-[13px] text-gray5 flex gap-[8px]">
+          <p className="text-label text-gray5 flex gap-[8px]">
             <span>{getCommentsByView(CommentView.DISAGREE).length}</span>
             <span>ไม่เห็นด้วย..</span>
           </p>

@@ -116,7 +116,7 @@ export default function ModalComment(props: PropTypes) {
       <div className="flex flex-col w-full md:max-w-[480px] bg-white md:rounded-lg shadow-lg m-[20px] rounded-[8px] overflow-hidden">
         <div className="flex flex-col gap-[12px] bg-gray1 p-[16px] border-solid border-b-[1px] border-[#D4D4D4]">
           <div className="flex justify-end items-center mt-[8px] relative">
-            <p className="absolute wv-ibmplex text-[16px] text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] px-[8px]">
+            <p className="absolute wv-ibmplex text-b2 text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] px-[8px]">
               {props.mode === 'create'
                 ? 'เพิ่มข้อถกเถียงต่อยอด'
                 : 'แก้ไขข้อถกเถียงต่อยอด'}
@@ -137,7 +137,7 @@ export default function ModalComment(props: PropTypes) {
                   src={getParentEvent()?.avatar_url}
                   alt={`avatar-event-${getParentEvent()?.display_name}`}
                 />
-                <span className="text-[10px] wv-bold">
+                <span className="text-label-sm wv-bold">
                   {getParentEvent()?.display_name}
                 </span>
               </div>

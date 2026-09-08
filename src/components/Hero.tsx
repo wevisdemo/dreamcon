@@ -24,7 +24,7 @@ export default function Hero(props: Props) {
             {props.textNavigate}
           </a>
         )}
-        <h2 className="wv-ibmplex wv-bold text-[40px]">{props.heroTitle}</h2>
+        <h2 className="wv-ibmplex wv-bold heading-2">{props.heroTitle}</h2>
       </div>
       <div className="flex justify-between">
         <img src="/icon/cloud-4.svg" alt="cloud-4" />

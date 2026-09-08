@@ -27,10 +27,10 @@ export default function DefaultFilterEvent(props: PropTypes) {
         }`}
         onClick={() => props.onClick()}
       >
-        <span className="text-[20px] wv-bold">{props.count}</span>
+        <span className="text-b1 wv-bold">{props.count}</span>
       </div>
       <p
-        className={`text-[10px] text-gray5 px-[5px] py-[3px] text-center whitespace-nowrap ${
+        className={`text-label-sm text-gray5 px-[5px] py-[3px] text-center whitespace-nowrap ${
           props.isSelected ? 'bg-blue6 rounded-full text-white wv-semibold' : ''
         }`}
       >

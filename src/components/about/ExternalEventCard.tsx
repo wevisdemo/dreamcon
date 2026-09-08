@@ -11,7 +11,9 @@ export default function ExternalEventCard(props: PropsType) {
         alt={`event-thumbnail-${props.event.display_name}`}
       />
       <div>
-        <h5 className="text-xl font-bold">{props.event.display_name}</h5>
+        <h5 className="heading-5 wv-ibmplex font-bold">
+          {props.event.display_name}
+        </h5>
         <p className="mt-2 text-gray-600">{props.event.description}</p>
       </div>
       <a

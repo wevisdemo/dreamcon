@@ -67,7 +67,7 @@ export default function LoginPage() {
         className="text-center p-8 flex flex-col gap-[32px]"
         onSubmit={handleSubmit}
       >
-        <h1 className="text-[40px] wv-ibmplex font-bold ">เข้าสู่ระบบ</h1>
+        <h1 className="heading-2 wv-ibmplex font-bold ">เข้าสู่ระบบ</h1>
         <div className="">
           <div
             className={`w-[364px] py-[16px] px-[20px] flex items-center bg-blue1 rounded-[10px] gap-[8px] ${

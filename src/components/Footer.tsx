@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 
 export default function Footer(): ReactElement {
   return (
-    <div className="flex flex-col max-w-[960px] w-full m-auto text-white text-[16px] space-y-[48px] text-left">
+    <div className="flex flex-col max-w-[960px] w-full m-auto text-white text-b2 space-y-[48px] text-left">
       <div className="flex md:flex-row flex-col md:justify-between md:items-center space-y-[32px] ">
         <img
           className="h-[48px] w-fit"

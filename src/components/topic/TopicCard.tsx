@@ -190,7 +190,7 @@ export default function TopicCard(props: PropTypes) {
             <div className="relative  w-full">
               <TextareaAutosize
                 id="topic-title-text-area"
-                className="w-full p-[10px] wv-ibmplex text-[20px] wv-bold resize-none overflow-hidden"
+                className="w-full p-[10px] wv-ibmplex heading-4 wv-bold resize-none overflow-hidden"
                 value={topicTitle}
                 onChange={e => {
                   setTopicTitle(e.target.value);
@@ -221,7 +221,7 @@ export default function TopicCard(props: PropTypes) {
                 />
               </div>
             </div>
-            <span className=" text-[10px] text-gray5">
+            <span className=" text-label-sm text-gray5">
               {topicTitle.length}/140
             </span>
           </>
@@ -244,7 +244,7 @@ export default function TopicCard(props: PropTypes) {
             classes={{ tooltip: 'tooltip-1' }}
           >
             <h2
-              className="p-[10px] wv-ibmplex text-[20px] wv-bold"
+              className="p-[10px] wv-ibmplex heading-4 wv-bold"
               onClick={() => {
                 if (hasPermissionToEdit()) {
                   setIsEditingMode(true);
@@ -294,7 +294,7 @@ export default function TopicCard(props: PropTypes) {
           {commentView && (
             <div className="relative flex">
               <textarea
-                className="w-full h-full p-[10px] text-[13px] bg-gray1 border-[1px] border-gray3 rounded-[4px] resize-none min-h-[52px] focus:outline-none "
+                className="w-full h-full p-[10px] text-b3 bg-gray1 border-[1px] border-gray3 rounded-[4px] resize-none min-h-[52px] focus:outline-none "
                 name="add-comment-in-topic-card"
                 id="add-comment-in-topic-card"
                 value={newCommentText}

@@ -243,7 +243,7 @@ export default function CommentAndChildren(props: PropTypes) {
           {isOver => (
             <>
               {showHeaderEvent(props.comment, props.parent.event_id) && (
-                <div className="flex gap-[8px] items-center text-[10px] pl-[4px] my-[4px]">
+                <div className="flex gap-[8px] items-center text-label-sm pl-[4px] my-[4px]">
                   <img
                     className="rounded-full w-[25px] h-[25px]"
                     src={

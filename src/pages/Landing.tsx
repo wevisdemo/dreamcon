@@ -68,7 +68,7 @@ export default function LandingPage() {
                 />
               </div>
             </div>
-            <h3 className="md:text-[31px] text-[24px] text-center wv-ibmplex font-semibold text-blue7">
+            <h3 className="heading-3 text-center wv-ibmplex font-semibold text-blue7">
               พาความฝันของพวกเรา มาสร้างอนาคตประเทศไทยไปด้วยกัน
             </h3>
             <img
@@ -81,7 +81,7 @@ export default function LandingPage() {
               alt="icon-arrow-down-black"
               className="h-[24px] w-[24px]"
             />
-            <p className="text-[16px] text-center">
+            <p className="text-b2 text-center">
               <span className="wv-bold">Dream Constitution</span>{' '}
               <span>
                 โครงการรวบรวมความคิดเห็นของคนไทยเพื่อเป็นศูนย์รวมไอเดียในการร่างรัฐธรรมนูญฉบับประชาชน
@@ -106,9 +106,7 @@ export default function LandingPage() {
               />
             </div>
             <div className="w-full flex flex-col items-center justify-between gap-[16px]">
-              <h3 className="text-[31px] wv-ibmplex font-bold">
-                กระบวนการทำงาน
-              </h3>
+              <h3 className="heading-3 wv-ibmplex font-bold">กระบวนการทำงาน</h3>
               <div className="w-full flex justify-center relative">
                 <div className="w-[63.75%] max-w-[612px] h-[2px] bg-blue6 relative">
                   <div className="absolute flex justify-between w-full items-center top-[-6px]">
@@ -121,27 +119,23 @@ export default function LandingPage() {
               </div>
               <div className="flex w-full max-w-[830px] justify-between text-center">
                 <div className="flex flex-col gap-[4px]">
-                  <p className="wv-ibmplex wv-bold text-[16px]">
-                    รวบรวมข้อคิดเห็น
-                  </p>
+                  <p className="wv-ibmplex wv-bold text-b2">รวบรวมข้อคิดเห็น</p>
                   <p>จากการทำแบบสอบถามทางออนไลน์</p>
                 </div>
                 <div className="flex flex-col gap-[4px]">
-                  <p className="wv-ibmplex wv-bold text-[16px]">
+                  <p className="wv-ibmplex wv-bold text-b2">
                     ริเริ่มข้อถกเถียง
                   </p>
                   <p>จัดวงสนทนากับกลุ่มต่างๆ</p>
                 </div>
                 <div className="flex flex-col gap-[4px]">
-                  <p className="wv-ibmplex wv-bold text-[16px]">
+                  <p className="wv-ibmplex wv-bold text-b2">
                     เรียบเรียงข้อถกเถียง
                   </p>
                   <p>จัดระบบเป็นโครงสร้างข้อมูล</p>
                 </div>
                 <div className="flex flex-col gap-[4px]">
-                  <p className="wv-ibmplex wv-bold text-[16px]">
-                    รายงานข้อสรุป
-                  </p>
+                  <p className="wv-ibmplex wv-bold text-b2">รายงานข้อสรุป</p>
                   <p>สรุปผลเพื่อส่งต่อให้ สสร. ในอนาคต</p>
                 </div>
               </div>
@@ -162,7 +156,7 @@ export default function LandingPage() {
           id="headway"
         >
           <div className="w-full max-w-[960px] m-auto flex flex-col ">
-            <h2 className="text-[31px] md:text-[39px] wv-ibmplex font-semibold ">
+            <h2 className="heading-2 wv-ibmplex font-semibold ">
               ความคืบหน้าตอนนี้
             </h2>
             <p className="text-blue7">อัปเดตล่าสุดวันที่ วันที่ 16 ก.ย. 2568</p>
@@ -172,7 +166,7 @@ export default function LandingPage() {
                 src="/landing/previous-event.jpg"
                 alt="previous-event"
               />
-              <p className="text-[16px]">
+              <p className="text-b2">
                 เราได้พัฒนาแพลตฟอร์มที่พร้อมให้ผู้จัดกระบวนการนำไปใช้ในวงสนทนาต่างๆ
                 ที่หลากหลายเสร็จสมบูรณ์แล้ว
                 เพื่อให้สามารถรวบรวมข้อคิดเห็นและข้อเสนอแนะจากคนกลุ่มต่างๆ
@@ -183,17 +177,17 @@ export default function LandingPage() {
         </section>
         <section className="bg-blue2 px-[24px] py-[48px]" id="influence">
           <div className="w-full max-w-[960px] m-auto flex flex-col gap-[24px]">
-            <h2 className="text-[31px] md:text-[39px] wv-ibmplex font-semibold ">
+            <h2 className="heading-2 wv-ibmplex font-semibold ">
               มามีส่วนร่วมกัน!
             </h2>
-            <p className="text-[16px]">
+            <p className="text-b2">
               พอได้ผลลัพธ์ข้อคิดเห็นจากประชาชนในขั้นตอนแรกแล้ว
               เราได้นำหัวข้อเหล่านี้มาตั้งเป็นหัวข้อหลักของข้อถกเถียง
               ทั้งแบบออนไลน์ในเว็บไซต์นี้
               หรือวงพูดคุยที่จัดโดยผู้จัดกระบวนการภายนอก ทั้งสื่อมวลชน
               นักวิชาการ และองค์กรภาคประชาสังคม
             </p>
-            <p className="text-[16px]">
+            <p className="text-b2">
               ลองดูประเด็นตัวอย่างด้านล่างนี้ หากคุณสนใจ สามารถร่วมแสดงความเห็น
               และยังมีอีกหลายเรื่องให้สำรวจหรือสร้างประเด็นใหม่ได้
             </p>
@@ -219,7 +213,7 @@ export default function LandingPage() {
               className="flex justify-between items-center gap-[8px] px-[16px] py-[10px] bg-blue6 w-fit rounded-[48px] m-auto"
               href="/topics"
             >
-              <span className="text-[16px] wv-ibmplex font-semibold text-white">
+              <span className="text-button wv-ibmplex font-semibold text-white">
                 ดูประเด็นทั้งหมด
               </span>
               <img
@@ -239,23 +233,23 @@ export default function LandingPage() {
         <section className="py-[48px]">
           <div className="flex justify-between max-w-[960px] w-full m-auto space-x-[24px]">
             <div className="flex flex-col w-[50%]">
-              <span className="text-[#1C4CD3] text-[16px] wv-bold">
+              <span className="text-[#1C4CD3] text-b2 wv-bold">
                 จะเกิดอะไรขึ้นต่อไป
               </span>
-              <span className="text-[16px]">
+              <span className="text-b2">
                 หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน
                 เราจะคอยส่งข่าวให้คุณรู้!
               </span>
             </div>
             <div className="flex w-[50%] items-start">
               <input
-                className="w-full h-[40px] p-[16px] text-[13px] border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
+                className="w-full h-[40px] p-[16px] text-b3 border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
                 type="text"
                 name="email-enter"
                 id="email-enter"
                 placeholder="ใส่อีเมลของคุณ"
               />
-              <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-[16px] leading-[20px] text-[#FFFFFF]">
+              <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-button text-[#FFFFFF]">
                 ติดตาม
               </button>
             </div>

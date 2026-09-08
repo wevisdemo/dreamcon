@@ -77,7 +77,7 @@ export default function ModalTopic(props: PropTypes) {
             options={topicCategories}
             placeholder="เลือกหัวข้อ"
           />
-          <p className="absolute wv-ibmplex text-[16px] text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%]  translate-x-[-50%] bg-white px-[8px]">
+          <p className="absolute wv-ibmplex text-b2 text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%]  translate-x-[-50%] bg-white px-[8px]">
             {props.mode === 'create'
               ? 'เพิ่มข้อถกเถียงใหม่'
               : 'แก้ไขข้อถกเถียง'}
@@ -98,7 +98,7 @@ export default function ModalTopic(props: PropTypes) {
               src={props.createdByEvent.avatar_url}
               alt={`avatar-event-${props.createdByEvent.display_name}`}
             />
-            <span className="text-[10px] wv-bold">
+            <span className="text-label-sm wv-bold">
               {props.createdByEvent.display_name}
             </span>
           </div>

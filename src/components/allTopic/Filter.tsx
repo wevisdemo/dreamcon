@@ -197,7 +197,7 @@ export default function Filter(props: PropTypes) {
               isOwner={isEventOwner(props.filter.selectedEvent)}
             />
           )}
-          <p className="absolute whitespace-nowrap text-[16px] text-white wv-bold wv-ibmplex px-[16px] py-[8px] top-[-24px] left-[-50%] bg-blue6 rounded-l-full rounded-tr-full shrink-0">
+          <p className="absolute whitespace-nowrap text-b2 text-white wv-bold wv-ibmplex px-[16px] py-[8px] top-[-24px] left-[-50%] bg-blue6 rounded-l-full rounded-tr-full shrink-0">
             สำรวจข้อถกเถียง
           </p>
         </div>
@@ -239,7 +239,7 @@ export default function Filter(props: PropTypes) {
       <div className="flex gap-[12px] items-center justify-between w-full px-[24px]">
         <div className="flex gap-[4px] items-center w-full shrink-2">
           <span className="text-blue7 text-nowrap">เรียงลำดับ:</span>
-          <div className="flex w-[130px] text-[13px]">
+          <div className="flex w-[130px] text-b3">
             <button
               style={{
                 backgroundColor:
@@ -293,7 +293,7 @@ export default function Filter(props: PropTypes) {
               } transition-opacity duration-300`}
             />
             <div
-              className="flex overflow-scroll text-[13px] gap-[8px] no-scrollbar"
+              className="flex overflow-scroll text-b3 gap-[8px] no-scrollbar"
               {...categoryEvents}
               ref={categoryRef}
             >

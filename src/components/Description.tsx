@@ -1,12 +1,12 @@
 export default function Description() {
   return (
-    <div className="flex flex-col gap-[24px] text-[16px]">
+    <div className="flex flex-col gap-[24px] text-b2">
       <p>
         เราได้นำหัวข้อยอดนิยมจากแบบสอบถามออนไลน์มาตั้งเป็นหัวข้อหลักสำหรับตั้งต้นข้อถกเถียง
         ทั้งแบบออนไลน์ในเว็บไซต์นี้ หรือวงพูดคุยที่จัดโดยผู้จัดกระบวนการภายนอก
         ทั้งสื่อมวลชน นักวิชาการ และองค์กรภาคประชาสังคม
       </p>
-      <h4 className="wv-ibmplex wv-bold text-[24px]">
+      <h4 className="wv-ibmplex wv-bold heading-4">
         โครงสร้างข้อถกเถียงแบบนี้ คืออะไร?
       </h4>
       <p>

@@ -80,7 +80,7 @@ export default function FilterEvent(props: PropTypes) {
               whiteSpace: 'nowrap',
               overflow: 'hidden',
             }}
-            className={`z-10 w-[84px] text-[8px] text-center absolute bg-white rounded-full right-[0px] top-[0px] py-[4px] ${
+            className={`z-10 w-[84px] text-label-sm text-center absolute bg-white rounded-full right-[0px] top-[0px] py-[4px] ${
               shouldScroll ? 'px-[8px]' : ''
             } shadow-sm rounded-full overflow-hidden`}
           >
@@ -91,7 +91,7 @@ export default function FilterEvent(props: PropTypes) {
       {!props.isSelected && props.isOwner && (
         <>
           <div className="z-20 absolute w-[6px] h-[6px] rounded-full bg-black right-[6px] top-[24px] shadow-sm" />
-          <div className="z-10 w-[84px] text-[8px] text-white text-center absolute bg-black rounded-full right-[0px] top-[0px] py-[4px] shadow-sm rounded-full overflow-hidden wv-ibmplex whitespace-nowrap">
+          <div className="z-10 w-[84px] text-label-sm text-white text-center absolute bg-black rounded-full right-[0px] top-[0px] py-[4px] shadow-sm rounded-full overflow-hidden wv-ibmplex whitespace-nowrap">
             วงสนทนาของคุณ
           </div>
         </>
@@ -103,7 +103,7 @@ export default function FilterEvent(props: PropTypes) {
         onClick={() => props.onClick(props.event)}
       >
         {props.isSelected && (
-          <span className="text-[20px] text-white wv-bold absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.4)]">
+          <span className="text-b1 text-white wv-bold absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.4)]">
             {props.event.topic_counts}
           </span>
         )}
@@ -116,7 +116,7 @@ export default function FilterEvent(props: PropTypes) {
 
       <div className="relative  px-[5px]">
         <p
-          className={`text-[10px] text-gray5 px-[5px] py-[3px] text-center ${
+          className={`text-label-sm text-gray5 px-[5px] py-[3px] text-center ${
             props.isSelected
               ? 'bg-blue6 rounded-full text-white wv-semibold whitespace-nowrap'
               : 'truncate w-[75px]'

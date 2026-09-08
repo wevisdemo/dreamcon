@@ -155,10 +155,10 @@ const AdminPage = () => {
           <div className="flex justify-center gap-[12px] items-center mb-4">
             <div className="flex flex-col items-center">
               <div className="relative flex flex-col items-center wv-ibmplex text-center">
-                <div className=" top-0 bg-white w-full px-[16px] py-[8px] rounded-l-[20px] rounded-tr-[20px] text-blue7 text-[16px] font-bold">
+                <div className=" top-0 bg-white w-full px-[16px] py-[8px] rounded-l-[20px] rounded-tr-[20px] text-blue7 text-b2 font-bold">
                   ทั้งหมด
                 </div>
-                <div className="bg-white rounded-full h-[86px] w-[86px] flex items-center justify-center text-[36px] font-bold text-blue7">
+                <div className="bg-white rounded-full h-[86px] w-[86px] flex items-center justify-center heading-2 font-bold text-blue7">
                   {displayEvents.length}
                 </div>
                 <div className=" bottom-0 bg-white w-full px-2 rounded-full text-blue7 font-bold">
@@ -172,16 +172,14 @@ const AdminPage = () => {
                 setModalEvent({ ...modalEvent, isOpen: true });
               }}
             >
-              <div className="text-blue7 text-[48px] leading-[24px]">+</div>
-              <div className="text-blue7 text-[16px] font-bold">
-                เพิ่มวงสนทนา
-              </div>
+              <div className="text-blue7 heading-1 leading-none">+</div>
+              <div className="text-blue7 text-b2 font-bold">เพิ่มวงสนทนา</div>
             </div>
           </div>
-          <div className="flex justify-between items-center mb-4 gap-[30px] text-[13px]">
+          <div className="flex justify-between items-center mb-4 gap-[30px] text-b3">
             <div className="flex gap-[4px] items-center">
               <span className="text-blue7 text-nowrap">เรียงลำดับ:</span>
-              <div className="flex w-lg text-[13px]">
+              <div className="flex w-lg text-b3">
                 <button
                   style={{
                     backgroundColor:

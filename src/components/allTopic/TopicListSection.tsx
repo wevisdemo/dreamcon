@@ -121,13 +121,13 @@ export default function TopicListSection(props: PropTypes) {
                   src="/icon/plus.svg"
                   alt="plus-icon"
                 />
-                <span className="text-[16px] wv-bold wv-ibmplex">
+                <span className="text-b2 wv-bold wv-ibmplex">
                   เพิ่มข้อถกเถียงใหม่
                 </span>
               </button>
             )}
           </Droppable>
-          <div className="flex flex-col items-center gap-[4px] max-w-[600px] text-center text-blue7 text-[13px] wv-ibmplex">
+          <div className="flex flex-col items-center gap-[4px] max-w-[600px] text-center text-blue7 text-b3 wv-ibmplex">
             <img
               className="w-[16px] h-[16px]"
               src="/icon/warning.svg"

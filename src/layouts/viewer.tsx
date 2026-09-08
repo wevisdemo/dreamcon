@@ -52,23 +52,23 @@ const ViewerLayout: React.FC<{
             <section className="py-[48px]">
               <div className="flex justify-between max-w-[960px] w-full m-auto space-x-[24px]">
                 <div className="flex flex-col w-[50%]">
-                  <span className="text-[#1C4CD3] text-[16px] wv-bold">
+                  <span className="text-[#1C4CD3] text-b2 wv-bold">
                     จะเกิดอะไรขึ้นต่อไป
                   </span>
-                  <span className="text-[16px]">
+                  <span className="text-b2">
                     หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน
                     เราจะคอยส่งข่าวให้คุณรู้!
                   </span>
                 </div>
                 <div className="flex w-[50%] items-start">
                   <input
-                    className="w-full h-[40px] p-[16px] text-[13px] border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
+                    className="w-full h-[40px] p-[16px] text-b3 border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
                     type="text"
                     name="email-enter"
                     id="email-enter"
                     placeholder="ใส่อีเมลของคุณ"
                   />
-                  <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-[16px] leading-[20px] text-[#FFFFFF]">
+                  <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-button text-[#FFFFFF]">
                     ติดตาม
                   </button>
                 </div>

@@ -30,7 +30,7 @@ export default function AboutPage() {
           id="content"
         >
           <div className="w-full max-w-[960px] m-auto">
-            <div className="w-full flex flex-col md:flex-row gap-[40px] text-[16px]">
+            <div className="w-full flex flex-col md:flex-row gap-[40px] text-b2">
               <div className="w-full md:w-[50%] flex flex-col gap-[16px]">
                 <span>
                   Dream Con หรือ Dream Conversation for Constitution คือ
@@ -48,7 +48,7 @@ export default function AboutPage() {
                 </span>
               </div>
               <div className="w-full md:w-[50%] flex flex-col gap-[16px]">
-                <h4 className="md:text-[25px] text-[20px] wv-ibmplex font-bold">
+                <h4 className="heading-4 wv-ibmplex font-bold">
                   แผนการดำเนินงาน
                 </h4>
 
@@ -84,7 +84,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="flex flex-col md:flex-row gap-[8px] justify-between items-center mt-[30px]">
-              <h4 className="text-[20px] wv-ibmplex font-bold">
+              <h4 className="heading-4 wv-ibmplex font-bold">
                 จัดทำโครงการโดย
               </h4>
               <div className="w-full md:w-auto flex md:space-x-[16px] justify-between">
@@ -143,10 +143,10 @@ export default function AboutPage() {
         </section>
         <section className="bg-blue2 py-[48px]" id="influence">
           <div className="flex flex-col gap-[24px]">
-            <h2 className="w-full max-w-[960px] m-auto px-[24px]  text-[31px] md:text-[39px] wv-ibmplex font-bold ">
+            <h2 className="w-full max-w-[960px] m-auto px-[24px]  heading-2 wv-ibmplex font-bold ">
               หากคุณสนใจเรื่องนี้
             </h2>
-            <p className="w-full max-w-[960px] m-auto px-[24px]  text-[16px]">
+            <p className="w-full max-w-[960px] m-auto px-[24px]  text-b2">
               ระหว่างนี้สามารถไปเยี่ยมชมโปรเจกต์อื่น
               ที่เกี่ยวกับเรื่องรัฐธรรมนูญได้
             </p>
@@ -169,23 +169,23 @@ export default function AboutPage() {
         <section className="py-[48px]">
           <div className="flex justify-between max-w-[960px] w-full m-auto space-x-[24px]">
             <div className="flex flex-col w-[50%]">
-              <span className="text-[#1C4CD3] text-[16px] wv-bold">
+              <span className="text-[#1C4CD3] text-b2 wv-bold">
                 จะเกิดอะไรขึ้นต่อไป
               </span>
-              <span className="text-[16px]">
+              <span className="text-b2">
                 หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน
                 เราจะคอยส่งข่าวให้คุณรู้!
               </span>
             </div>
             <div className="flex w-[50%] items-start">
               <input
-                className="w-full h-[40px] p-[16px] text-[13px] border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
+                className="w-full h-[40px] p-[16px] text-b3 border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
                 type="text"
                 name="email-enter"
                 id="email-enter"
                 placeholder="ใส่อีเมลของคุณ"
               />
-              <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-[16px] leading-[20px] text-[#FFFFFF]">
+              <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-button text-[#FFFFFF]">
                 ติดตาม
               </button>
             </div>

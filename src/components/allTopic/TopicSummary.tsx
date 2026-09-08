@@ -66,9 +66,9 @@ export default function TopicSummary(props: PropTypes) {
           color="#2579F5"
         />
       )}
-      <p className="text-[16px] wv-bold wv-ibmplex"> {props.topic.title} </p>
+      <p className="text-b2 wv-bold wv-ibmplex"> {props.topic.title} </p>
       <div className="flex justify-between items-center h-[32px]">
-        <p className="text-accent underline text-[13px]">
+        <p className="text-accent underline text-b3">
           {props.topic.comments.length || 0} ความคิดเห็น
         </p>
         {!props.isSelected && !props.isReadOnly && (

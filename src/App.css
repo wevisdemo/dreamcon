@@ -18,6 +18,61 @@
   --color-gray7: #6e6e6e;
   --color-gray8: #454343;
   --color-green3: #d2fed6;
+
+  --text-num: 76px;
+  --text-num--line-height: 1.2;
+  --text-button: 16px;
+  --text-button--line-height: 1.2;
+  --text-label: 13px;
+  --text-label--line-height: 1;
+  --text-label-sm: 10px;
+  --text-label-sm--line-height: 1;
+  --text-b1: 20px;
+  --text-b1--line-height: 1.3;
+  --text-b2: 16px;
+  --text-b2--line-height: 1.3;
+  --text-b3: 13px;
+  --text-b3--line-height: 1.3;
+}
+
+@utility heading-1 {
+  font-size: 39px;
+  line-height: 1.25;
+  @variant md {
+    font-size: 49px;
+  }
+}
+
+@utility heading-2 {
+  font-size: 31px;
+  line-height: 1.25;
+  @variant md {
+    font-size: 39px;
+  }
+}
+
+@utility heading-3 {
+  font-size: 25px;
+  line-height: 1.25;
+  @variant md {
+    font-size: 31px;
+  }
+}
+
+@utility heading-4 {
+  font-size: 20px;
+  line-height: 1.25;
+  @variant md {
+    font-size: 25px;
+  }
+}
+
+@utility heading-5 {
+  font-size: 16px;
+  line-height: 1.25;
+  @variant md {
+    font-size: 20px;
+  }
 }
 
 .box-1 {

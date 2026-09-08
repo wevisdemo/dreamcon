@@ -25,7 +25,7 @@ export default function MenuPopover(props: PropTypes) {
           />
           <span
             style={{ pointerEvents: 'none' }}
-            className="text-black text-[13px] "
+            className="text-black text-b3 "
           >
             แก้ไข
           </span>
@@ -52,7 +52,7 @@ export default function MenuPopover(props: PropTypes) {
           />
           <span
             style={{ pointerEvents: 'none' }}
-            className="text-black text-[13px]"
+            className="text-black text-b3"
           >
             {props.isPinned ? 'ถอนหมุด' : 'ปักหมุด'}
           </span>
@@ -73,7 +73,7 @@ export default function MenuPopover(props: PropTypes) {
           />
           <span
             style={{ pointerEvents: 'none' }}
-            className="text-[#B30000] text-[13px]"
+            className="text-[#B30000] text-b3"
           >
             ลบ
           </span>

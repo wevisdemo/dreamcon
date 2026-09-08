@@ -53,7 +53,7 @@ export default function TopicTemplate(props: PropTypes) {
         </div>
         <div className="w-full h-full header-section flex flex-col gap-[10px]">
           {getOwnerEvent() && (
-            <div className="flex gap-[8px] items-center text-[10px] pl-[16px]">
+            <div className="flex gap-[8px] items-center text-label-sm pl-[16px]">
               <img
                 className="rounded-full w-[25px] h-[25px]"
                 src={getOwnerEvent()?.avatar_url}
@@ -81,13 +81,13 @@ export default function TopicTemplate(props: PropTypes) {
       </div>
 
       <div className="comment-section pl-[24px] pt-[10px] pb-[24px] overflow-hidden ">
-        <p className="text-[16px] wv-bold wv-ibmplex mt-[24px]">
+        <p className="text-b2 wv-bold wv-ibmplex mt-[24px]">
           {props.topic.comments.length} ความคิดเห็น
         </p>
         <div className="comment-section-body flex flex-col gap-[24px]">
           <div className="view-wrapper mt-[16px]">
             <div className="relative">
-              <p className="relative bg-lightGreen px-[10px] py-[4px] w-fit rounded-[16px] text[13px] z-10">
+              <p className="relative bg-lightGreen px-[10px] py-[4px] w-fit rounded-[16px] text-b3 z-10">
                 {getCommentsByView(CommentView.AGREE).length} เห็นด้วย
               </p>
               <div className="absolute w-[40px] left-[-24px] bottom-[50%] rounded-bl-[16px] border-solid border-l-[2px] border-b-[2px] border-blue3 h-[1000vh]"></div>
@@ -101,7 +101,7 @@ export default function TopicTemplate(props: PropTypes) {
           </div>
           <div className="view-wrapper">
             <div className="relative">
-              <p className="relative bg-lightYellow px-[10px] py-[4px] w-fit rounded-[16px] text[13px] z-10">
+              <p className="relative bg-lightYellow px-[10px] py-[4px] w-fit rounded-[16px] text-b3 z-10">
                 {getCommentsByView(CommentView.PARTIAL_AGREE).length}{' '}
                 เห็นด้วยบางส่วน
               </p>
@@ -116,7 +116,7 @@ export default function TopicTemplate(props: PropTypes) {
           </div>
           <div className="view-wrapper">
             <div className="relative">
-              <p className="relative bg-lightRed px-[10px] py-[4px] w-fit rounded-[16px] text[13px] z-10">
+              <p className="relative bg-lightRed px-[10px] py-[4px] w-fit rounded-[16px] text-b3 z-10">
                 {getCommentsByView(CommentView.DISAGREE).length} ไม่เห็นด้วย
               </p>
               <div className="absolute w-[40px] left-[-24px] bottom-[50%] rounded-bl-[16px] border-solid border-l-[2px] border-b-[2px] border-blue3 h-[1000vh]"></div>

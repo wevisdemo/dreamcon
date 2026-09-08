@@ -22,7 +22,7 @@ export default function AlertPopup({
   return (
     <>
       {visible && (
-        <div className="bg-gray8 text-white text-[10px] py-[4px] px-[6px] rounded-[3px] shadow-lg flex flex-col items-center gap-[2px] z-50">
+        <div className="bg-gray8 text-white text-label-sm py-[4px] px-[6px] rounded-[3px] shadow-lg flex flex-col items-center gap-[2px] z-50">
           <span className="wv-bold">
             🎉 {mode === 'copy' ? 'คัดลอกไปยังคลิปบอร์ดแล้ว' : 'ย้ายแล้ว!'}
           </span>

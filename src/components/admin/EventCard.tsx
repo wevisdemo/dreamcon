@@ -18,7 +18,7 @@ export default function EventCard(props: PropTypes) {
     <div className="bg-white px-[16px] py-[24px] rounded-[15px] max-w-[940px] w-full flex">
       {/* Left Section */}
       <div className="flex flex-col items-center max-w-[150px] w-full gap-[16px]">
-        <div className="w-[25px] h-[25px] flex items-center justify-center text-blue6 border-1 border-blue6 rounded-full text-[13px] font-bold">
+        <div className="w-[25px] h-[25px] flex items-center justify-center text-blue6 border-1 border-blue6 rounded-full text-label font-bold">
           {props.index}
         </div>
         <img
@@ -26,7 +26,7 @@ export default function EventCard(props: PropTypes) {
           alt="event-avatar"
           className="w-[96px] h-[96px] rounded-full"
         />
-        <p className="font-bold text-center text-[16px]">
+        <p className="font-bold text-center text-b2">
           {props.event.display_name}
         </p>
         <button
@@ -40,14 +40,16 @@ export default function EventCard(props: PropTypes) {
 
       <div className="flex w-full h-auto gap-[16px]">
         {/* Middle Section */}
-        <div className="w-1/2 h-fit p-[16px] bg-gray1 rounded-[8px] flex flex-col gap-[16px] text-[13px]">
+        <div className="w-1/2 h-fit p-[16px] bg-gray1 rounded-[8px] flex flex-col gap-[16px] text-b3">
           <div className="flex flex-col gap-[6px]">
-            <h2 className="font-bold">{props.event.title_en}</h2>
+            <h2 className="heading-5 wv-ibmplex font-bold">
+              {props.event.title_en}
+            </h2>
             <p className="">{props.event.title_th}</p>
           </div>
           <div className="flex flex-col gap-[6px]">
-            <p className="text-[10px] mt-[8px]">{props.event.description}</p>
-            <ul className="text-[8px] text-gray7 text-gray-600 flex flex-col gap-[2px]">
+            <p className="text-b3 mt-[8px]">{props.event.description}</p>
+            <ul className="text-label-sm text-gray7 text-gray-600 flex flex-col gap-[2px]">
               <li className="flex items-center gap-[8px]">
                 <img src="/icon/location.svg" alt="location-icon" /> ที่{' '}
                 {props.event.location}
@@ -67,7 +69,7 @@ export default function EventCard(props: PropTypes) {
             </ul>
           </div>
 
-          <p className="flex gap-[4px] text-blue7 text-[10px]">
+          <p className="flex gap-[4px] text-blue7 text-label-sm">
             ลิงก์ข่าว{' '}
             <a href={props.event.news_link} className="underline ">
               {props.event.news_link}

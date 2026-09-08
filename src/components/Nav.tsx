@@ -48,7 +48,7 @@ export default function Nav(): ReactElement {
       {isReadOnly() && (
         <div className="flex ">
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-button ${
               currentPage.value === 'about' ? 'bg-blue2' : ''
             }`}
             href="/about"
@@ -56,7 +56,7 @@ export default function Nav(): ReactElement {
             เกี่ยวกับโครงการ
           </a>
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-[16px] ${
+            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-button ${
               currentPage.value === 'all-topic' || currentPage.value === 'topic'
                 ? 'bg-blue2'
                 : ''

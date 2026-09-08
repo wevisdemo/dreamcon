@@ -341,7 +341,7 @@ export default function TopicPage() {
             <div className="w-full h-[32px] bg-gray2 flex justify-center items-center">
               <div className="w-full max-w-[920px] flex">
                 <a
-                  className="text-accent text-[13px] wv-ibmplex underline!"
+                  className="text-accent text-label wv-ibmplex underline!"
                   href={getHomeLink()}
                 >
                   กลับหน้าหลัก
