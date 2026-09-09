@@ -30,8 +30,22 @@ Because the constitution may sometimes feel distant, we invite everyone to share
 
 ## Prerequisites
 
-- [pnpm](https://pnpm.io/)
-- Java 11+ (required by the Firestore emulator)
+You need Node 24, [pnpm](https://pnpm.io/), Java 11+ (for the Firestore emulator) and, to run the tests, a Chromium build for Playwright. Get them either way:
+
+**With Nix** (optional, but nothing then depends on host tooling)
+
+`flake.nix` provides all of the above. With [direnv](https://direnv.net/), run `direnv allow` once and every command works as written; otherwise prefix them with `nix develop --command`, e.g. `nix develop --command pnpm dev`.
+
+**Without Nix**
+
+Install Node, pnpm and a JDK yourself, then fetch the browser once:
+
+```
+pnpm install
+pnpm exec playwright install chromium
+```
+
+The Nix shell sets `PLAYWRIGHT_BROWSERS_PATH` to a browser from nixpkgs, so `playwright install` is neither needed nor wanted there.
 
 ## Command
 
@@ -75,7 +89,31 @@ Other commands:
 
 ### Seed data
 
-Emulator data is in-memory and nothing is exported on exit, so every startup begins from the same fixed state defined in [`src/script/seedEmulator.ts`](src/script/seedEmulator.ts). Worth highlight that one admin account is created: `admin@dreamcon.local` with `dreamcon` password.
+Emulator data is in-memory and nothing is exported on exit, so every startup begins from the same fixed state defined in [`src/script/seedEmulator.ts`](src/script/seedEmulator.ts). Worth highlight that one admin account is created, from the `ADMIN_EMAIL` / `ADMIN_PASSWORD` constants in [`src/utils/firebaseEmulator.ts`](src/utils/firebaseEmulator.ts).
+
+## E2E tests
+
+[Playwright](https://playwright.dev/) drives a real browser against the seeded emulators.
+
+| Command        | Description                 |
+| -------------- | --------------------------- |
+| `pnpm test`    | Run the suite headless      |
+| `pnpm test:ui` | Run it in the Playwright UI |
+
+Both start their own `pnpm dev` and re-seed the emulator first, so the fixtures in `src/script/seedEmulator.ts` are the contract the specs assert against. Extend those fixtures when a test needs new fixed data, rather than creating it ad hoc in the test.
+
+An existing server is never reused — one already on port 5173 could be `pnpm dev:prod`, and the write specs would then create documents in the real Firestore — so stop your dev server before running the suite.
+
+Where the specs live:
+
+- One spec per page, next to it and sharing its name: `src/pages/AllTopic.tsx` is tested by `src/pages/AllTopic.spec.ts` (`About.tsx` has no spec yet).
+- Shared setup and helpers are in `src/utils/e2e/`.
+- Inside a spec, `describe` blocks separate anonymous, writer and admin access.
+- A flow crossing pages belongs to the page it starts from: the admin share link is in `Admin.spec.ts` even though it ends on `/topics`.
+- Being inside `src` means `tsc -b` typechecks the specs; Vite never bundles them, since nothing in the app imports them.
+- Tests run serially on one worker because they share a single emulator.
+
+> For Nix users: `@playwright/test` is pinned exactly to the `playwright-driver` version in `flake.nix`, because Playwright refuses to launch a browser build from a different version. Bumping one means bumping the other (`nix flake update`, then `pnpm add -D -E @playwright/test@<version printed by the dev shell>`). Without Nix, `pnpm exec playwright install` fetches whatever matches the installed package.
 
 Notes:
 

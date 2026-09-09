@@ -28,3 +28,10 @@ out
 
 # Firebase emulator
 *-debug.log
+
+# Nix / direnv
+.direnv
+
+# Playwright
+test-results
+playwright-report

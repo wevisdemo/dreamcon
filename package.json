@@ -10,7 +10,9 @@
     "seed:emulator": "tsx src/script/seedEmulator.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint --fix .",
-    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\" playwright.config.ts",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
     "prepare": "husky"
   },
   "dependencies": {
@@ -36,6 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@playwright/test": "1.61.1",
     "@types/d3-dsv": "^3.0.7",
     "@types/dotenv": "^6.1.1",
     "@types/js-cookie": "^3.0.6",

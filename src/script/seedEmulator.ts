@@ -15,6 +15,8 @@ import type { TopicDB } from '../types/topic';
 import type { Writer } from '../types/writer';
 import { eventAvatars } from '../data/event';
 import {
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
   AUTH_EMULATOR_PORT,
   EMULATOR_FIREBASE_CONFIG,
   EMULATOR_HOST,
@@ -24,9 +26,6 @@ import {
 // Force emulator mode so this script can never reach the production project.
 // `initDB` reads this when it is called, below.
 process.env.VITE_USE_FIREBASE_EMULATOR = 'true';
-
-const ADMIN_EMAIL = 'admin@dreamcon.local';
-const ADMIN_PASSWORD = 'dreamcon';
 
 /** Fixed clock so seeded documents are byte-identical on every run. */
 const NOW = new Date('2025-06-01T09:00:00.000Z');

@@ -7,6 +7,10 @@
 - After finishing any task, lint and format code with coresponded script in package.json before declaring task as done
 - DO NOT write arbitrary low value comments, especially when the code is self-explainable
 - Human will get in the loop and edit some file along the way. If you spot it, please respect those changes
+- This repo ships a Nix dev shell providing Node, pnpm, Java and a Playwright browser. If `flake.nix` is present, run commands through it (direnv loads it, otherwise `nix develop --command <cmd>`) rather than relying on host tooling
+- After any task that touches user-facing behaviour, run `pnpm test` and make it pass before declaring the task done
+- E2E specs sit next to their page and share its name (`src/pages/AllTopic.tsx` → `src/pages/AllTopic.spec.ts`); shared setup and helpers live in `src/utils/e2e/`. When changing a page, modal, permission or auth flow, update that page's spec in the same change; a flow spanning pages belongs to the page it starts from
+- Tests run against the seeded emulator; if a test needs new fixed data, extend `src/script/seedEmulator.ts` rather than creating it ad hoc in the test
 
 ## Typography
 

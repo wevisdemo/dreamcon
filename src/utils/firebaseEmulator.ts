@@ -12,6 +12,10 @@ export const EMULATOR_FIREBASE_CONFIG = {
   apiKey: 'demo-api-key',
 };
 
+/** The only account `seedEmulator.ts` creates; signs in to /admin locally. */
+export const ADMIN_EMAIL = 'admin@dreamcon.local';
+export const ADMIN_PASSWORD = 'dreamcon';
+
 export const isEmulatorEnabled = (value: string | undefined): boolean =>
   value === 'true' || value === '1';
 
