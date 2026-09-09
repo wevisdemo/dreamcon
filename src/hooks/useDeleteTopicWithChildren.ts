@@ -30,7 +30,7 @@ export const useDeleteTopicWithChildren = () => {
       return;
     }
 
-    if (!isWriterOwner(topic.event_id)) {
+    if (!isWriterOwner(topic.event_ids)) {
       setError('You do not have permission to edit this comment');
       setLoading(false);
       return;

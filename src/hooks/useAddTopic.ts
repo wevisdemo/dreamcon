@@ -14,8 +14,8 @@ export const useAddTopic = () => {
     try {
       const topicsCollection = collection(db, 'topics');
 
-      if (!payload.event_id) {
-        setError('No event_id found in Add New Topic Payload');
+      if (payload.event_ids.length === 0) {
+        setError('No event_ids found in Add New Topic Payload');
         setLoading(false);
         return;
       }
@@ -24,7 +24,7 @@ export const useAddTopic = () => {
       const TopicDBPayload: CreateTopicDBPayload = {
         title: payload.title,
         category: payload.category,
-        event_id: payload.event_id,
+        event_ids: payload.event_ids,
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,

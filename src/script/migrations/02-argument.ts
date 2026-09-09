@@ -1,9 +1,9 @@
 import { collection, getDocs } from 'firebase/firestore';
-import { DreamConEventDB } from '../types/event';
+import { DreamConEventDB } from '../../types/event';
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
-import { initDB } from './firestore';
-import { CreateTopicDBPayload, TopicDB } from '../types/topic';
+import { initDB } from '../firestore';
+import { CreateTopicDBPayload, TopicDB } from '../../types/topic';
 import { addDoc, CollectionReference } from 'firebase/firestore';
 
 const { db } = initDB();
@@ -102,7 +102,7 @@ const mapArgumentsToTopic = (
     return {
       ref_id: arg.ArgumentId,
       title: arg.Argument,
-      event_id: event?.id || '',
+      event_ids: event ? [event.id] : [],
       category: arg.Tag,
       created_at: new Date(),
       updated_at: new Date(),

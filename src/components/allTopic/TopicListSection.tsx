@@ -35,7 +35,7 @@ export default function TopicListSection(props: PropTypes) {
       // sorted by filter
       const isFilteredByEvent =
         props.topicFilter.selectedEvent === null ||
-        topic.event_id === props.topicFilter.selectedEvent.id;
+        topic.event_ids.includes(props.topicFilter.selectedEvent.id);
       const isFilteredByCategory =
         props.topicFilter.category === 'ทั้งหมด' ||
         topic.category === props.topicFilter.category;

@@ -81,7 +81,8 @@ export default function Filter(props: PropTypes) {
 
   const getEventHighlightedTopic = (event: DreamConEvent) => {
     const filteredTopics = props.lightWeightTopics.filter(
-      topic => topic.event_id === event.id && topic.comment_level1_count >= 10
+      topic =>
+        topic.event_ids.includes(event.id) && topic.comment_level1_count >= 10
     );
     if (filteredTopics.length > 0) {
       return filteredTopics[0].title;
@@ -106,8 +107,8 @@ export default function Filter(props: PropTypes) {
 
   // TODO: this is for temp fix, should be controller by fetch event
   const getFreshFilteredEventData = (): DreamConEvent | null => {
-    const topicCount = props.lightWeightTopics.filter(
-      topic => topic.event_id === props.filter.selectedEvent?.id
+    const topicCount = props.lightWeightTopics.filter(topic =>
+      topic.event_ids.includes(props.filter.selectedEvent?.id ?? '')
     ).length;
 
     if (props.filter.selectedEvent !== null) {

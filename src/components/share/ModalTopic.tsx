@@ -45,7 +45,7 @@ export default function ModalTopic(props: PropTypes) {
       case 'create':
         props.onSubmit(props.mode, {
           title: text,
-          event_id: props.defaultState?.event_id,
+          event_ids: props.defaultState?.event_ids,
           category: category === '' ? 'ไม่ระบุ' : category,
         });
         break;
@@ -54,7 +54,7 @@ export default function ModalTopic(props: PropTypes) {
           id: props.defaultState?.id,
           title: text,
           category: category === '' ? 'ไม่ระบุ' : category,
-          event_id: props.defaultState?.event_id,
+          event_ids: props.defaultState?.event_ids,
         });
         break;
     }

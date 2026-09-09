@@ -20,8 +20,8 @@ export const useAddComment = () => {
       return;
     }
 
-    if (!payload.event_id) {
-      setError('No event_id found in Add New Comment Payload');
+    if (payload.event_ids.length === 0) {
+      setError('No event_ids found in Add New Comment Payload');
       setLoading(false);
       return;
     }
@@ -34,7 +34,7 @@ export const useAddComment = () => {
         reason: payload.reason,
         parent_comment_ids: payload.parent_comment_ids || [],
         parent_topic_id: payload.parent_topic_id,
-        event_id: payload.event_id || '',
+        event_ids: payload.event_ids,
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,

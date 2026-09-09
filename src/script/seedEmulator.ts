@@ -7,7 +7,6 @@
  */
 import { doc, writeBatch } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { FirebaseError } from 'firebase/app';
 import { initDB } from './firestore';
 import { CommentView } from '../types/comment';
 import type { CommentDB } from '../types/comment';
@@ -90,7 +89,7 @@ const topics: TopicDB[] = [
     ref_id: 'SHEET-001',
     title: 'รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร',
     category: 'สิทธิเสรีภาพ',
-    event_id: 'ev-bangkok',
+    event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-28),
     updated_at: daysFromSeed(-3),
     notified_at: daysFromSeed(-3),
@@ -99,7 +98,7 @@ const topics: TopicDB[] = [
     id: 'tp-parliament',
     title: 'ที่มาของสมาชิกวุฒิสภาควรเป็นแบบใด',
     category: 'รัฐสภา',
-    event_id: 'ev-bangkok',
+    event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-27),
     updated_at: daysFromSeed(-2),
     notified_at: daysFromSeed(-2),
@@ -109,7 +108,7 @@ const topics: TopicDB[] = [
     id: 'tp-court',
     title: 'ศาลรัฐธรรมนูญควรมีอำนาจตรวจสอบเรื่องใดบ้าง',
     category: 'ศาล รธน.',
-    event_id: 'ev-bangkok',
+    event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-26),
     updated_at: daysFromSeed(-26),
     notified_at: daysFromSeed(-26),
@@ -118,7 +117,7 @@ const topics: TopicDB[] = [
     id: 'tp-environment',
     title: 'สิทธิในสิ่งแวดล้อมที่ดีควรถูกบัญญัติไว้หรือไม่',
     category: 'สิ่งแวดล้อม',
-    event_id: 'ev-bangkok',
+    event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-24),
     updated_at: daysFromSeed(-4),
     notified_at: daysFromSeed(-4),
@@ -127,7 +126,7 @@ const topics: TopicDB[] = [
     id: 'tp-welfare',
     title: 'รัฐสวัสดิการถ้วนหน้าควรเป็นหน้าที่ของรัฐหรือไม่',
     category: 'สวัสดิการ',
-    event_id: 'ev-bangkok',
+    event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-22),
     updated_at: daysFromSeed(-6),
     notified_at: daysFromSeed(-6),
@@ -136,7 +135,7 @@ const topics: TopicDB[] = [
     id: 'tp-other',
     title: 'ประเด็นอื่น ๆ ที่อยากเห็นในรัฐธรรมนูญฉบับใหม่',
     category: 'อื่น ๆ',
-    event_id: 'ev-bangkok',
+    event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-21),
     updated_at: daysFromSeed(-7),
     notified_at: daysFromSeed(-7),
@@ -146,7 +145,7 @@ const topics: TopicDB[] = [
     ref_id: 'SHEET-002',
     title: 'ท้องถิ่นควรมีอำนาจจัดเก็บภาษีของตัวเองหรือไม่',
     category: 'การปกครองส่วนท้องถิ่น',
-    event_id: 'ev-chiangmai',
+    event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-18),
     updated_at: daysFromSeed(-5),
     notified_at: daysFromSeed(-5),
@@ -155,7 +154,7 @@ const topics: TopicDB[] = [
     id: 'tp-education',
     title: 'รัฐควรรับรองสิทธิการศึกษาฟรีถึงระดับใด',
     category: 'การศึกษา',
-    event_id: 'ev-chiangmai',
+    event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-16),
     updated_at: daysFromSeed(-8),
     notified_at: daysFromSeed(-8),
@@ -164,7 +163,7 @@ const topics: TopicDB[] = [
     id: 'tp-unspecified',
     title: 'ข้อเสนอที่ยังไม่ได้จัดหมวดหมู่',
     category: 'ไม่ระบุ',
-    event_id: 'ev-chiangmai',
+    event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-14),
     updated_at: daysFromSeed(-14),
     notified_at: daysFromSeed(-14),
@@ -174,7 +173,7 @@ const topics: TopicDB[] = [
     id: 'tp-ssr',
     title: 'สสร. ควรมาจากการเลือกตั้งทั้งหมดหรือไม่',
     category: 'สสร.',
-    event_id: 'ev-chiangmai',
+    event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-1),
     updated_at: daysFromSeed(-1),
     notified_at: daysFromSeed(-1),
@@ -362,7 +361,7 @@ const comments: CommentDB[] = seedComments.map(c => ({
   reason: c.reason,
   parent_comment_ids: c.parents,
   parent_topic_id: c.topic,
-  event_id: topics.find(t => t.id === c.topic)!.event_id,
+  event_ids: topics.find(t => t.id === c.topic)!.event_ids,
   created_at: daysFromSeed(c.ageInDays),
   updated_at: daysFromSeed(c.ageInDays),
   notified_at: daysFromSeed(c.ageInDays),
@@ -425,6 +424,10 @@ const main = async () => {
 
   const { db, auth } = initDB();
 
+  // Writers can only be created by a signed-in user (see firestore.rules).
+  // clearEmulators() wiped the auth accounts, so this always creates a fresh one.
+  await createUserWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
+
   const batch = writeBatch(db);
   events.forEach(({ id, ...data }) => batch.set(doc(db, 'events', id), data));
   topics.forEach(({ id, ...data }) => batch.set(doc(db, 'topics', id), data));
@@ -433,17 +436,6 @@ const main = async () => {
   );
   writers.forEach(({ id, ...data }) => batch.set(doc(db, 'writers', id), data));
   await batch.commit();
-
-  try {
-    await createUserWithEmailAndPassword(auth, ADMIN_EMAIL, ADMIN_PASSWORD);
-  } catch (err) {
-    if (
-      !(err instanceof FirebaseError) ||
-      err.code !== 'auth/email-already-in-use'
-    ) {
-      throw err;
-    }
-  }
 
   console.log(
     `[seed] ${events.length} events, ${topics.length} topics, ${comments.length} comments, ${writers.length} writers`

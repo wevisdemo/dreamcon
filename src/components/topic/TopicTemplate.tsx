@@ -30,7 +30,7 @@ export default function TopicTemplate(props: PropTypes) {
 
   const getOwnerEvent = (): DreamConEvent | null => {
     const event = eventContext.events.find(
-      event => event.id === props.topic.event_id
+      event => event.id === props.topic.event_ids[0]
     );
     if (event) {
       return event;

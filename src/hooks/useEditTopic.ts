@@ -7,7 +7,7 @@ import { usePermission } from './usePermission';
 export const useEditTopic = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { isWriterOwner, getWriterEvent } = usePermission();
+  const { isWriterOwner } = usePermission();
 
   const editTopic = async (payload: AddOrEditTopicPayload) => {
     setLoading(true);
@@ -19,14 +19,7 @@ export const useEditTopic = () => {
       return;
     }
 
-    const writerEvent = getWriterEvent();
-    if (!writerEvent) {
-      setError('No writer event found');
-      setLoading(false);
-      return;
-    }
-
-    if (!isWriterOwner(payload.event_id)) {
+    if (!isWriterOwner(payload.event_ids)) {
       setError('You do not have permission to edit this comment');
       setLoading(false);
       return;
@@ -39,7 +32,7 @@ export const useEditTopic = () => {
       const TopicDBPayload: UpdateTopicDBPayload = {
         title: payload.title,
         category: payload.category,
-        event_id: writerEvent.id,
+        event_ids: payload.event_ids,
         updated_at: timeNow,
         notified_at: timeNow,
       };

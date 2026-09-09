@@ -79,5 +79,5 @@ Emulator data is in-memory and nothing is exported on exit, so every startup beg
 
 Notes:
 
-- The emulator uses `firestore.rules`, which is fully open. Production rules are managed in the Firebase console; this file is not deployed by any script here.
+- The emulator uses `firestore.rules`, a hand-maintained mirror of the production rules. Production rules are managed in the Firebase console; this file is not deployed by any script here, so keep the two in sync manually.
 - Scripts in `src/script/` (e.g. the Firestore dump) still target production by default. Prefix with `VITE_USE_FIREBASE_EMULATOR=true` to point them at the emulator.

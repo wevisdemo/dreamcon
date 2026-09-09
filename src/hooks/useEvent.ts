@@ -81,11 +81,10 @@ export const useEvent = () => {
       const topicsSnapshot = await getDocs(topicsCollection);
 
       topicsSnapshot.docs.forEach(doc => {
-        const topic = doc.data();
-        if (topic.event_id) {
-          topicCountsMap[topic.event_id] =
-            (topicCountsMap[topic.event_id] || 0) + 1;
-        }
+        const eventIds: string[] = doc.data().event_ids ?? [];
+        eventIds.forEach(id => {
+          topicCountsMap[id] = (topicCountsMap[id] || 0) + 1;
+        });
       });
       events.forEach(event => {
         event.topic_counts = topicCountsMap[event.id] || 0;

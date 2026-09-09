@@ -22,7 +22,7 @@ export const useDeleteCommentWithChildren = () => {
       setError('No comment ID provided for deletion');
       return;
     }
-    const isOwner = isWriterOwner(comment.event_id);
+    const isOwner = isWriterOwner(comment.event_ids);
     if (!isOwner) {
       setError('You do not have permission to delete this comment');
       return;

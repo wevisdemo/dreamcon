@@ -1,11 +1,11 @@
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 // import { collection, getDocs, query, where } from 'firebase/firestore';
-import { initDB } from './firestore';
-import { DreamConEventDB } from '../types/event';
+import { initDB } from '../firestore';
+import { DreamConEventDB } from '../../types/event';
 import * as XLSX from 'xlsx';
 import * as fs from 'fs';
-import { TopicDB } from '../types/topic';
-import { CommentView, CreateCommentDBPayload } from '../types/comment';
+import { TopicDB } from '../../types/topic';
+import { CommentView, CreateCommentDBPayload } from '../../types/comment';
 const { db } = initDB();
 
 const newEventDisplays = ['Dream Con x The Active', 'TIJ Youth Dialogue'];
@@ -36,7 +36,10 @@ const getEventsByDisplayName = async (displayNames: string[]) => {
 
 const getTopicsByEventId = async (eventId: string): Promise<TopicDB[]> => {
   const topicsCollection = collection(db, 'topics');
-  const topicsQuery = query(topicsCollection, where('event_id', '==', eventId));
+  const topicsQuery = query(
+    topicsCollection,
+    where('event_ids', 'array-contains', eventId)
+  );
   const snapshot = await getDocs(topicsQuery);
   return snapshot.docs.map(
     doc =>
@@ -228,7 +231,7 @@ const convertToCommentDB = (
     reason: commentSheet.Comment || '',
     parent_comment_ids: parentCommentIDs, // this is still not an id from firestore
     parent_topic_id: topicID,
-    event_id: event.id,
+    event_ids: [event.id],
     created_at: new Date(),
     updated_at: new Date(),
     notified_at: new Date(),

@@ -3,7 +3,7 @@ export interface Comment {
   comment_view: CommentView;
   reason: string;
   parent_comment_ids: string[];
-  event_id: string;
+  event_ids: string[];
   parent_topic_id: string;
   comments: Comment[];
   created_at: Date;
@@ -18,7 +18,7 @@ export interface CommentDB {
   reason: string;
   parent_comment_ids: string[];
   parent_topic_id: string;
-  event_id: string;
+  event_ids: string[];
   created_at: Date;
   updated_at: Date;
   notified_at: Date;
@@ -43,5 +43,5 @@ export interface AddOrEditCommentPayload {
   reason: string;
   parent_comment_ids?: string[];
   parent_topic_id?: string;
-  event_id: string;
+  event_ids: string[];
 }

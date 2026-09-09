@@ -370,7 +370,7 @@ export default function TopicPage() {
                   editTopic({
                     id: selectedTopic.value?.id,
                     title: selectedTopic.value?.title || '',
-                    event_id: selectedTopic.value?.event_id || '',
+                    event_ids: selectedTopic.value?.event_ids ?? [],
                     category: newCategory as TopicCategory,
                   });
                 }}
@@ -378,7 +378,7 @@ export default function TopicPage() {
                   editTopic({
                     id: selectedTopic.value?.id,
                     title: newTitle,
-                    event_id: selectedTopic.value?.event_id || '',
+                    event_ids: selectedTopic.value?.event_ids ?? [],
                     category: selectedTopic.value?.category as TopicCategory,
                   });
                 }}
@@ -388,7 +388,7 @@ export default function TopicPage() {
                     parent_comment_ids: [],
                     comment_view: commentView,
                     reason,
-                    event_id: getCreatedByEvent()?.id || '',
+                    event_ids: [getCreatedByEvent()?.id ?? ''].filter(Boolean),
                   });
                 }}
                 onPinTopic={() => {

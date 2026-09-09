@@ -1,6 +1,6 @@
 import { collection, doc, runTransaction } from 'firebase/firestore';
-import { AddOrEditEventPayload, CreateEventDBPayload } from '../types/event';
-import { initDB } from './firestore';
+import { AddOrEditEventPayload, CreateEventDBPayload } from '../../types/event';
+import { initDB } from '../firestore';
 
 const { db } = initDB();
 

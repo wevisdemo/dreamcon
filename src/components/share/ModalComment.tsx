@@ -49,7 +49,7 @@ export default function ModalComment(props: PropTypes) {
   const getParentEvent = (): DreamConEvent | null => {
     if (props.fromTopic) {
       const event = props.events.find(
-        event => event.id === props.fromTopic?.event_id
+        event => event.id === props.fromTopic?.event_ids[0]
       );
       if (event) {
         return event;
@@ -57,7 +57,7 @@ export default function ModalComment(props: PropTypes) {
     }
     if (props.fromComment) {
       const event = props.events.find(
-        event => event.id === props.fromComment?.event_id
+        event => event.id === props.fromComment?.event_ids[0]
       );
       if (event) {
         return event;
@@ -76,7 +76,7 @@ export default function ModalComment(props: PropTypes) {
             reason: text,
             parent_comment_ids: props.defaultState?.parent_comment_ids,
             parent_topic_id: props.defaultState?.parent_topic_id,
-            event_id: props.createdByEvent.id,
+            event_ids: props.defaultState?.event_ids ?? [],
           });
           break;
         case 'create':
@@ -85,7 +85,7 @@ export default function ModalComment(props: PropTypes) {
             reason: text,
             parent_comment_ids: props.parentCommentIds,
             parent_topic_id: props.parentTopicId,
-            event_id: props.createdByEvent.id,
+            event_ids: [props.createdByEvent.id],
           });
           break;
       }

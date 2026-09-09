@@ -14,41 +14,9 @@ import { LightWeightTopic, Topic, TopicDB } from '../types/topic';
 import { CommentDB } from '../types/comment';
 import { convertTopicDBToTopic } from '../utils/mapping';
 
-// filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useTopic.ts
-
 export const useTopic = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const getTopicByEventId = async (eventId: string): Promise<Topic[]> => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const topicsCollection = collection(db, 'topics');
-      const q = query(topicsCollection, where('event_id', '==', eventId));
-      const snapshot = await getDocs(q);
-      const topics = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          comments: data.comments || [],
-          created_at: data.created_at.toDate(),
-          updated_at: data.updated_at.toDate(),
-          notified_at: data.notified_at.toDate(),
-        } as Topic;
-      });
-
-      return topics;
-    } catch (err) {
-      console.error('Error fetching topics: ', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
-      return [];
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getCommentLevel1Count = async (topicId: string): Promise<number> => {
     const commentsCollection = collection(db, 'comments');
@@ -75,7 +43,7 @@ export const useTopic = () => {
             title: data.title,
             category: data.category,
             created_at: data.created_at.toDate(),
-            event_id: data.event_id,
+            event_ids: data.event_ids ?? [],
             comment_level1_count: commentLv1Count,
           } as LightWeightTopic;
         })
@@ -240,7 +208,6 @@ export const useTopic = () => {
 
   return {
     getTopicsByFilter,
-    getTopicByEventId,
     getLightWeightTopics,
     getTopicByIds,
     loading,

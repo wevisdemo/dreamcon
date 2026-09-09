@@ -13,7 +13,7 @@ export const convertTopicDBToTopic = (
     created_at: topicDB.created_at,
     updated_at: topicDB.updated_at,
     notified_at: topicDB.notified_at,
-    event_id: topicDB.event_id,
+    event_ids: topicDB.event_ids ?? [],
     category: topicDB.category,
   };
 };
@@ -25,6 +25,7 @@ export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
   commentDBList.forEach(commentDB => {
     commentMap.set(commentDB.id, {
       ...commentDB,
+      event_ids: commentDB.event_ids ?? [],
       comments: [],
     });
   });

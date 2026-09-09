@@ -13,6 +13,7 @@ import { DraggableCommentProps } from '../../types/dragAndDrop';
 import { Droppable } from '../Droppable';
 import { useDeleteCommentWithChildren } from '../../hooks/useDeleteCommentWithChildren';
 import { DreamConEvent } from '../../types/event';
+import { usePermission } from '../../hooks/usePermission';
 
 interface PropTypes {
   comment: Comment;
@@ -38,6 +39,7 @@ export default function CommentAndChildren(props: PropTypes) {
   } = useContext(StoreContext);
 
   const { deleteCommentWithChildren } = useDeleteCommentWithChildren();
+  const { isWriterOwner } = usePermission();
 
   //rounded top-left if previous has children OR is parent
   //rounded top-right if parent
@@ -57,7 +59,7 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const isRoundedTL = (previousComment: Comment | null): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent(props.comment, props.parent.event_id) !== null)
+    if (showHeaderEvent(props.comment, props.parent.event_ids[0]) !== null)
       return true;
     if ((previousComment?.comments.length || 0) > 0) return true;
     return false;
@@ -65,7 +67,7 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const isRoundedTR = (): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent(props.comment, props.parent.event_id) !== null)
+    if (showHeaderEvent(props.comment, props.parent.event_ids[0]) !== null)
       return true;
     return false;
   };
@@ -77,7 +79,7 @@ export default function CommentAndChildren(props: PropTypes) {
     if (props.level === 1) return true;
     if (nextComment === null) return true;
     if (nextComment !== null) {
-      if (showHeaderEvent(nextComment, props.parent.event_id) !== null)
+      if (showHeaderEvent(nextComment, props.parent.event_ids[0]) !== null)
         return true;
     }
     if ((currentComment.comments.length || 0) > 0) return true;
@@ -89,7 +91,7 @@ export default function CommentAndChildren(props: PropTypes) {
     nextComment: Comment | null
   ): boolean => {
     if (nextComment !== null) {
-      if (showHeaderEvent(nextComment, props.parent.event_id) !== null)
+      if (showHeaderEvent(nextComment, props.parent.event_ids[0]) !== null)
         return true;
     }
     return (
@@ -101,7 +103,7 @@ export default function CommentAndChildren(props: PropTypes) {
   const hasNoSameEventChildren = (comment: Comment): boolean => {
     if (comment.comments.length === 0) return true;
     const hasSameEventChildren = comment.comments.some(
-      childComment => childComment.event_id === comment.event_id
+      childComment => childComment.event_ids[0] === comment.event_ids[0]
     );
     return !hasSameEventChildren;
   };
@@ -189,9 +191,9 @@ export default function CommentAndChildren(props: PropTypes) {
     comment: Comment,
     parentEventID: string
   ): DreamConEvent | null => {
-    if (comment.event_id !== parentEventID) {
+    if (comment.event_ids[0] !== parentEventID) {
       const event = eventContext.events.find(
-        event => event.id === comment.event_id
+        event => event.id === comment.event_ids[0]
       );
       if (event) {
         return event;
@@ -205,7 +207,7 @@ export default function CommentAndChildren(props: PropTypes) {
     if (modeContext.value === 'view') return false;
     switch (userContext.userState?.role) {
       case 'writer':
-        return props.comment.event_id === userContext.userState?.event.id;
+        return isWriterOwner(props.comment.event_ids);
       default:
         return false;
     }
@@ -219,10 +221,16 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const sortedChildrenComments = (comment: Comment): Comment[] => {
     return comment.comments.sort((a, b) => {
-      if (a.event_id === comment.event_id && b.event_id !== comment.event_id) {
+      if (
+        a.event_ids[0] === comment.event_ids[0] &&
+        b.event_ids[0] !== comment.event_ids[0]
+      ) {
         return -1;
       }
-      if (a.event_id !== comment.event_id && b.event_id === comment.event_id) {
+      if (
+        a.event_ids[0] !== comment.event_ids[0] &&
+        b.event_ids[0] === comment.event_ids[0]
+      ) {
         return 1;
       }
       return 0;
@@ -242,22 +250,22 @@ export default function CommentAndChildren(props: PropTypes) {
         >
           {isOver => (
             <>
-              {showHeaderEvent(props.comment, props.parent.event_id) && (
+              {showHeaderEvent(props.comment, props.parent.event_ids[0]) && (
                 <div className="flex gap-[8px] items-center text-label-sm pl-[4px] my-[4px]">
                   <img
                     className="rounded-full w-[25px] h-[25px]"
                     src={
-                      showHeaderEvent(props.comment, props.parent.event_id)
+                      showHeaderEvent(props.comment, props.parent.event_ids[0])
                         ?.avatar_url
                     }
                     alt={`avatar-event-${
-                      showHeaderEvent(props.comment, props.parent.event_id)
+                      showHeaderEvent(props.comment, props.parent.event_ids[0])
                         ?.display_name
                     }`}
                   />
                   <span className="wv-bold">
                     {
-                      showHeaderEvent(props.comment, props.parent.event_id)
+                      showHeaderEvent(props.comment, props.parent.event_ids[0])
                         ?.display_name
                     }
                   </span>

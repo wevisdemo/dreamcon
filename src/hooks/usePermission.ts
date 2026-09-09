@@ -28,9 +28,9 @@ export const usePermission = () => {
     return null;
   };
 
-  const isWriterOwner = (eventId: string): boolean => {
+  const isWriterOwner = (eventIds: string[]): boolean => {
     if (userContext.userState?.role === 'writer') {
-      return userContext.userState.event.id === eventId;
+      return eventIds.includes(userContext.userState.event.id);
     }
     return false;
   };

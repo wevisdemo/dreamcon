@@ -29,7 +29,7 @@ export default function TopicCard(props: PropTypes) {
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const { user: userContext, mode: modeContext } = useContext(StoreContext);
-  const { isReadOnly } = usePermission();
+  const { isReadOnly, isWriterOwner } = usePermission();
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? 'topic-menu' : undefined;
@@ -113,7 +113,7 @@ export default function TopicCard(props: PropTypes) {
     }
     switch (userContext.userState?.role) {
       case 'writer':
-        return props.topic.event_id === userContext.userState?.event.id;
+        return isWriterOwner(props.topic.event_ids);
       default:
         return false;
     }

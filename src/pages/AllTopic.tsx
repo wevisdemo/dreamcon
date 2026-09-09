@@ -370,7 +370,7 @@ export default function AllTopic() {
       // sorted by filter
       const isFilteredByEvent =
         topicFilter.selectedEvent === null ||
-        topic.event_id === topicFilter.selectedEvent.id;
+        topic.event_ids.includes(topicFilter.selectedEvent.id);
       const isFilteredByCategory =
         topicFilter.category === 'ทั้งหมด' ||
         topic.category === topicFilter.category;
@@ -490,15 +490,15 @@ export default function AllTopic() {
           eventID = userContext.userState?.event.id;
         }
         if (!eventID) return;
-        await addNewTopic({ ...payload, event_id: eventID });
+        await addNewTopic({ ...payload, event_ids: [eventID] });
         break;
       }
       case 'edit':
-        if (!payload.event_id) return;
+        if (!payload.event_ids?.length) return;
         await editTopic({
           id: payload.id,
           title: payload.title,
-          event_id: payload.event_id,
+          event_ids: payload.event_ids,
           category: payload.category as TopicCategory,
         });
 
@@ -716,14 +716,16 @@ export default function AllTopic() {
                         reason,
                         parent_topic_id: selectedTopic.value?.id,
                         parent_comment_ids: [],
-                        event_id: getCreatedByEvent()?.id || '',
+                        event_ids: [getCreatedByEvent()?.id ?? ''].filter(
+                          Boolean
+                        ),
                       });
                     }}
                     onChangeTopicTitle={newTitle => {
                       editTopic({
                         id: selectedTopic.value?.id,
                         title: newTitle,
-                        event_id: selectedTopic.value?.event_id || '',
+                        event_ids: selectedTopic.value?.event_ids ?? [],
                         category: selectedTopic.value
                           ?.category as TopicCategory,
                       });
@@ -732,7 +734,7 @@ export default function AllTopic() {
                       editTopic({
                         id: selectedTopic.value?.id,
                         title: selectedTopic.value?.title || '',
-                        event_id: selectedTopic.value?.event_id || '',
+                        event_ids: selectedTopic.value?.event_ids ?? [],
                         category: newCategory as TopicCategory,
                       });
                     }}
