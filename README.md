@@ -27,6 +27,8 @@ Because the constitution may sometimes feel distant, we invite everyone to share
 | VITE_BASE_URL              | Base url. For development, we usually set with http://localhost:5173                                                                                                |
 | BASE_URL                   | Base url. For development, we usually set with http://localhost:5173                                                                                                |
 | VITE_USE_FIREBASE_EMULATOR | `true` to connect to the local Firebase emulators instead of the real project. Already set to `true` in `.env.development`, so `pnpm dev` never touches production. |
+| BACKUP_ADMIN_EMAIL         | Admin account used by `pnpm firestore:restore` (writing `writers` requires a signed-in user). Restore only.                                                         |
+| BACKUP_ADMIN_PASSWORD      | Password for `BACKUP_ADMIN_EMAIL`. Keep it out of committed files.                                                                                                  |
 
 ## Prerequisites
 
@@ -81,11 +83,52 @@ How the safety net works:
 
 Other commands:
 
-| Command              | Description                                                                         |
-| -------------------- | ----------------------------------------------------------------------------------- |
-| `pnpm emulators`     | Emulators + seed only, without Vite. Useful when running the dev server separately. |
-| `pnpm seed:emulator` | Wipe and re-seed running emulators, back to the exact initial state.                |
-| `pnpm dev:prod`      | Dev server against the **real** project. Use deliberately.                          |
+| Command                                   | Description                                                                                                  |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `pnpm emulators`                          | Emulators + seed only, without Vite. Useful when running the dev server separately.                          |
+| `pnpm seed:emulator`                      | Wipe and re-seed running emulators, back to the exact initial state.                                         |
+| `pnpm dev:prod`                           | Dev server against the **real** project. Use deliberately.                                                   |
+| `pnpm firestore:backup [file]`            | Lossless JSON backup of `events`, `topics`, `comments`, `writers` into `out/`. Read-only.                    |
+| `pnpm firestore:restore <file> [--force]` | Restore a backup (upsert by id, never deletes). Refuses to touch the real project without `--force`.         |
+| `pnpm firestore:dump`                     | CSV export for analysis. Lossy on purpose (flattens `parent_comment_ids`, stringifies types) — not a backup. |
+
+## Backup and restore
+
+`pnpm firestore:backup` writes `out/firestore-backup-<timestamp>.json` with document ids, sorted keys and timestamps encoded as `{ "$ts": "<ISO>" }`, so two backups of the same data diff cleanly and a restore reproduces the original types.
+
+Restoring a production backup into the emulator is the everyday use — debugging with real data without touching production:
+
+```
+pnpm firestore:backup                                   # against production
+pnpm emulators                                          # in another shell
+VITE_USE_FIREBASE_EMULATOR=true BACKUP_ADMIN_EMAIL=admin@dreamcon.local BACKUP_ADMIN_PASSWORD=dreamcon \
+  pnpm firestore:restore out/firestore-backup-<timestamp>.json
+```
+
+The seed fixtures stay alongside the restored documents — restore never deletes, and the seeded admin account is what it signs in as, so the emulator cannot be wiped first.
+
+### Restoring production
+
+Restore is upsert-only, and the Firestore rules deny an update that changes `event_ids`. So a production restore must start from empty collections:
+
+1. `pnpm firestore:backup` first, and keep the file.
+2. Firebase console → Firestore → Data → three-dot menu on each of `events`, `topics`, `comments`, `writers` → "Delete collection". The console runs as project owner, so rules do not apply. This repo intentionally ships no script that deletes production data.
+3. `BACKUP_ADMIN_EMAIL=… BACKUP_ADMIN_PASSWORD=… pnpm firestore:restore out/<file>.json --force`
+
+Each batch of 500 documents commits separately, so a failure mid-restore leaves a partial restore; rerunning is safe because writes are idempotent.
+
+### Firebase Auth accounts
+
+Auth users (the admin logins) do not live in Firestore and are not covered by the backup script. Export them separately:
+
+```
+pnpm firebase auth:export out/auth-<date>.json --project <prod-project>
+pnpm firebase auth:import out/auth-<date>.json --project <prod-project>
+```
+
+`firestore.rules` and the avatars in `public/avatar` are in git already, so nothing to back up there.
+
+For much larger data than today's (hundreds of thousands of documents), the client SDK's full-collection read stops being viable — switch to the managed `gcloud firestore export` to a GCS bucket (needs the Blaze plan).
 
 ### Seed data
 
