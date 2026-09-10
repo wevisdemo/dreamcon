@@ -48,7 +48,7 @@ import { useDeleteTopicWithChildren } from '../hooks/useDeleteTopicWithChildren'
 import { useMoveComment } from '../hooks/useMoveComment';
 import { useConvertCommentToTopic } from '../hooks/useConvertCommentToTopic';
 import FullPageLoader from '../components/FullPageLoader';
-import AlertPopup from '../components/AlertMoveComment';
+import AlertPopup from '../components/AlertPopup';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useLocation } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
@@ -82,7 +82,12 @@ export default function AllTopic() {
     mode: modeContext,
   } = useContext(StoreContext);
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
-  const { editTopic, loading: editTopicLoading } = useEditTopic();
+  const {
+    editTopic,
+    joinTopic,
+    leaveTopic,
+    loading: editTopicLoading,
+  } = useEditTopic();
   const { addNewComment, loading: addNewCommentLoading } = useAddComment();
   const { editComment, loading: editCommentLoading } = useEditComment();
   const { deleteTopicWithChildren, loading: deleteTopicLoading } =
@@ -493,16 +498,15 @@ export default function AllTopic() {
         await addNewTopic({ ...payload, event_ids: [eventID] });
         break;
       }
-      case 'edit':
-        if (!payload.event_ids?.length) return;
-        await editTopic({
-          id: payload.id,
+      case 'edit': {
+        const topic = displayTopics.find(topic => topic.id === payload.id);
+        if (!topic) return;
+        await editTopic(topic, {
           title: payload.title,
-          event_ids: payload.event_ids,
-          category: payload.category as TopicCategory,
+          category: payload.category,
         });
-
         break;
+      }
     }
   };
 
@@ -623,20 +627,18 @@ export default function AllTopic() {
                 setTopicFilter={setTopicFilter}
               />
             </section>
-            <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
-              <AlertPopup
-                visible={showCopyAlert}
-                onClose={() => setShowCopyAlert(false)}
-                onUndo={() => handleUndoMoveComment()}
-                mode="copy"
-              />
-              <AlertPopup
-                visible={showPasteAlert}
-                onClose={() => setShowPasteAlert(false)}
-                onUndo={() => handleUndoMoveComment()}
-                mode="paste"
-              />
-            </div>
+            <AlertPopup
+              visible={showCopyAlert}
+              onClose={() => setShowCopyAlert(false)}
+              onUndo={() => handleUndoMoveComment()}
+              mode="copy"
+            />
+            <AlertPopup
+              visible={showPasteAlert}
+              onClose={() => setShowPasteAlert(false)}
+              onUndo={() => handleUndoMoveComment()}
+              mode="paste"
+            />
           </section>
           <section
             className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
@@ -722,21 +724,27 @@ export default function AllTopic() {
                       });
                     }}
                     onChangeTopicTitle={newTitle => {
-                      editTopic({
-                        id: selectedTopic.value?.id,
+                      if (!selectedTopic.value) return;
+                      editTopic(selectedTopic.value, {
                         title: newTitle,
-                        event_ids: selectedTopic.value?.event_ids ?? [],
-                        category: selectedTopic.value
-                          ?.category as TopicCategory,
+                        category: selectedTopic.value.category as TopicCategory,
                       });
                     }}
                     onChangeTopicCategory={newCategory => {
-                      editTopic({
-                        id: selectedTopic.value?.id,
-                        title: selectedTopic.value?.title || '',
-                        event_ids: selectedTopic.value?.event_ids ?? [],
-                        category: newCategory as TopicCategory,
+                      if (!selectedTopic.value) return;
+                      editTopic(selectedTopic.value, {
+                        title: selectedTopic.value.title,
+                        category: newCategory,
                       });
+                    }}
+                    onJoinTopic={() => {
+                      joinTopic(selectedTopic.value?.id ?? '');
+                    }}
+                    onLeaveTopic={() => {
+                      leaveTopic(
+                        selectedTopic.value?.id ?? '',
+                        selectedTopic.value?.event_ids ?? []
+                      );
                     }}
                     onDeleteTopic={() =>
                       handleOnDeleteTopic(selectedTopic.value || null)

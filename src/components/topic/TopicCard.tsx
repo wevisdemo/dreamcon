@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react';
-import { CommentView } from '../../types/comment';
 import { Topic, topicCategories, TopicCategory } from '../../types/topic';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Tooltip from '@mui/material/Tooltip';
@@ -12,7 +11,6 @@ import { usePermission } from '../../hooks/usePermission';
 interface PropTypes {
   topic: Topic;
   isPinned?: boolean;
-  onAddComment: (commentView: CommentView, reason: string) => void;
   onChangeTopicCategory: (category: TopicCategory) => void;
   onChangeTopicTitle: (title: string) => void;
   onDeleteTopic: () => void;
@@ -22,20 +20,15 @@ interface PropTypes {
 
 export default function TopicCard(props: PropTypes) {
   const [topicTitle, setTopicTitle] = useState<string>(props.topic.title);
-  const [commentView, setCommentView] = useState<null | CommentView>(
-    CommentView.AGREE
-  );
-  const [newCommentText, setNewCommentText] = useState('');
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
-  const { user: userContext, mode: modeContext } = useContext(StoreContext);
-  const { isReadOnly, isWriterOwner } = usePermission();
+  const { mode: modeContext } = useContext(StoreContext);
+  const { isReadOnly, canManageTopic } = usePermission();
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? 'topic-menu' : undefined;
 
   useEffect(() => {
-    resetNewCommentText();
     resetEditTopic();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- reset form state only when a different topic is rendered
   }, [props.topic]);
@@ -63,19 +56,6 @@ export default function TopicCard(props: PropTypes) {
     handleCloseMenu();
   };
 
-  const handleSelectCommentView = (selectedView: CommentView) => {
-    if (commentView === selectedView) {
-      setCommentView(null);
-      return;
-    }
-    setCommentView(selectedView);
-  };
-
-  const resetNewCommentText = () => {
-    setCommentView(CommentView.AGREE);
-    setNewCommentText('');
-  };
-
   const handlerSubmitTopicTitle = () => {
     props.onChangeTopicTitle(topicTitle);
     resetEditTopic();
@@ -84,13 +64,6 @@ export default function TopicCard(props: PropTypes) {
   const resetEditTopic = () => {
     setTopicTitle(props.topic.title);
     setIsEditingMode(false);
-  };
-
-  const handleAddComment = () => {
-    if (newCommentText.trim().length > 0 && commentView !== null) {
-      props.onAddComment(commentView, newCommentText);
-    }
-    resetNewCommentText();
   };
 
   const handlePinTopic = () => {
@@ -103,24 +76,11 @@ export default function TopicCard(props: PropTypes) {
     handleCloseMenu();
   };
 
-  const canSubmit = () => {
-    return newCommentText.trim().length > 0 && commentView !== null;
-  };
-
-  const hasPermissionToEdit = () => {
-    if (modeContext.value === 'view') {
-      return false;
-    }
-    switch (userContext.userState?.role) {
-      case 'writer':
-        return isWriterOwner(props.topic.event_ids);
-      default:
-        return false;
-    }
-  };
+  const hasPermissionToEdit = () =>
+    modeContext.value !== 'view' && canManageTopic(props.topic);
 
   return (
-    <div className="w-full p-[16px] bg-white rounded-[16px] shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-[10px]">
+    <div className="w-full p-4 bg-white rounded-2xl shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-2.5">
       <div className="flex justify-between items-start">
         {isEditingMode ? (
           <Dropdown
@@ -129,7 +89,7 @@ export default function TopicCard(props: PropTypes) {
             placeholder={props.topic.category}
           />
         ) : (
-          <div className="badge px-[8px] py-[4px] rounded-[48px] bg-accent text-white w-fit">
+          <div className="badge px-2 py-1 rounded-[48px] bg-accent text-white w-fit">
             {props.topic.category}
           </div>
         )}
@@ -137,7 +97,7 @@ export default function TopicCard(props: PropTypes) {
         {!isReadOnly() && (
           <>
             <img
-              className="w-[18px] h-[18px] hover:cursor-pointer"
+              className="w-4.5 h-4.5 hover:cursor-pointer"
               src="/icon/menu.svg"
               alt="menu-icon"
               onClick={e => {
@@ -190,7 +150,7 @@ export default function TopicCard(props: PropTypes) {
             <div className="relative  w-full">
               <TextareaAutosize
                 id="topic-title-text-area"
-                className="w-full p-[10px] wv-ibmplex heading-4 wv-bold resize-none overflow-hidden"
+                className="w-full p-2.5 wv-ibmplex heading-4 wv-bold resize-none overflow-hidden"
                 value={topicTitle}
                 onChange={e => {
                   setTopicTitle(e.target.value);
@@ -204,7 +164,7 @@ export default function TopicCard(props: PropTypes) {
                 autoFocus
                 maxLength={140}
               />
-              <div className="absolute bottom-[10px] right-[10px] flex gap-[8px]">
+              <div className="absolute bottom-2.5 right-2.5 flex gap-2">
                 <span
                   className="wv-ibmplex text-gray5 font-semibold underline hover:cursor-pointer"
                   onClick={() => {
@@ -214,7 +174,7 @@ export default function TopicCard(props: PropTypes) {
                   ยกเลิก
                 </span>
                 <img
-                  className="w-[18px] h-[18px] hover:cursor-pointer"
+                  className="w-4.5 h-4.5 hover:cursor-pointer"
                   src="/icon/upload.svg"
                   alt="upload-icon"
                   onClick={handlerSubmitTopicTitle}
@@ -244,7 +204,7 @@ export default function TopicCard(props: PropTypes) {
             classes={{ tooltip: 'tooltip-1' }}
           >
             <h2
-              className="p-[10px] wv-ibmplex heading-4 wv-bold"
+              className="p-2.5 wv-ibmplex heading-4 wv-bold"
               onClick={() => {
                 if (hasPermissionToEdit()) {
                   setIsEditingMode(true);
@@ -256,70 +216,6 @@ export default function TopicCard(props: PropTypes) {
           </Tooltip>
         )}
       </div>
-      {!isReadOnly() && (
-        <>
-          <div className="flex gap-[8px]">
-            <button
-              className={`py-[10px] ${
-                commentView === CommentView.AGREE
-                  ? 'bg-lightGreen'
-                  : 'bg-lightGreen/25'
-              } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
-              onClick={() => handleSelectCommentView(CommentView.AGREE)}
-            >
-              เห็นด้วย
-            </button>
-            <button
-              className={`py-[10px] ${
-                commentView === CommentView.PARTIAL_AGREE
-                  ? 'bg-lightYellow'
-                  : 'bg-lightYellow/25'
-              } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
-              onClick={() => handleSelectCommentView(CommentView.PARTIAL_AGREE)}
-            >
-              เห็นด้วยบ้าง
-            </button>
-            <button
-              className={`py-[10px] ${
-                commentView === CommentView.DISAGREE
-                  ? 'bg-lightRed'
-                  : 'bg-lightRed/25'
-              } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
-          `}
-              onClick={() => handleSelectCommentView(CommentView.DISAGREE)}
-            >
-              ไม่เห็นด้วย
-            </button>
-          </div>
-          {commentView && (
-            <div className="relative flex">
-              <textarea
-                className="w-full h-full p-[10px] text-b3 bg-gray1 border-[1px] border-gray3 rounded-[4px] resize-none min-h-[52px] focus:outline-none "
-                name="add-comment-in-topic-card"
-                id="add-comment-in-topic-card"
-                value={newCommentText}
-                onChange={e => setNewCommentText(e.target.value)}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleAddComment();
-                  }
-                }}
-                placeholder="เพราะว่า...(140ตัวอักษร)"
-                maxLength={140}
-              />
-              {canSubmit() && (
-                <img
-                  className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
-                  src="/icon/upload.svg"
-                  alt="upload-icon"
-                  onClick={handleAddComment}
-                />
-              )}
-            </div>
-          )}
-        </>
-      )}
     </div>
   );
 }

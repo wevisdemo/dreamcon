@@ -14,7 +14,7 @@ import { Topic } from '../types/topic';
 export const useDeleteTopicWithChildren = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { isWriterOwner, getWriterEvent } = usePermission();
+  const { canManageTopic, getWriterEvent } = usePermission();
 
   const deleteTopicWithChildren = async (topic: Topic) => {
     const topicId = topic.id;
@@ -30,8 +30,8 @@ export const useDeleteTopicWithChildren = () => {
       return;
     }
 
-    if (!isWriterOwner(topic.event_ids)) {
-      setError('You do not have permission to edit this comment');
+    if (!canManageTopic(topic)) {
+      setError('You do not have permission to delete this topic');
       setLoading(false);
       return;
     }

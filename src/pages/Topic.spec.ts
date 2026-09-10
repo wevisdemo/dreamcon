@@ -47,13 +47,73 @@ test.describe('signed in as the Bangkok writer', () => {
       .getByRole('button', { name: 'ไม่เห็นด้วย', exact: true })
       .click();
     await page.locator('#add-comment-in-topic-card').fill(reason);
-    await submitForm(page);
+    await page.getByRole('button', { name: 'ส่ง' }).click();
 
     await expect(page.getByText(reason, { exact: true })).toBeVisible();
     await expect(
       page.getByText('1 ไม่เห็นด้วย', { exact: true })
     ).toBeVisible();
     await expect(page.getByText('1 ความคิดเห็น')).toBeVisible();
+    await expect(page.getByText('จากวง เวทีกรุงเทพฯ')).toBeVisible();
+  });
+
+  test('the only linked event edits and deletes the topic instead of leaving it', async ({
+    page,
+  }) => {
+    await page.goto('/topics/tp-court');
+    await waitForLoaded(page);
+
+    await expect(page.getByText('ข้อถกเถียงจาก 1 วงสนทนา')).toBeVisible();
+    // Leaving would strip the topic's last event, so only delete is offered.
+    await expect(page.locator('img[alt="remove-event-icon"]')).toHaveCount(0);
+
+    await page.locator('img[alt="menu-icon"]').click();
+    await expect(page.locator('img[alt="pen-icon"]')).toBeVisible();
+    await expect(page.locator('img[alt="bin-icon"]')).toBeVisible();
+  });
+
+  test('cannot edit or delete its own topic once another event commented', async ({
+    page,
+  }) => {
+    await page.goto('/topics/tp-parliament');
+    await waitForLoaded(page);
+
+    await expect(page.getByText('ข้อถกเถียงจาก 2 วงสนทนา')).toBeVisible();
+
+    await page.locator('img[alt="menu-icon"]').click();
+    await expect(page.locator('img[alt="pin-icon"]')).toBeVisible();
+    await expect(page.locator('img[alt="pen-icon"]')).toHaveCount(0);
+    await expect(page.locator('img[alt="bin-icon"]')).toHaveCount(0);
+  });
+
+  test('replying to another event topic links this event through the comment', async ({
+    page,
+  }) => {
+    const reply = `E2E cross-event reply ${Date.now()}`;
+
+    await page.goto('/topics/tp-local');
+    await waitForLoaded(page);
+    await expect(page.getByText('ข้อถกเถียงจาก 1 วงสนทนา')).toBeVisible();
+
+    const parent = commentCard(
+      page,
+      'ท้องถิ่นควรจัดเก็บและใช้ภาษีของตัวเองได้ตามสัดส่วนที่ชัดเจน'
+    );
+    await parent.hover();
+    // Not this event's comment, so dnd-kit marks the wrapper aria-disabled and
+    // Playwright's actionability check refuses the click; the icon still works.
+    await parent.locator('svg').click({ force: true });
+    await page.locator('#topic-title-text-area').fill(reply);
+    await submitForm(page);
+
+    await expect(page.getByText(reply, { exact: true })).toBeVisible();
+    await expect(page.getByText('ข้อถกเถียงจาก 2 วงสนทนา')).toBeVisible();
+    await expect(page.getByText('จากวง เวทีกรุงเทพฯ')).toBeVisible();
+
+    // Linked through a comment only: leaving is blocked while that comment exists.
+    await page.locator('img[alt="remove-event-icon"]').click();
+    await expect(page.getByText('เพราะวงสนทนาของคุณมี')).toBeVisible();
+    await expect(page.getByText('ข้อถกเถียงจาก 2 วงสนทนา')).toBeVisible();
   });
 
   test('replies to an existing comment', async ({ page }) => {
@@ -81,5 +141,64 @@ test.describe('signed in as the Bangkok writer', () => {
     await submitForm(page);
 
     await expect(page.getByText(reply, { exact: true })).toBeVisible();
+  });
+});
+
+test.describe('signed in as the Online writer', () => {
+  const JOIN = 'ใช่ เพิ่มวงของฉัน';
+  const eventList = (page: Page) => page.getByText('ข้อถกเถียงจาก');
+
+  test.beforeEach(async ({ context }) => {
+    await loginAsWriter(context, 'writer-permanent-online');
+  });
+
+  test('joins and leaves a topic of another event', async ({ page }) => {
+    await page.goto('/topics/tp-court');
+    await waitForLoaded(page);
+
+    await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 1 วงสนทนา/);
+    await expect(page.locator('#add-comment-in-topic-card')).toHaveCount(0);
+
+    // Not a member yet: no edit and no delete in the menu.
+    await page.locator('img[alt="menu-icon"]').click();
+    await expect(page.locator('img[alt="bin-icon"]')).toHaveCount(0);
+    await page.locator('.MuiBackdrop-root').click();
+
+    await page.getByRole('button', { name: JOIN }).click();
+    await waitForLoaded(page);
+
+    await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 2 วงสนทนา/);
+    await expect(page.getByText('ความคิดเห็นของ')).toBeVisible();
+    await expect(page.getByText('เวทีออนไลน์').first()).toBeVisible();
+
+    // Two events are linked now, so neither can edit or delete the topic.
+    await page.locator('img[alt="menu-icon"]').click();
+    await expect(page.locator('img[alt="pen-icon"]')).toHaveCount(0);
+    await expect(page.locator('img[alt="bin-icon"]')).toHaveCount(0);
+    await page.locator('.MuiBackdrop-root').click();
+
+    await page.locator('img[alt="remove-event-icon"]').click();
+    await waitForLoaded(page);
+
+    await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 1 วงสนทนา/);
+    await expect(page.getByRole('button', { name: JOIN })).toBeVisible();
+  });
+
+  test('cannot leave a topic its own event has commented on', async ({
+    page,
+  }) => {
+    await page.goto('/topics/tp-parliament');
+    await waitForLoaded(page);
+
+    await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 2 วงสนทนา/);
+
+    await page.locator('img[alt="remove-event-icon"]').click();
+
+    const alert = page.getByText(
+      'เพราะวงสนทนาของคุณมี 1 ความคิดเห็นในข้อถกเถียงนี้'
+    );
+    await expect(alert).toBeVisible();
+    await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 2 วงสนทนา/);
+    await expect(alert).toBeHidden({ timeout: 5000 });
   });
 });

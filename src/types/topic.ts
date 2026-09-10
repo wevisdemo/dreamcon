@@ -24,7 +24,11 @@ export interface TopicDB {
 
 export type CreateTopicDBPayload = Omit<TopicDB, 'id'>;
 
-export type UpdateTopicDBPayload = Omit<TopicDB, 'created_at' | 'id'>;
+/** `event_ids` is written on its own through join/leave, never by a text edit. */
+export type UpdateTopicDBPayload = Omit<
+  TopicDB,
+  'created_at' | 'id' | 'event_ids'
+>;
 
 export interface AddOrEditTopicPayload {
   id?: string;

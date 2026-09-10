@@ -1,6 +1,8 @@
 import { useContext } from 'react';
 import { StoreContext } from '../store';
 import { DreamConEventDB } from '../types/event';
+import { Topic } from '../types/topic';
+import { linkedEventIds } from '../utils/mapping';
 
 export const usePermission = () => {
   const {
@@ -35,5 +37,23 @@ export const usePermission = () => {
     return false;
   };
 
-  return { isReadOnly, userCanEdit, getWriterEvent, isWriterOwner };
+  /**
+   * A topic can be edited or deleted only by its sole linked event: once another
+   * event joins or comments, the topic is shared and nobody can change it.
+   */
+  const canManageTopic = (topic: Topic): boolean => {
+    const writerEvent = getWriterEvent();
+    const eventIds = linkedEventIds(topic);
+    return (
+      !!writerEvent && eventIds.length === 1 && eventIds[0] === writerEvent.id
+    );
+  };
+
+  return {
+    isReadOnly,
+    userCanEdit,
+    getWriterEvent,
+    isWriterOwner,
+    canManageTopic,
+  };
 };

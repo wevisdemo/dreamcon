@@ -18,6 +18,24 @@ export const convertTopicDBToTopic = (
   };
 };
 
+export const flattenComments = (topic: Topic): Comment[] => {
+  const walk = (comment: Comment): Comment[] => [
+    comment,
+    ...comment.comments.flatMap(walk),
+  ];
+  return topic.comments.flatMap(walk);
+};
+
+/** Events the topic is explicitly linked to, plus every event that commented on it. */
+export const linkedEventIds = (topic: Topic): string[] => [
+  ...new Set(
+    [
+      ...topic.event_ids,
+      ...flattenComments(topic).map(comment => comment.event_ids[0]),
+    ].filter(Boolean)
+  ),
+];
+
 export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
   const commentMap: Map<string, Comment> = new Map();
 

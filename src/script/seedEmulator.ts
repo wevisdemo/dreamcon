@@ -64,7 +64,8 @@ const events: DreamConEventDB[] = [
     updated_at: daysFromSeed(-1),
   },
   {
-    // Event with no topics: covers the empty-state UI.
+    // Event with no topics of its own: covers the empty-state UI. It is still
+    // linked to tp-parliament through the cm-parliament-6 comment.
     id: 'ev-online',
     display_name: 'เวทีออนไลน์',
     avatar_url: eventAvatars[2],
@@ -188,6 +189,8 @@ interface SeedComment {
   view: CommentView;
   reason: string;
   ageInDays: number;
+  /** Defaults to the topic's first event. Set it for cross-event replies. */
+  eventId?: string;
 }
 
 /**
@@ -286,6 +289,17 @@ const seedComments: SeedComment[] = [
     ageInDays: -21,
   },
   {
+    // Comment from an event the topic is not explicitly linked to: makes
+    // tp-parliament a two-event topic that ev-online cannot leave or delete.
+    id: 'cm-parliament-6',
+    topic: 'tp-parliament',
+    parents: [],
+    view: CommentView.AGREE,
+    eventId: 'ev-online',
+    reason: 'ควรเปิดให้ประชาชนเสนอชื่อผู้สมัครวุฒิสภาได้ผ่านช่องทางออนไลน์',
+    ageInDays: -19,
+  },
+  {
     // Legacy comment: no ref_id, mirrors documents created before the field.
     id: 'cm-local-1',
     topic: 'tp-local',
@@ -360,7 +374,9 @@ const comments: CommentDB[] = seedComments.map(c => ({
   reason: c.reason,
   parent_comment_ids: c.parents,
   parent_topic_id: c.topic,
-  event_ids: topics.find(t => t.id === c.topic)!.event_ids,
+  event_ids: c.eventId
+    ? [c.eventId]
+    : [topics.find(t => t.id === c.topic)!.event_ids[0]],
   created_at: daysFromSeed(c.ageInDays),
   updated_at: daysFromSeed(c.ageInDays),
   notified_at: daysFromSeed(c.ageInDays),

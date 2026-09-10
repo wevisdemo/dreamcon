@@ -43,7 +43,7 @@ import { useMoveComment } from '../hooks/useMoveComment';
 import { SmartPointerSensor } from '../utils/SmartSenson';
 import { useEditComment } from '../hooks/useEditComment';
 import FullPageLoader from '../components/FullPageLoader';
-import AlertPopup from '../components/AlertMoveComment';
+import AlertPopup from '../components/AlertPopup';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useEvent } from '../hooks/useEvent';
 import { DreamConEvent } from '../types/event';
@@ -81,7 +81,12 @@ export default function TopicPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- run once on mount; the cleanup unsubscribes
   }, []);
 
-  const { editTopic, loading: editTopicLoading } = useEditTopic();
+  const {
+    editTopic,
+    joinTopic,
+    leaveTopic,
+    loading: editTopicLoading,
+  } = useEditTopic();
   const { addNewComment, loading: addNewCommentLoading } = useAddComment();
   const { editComment, loading: editCommentLoading } = useEditComment();
   const { deleteTopicWithChildren, loading: deleteTopicLoading } =
@@ -367,20 +372,27 @@ export default function TopicPage() {
               <TopicTemplate
                 topic={selectedTopic.value}
                 onChangeTopicCategory={newCategory => {
-                  editTopic({
-                    id: selectedTopic.value?.id,
-                    title: selectedTopic.value?.title || '',
-                    event_ids: selectedTopic.value?.event_ids ?? [],
-                    category: newCategory as TopicCategory,
+                  if (!selectedTopic.value) return;
+                  editTopic(selectedTopic.value, {
+                    title: selectedTopic.value.title,
+                    category: newCategory,
                   });
                 }}
                 onChangeTopicTitle={newTitle => {
-                  editTopic({
-                    id: selectedTopic.value?.id,
+                  if (!selectedTopic.value) return;
+                  editTopic(selectedTopic.value, {
                     title: newTitle,
-                    event_ids: selectedTopic.value?.event_ids ?? [],
-                    category: selectedTopic.value?.category as TopicCategory,
+                    category: selectedTopic.value.category as TopicCategory,
                   });
+                }}
+                onJoinTopic={() => {
+                  joinTopic(selectedTopic.value?.id ?? '');
+                }}
+                onLeaveTopic={() => {
+                  leaveTopic(
+                    selectedTopic.value?.id ?? '',
+                    selectedTopic.value?.event_ids ?? []
+                  );
                 }}
                 onAddComment={(commentView, reason) => {
                   addNewComment({
@@ -423,20 +435,18 @@ export default function TopicPage() {
                 fromComment={topicPageContext.modalComment.state.fromComment}
               />
             </section>
-            <div className="absolute bottom-0 right-0 py-[24px] px-[75px]">
-              <AlertPopup
-                visible={showCopyAlert}
-                onClose={() => setShowCopyAlert(false)}
-                onUndo={() => handleUndoMoveComment()}
-                mode="copy"
-              />
-              <AlertPopup
-                visible={showPasteAlert}
-                onClose={() => setShowPasteAlert(false)}
-                onUndo={() => handleUndoMoveComment()}
-                mode="paste"
-              />
-            </div>
+            <AlertPopup
+              visible={showCopyAlert}
+              onClose={() => setShowCopyAlert(false)}
+              onUndo={() => handleUndoMoveComment()}
+              mode="copy"
+            />
+            <AlertPopup
+              visible={showPasteAlert}
+              onClose={() => setShowPasteAlert(false)}
+              onUndo={() => handleUndoMoveComment()}
+              mode="paste"
+            />
           </div>
         ) : (
           <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center"></div>

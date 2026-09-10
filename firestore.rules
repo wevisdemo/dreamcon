@@ -2,12 +2,28 @@ rules_version = '2';
 
 // Mirror of the production rules managed in the Firebase console.
 // Not deployed by anything in this repo; keep in sync by hand.
+//
+// Writers are identified by a cookie, not by Firebase Auth, so these rules
+// cannot tell *which* event joins or leaves a topic - only that at most one id
+// changes at a time. The remaining guards ("you still have comments here",
+// "edit or delete only when a single event is linked") need a query over
+// comments and stay client-side in usePermission.canManageTopic.
 function isEventUnchanged() {
   let oldData = resource.data;
   let newData = request.resource.data;
   // Prevent changing 'event_ids'. Docs that predate the field are exempt,
   // otherwise reading the missing key would deny every update to them.
   return !('event_ids' in oldData) || oldData.event_ids == newData.event_ids
+}
+
+// A topic may gain or lose exactly one event per update, and never end up empty.
+function isEventIdsValid() {
+  let oldIds = resource.data.event_ids.toSet();
+  let newIds = request.resource.data.event_ids.toSet();
+  return !('event_ids' in resource.data)
+    || oldIds == newIds
+    || (newIds.size() == oldIds.size() + 1 && newIds.hasAll(oldIds))
+    || (oldIds.size() == newIds.size() + 1 && oldIds.hasAll(newIds) && newIds.size() > 0)
 }
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -27,7 +43,7 @@ service cloud.firestore {
     }
 
     match /topics/{docId} {
-      allow update: if isEventUnchanged();
+      allow update: if isEventIdsValid();
       allow read, create, delete: if true;
     }
   }

@@ -182,6 +182,9 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await card.click();
     await expect(page.locator('.badge')).toHaveText('สิทธิเสรีภาพ');
+    await expect(page.getByText('ข้อถกเถียงจาก')).toHaveText(
+      /ข้อถกเถียงจาก 1 วงสนทนา/
+    );
 
     await page.locator('img[alt="menu-icon"]').first().click();
     await menuAction(page, 'pen');

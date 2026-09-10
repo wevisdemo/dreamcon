@@ -59,16 +59,14 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const isRoundedTL = (previousComment: Comment | null): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent(props.comment, props.parent.event_ids[0]) !== null)
-      return true;
+    if (showHeaderEvent(props.comment) !== null) return true;
     if ((previousComment?.comments.length || 0) > 0) return true;
     return false;
   };
 
   const isRoundedTR = (): boolean => {
     if (props.level === 1) return true;
-    if (showHeaderEvent(props.comment, props.parent.event_ids[0]) !== null)
-      return true;
+    if (showHeaderEvent(props.comment) !== null) return true;
     return false;
   };
 
@@ -79,8 +77,7 @@ export default function CommentAndChildren(props: PropTypes) {
     if (props.level === 1) return true;
     if (nextComment === null) return true;
     if (nextComment !== null) {
-      if (showHeaderEvent(nextComment, props.parent.event_ids[0]) !== null)
-        return true;
+      if (showHeaderEvent(nextComment) !== null) return true;
     }
     if ((currentComment.comments.length || 0) > 0) return true;
     return false;
@@ -91,8 +88,7 @@ export default function CommentAndChildren(props: PropTypes) {
     nextComment: Comment | null
   ): boolean => {
     if (nextComment !== null) {
-      if (showHeaderEvent(nextComment, props.parent.event_ids[0]) !== null)
-        return true;
+      if (showHeaderEvent(nextComment) !== null) return true;
     }
     return (
       isLastUltimateLastChild(currentComment, nextComment) ||
@@ -187,19 +183,19 @@ export default function CommentAndChildren(props: PropTypes) {
     };
   };
 
-  const showHeaderEvent = (
-    comment: Comment,
-    parentEventID: string
-  ): DreamConEvent | null => {
-    if (comment.event_ids[0] !== parentEventID) {
-      const event = eventContext.events.find(
-        event => event.id === comment.event_ids[0]
-      );
-      if (event) {
-        return event;
-      }
-    }
-    return null;
+  const findEvent = (comment: Comment): DreamConEvent | null =>
+    eventContext.events.find(event => event.id === comment.event_ids[0]) ??
+    null;
+
+  /**
+   * Level 1 sits under a topic, which can be linked to several events, so
+   * "differs from the parent event" is meaningless there. The `จากวง` footer
+   * names the event on every comment instead.
+   */
+  const showHeaderEvent = (comment: Comment): DreamConEvent | null => {
+    if (props.level === 1) return null;
+    if (comment.event_ids[0] === props.parent.event_ids[0]) return null;
+    return findEvent(comment);
   };
 
   // TODO: move to global
@@ -250,24 +246,17 @@ export default function CommentAndChildren(props: PropTypes) {
         >
           {isOver => (
             <>
-              {showHeaderEvent(props.comment, props.parent.event_ids[0]) && (
+              {showHeaderEvent(props.comment) && (
                 <div className="flex gap-[8px] items-center text-label-sm pl-[4px] my-[4px]">
                   <img
                     className="rounded-full w-[25px] h-[25px]"
-                    src={
-                      showHeaderEvent(props.comment, props.parent.event_ids[0])
-                        ?.avatar_url
-                    }
+                    src={showHeaderEvent(props.comment)?.avatar_url}
                     alt={`avatar-event-${
-                      showHeaderEvent(props.comment, props.parent.event_ids[0])
-                        ?.display_name
+                      showHeaderEvent(props.comment)?.display_name
                     }`}
                   />
                   <span className="wv-bold">
-                    {
-                      showHeaderEvent(props.comment, props.parent.event_ids[0])
-                        ?.display_name
-                    }
+                    {showHeaderEvent(props.comment)?.display_name}
                   </span>
                   <span>เพิ่มข้อถกเถียงต่อยอด</span>
                 </div>
@@ -286,6 +275,14 @@ export default function CommentAndChildren(props: PropTypes) {
                 canEdit={hasPermissionToEdit()}
                 canAddComment={canAddComment()}
               />
+              {findEvent(comment) && (
+                <div className="text-label-sm text-blue7 pt-2 pl-2">
+                  จากวง{' '}
+                  <span className="underline font-bold">
+                    {findEvent(comment)?.display_name}
+                  </span>
+                </div>
+              )}
             </>
           )}
         </Droppable>
