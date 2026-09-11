@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { auth } from '../utils/firestore';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import LockIcon from '@material-symbols/svg-700/rounded/lock.svg?react';
+import ProfileIcon from '../components/icon/ProfileIcon';
 
 export default function LoginPage() {
   const [validInputs, setValidInputs] = useState<{
@@ -73,11 +75,7 @@ export default function LoginPage() {
               validInputs.username ? '' : 'border-2 border-red-5'
             }`}
           >
-            <img
-              className="w-4.5 h-4.5"
-              src="/icon/profile.svg"
-              alt="icon-profile"
-            />
+            <ProfileIcon className="w-4.5 h-4.5 text-[#1C1C1C]" aria-hidden />
             <input
               type="text"
               name="username"
@@ -101,7 +99,7 @@ export default function LoginPage() {
               validInputs.password ? '' : 'border-2 border-red-5'
             }`}
           >
-            <img className="w-4.5 h-4.5" src="/icon/lock.svg" alt="icon-lock" />
+            <LockIcon className="w-4.5 h-4.5 text-[#1C1C1C]" aria-hidden />
             <input
               type="password"
               name="password"

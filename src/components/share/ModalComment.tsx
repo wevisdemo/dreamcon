@@ -7,6 +7,8 @@ import { useEditComment } from '../../hooks/useEditComment';
 import { usePermission } from '../../hooks/usePermission';
 import { TextareaAutosize } from '@mui/material';
 import FullPageLoader from '../FullPageLoader';
+import CommunityIcon from '../icon/CommunityIcon';
+import UploadIcon from '../icon/UploadIcon';
 
 interface PropTypes {
   store: CommentModalStore;
@@ -194,7 +196,7 @@ export default function ModalComment(props: PropTypes) {
           <div className="w-full rounded-[5px] border border-gray-1 overflow-hidden">
             <div className="px-2.5 py-2 bg-gray-2 flex gap-1">
               <span>ความคิดเห็นของ</span>
-              <img src="/icon/community.svg" alt="icon-community" />
+              <CommunityIcon className="text-gray-8" aria-hidden />
               <span>{createdByEvent?.display_name}</span>
             </div>
             <div className="w-full bg-gray-1 relative">
@@ -208,10 +210,9 @@ export default function ModalComment(props: PropTypes) {
                 placeholder="เพราะว่า...(140ตัวอักษร)"
               />
               {canSubmit() && (
-                <img
-                  className="w-4.5 h-4.5 absolute bottom-2.5 right-2.5 hover:cursor-pointer"
-                  src="/icon/upload.svg"
-                  alt="upload-icon"
+                <UploadIcon
+                  className="w-4.5 h-4.5 absolute bottom-2.5 right-2.5 hover:cursor-pointer text-blue-6"
+                  aria-label="ส่ง"
                   onClick={onSubmit}
                 />
               )}

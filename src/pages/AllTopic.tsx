@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { collection, onSnapshot } from 'firebase/firestore';
 import TopicListSection from '../components/allTopic/TopicListSection';
 import FullPageLoader from '../components/FullPageLoader';
+import ExpandWideIcon from '../components/icon/ExpandWideIcon';
+import KeyboardDoubleArrowRightIcon from '@material-symbols/svg-700/rounded/keyboard_double_arrow_right.svg?react';
 import ModalComment from '../components/share/ModalComment';
 import ModalTopic from '../components/share/ModalTopic';
 import CommentDndContext from '../components/topic/CommentDndContext';
@@ -193,18 +195,22 @@ export default function AllTopic() {
             <section className="w-full h-full">
               <div className="w-full px-2.5 py-1 bg-gray-2 flex justify-between items-center">
                 <div className="flex items-center gap-2.5">
-                  <button onClick={() => selectedTopic.setValue(null)}>
-                    <img
-                      className="w-6 h-6"
-                      src="/icon/double-arrow-right.svg"
-                      alt="double-arrow-right-icon"
+                  <button
+                    onClick={() => selectedTopic.setValue(null)}
+                    aria-label="ปิดแผงด้านข้าง"
+                  >
+                    <KeyboardDoubleArrowRightIcon
+                      className="w-6 h-6 text-gray-5"
+                      aria-hidden
                     />
                   </button>
-                  <button onClick={openTopicPage}>
-                    <img
-                      className="w-6 h-6"
-                      src="/icon/expand-wide.svg"
-                      alt="expand-icon"
+                  <button
+                    onClick={openTopicPage}
+                    aria-label="เปิดหน้าข้อถกเถียง"
+                  >
+                    <ExpandWideIcon
+                      className="w-6 h-6 text-gray-5"
+                      aria-hidden
                     />
                   </button>
                 </div>

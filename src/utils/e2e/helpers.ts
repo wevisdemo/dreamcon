@@ -24,7 +24,7 @@ export async function loginAsAdmin(page: Page, password = ADMIN_PASSWORD) {
 
 /** Topic and comment forms submit through an upload icon, not a button. */
 export const submitForm = (page: Page) =>
-  page.locator('img[alt="upload-icon"]').click();
+  page.getByLabel('ส่ง', { exact: true }).click();
 
 /** `FullPageLoader` is a full-screen overlay that swallows clicks while any hook is loading. */
 export async function waitForLoaded(page: Page) {

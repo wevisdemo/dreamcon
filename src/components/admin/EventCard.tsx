@@ -1,7 +1,12 @@
 import { useState } from 'react';
+import EditIcon from '@material-symbols/svg-700/rounded/edit.svg?react';
+import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
 import { DreamConEvent } from '../../types/event';
-import IconPen from '../icon/Pen';
 import ChainIcon from '../icon/ChainIcon';
+import ClockIcon from '../icon/ClockIcon';
+import LocationIcon from '../icon/LocationIcon';
+import ParticipantIcon from '../icon/ParticipantIcon';
+import TargetIcon from '../icon/TargetIcon';
 
 interface PropTypes {
   index: number;
@@ -32,7 +37,7 @@ export default function EventCard(props: PropTypes) {
           className="flex gap-2 items-center px-4 py-1 bg-blue-1 text-blue-6 font-bold rounded-full"
           onClick={props.onClickEdit}
         >
-          <IconPen />
+          <EditIcon className="w-4 h-4" aria-hidden />
           แก้ไขข้อมูล
         </button>
       </div>
@@ -49,20 +54,18 @@ export default function EventCard(props: PropTypes) {
             <p className="text-b3 mt-2">{props.event.description}</p>
             <ul className="text-label-sm text-gray-7 flex flex-col gap-0.5">
               <li className="flex items-center gap-2">
-                <img src="/icon/location.svg" alt="location-icon" /> ที่{' '}
-                {props.event.location}
+                <LocationIcon aria-hidden /> ที่ {props.event.location}
               </li>
               <li className="flex items-center gap-2">
-                <img src="/icon/clock.svg" alt="clock-icon" /> จัดขึ้นวันที่{' '}
-                {props.event.date}
+                <ClockIcon aria-hidden /> จัดขึ้นวันที่ {props.event.date}
               </li>
               <li className="flex items-center gap-2">
-                <img src="/icon/target.svg" alt="target-icon" /> กลุ่มเป้าหมาย:{' '}
+                <TargetIcon aria-hidden /> กลุ่มเป้าหมาย:{' '}
                 {props.event.target_group}
               </li>
               <li className="flex items-center gap-2">
-                <img src="/icon/participant.svg" alt="participant-icon" />{' '}
-                จำนวนผู้เข้าร่วม: {props.event.participants} คน
+                <ParticipantIcon aria-hidden /> จำนวนผู้เข้าร่วม:{' '}
+                {props.event.participants} คน
               </li>
             </ul>
           </div>
@@ -83,11 +86,7 @@ export default function EventCard(props: PropTypes) {
             className="w-full h-full flex flex-col justify-center items-center gap-2 bg-blue-1 text-blue-6 font-bold rounded-lg"
             onClick={props.onClickCreateDebate}
           >
-            <img
-              className="w-4 h-4"
-              src="/icon/new-tab.svg"
-              alt="new-tab-icon"
-            />
+            <OpenInNewIcon className="w-4 h-4" aria-hidden />
             <p>สร้างข้อถกเถียงของวงสนทนานี้</p>
           </button>
           <button

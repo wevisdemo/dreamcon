@@ -25,7 +25,7 @@ export class SmartPointerSensor extends PointerSensor {
 }
 
 function isInteractiveElement(element: Element | null) {
-  if (element?.attributes.getNamedItem('data-dndkit-disable-drag')) {
+  if (element?.closest('[data-dndkit-disable-drag]')) {
     return true;
   }
   if (element?.classList.contains('MuiBackdrop-root')) {

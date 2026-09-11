@@ -1,6 +1,8 @@
 import { useContext, useState } from 'react';
 import { Comment, CommentView } from '../../types/comment';
-import BubblePlusIcon from '../icon/BubblePlusIcon';
+import AddCommentIcon from '@material-symbols/svg-700/rounded/maps_ugc.svg?react';
+import MoreVertIcon from '@material-symbols/svg-700/rounded/more_vert.svg?react';
+import DraggableDotsIcon from '../icon/DraggableDotsIcon';
 import Popover from '@mui/material/Popover';
 import MenuPopover from '../share/MenuPopover';
 import { useHotkeys } from 'react-hotkeys-hook';
@@ -22,7 +24,7 @@ interface PropTypes {
 }
 export default function CommentCard(props: PropTypes) {
   const [hovered, setHovered] = useState(false);
-  const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
+  const [anchorMenu, setAnchorMenu] = useState<null | Element>(null);
   const onClickAddComment = () => {
     props.onClickAddComment();
   };
@@ -45,7 +47,7 @@ export default function CommentCard(props: PropTypes) {
     return false;
   };
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClickMenu = (event: React.MouseEvent<Element>) => {
     setAnchorMenu(anchorMenu ? null : event.currentTarget);
   };
 
@@ -125,10 +127,9 @@ export default function CommentCard(props: PropTypes) {
           className="hover:cursor-pointer"
           classes={{ tooltip: 'tooltip-1' }}
         >
-          <img
-            className="absolute -left-6 top-1/2 -translate-y-1/2 w-6 h-6"
-            src="/icon/six-dot.svg"
-            alt="six-dot-icon"
+          <DraggableDotsIcon
+            className="absolute -left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-2"
+            aria-hidden
           />
         </Tooltip>
       )}
@@ -149,9 +150,10 @@ export default function CommentCard(props: PropTypes) {
         </div>
         <div className="flex items-start justify-between w-10">
           {showAddComment() && (
-            <BubblePlusIcon
+            <AddCommentIcon
               data-dndkit-disable-drag
               className="w-4.5 h-4.5 text-gray-5"
+              aria-label="เพิ่มข้อถกเถียงต่อยอด"
               onClick={e => {
                 e.stopPropagation();
                 onClickAddComment();
@@ -159,11 +161,10 @@ export default function CommentCard(props: PropTypes) {
             />
           )}
           {showOption() && (
-            <img
+            <MoreVertIcon
               data-dndkit-disable-drag
-              src="/icon/menu.svg"
-              alt="menu-icon"
-              className="w-4.5 h-4.5"
+              aria-label="เมนู"
+              className="w-4.5 h-4.5 text-gray-5"
               onClick={e => {
                 e.stopPropagation();
                 handleClickMenu(e);

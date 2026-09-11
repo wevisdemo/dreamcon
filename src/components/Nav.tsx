@@ -2,7 +2,7 @@ import { ReactElement, useContext, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { StoreContext } from '../store';
 import { Popover } from '@mui/material';
-import NewTabIcon from './icon/NewTab';
+import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
 import { usePermission } from '../hooks/usePermission';
 
 // todo: if has some tabs later, we have to handle state
@@ -41,7 +41,7 @@ export default function Nav(): ReactElement {
             className="flex text-blue-3 gap-2 items-center px-4 py-[5.5px] bg-blue-1 rounded-full font-bold ml-6"
           >
             <span>preview</span>
-            <NewTabIcon className="h-4 w-4 text-blue-3" />
+            <OpenInNewIcon className="h-4 w-4 text-blue-3" aria-hidden />
           </a>
         )}
       </div>

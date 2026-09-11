@@ -7,6 +7,8 @@ import MenuPopover from '../share/MenuPopover';
 import Dropdown from '../share/Dropdown';
 import { StoreContext } from '../../store';
 import { usePermission } from '../../hooks/usePermission';
+import MoreVertIcon from '@material-symbols/svg-700/rounded/more_vert.svg?react';
+import UploadIcon from '../icon/UploadIcon';
 
 interface PropTypes {
   topic: Topic;
@@ -21,7 +23,7 @@ interface PropTypes {
 export default function TopicCard(props: PropTypes) {
   const [topicTitle, setTopicTitle] = useState<string>(props.topic.title);
   const [isEditingMode, setIsEditingMode] = useState(false);
-  const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
+  const [anchorMenu, setAnchorMenu] = useState<null | Element>(null);
   const { mode: modeContext } = useContext(StoreContext);
   const { isReadOnly, canManageTopic } = usePermission();
 
@@ -33,7 +35,7 @@ export default function TopicCard(props: PropTypes) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- reset form state only when a different topic is rendered
   }, [props.topic]);
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLImageElement>) => {
+  const handleClickMenu = (event: React.MouseEvent<Element>) => {
     setAnchorMenu(anchorMenu ? null : event.currentTarget);
   };
 
@@ -96,10 +98,9 @@ export default function TopicCard(props: PropTypes) {
 
         {!isReadOnly() && (
           <>
-            <img
-              className="w-4.5 h-4.5 hover:cursor-pointer"
-              src="/icon/menu.svg"
-              alt="menu-icon"
+            <MoreVertIcon
+              className="w-4.5 h-4.5 hover:cursor-pointer text-gray-5"
+              aria-label="เมนู"
               onClick={e => {
                 e.stopPropagation();
                 handleClickMenu(e);
@@ -173,10 +174,9 @@ export default function TopicCard(props: PropTypes) {
                 >
                   ยกเลิก
                 </span>
-                <img
-                  className="w-4.5 h-4.5 hover:cursor-pointer"
-                  src="/icon/upload.svg"
-                  alt="upload-icon"
+                <UploadIcon
+                  className="w-4.5 h-4.5 hover:cursor-pointer text-blue-6"
+                  aria-label="ส่ง"
                   onClick={handlerSubmitTopicTitle}
                 />
               </div>

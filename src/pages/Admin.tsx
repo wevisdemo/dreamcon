@@ -8,6 +8,7 @@ import { useEvent } from '../hooks/useEvent';
 import { useWriter } from '../hooks/useWriter';
 import FullPageLoader from '../components/FullPageLoader';
 import DefaultLayout from '../layouts/default';
+import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
 
 enum RoomSortOption {
   LATEST_EVENT,
@@ -222,10 +223,9 @@ const AdminPage = () => {
                 placeholder="ค้นหา"
                 className="bg-white w-full border border-blue-3 outline-none p-2 rounded-full"
               />
-              <img
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
-                src="/icon/search.svg"
-                alt="search-icon"
+              <SearchIcon
+                className="absolute right-5 top-1/2 transform -translate-y-1/2 hover:cursor-pointer w-4 h-4 text-blue-5"
+                aria-hidden
                 onClick={() => {}}
               />
             </div>

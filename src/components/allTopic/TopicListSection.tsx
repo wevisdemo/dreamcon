@@ -8,6 +8,8 @@ import Filter from './Filter';
 import { TopicFilter } from '../../types/home';
 import { DreamConEvent } from '../../types/event';
 import { usePermission } from '../../hooks/usePermission';
+import AddIcon from '@material-symbols/svg-700/rounded/add.svg?react';
+import WarningIcon from '@material-symbols/svg-700/rounded/warning.svg?react';
 
 interface PropTypes {
   topics: Topic[];
@@ -66,7 +68,7 @@ export default function TopicListSection(props: PropTypes) {
                 }`}
                 onClick={handleAddTopic}
               >
-                <img className="w-6 h-6" src="/icon/plus.svg" alt="plus-icon" />
+                <AddIcon className="w-6 h-6 text-white" aria-hidden />
                 <span className="text-b2 wv-bold wv-ibmplex">
                   เพิ่มข้อถกเถียงใหม่
                 </span>
@@ -74,11 +76,7 @@ export default function TopicListSection(props: PropTypes) {
             )}
           </Droppable>
           <div className="flex flex-col items-center gap-1 max-w-150 text-center text-blue-7 text-b3 wv-ibmplex">
-            <img
-              className="w-4 h-4"
-              src="/icon/warning.svg"
-              alt="warning-icon"
-            />
+            <WarningIcon className="w-4 h-4" aria-hidden />
             <p>
               ก่อนเพิ่มข้อถกเถียงใหม่ ควรตรวจสอบข้อถกเถียงที่มีอยู่ก่อน
               หากพบประเด็นเดียวกัน ให้เพิ่มวงสนทนาของคุณในข้อถกเถียงนั้น หรือ

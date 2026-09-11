@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
 import { Topic } from '../../types/topic';
 import TopicSummaryComment from './TopicSummaryComment';
+import AddCommentIcon from '@material-symbols/svg-700/rounded/maps_ugc.svg?react';
+import PinIcon from '../icon/PinIcon';
 import SideScreenIcon from '../icon/SideScreenIcon';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { StoreContext } from '../../store';
@@ -48,10 +50,10 @@ export default function TopicSummary(props: PropTypes) {
       }}
     >
       {props.isPinned && (
-        <img
-          className="absolute -top-3 left-6 bg-white h-6 w-6 rounded-full border-blue-6 border-2"
-          src="/icon/pin-blue.svg"
-          alt="icon-pin-blue"
+        <PinIcon
+          className="absolute -top-3 left-6 bg-white h-6 w-6 rounded-full border-blue-6 border-2 text-blue-6"
+          role="img"
+          aria-label="ปักหมุดแล้ว"
         />
       )}
       {hovered && !props.isSelected && !props.hideSideScreenIcon && (
@@ -68,12 +70,13 @@ export default function TopicSummary(props: PropTypes) {
         {!props.isSelected && !props.isReadOnly && (
           <button
             className="px-3 py-1.5 border-solid border-[1.5px] border-gray-2 rounded-full hover:bg-gray-2"
+            aria-label="เพิ่มข้อถกเถียงต่อยอด"
             onClick={e => {
               e.stopPropagation();
               props.onAddComment();
             }}
           >
-            <img src="/icon/bubble-plus.svg" alt="bubble-plus-icon" />
+            <AddCommentIcon className="w-4.5 h-4.5 text-blue-5" aria-hidden />
           </button>
         )}
       </div>

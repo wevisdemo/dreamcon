@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { DreamConEvent } from '../../types/event';
 import { Tooltip } from '@mui/material';
-import IconInfo from '../icon/Info';
+import InfoIcon from '@material-symbols/svg-700/outlined/info.svg?react';
 import TooltipEventInfo from './TooltipEventInfo';
 
 interface PropTypes {
@@ -138,7 +138,7 @@ export default function FilterEvent(props: PropTypes) {
             classes={{ tooltip: 'tooltip-2' }}
           >
             <div className="absolute w-2.5 h-2.5 -right-1.25 top-1/2 -translate-y-1/2 ">
-              <IconInfo className="w-2.5 h-2.5 text-gray-5" />
+              <InfoIcon className="w-2.5 h-2.5 text-gray-5" />
             </div>
           </Tooltip>
         )}

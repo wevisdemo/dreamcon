@@ -26,9 +26,9 @@ const SEEDED_TITLES = [
 const eventFilter = (page: Page, name: string) =>
   page.locator(`img[alt="Avatar of ${name}"]`).locator('..');
 
-/** Menu icons are `pointer-events: none`; the clickable target is their row. */
-const menuAction = (page: Page, icon: 'pen' | 'bin') =>
-  page.locator(`img[alt="${icon}-icon"]`).locator('..').click();
+/** Menu labels are `pointer-events: none`; the clickable target is their row. */
+const menuAction = (page: Page, label: 'แก้ไข' | 'ลบ') =>
+  page.getByText(label, { exact: true }).locator('..').click();
 
 test.describe('anonymous', () => {
   test.beforeEach(async ({ page }) => {
@@ -43,8 +43,8 @@ test.describe('anonymous', () => {
     }
 
     await expect(page.getByRole('button', { name: ADD_TOPIC })).toHaveCount(0);
-    await expect(page.locator('img[alt="menu-icon"]')).toHaveCount(0);
-    await expect(page.locator('img[alt="bubble-plus-icon"]')).toHaveCount(0);
+    await expect(page.getByLabel('เมนู')).toHaveCount(0);
+    await expect(page.getByLabel('เพิ่มข้อถกเถียงต่อยอด')).toHaveCount(0);
   });
 
   test('filters by event', async ({ page }) => {
@@ -123,7 +123,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await waitForLoaded(page);
 
     await expect(page.getByRole('button', { name: ADD_TOPIC })).toHaveCount(0);
-    await expect(page.locator('img[alt="menu-icon"]')).toHaveCount(0);
+    await expect(page.getByLabel('เมนู')).toHaveCount(0);
   });
 
   test('can edit its own event topics but not another event topics', async ({
@@ -135,8 +135,8 @@ test.describe('signed in as the Bangkok writer', () => {
     await page
       .getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร')
       .click();
-    await page.locator('img[alt="menu-icon"]').first().click();
-    await expect(page.locator('img[alt="pen-icon"]')).toBeVisible();
+    await page.getByLabel('เมนู').first().click();
+    await expect(page.getByText('แก้ไข', { exact: true })).toBeVisible();
     // The popover keeps focus outside itself, so Escape does not close it.
     await page.locator('.MuiBackdrop-root').click();
     await expect(page.locator('.MuiBackdrop-root')).toHaveCount(0);
@@ -144,9 +144,9 @@ test.describe('signed in as the Bangkok writer', () => {
     await page
       .getByText('ท้องถิ่นควรมีอำนาจจัดเก็บภาษีของตัวเองหรือไม่')
       .click();
-    await page.locator('img[alt="menu-icon"]').first().click();
-    await expect(page.locator('img[alt="pin-icon"]')).toBeVisible();
-    await expect(page.locator('img[alt="pen-icon"]')).toHaveCount(0);
+    await page.getByLabel('เมนู').first().click();
+    await expect(page.getByText('ปักหมุด', { exact: true })).toBeVisible();
+    await expect(page.getByText('แก้ไข', { exact: true })).toHaveCount(0);
   });
 
   test('logging out returns the page to read-only', async ({
@@ -186,14 +186,14 @@ test.describe('signed in as the Bangkok writer', () => {
       /ข้อถกเถียงจาก 1 วงสนทนา/
     );
 
-    await page.locator('img[alt="menu-icon"]').first().click();
-    await menuAction(page, 'pen');
+    await page.getByLabel('เมนู').first().click();
+    await menuAction(page, 'แก้ไข');
     await page.locator('#topic-title-text-area').fill(editedTitle);
     await submitForm(page);
     await expect(page.getByText(editedTitle, { exact: true })).toHaveCount(2); // list card + side panel
 
-    await page.locator('img[alt="menu-icon"]').first().click();
-    await menuAction(page, 'bin');
+    await page.getByLabel('เมนู').first().click();
+    await menuAction(page, 'ลบ');
     await expect(page.getByText(editedTitle, { exact: true })).toHaveCount(0);
   });
 
@@ -204,11 +204,11 @@ test.describe('signed in as the Bangkok writer', () => {
     await waitForLoaded(page);
 
     await page.getByRole('button', { name: ADD_TOPIC }).click();
-    await expect(page.locator('img[alt="upload-icon"]')).toHaveCount(0);
+    await expect(page.getByLabel('ส่ง', { exact: true })).toHaveCount(0);
 
     await page.locator('#topic-title-text-area').fill('x'.repeat(141));
     await expect(page.getByText('140/140')).toBeVisible();
-    await expect(page.locator('img[alt="upload-icon"]')).toBeVisible();
+    await expect(page.getByLabel('ส่ง', { exact: true })).toBeVisible();
   });
 
   test('pastes a comment onto the add-topic button as a new topic, then undoes it', async ({

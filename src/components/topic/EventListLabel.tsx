@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import DeleteIcon from '@material-symbols/svg-700/rounded/delete.svg?react';
 import { StoreContext } from '../../store';
 
 interface PropTypes {
@@ -28,11 +29,14 @@ export default function EventListLabel(props: PropTypes) {
             >
               {eventDisplayName(eventId)}
               {props.canLeave && isActiveEvent && (
-                <button onClick={props.onLeave} className="px-1">
-                  <img
-                    className="w-3 h-3 hover:cursor-pointer saturate-0 hover:saturate-100"
-                    src="/icon/bin.svg"
-                    alt="remove-event-icon"
+                <button
+                  onClick={props.onLeave}
+                  className="px-1"
+                  aria-label="ถอนวงของฉันออก"
+                >
+                  <DeleteIcon
+                    className="w-3 h-3 hover:cursor-pointer text-gray-8 hover:text-red-7"
+                    aria-hidden
                   />
                 </button>
               )}

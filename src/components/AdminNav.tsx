@@ -1,7 +1,8 @@
 import { ReactElement, useState } from 'react';
 import useAuth from '../hooks/useAuth';
 import { Popover } from '@mui/material';
-import NewTabIcon from './icon/NewTab';
+import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
+import ProfileIcon from './icon/ProfileIcon';
 import { usePermission } from '../hooks/usePermission';
 
 // todo: if has some tabs later, we have to handle state
@@ -32,7 +33,7 @@ export default function AdminNav(): ReactElement {
             className="flex text-blue-3 gap-2 items-center px-4 py-[5.5px] bg-blue-1 rounded-full font-bold"
           >
             <span>view site</span>
-            <NewTabIcon className="h-4 w-4 text-blue-3" />
+            <OpenInNewIcon className="h-4 w-4 text-blue-3" aria-hidden />
           </a>
         )}
       </div>
@@ -44,10 +45,9 @@ export default function AdminNav(): ReactElement {
           setAnchorMenu(e.currentTarget);
         }}
       >
-        <img
-          className="rounded-full bg-blue-1 p-1 w-6.25 h-6.25"
-          src="/icon/profile.svg"
-          alt={`avatar-event-admin`}
+        <ProfileIcon
+          className="rounded-full bg-blue-1 p-1 w-6.25 h-6.25 text-[#1C1C1C]"
+          aria-hidden
         />
         <span className="wv-bold">Admin</span>
       </div>

@@ -10,6 +10,7 @@ import FilterEvent from './FilterEvent';
 import { StoreContext } from '../../store';
 import { LightWeightTopic } from '../../types/topic';
 import { useDraggable } from 'react-use-draggable-scroll';
+import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
 
 interface PropTypes {
   allTopicCount: number;
@@ -308,10 +309,9 @@ export default function Filter(props: PropTypes) {
               handleSearchTextChange(e.target.value);
             }}
           />
-          <img
-            className="absolute right-2 top-1/2 transform -translate-y-1/2"
-            src="/icon/search.svg"
-            alt="search-icon"
+          <SearchIcon
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-5"
+            aria-hidden
           />
         </div>
       </div>

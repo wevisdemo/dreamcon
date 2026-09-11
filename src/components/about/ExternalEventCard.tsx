@@ -1,3 +1,4 @@
+import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
 import { ExternalEvent } from '../../types/about';
 
 interface PropsType {
@@ -22,7 +23,7 @@ export default function ExternalEventCard(props: PropsType) {
         className="flex items-center gap-2 text-blue-5 hover:underline"
       >
         <span>เยี่ยมชมงาน</span>
-        <img src="/icon/new-tab.svg" alt="icon-new-tab" />
+        <OpenInNewIcon className="w-4 h-4 text-blue-6" aria-hidden />
       </a>
     </div>
   );

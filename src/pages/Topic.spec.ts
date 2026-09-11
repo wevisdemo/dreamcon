@@ -1,6 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
 import { loginAsWriter, submitForm, waitForLoaded } from '../utils/e2e/helpers';
 
+const ADD_COMMENT = 'เพิ่มข้อถกเถียงต่อยอด';
+const LEAVE_EVENT = 'ถอนวงของฉันออก';
+
 /** Walks up from the reason text to the card that holds the hover controls. */
 const commentCard = (page: Page, reason: string) =>
   page.getByText(reason, { exact: true }).locator('../..');
@@ -65,11 +68,11 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await expect(page.getByText('ข้อถกเถียงจาก 1 วงสนทนา')).toBeVisible();
     // Leaving would strip the topic's last event, so only delete is offered.
-    await expect(page.locator('img[alt="remove-event-icon"]')).toHaveCount(0);
+    await expect(page.getByLabel(LEAVE_EVENT)).toHaveCount(0);
 
-    await page.locator('img[alt="menu-icon"]').click();
-    await expect(page.locator('img[alt="pen-icon"]')).toBeVisible();
-    await expect(page.locator('img[alt="bin-icon"]')).toBeVisible();
+    await page.getByLabel('เมนู').click();
+    await expect(page.getByText('แก้ไข', { exact: true })).toBeVisible();
+    await expect(page.getByText('ลบ', { exact: true })).toBeVisible();
   });
 
   test('cannot edit or delete its own topic once another event commented', async ({
@@ -80,10 +83,10 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await expect(page.getByText('ข้อถกเถียงจาก 2 วงสนทนา')).toBeVisible();
 
-    await page.locator('img[alt="menu-icon"]').click();
-    await expect(page.locator('img[alt="pin-icon"]')).toBeVisible();
-    await expect(page.locator('img[alt="pen-icon"]')).toHaveCount(0);
-    await expect(page.locator('img[alt="bin-icon"]')).toHaveCount(0);
+    await page.getByLabel('เมนู').click();
+    await expect(page.getByText('ปักหมุด', { exact: true })).toBeVisible();
+    await expect(page.getByText('แก้ไข', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
   });
 
   test('replying to another event topic links this event through the comment', async ({
@@ -102,7 +105,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await parent.hover();
     // Not this event's comment, so dnd-kit marks the wrapper aria-disabled and
     // Playwright's actionability check refuses the click; the icon still works.
-    await parent.locator('svg').click({ force: true });
+    await parent.getByLabel(ADD_COMMENT).click({ force: true });
     await page.locator('#topic-title-text-area').fill(reply);
     await submitForm(page);
 
@@ -111,7 +114,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(page.getByText('จากวง เวทีกรุงเทพฯ')).toBeVisible();
 
     // Linked through a comment only: leaving is blocked while that comment exists.
-    await page.locator('img[alt="remove-event-icon"]').click();
+    await page.getByLabel(LEAVE_EVENT).click();
     await expect(page.getByText('เพราะวงสนทนาของคุณมี')).toBeVisible();
     await expect(page.getByText('ข้อถกเถียงจาก 2 วงสนทนา')).toBeVisible();
   });
@@ -127,12 +130,10 @@ test.describe('signed in as the Bangkok writer', () => {
       'ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ'
     );
     await parent.hover();
-    await parent.locator('svg').click();
+    await parent.getByLabel(ADD_COMMENT).click();
 
     // The view buttons also exist in the topic card, so scope them to the modal.
-    const modal = page
-      .locator('section.z-30')
-      .filter({ hasText: 'เพิ่มข้อถกเถียงต่อยอด' });
+    const modal = page.locator('section.z-30').filter({ hasText: ADD_COMMENT });
     await expect(modal).toBeVisible();
     await modal
       .getByRole('button', { name: 'เห็นด้วยบ้าง', exact: true })
@@ -188,8 +189,8 @@ test.describe('signed in as the Online writer', () => {
     await expect(page.locator('#add-comment-in-topic-card')).toHaveCount(0);
 
     // Not a member yet: no edit and no delete in the menu.
-    await page.locator('img[alt="menu-icon"]').click();
-    await expect(page.locator('img[alt="bin-icon"]')).toHaveCount(0);
+    await page.getByLabel('เมนู').click();
+    await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
     await page.locator('.MuiBackdrop-root').click();
 
     await page.getByRole('button', { name: JOIN }).click();
@@ -200,12 +201,12 @@ test.describe('signed in as the Online writer', () => {
     await expect(page.getByText('เวทีออนไลน์').first()).toBeVisible();
 
     // Two events are linked now, so neither can edit or delete the topic.
-    await page.locator('img[alt="menu-icon"]').click();
-    await expect(page.locator('img[alt="pen-icon"]')).toHaveCount(0);
-    await expect(page.locator('img[alt="bin-icon"]')).toHaveCount(0);
+    await page.getByLabel('เมนู').click();
+    await expect(page.getByText('แก้ไข', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
     await page.locator('.MuiBackdrop-root').click();
 
-    await page.locator('img[alt="remove-event-icon"]').click();
+    await page.getByLabel(LEAVE_EVENT).click();
     await waitForLoaded(page);
 
     await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 1 วงสนทนา/);
@@ -220,7 +221,7 @@ test.describe('signed in as the Online writer', () => {
 
     await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 2 วงสนทนา/);
 
-    await page.locator('img[alt="remove-event-icon"]').click();
+    await page.getByLabel(LEAVE_EVENT).click();
 
     const alert = page.getByText(
       'เพราะวงสนทนาของคุณมี 1 ความคิดเห็นในข้อถกเถียงนี้'

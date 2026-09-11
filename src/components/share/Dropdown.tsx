@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import KeyboardArrowDownIcon from '@material-symbols/svg-700/rounded/keyboard_arrow_down.svg?react';
 
 interface DropdownProps {
   options: string[];
@@ -29,7 +30,10 @@ const Dropdown: React.FC<DropdownProps> = ({
         onClick={handleToggle}
       >
         <span className="truncate">{selectedOption || placeholder}</span>
-        <img className="hover:cursor-pointer" src="/icon/arrow-down.svg" />
+        <KeyboardArrowDownIcon
+          className="w-4 h-4 shrink-0 self-center hover:cursor-pointer"
+          aria-hidden
+        />
       </button>
       {isOpen && (
         <ul className="dropdown-menu absolute top-full left-0 bg-white w-29 border border-gray-3 text-blue-7 rounded-xl overflow-hidden">

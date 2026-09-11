@@ -5,6 +5,8 @@ import { Topic } from '../types/topic';
 import DefaultLayout from '../layouts/default';
 import Footer from '../components/Footer';
 import { StoreContext } from '../store';
+import ArrowForwardIcon from '@material-symbols/svg-700/rounded/arrow_forward.svg?react';
+import KeyboardArrowDownIcon from '@material-symbols/svg-700/rounded/keyboard_arrow_down.svg?react';
 
 export default function LandingPage() {
   const { currentPage } = useContext(StoreContext);
@@ -76,10 +78,9 @@ export default function LandingPage() {
               alt="concept"
               className="w-full max-h-28.5"
             />
-            <img
-              src="/icon/arrow-down-black.svg"
-              alt="icon-arrow-down-black"
-              className="h-6 w-6"
+            <KeyboardArrowDownIcon
+              aria-hidden
+              className="h-6 w-6 text-gray-8"
             />
             <p className="text-b2 text-center">
               <span className="wv-bold">Dream Constitution</span>{' '}
@@ -204,11 +205,7 @@ export default function LandingPage() {
               <span className="text-button wv-ibmplex font-semibold text-white">
                 ดูประเด็นทั้งหมด
               </span>
-              <img
-                className="w-6 h-6"
-                src="/icon/arrow-forward.svg"
-                alt="arrow-forward"
-              />
+              <ArrowForwardIcon className="w-6 h-6 text-white" aria-hidden />
             </a>
           </div>
         </section>

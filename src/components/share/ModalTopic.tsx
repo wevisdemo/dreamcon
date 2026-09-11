@@ -7,6 +7,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import Dropdown from './Dropdown';
+import UploadIcon from '../icon/UploadIcon';
 import { DreamConEvent } from '../../types/event';
 interface PropTypes {
   mode: 'create' | 'edit';
@@ -115,10 +116,9 @@ export default function ModalTopic(props: PropTypes) {
                 placeholder="ข้อถกเถียงควรประกอบด้วยเหตุผลและข้อสรุป (140 ตัวอักษร)"
               />
               {canSubmit() && (
-                <img
-                  className="w-4.5 h-4.5 absolute bottom-2.5 right-2.5 hover:cursor-pointer"
-                  src="/icon/upload.svg"
-                  alt="upload-icon"
+                <UploadIcon
+                  className="w-4.5 h-4.5 absolute bottom-2.5 right-2.5 hover:cursor-pointer text-blue-6"
+                  aria-label="ส่ง"
                   onClick={onSubmit}
                 />
               )}

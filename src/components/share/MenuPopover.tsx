@@ -1,3 +1,8 @@
+import EditIcon from '@material-symbols/svg-700/rounded/edit.svg?react';
+import DeleteIcon from '@material-symbols/svg-700/rounded/delete.svg?react';
+import PinIcon from '../icon/PinIcon';
+import UnpinIcon from '../icon/UnpinIcon';
+
 interface PropTypes {
   canEdit: boolean;
   hasPin?: boolean;
@@ -9,6 +14,8 @@ interface PropTypes {
 }
 
 export default function MenuPopover(props: PropTypes) {
+  const PinToggleIcon = props.isPinned ? UnpinIcon : PinIcon;
+
   return (
     <div className="w-45 flex flex-col gap-0.25 bg-white rounded-lg border overflow-hidden border-gray-3 wv-ibmplexlooped">
       {props.canEdit && (
@@ -17,10 +24,9 @@ export default function MenuPopover(props: PropTypes) {
           data-dndkit-disable-drag
           onClick={props.onClickEdit}
         >
-          <img
-            className="pointer-events-none w-4 h-4"
-            src="/icon/pen.svg"
-            alt="pen-icon"
+          <EditIcon
+            className="pointer-events-none w-4 h-4 text-gray-8"
+            aria-hidden
           />
           <span className="pointer-events-none text-black text-b3 ">แก้ไข</span>
         </div>
@@ -38,10 +44,9 @@ export default function MenuPopover(props: PropTypes) {
             }
           }}
         >
-          <img
-            className="pointer-events-none w-5 h-5"
-            src={props.isPinned ? '/icon/unpin.svg' : '/icon/pin.svg'}
-            alt="pin-icon"
+          <PinToggleIcon
+            className="pointer-events-none w-5 h-5 text-gray-8"
+            aria-hidden
           />
           <span className="pointer-events-none text-black text-b3">
             {props.isPinned ? 'ถอนหมุด' : 'ปักหมุด'}
@@ -55,10 +60,9 @@ export default function MenuPopover(props: PropTypes) {
           className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
           onClick={props.onClickDelete}
         >
-          <img
-            className="pointer-events-none w-4 h-4"
-            src="/icon/bin.svg"
-            alt="bin-icon"
+          <DeleteIcon
+            className="pointer-events-none w-4 h-4 text-red-7"
+            aria-hidden
           />
           <span className="pointer-events-none text-red-7 text-b3">ลบ</span>
         </div>
