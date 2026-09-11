@@ -22,7 +22,7 @@ export async function loginAsAdmin(page: Page, password = ADMIN_PASSWORD) {
   await page.getByRole('button', { name: 'Login' }).click();
 }
 
-/** Topic and comment forms submit through an upload icon, not a button. */
+/** Topic forms submit through an upload icon, not a button. */
 export const submitForm = (page: Page) =>
   page.getByLabel('ส่ง', { exact: true }).click();
 

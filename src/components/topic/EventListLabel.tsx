@@ -3,10 +3,13 @@ import DeleteIcon from '@material-symbols/svg-700/rounded/delete.svg?react';
 import { StoreContext } from '../../store';
 
 interface PropTypes {
+  label: string;
   eventIds: string[];
   activeEventId?: string;
   canLeave?: boolean;
   onLeave: () => void;
+  className?: string;
+  color?: 'blue' | 'gray';
 }
 
 export default function EventListLabel(props: PropTypes) {
@@ -17,8 +20,10 @@ export default function EventListLabel(props: PropTypes) {
     eventId;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-label-sm text-blue-7 py-3">
-      <span>ข้อถกเถียงจาก {props.eventIds.length} วงสนทนา:</span>
+    <div
+      className={`flex flex-wrap items-center gap-2 text-label-sm ${props.color === 'gray' ? 'text-gray-5' : 'text-blue-7'} ${props.className ?? 'py-3'}`}
+    >
+      <span>{props.label}</span>
       {props.eventIds.map((eventId, index) => {
         const isActiveEvent = eventId === props.activeEventId;
         return (

@@ -26,9 +26,10 @@ export interface CommentDB {
 
 export type CreateCommentDBPayload = Omit<CommentDB, 'id'>;
 
+/** `event_ids` is written on its own through join/leave, never by a text edit. */
 export type UpdateCommentDBPayload = Omit<
   CommentDB,
-  'created_at' | 'id' | 'parent_topic_id' | 'parent_comment_ids'
+  'created_at' | 'id' | 'parent_topic_id' | 'parent_comment_ids' | 'event_ids'
 >;
 
 export enum CommentView {

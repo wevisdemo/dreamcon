@@ -149,7 +149,7 @@ export default function AllTopic() {
             <section className="absolute w-full h-content z-30 bg-transparent">
               <ModalComment
                 store={homePageContext.modalCommentMainSection}
-                events={eventContext.events}
+                topics={displayTopics ?? []}
               />
               <ModalTopic
                 mode={homePageContext.modalTopicMainSection.state.mode}
@@ -189,7 +189,7 @@ export default function AllTopic() {
             <section className="absolute w-full h-content z-30 bg-transparent">
               <ModalComment
                 store={homePageContext.modalCommentSideSection}
-                events={eventContext.events}
+                topics={displayTopics ?? []}
               />
             </section>
             <section className="w-full h-full">

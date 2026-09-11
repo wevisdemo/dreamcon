@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import { StoreContext } from '../store';
+import { Comment } from '../types/comment';
 import { DreamConEventDB } from '../types/event';
 import { Topic } from '../types/topic';
-import { linkedEventIds } from '../utils/mapping';
+import { CommentParent, linkedEventIds } from '../utils/mapping';
 
 export const usePermission = () => {
   const {
@@ -30,30 +31,44 @@ export const usePermission = () => {
     return null;
   };
 
-  const isWriterOwner = (eventIds: string[]): boolean => {
-    if (userContext.userState?.role === 'writer') {
-      return eventIds.includes(userContext.userState.event.id);
-    }
-    return false;
+  /**
+   * A topic or comment can be edited or deleted only by its sole linked event:
+   * once another event joins or replies, it is shared and nobody can change it.
+   * The event must also be linked explicitly, not only through a reply.
+   */
+  const canManage = (parent: CommentParent): boolean => {
+    const writerEvent = getWriterEvent();
+    const eventIds = linkedEventIds(parent);
+    return (
+      !!writerEvent &&
+      eventIds.length === 1 &&
+      eventIds[0] === writerEvent.id &&
+      parent.event_ids.includes(writerEvent.id)
+    );
   };
 
   /**
-   * A topic can be edited or deleted only by its sole linked event: once another
-   * event joins or comments, the topic is shared and nobody can change it.
+   * A topic's sole explicit event deletes instead of leaving. A comment's author
+   * (`event_ids[0]`) never leaves: the next event would inherit its authorship.
    */
-  const canManageTopic = (topic: Topic): boolean => {
+  const canLeave = (parent: Topic | Comment): boolean => {
     const writerEvent = getWriterEvent();
-    const eventIds = linkedEventIds(topic);
-    return (
-      !!writerEvent && eventIds.length === 1 && eventIds[0] === writerEvent.id
-    );
+    if (!writerEvent || !linkedEventIds(parent).includes(writerEvent.id)) {
+      return false;
+    }
+    if ('title' in parent) {
+      return !(
+        parent.event_ids.length === 1 && parent.event_ids[0] === writerEvent.id
+      );
+    }
+    return parent.event_ids[0] !== writerEvent.id;
   };
 
   return {
     isReadOnly,
     userCanEdit,
     getWriterEvent,
-    isWriterOwner,
-    canManageTopic,
+    canManage,
+    canLeave,
   };
 };

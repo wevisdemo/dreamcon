@@ -1,44 +1,21 @@
 import { Comment } from '../../types/comment';
-import { Topic } from '../../types/topic';
 import CommentAndChildren from './CommentAndChildren';
 
 interface PropTypes {
   comments: Comment[];
   level: number;
-  isLastChildOfParent?: boolean;
-  parent: Topic | Comment;
 }
 
 export default function CommentWrapper(props: PropTypes) {
-  const getNextComment = (index: number): Comment | null => {
-    if (index + 1 >= props.comments.length) return null;
-    return props.comments[index + 1];
-  };
-
-  const getPreviousComment = (index: number): Comment | null => {
-    if (index - 1 < 0) return null;
-    return props.comments[index - 1];
-  };
-
   return (
-    <div
-      className={`comment-wrapper flex flex-col ${
-        props.level === 1 ? 'gap-4 mt-2.5' : ''
-      }`}
-    >
-      {props.comments.map((comment, index) => {
-        return (
-          <CommentAndChildren
-            key={comment.id}
-            comment={comment}
-            previousComment={getPreviousComment(index)}
-            nextComment={getNextComment(index)}
-            level={props.level}
-            isLastChildOfParent={props.isLastChildOfParent}
-            parent={props.parent}
-          />
-        );
-      })}
+    <div className="comment-wrapper flex flex-col gap-4 mt-2.5">
+      {props.comments.map(comment => (
+        <CommentAndChildren
+          key={comment.id}
+          comment={comment}
+          level={props.level}
+        />
+      ))}
     </div>
   );
 }

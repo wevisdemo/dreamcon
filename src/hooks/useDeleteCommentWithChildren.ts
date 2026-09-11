@@ -14,18 +14,19 @@ import { usePermission } from './usePermission';
 export const useDeleteCommentWithChildren = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { isWriterOwner } = usePermission();
+  const { canManage } = usePermission();
 
-  const deleteCommentWithChildren = async (comment: Comment) => {
+  const deleteCommentWithChildren = async (
+    comment: Comment
+  ): Promise<boolean> => {
     const commentId = comment.id;
     if (!commentId) {
       setError('No comment ID provided for deletion');
-      return;
+      return false;
     }
-    const isOwner = isWriterOwner(comment.event_ids);
-    if (!isOwner) {
+    if (!canManage(comment)) {
       setError('You do not have permission to delete this comment');
-      return;
+      return false;
     }
 
     setLoading(true);
@@ -67,9 +68,11 @@ export const useDeleteCommentWithChildren = () => {
         'Comment and all child comments deleted successfully:',
         commentId
       );
+      return true;
     } catch (err) {
       console.error('Error deleting comment:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      return false;
     } finally {
       setLoading(false);
     }

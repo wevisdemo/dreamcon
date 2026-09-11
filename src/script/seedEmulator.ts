@@ -189,8 +189,8 @@ interface SeedComment {
   view: CommentView;
   reason: string;
   ageInDays: number;
-  /** Defaults to the topic's first event. Set it for cross-event replies. */
-  eventId?: string;
+  /** Defaults to the topic's first event. Set it for cross-event replies or joined comments. */
+  eventIds?: string[];
 }
 
 /**
@@ -295,9 +295,30 @@ const seedComments: SeedComment[] = [
     topic: 'tp-parliament',
     parents: [],
     view: CommentView.AGREE,
-    eventId: 'ev-online',
+    eventIds: ['ev-online'],
     reason: 'ควรเปิดให้ประชาชนเสนอชื่อผู้สมัครวุฒิสภาได้ผ่านช่องทางออนไลน์',
     ageInDays: -19,
+  },
+  {
+    // Cross-event reply: ev-online is linked to cm-parliament-3 through it and
+    // cannot leave that comment while it exists.
+    id: 'cm-parliament-3-2',
+    topic: 'tp-parliament',
+    parents: ['cm-parliament-3'],
+    view: CommentView.PARTIAL_AGREE,
+    eventIds: ['ev-online'],
+    reason: 'สภาเดี่ยวต้องมาพร้อมกลไกตรวจสอบจากภาคประชาชน',
+    ageInDays: -18,
+  },
+  {
+    // Joined by a second event: ev-online can leave it, nobody can edit or delete it.
+    id: 'cm-parliament-7',
+    topic: 'tp-parliament',
+    parents: [],
+    view: CommentView.DISAGREE,
+    eventIds: ['ev-bangkok', 'ev-online'],
+    reason: 'ควรให้ประชาชนลงประชามติรับรองรายชื่อสมาชิกวุฒิสภา',
+    ageInDays: -17,
   },
   {
     // Legacy comment: no ref_id, mirrors documents created before the field.
@@ -374,9 +395,7 @@ const comments: CommentDB[] = seedComments.map(c => ({
   reason: c.reason,
   parent_comment_ids: c.parents,
   parent_topic_id: c.topic,
-  event_ids: c.eventId
-    ? [c.eventId]
-    : [topics.find(t => t.id === c.topic)!.event_ids[0]],
+  event_ids: c.eventIds ?? [topics.find(t => t.id === c.topic)!.event_ids[0]],
   created_at: daysFromSeed(c.ageInDays),
   updated_at: daysFromSeed(c.ageInDays),
   notified_at: daysFromSeed(c.ageInDays),

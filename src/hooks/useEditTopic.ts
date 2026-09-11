@@ -19,14 +19,14 @@ import { usePermission } from './usePermission';
 export const useEditTopic = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { canManageTopic, getWriterEvent } = usePermission();
+  const { canManage, getWriterEvent } = usePermission();
 
   /** Takes the whole topic because permission depends on its comments. */
   const editTopic = async (
     topic: Topic,
     changes: Pick<AddOrEditTopicPayload, 'title' | 'category'>
   ): Promise<boolean> => {
-    if (!canManageTopic(topic)) {
+    if (!canManage(topic)) {
       setError('You do not have permission to edit this topic');
       return false;
     }

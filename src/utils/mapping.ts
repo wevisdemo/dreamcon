@@ -18,20 +18,23 @@ export const convertTopicDBToTopic = (
   };
 };
 
-export const flattenComments = (topic: Topic): Comment[] => {
+export type CommentParent = Pick<Topic | Comment, 'event_ids' | 'comments'>;
+
+/** Every descendant reply, not including the parent itself. */
+export const flattenComments = (parent: CommentParent): Comment[] => {
   const walk = (comment: Comment): Comment[] => [
     comment,
     ...comment.comments.flatMap(walk),
   ];
-  return topic.comments.flatMap(walk);
+  return parent.comments.flatMap(walk);
 };
 
-/** Events the topic is explicitly linked to, plus every event that commented on it. */
-export const linkedEventIds = (topic: Topic): string[] => [
+/** Events the parent is explicitly linked to, plus every event that replied under it. */
+export const linkedEventIds = (parent: CommentParent): string[] => [
   ...new Set(
     [
-      ...topic.event_ids,
-      ...flattenComments(topic).map(comment => comment.event_ids[0]),
+      ...parent.event_ids,
+      ...flattenComments(parent).map(comment => comment.event_ids[0]),
     ].filter(Boolean)
   ),
 ];

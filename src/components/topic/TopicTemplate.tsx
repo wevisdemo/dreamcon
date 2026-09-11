@@ -5,13 +5,14 @@ import { Topic, TopicCategory } from '../../types/topic';
 import { useAddComment } from '../../hooks/useAddComment';
 import { useDeleteTopicWithChildren } from '../../hooks/useDeleteTopicWithChildren';
 import { useEditTopic } from '../../hooks/useEditTopic';
+import { useLeaveEvent } from '../../hooks/useLeaveEvent';
 import { usePermission } from '../../hooks/usePermission';
-import { useShowError } from '../../hooks/useShowError';
-import { flattenComments, linkedEventIds } from '../../utils/mapping';
+import { useAlertIfNotSaved, useShowError } from '../../hooks/useShowError';
+import { linkedEventIds } from '../../utils/mapping';
 import FullPageLoader from '../FullPageLoader';
+import JoinAndComment from '../share/JoinAndComment';
 import CommentWrapper from './CommentWrapper';
 import EventListLabel from './EventListLabel';
-import JoinTopic from './JoinTopic';
 import TopicCard from './TopicCard';
 
 interface PropTypes {
@@ -21,48 +22,18 @@ interface PropTypes {
 
 export default function TopicTemplate(props: PropTypes) {
   const { pin: pinContext } = useContext(StoreContext);
-  const { isReadOnly, getWriterEvent } = usePermission();
+  const { isReadOnly, getWriterEvent, canLeave } = usePermission();
   const showError = useShowError();
-  const {
-    editTopic,
-    joinTopic,
-    leaveTopic,
-    loading: editTopicLoading,
-  } = useEditTopic();
+  const alertIfNotSaved = useAlertIfNotSaved();
+  const { editTopic, joinTopic, loading: editTopicLoading } = useEditTopic();
+  const { leave, loading: leaveLoading } = useLeaveEvent();
   const { addNewComment, loading: addCommentLoading } = useAddComment();
   const { deleteTopicWithChildren, loading: deleteTopicLoading } =
     useDeleteTopicWithChildren();
 
   const activeEvent = getWriterEvent();
   const linkedEvents = linkedEventIds(props.topic);
-  const isMember = !!activeEvent && linkedEvents.includes(activeEvent.id);
-  const canJoin = !!activeEvent && !isMember;
-  const isOnlyEvent =
-    !!activeEvent &&
-    props.topic.event_ids.length === 1 &&
-    props.topic.event_ids[0] === activeEvent.id;
-  const canLeave = isMember && !isOnlyEvent;
-
-  const alertIfNotSaved = async (save: Promise<boolean>) => {
-    if (!(await save)) {
-      showError({ title: 'บันทึกไม่สำเร็จ', message: 'กรุณาลองใหม่อีกครั้ง' });
-    }
-  };
-
-  const handleLeaveTopic = () => {
-    if (!activeEvent) return;
-    const ownComments = flattenComments(props.topic).filter(
-      comment => comment.event_ids[0] === activeEvent.id
-    );
-    if (ownComments.length > 0) {
-      showError({
-        title: 'ลบไม่ได้',
-        message: `เพราะวงสนทนาของคุณมี ${ownComments.length} ความคิดเห็นในข้อถกเถียงนี้`,
-      });
-      return;
-    }
-    alertIfNotSaved(leaveTopic(props.topic));
-  };
+  const canJoin = !!activeEvent && !linkedEvents.includes(activeEvent.id);
 
   const handleAddComment = (commentView: CommentView, reason: string) => {
     addNewComment({
@@ -90,9 +61,10 @@ export default function TopicTemplate(props: PropTypes) {
 
   return (
     <div className="max-w-230 w-full py-6">
-      {(editTopicLoading || addCommentLoading || deleteTopicLoading) && (
-        <FullPageLoader />
-      )}
+      {(editTopicLoading ||
+        leaveLoading ||
+        addCommentLoading ||
+        deleteTopicLoading) && <FullPageLoader />}
       <div className="flex w-full items-stretch">
         <div className="w-6 h-auto relative overflow-hidden">
           <div className="absolute w-12 left-0 top-1/2 rounded-2xl border-solid border-2 border-blue-3 h-screen"></div>
@@ -123,16 +95,18 @@ export default function TopicTemplate(props: PropTypes) {
 
       <div className="comment-section pl-6 overflow-hidden">
         <EventListLabel
+          label={`ข้อถกเถียงจาก ${linkedEvents.length} วงสนทนา:`}
           eventIds={linkedEvents}
           activeEventId={activeEvent?.id}
-          canLeave={!isReadOnly() && canLeave}
-          onLeave={handleLeaveTopic}
+          canLeave={!isReadOnly() && canLeave(props.topic)}
+          onLeave={() => leave(props.topic)}
         />
         {!isReadOnly() && (
-          <JoinTopic
+          <JoinAndComment
             key={props.topic.id}
+            textareaId="add-comment-in-topic-card"
             canJoin={canJoin}
-            onJoinTopic={() => alertIfNotSaved(joinTopic(props.topic))}
+            onJoin={() => alertIfNotSaved(joinTopic(props.topic))}
             onAddComment={handleAddComment}
           />
         )}
@@ -150,8 +124,6 @@ export default function TopicTemplate(props: PropTypes) {
             <CommentWrapper
               comments={getCommentsByView(CommentView.AGREE)}
               level={1}
-              parent={props.topic}
-              isLastChildOfParent
             />
           </div>
           <div className="view-wrapper">
@@ -165,8 +137,6 @@ export default function TopicTemplate(props: PropTypes) {
             <CommentWrapper
               comments={getCommentsByView(CommentView.PARTIAL_AGREE)}
               level={1}
-              parent={props.topic}
-              isLastChildOfParent
             />
           </div>
           <div className="view-wrapper">
@@ -179,8 +149,6 @@ export default function TopicTemplate(props: PropTypes) {
             <CommentWrapper
               comments={getCommentsByView(CommentView.DISAGREE)}
               level={1}
-              parent={props.topic}
-              isLastChildOfParent
             />
           </div>
         </div>

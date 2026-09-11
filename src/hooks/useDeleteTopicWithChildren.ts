@@ -14,7 +14,7 @@ import { Topic } from '../types/topic';
 export const useDeleteTopicWithChildren = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { canManageTopic, getWriterEvent } = usePermission();
+  const { canManage, getWriterEvent } = usePermission();
 
   const deleteTopicWithChildren = async (topic: Topic): Promise<boolean> => {
     const topicId = topic.id;
@@ -30,7 +30,7 @@ export const useDeleteTopicWithChildren = () => {
       return false;
     }
 
-    if (!canManageTopic(topic)) {
+    if (!canManage(topic)) {
       setError('You do not have permission to delete this topic');
       setLoading(false);
       return false;

@@ -25,7 +25,7 @@ export default function TopicCard(props: PropTypes) {
   const [isEditingMode, setIsEditingMode] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | Element>(null);
   const { mode: modeContext } = useContext(StoreContext);
-  const { isReadOnly, canManageTopic } = usePermission();
+  const { isReadOnly, canManage } = usePermission();
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? 'topic-menu' : undefined;
@@ -79,7 +79,7 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const hasPermissionToEdit = () =>
-    modeContext.value !== 'view' && canManageTopic(props.topic);
+    modeContext.value !== 'view' && canManage(props.topic);
 
   return (
     <div className="w-full p-4 bg-white rounded-2xl shadow-card flex flex-col gap-2.5">

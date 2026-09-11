@@ -11,10 +11,6 @@ import Tooltip from '@mui/material/Tooltip';
 interface PropTypes {
   comment: Comment;
   bgClass: string;
-  roundedTl?: boolean;
-  roundedTr?: boolean;
-  roundedBl?: boolean;
-  roundedBr?: boolean;
   onClickAddComment: () => void;
   onClickEdit: () => void;
   onClickDelete: () => void;
@@ -33,19 +29,7 @@ export default function CommentCard(props: PropTypes) {
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? 'comment-menu' : undefined;
 
-  const showOption = () => {
-    if (!props.canEdit) return false;
-    if (hovered) return true;
-    if (openMenu) return true;
-    return false;
-  };
-
-  const showAddComment = () => {
-    if (!props.canAddComment) return false;
-    if (hovered) return true;
-    if (openMenu) return true;
-    return false;
-  };
+  const revealClass = () => (hovered || openMenu ? '' : 'invisible');
 
   const handleClickMenu = (event: React.MouseEvent<Element>) => {
     setAnchorMenu(anchorMenu ? null : event.currentTarget);
@@ -74,15 +58,6 @@ export default function CommentCard(props: PropTypes) {
       case CommentView.DISAGREE:
         return 'bg-red-2';
     }
-  };
-
-  const roundedClass = () => {
-    let classes = '';
-    if (props.roundedTl) classes += 'rounded-tl-2xl ';
-    if (props.roundedTr) classes += 'rounded-tr-2xl ';
-    if (props.roundedBl) classes += 'rounded-bl-2xl ';
-    if (props.roundedBr) classes += 'rounded-br-2xl ';
-    return classes;
   };
 
   useHotkeys('Meta+x, ctrl+x', () => {
@@ -136,7 +111,7 @@ export default function CommentCard(props: PropTypes) {
 
       <div
         aria-describedby={popoverID}
-        className={`p-2.5 ${props.bgClass} ${roundedClass()} text-b3 flex justify-between border-2 ${
+        className={`p-2.5 ${props.bgClass} rounded-2xl text-b3 flex justify-between border-2 ${
           props.isOver ? 'border-dashed border-blue-4' : 'border-transparent'
         } ${
           hovered && props.canEdit
@@ -149,10 +124,10 @@ export default function CommentCard(props: PropTypes) {
           <span className="flex-1">{props.comment.reason}</span>
         </div>
         <div className="flex items-start justify-between w-10">
-          {showAddComment() && (
+          {props.canAddComment && (
             <AddCommentIcon
               data-dndkit-disable-drag
-              className="w-4.5 h-4.5 text-gray-5"
+              className={`w-4.5 h-4.5 text-gray-5 ${revealClass()}`}
               aria-label="เพิ่มข้อถกเถียงต่อยอด"
               onClick={e => {
                 e.stopPropagation();
@@ -160,11 +135,11 @@ export default function CommentCard(props: PropTypes) {
               }}
             />
           )}
-          {showOption() && (
+          {props.canEdit && (
             <MoreVertIcon
               data-dndkit-disable-drag
               aria-label="เมนู"
-              className="w-4.5 h-4.5 text-gray-5"
+              className={`w-4.5 h-4.5 text-gray-5 ${revealClass()}`}
               onClick={e => {
                 e.stopPropagation();
                 handleClickMenu(e);

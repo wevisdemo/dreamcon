@@ -10,20 +10,22 @@ export const useAddComment = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const addNewComment = async (payload: AddOrEditCommentPayload) => {
+  const addNewComment = async (
+    payload: AddOrEditCommentPayload
+  ): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
     if (!payload.parent_topic_id) {
       setError('No parent_topic_id found in Add New Comment Payload');
       setLoading(false);
-      return;
+      return false;
     }
 
     if (payload.event_ids.length === 0) {
       setError('No event_ids found in Add New Comment Payload');
       setLoading(false);
-      return;
+      return false;
     }
 
     try {
@@ -51,9 +53,11 @@ export const useAddComment = () => {
 
         console.log('Document written with ID: ', docRef.id);
       });
+      return true;
     } catch (err) {
       console.error('Error adding document: ', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      return false;
     } finally {
       setLoading(false);
     }

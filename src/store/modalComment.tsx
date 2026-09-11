@@ -1,22 +1,18 @@
 import { Comment } from '../types/comment';
-import { Topic } from '../types/topic';
 
+/** Holds ids only: the modal reads the live topic and comment from the page. */
 export interface ModalCommentState {
   isModalOpen: boolean;
   defaultState?: Comment;
   parentTopicId?: string;
   parentCommentIds?: string[];
   mode: 'create' | 'edit';
-  fromTopic?: Topic;
-  fromComment?: Comment;
 }
 
 export interface ActionCreateCommentPayload {
   mode: 'create';
   parentTopicId: string;
   parentCommentIds: string[];
-  fromTopic?: Topic;
-  fromComment?: Comment;
 }
 
 export interface ActionEditCommentPayload {

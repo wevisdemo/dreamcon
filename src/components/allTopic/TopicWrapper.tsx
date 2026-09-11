@@ -26,7 +26,6 @@ export default function TopicWrapper(props: PropTypes) {
         mode: 'create',
         parentTopicId: topic.id,
         parentCommentIds: [],
-        fromTopic: topic,
       },
     });
   };

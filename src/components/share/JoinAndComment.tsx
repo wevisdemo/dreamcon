@@ -28,48 +28,60 @@ const commentViewOptions = [
   },
 ];
 
+const colorStyle = {
+  blue: {
+    joinCard: 'bg-blue-5',
+    joinButton: 'bg-blue-4 hover:bg-blue-3 border-white',
+    commentCard: 'bg-blue-3',
+  },
+  gray: {
+    joinCard: 'bg-gray-2',
+    joinButton: 'bg-white hover:bg-gray-3 border-gray-3',
+    commentCard: 'bg-gray-2',
+  },
+};
+
 interface PropTypes {
+  textareaId: string;
   canJoin: boolean;
-  onJoinTopic: () => void;
+  color?: keyof typeof colorStyle;
+  defaultState?: { comment_view: CommentView; reason: string };
+  onJoin: () => void;
   onAddComment: (commentView: CommentView, reason: string) => void;
 }
 
-export default function JoinTopic(props: PropTypes) {
+export default function JoinAndComment(props: PropTypes) {
   const { getWriterEvent } = usePermission();
-  const [commentView, setCommentView] = useState<null | CommentView>(
-    CommentView.AGREE
+  const [commentView, setCommentView] = useState(
+    props.defaultState?.comment_view ?? CommentView.AGREE
   );
-  const [newCommentText, setNewCommentText] = useState('');
+  const [newCommentText, setNewCommentText] = useState(
+    props.defaultState?.reason ?? ''
+  );
 
   const activeEvent = getWriterEvent();
-
-  const handleSelectCommentView = (selectedView: CommentView) => {
-    if (commentView === selectedView) {
-      setCommentView(null);
-      return;
-    }
-    setCommentView(selectedView);
-  };
+  const style = colorStyle[props.color ?? 'blue'];
 
   const handleAddComment = () => {
-    if (!newCommentText.trim() || commentView === null) return;
+    if (!newCommentText.trim()) return;
     props.onAddComment(commentView, newCommentText);
     setCommentView(CommentView.AGREE);
     setNewCommentText('');
   };
 
-  const canSubmit = () =>
-    newCommentText.trim().length > 0 && commentView !== null;
+  const canSubmit = () => newCommentText.trim().length > 0;
 
   if (props.canJoin) {
     return (
-      <div className="flex flex-row gap-2 px-4 py-5 bg-blue-5 rounded-2xl items-center">
+      <div
+        className={`flex flex-row gap-2 px-4 py-5 ${style.joinCard} rounded-2xl items-center`}
+      >
         <p className="text-b3 font-bold flex-1">
           วงสนทนาของคุณพูดเรื่องเดียวกันหรือไม่
         </p>
         <button
-          className="py-2.5 px-4 bg-blue-4 hover:bg-blue-3 border-white border-1 rounded-full text-label"
-          onClick={props.onJoinTopic}
+          className={`py-2.5 px-4 ${style.joinButton} border-1 rounded-full text-label`}
+          onClick={props.onJoin}
         >
           + ใช่ เพิ่มวงของฉัน
         </button>
@@ -78,7 +90,7 @@ export default function JoinTopic(props: PropTypes) {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-blue-3 rounded-2xl">
+    <div className={`flex flex-col gap-4 p-4 ${style.commentCard} rounded-2xl`}>
       <p className="text-b3 font-bold flex-1">
         วงสนทนาของคุณมีความคิดเห็นต่อยอดว่า..
       </p>
@@ -91,13 +103,13 @@ export default function JoinTopic(props: PropTypes) {
                 ? option.background
                 : option.mutedBackground
             } ${option.color} border-solid border rounded-full w-full`}
-            onClick={() => handleSelectCommentView(option.view)}
+            onClick={() => setCommentView(option.view)}
           >
             {option.label}
           </button>
         ))}
       </div>
-      {commentView && activeEvent && (
+      {activeEvent && (
         <div className="flex flex-col gap-2">
           <div>
             <div className="px-2.5 py-2 bg-gray-2 flex gap-1 text-label-sm border border-gray-3 border-b-0 rounded-t">
@@ -107,8 +119,8 @@ export default function JoinTopic(props: PropTypes) {
             </div>
             <textarea
               className="w-full p-2.5 text-b3 bg-gray-1 resize-none focus:outline-none border border-t-0 border-gray-3 rounded-b"
-              name="add-comment-in-topic-card"
-              id="add-comment-in-topic-card"
+              name={props.textareaId}
+              id={props.textareaId}
               rows={3}
               value={newCommentText}
               onChange={e => setNewCommentText(e.target.value)}

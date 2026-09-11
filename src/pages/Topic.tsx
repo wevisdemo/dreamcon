@@ -29,11 +29,8 @@ const topicsUrl = () =>
 
 export default function TopicPage() {
   const { id: topicId } = useParams();
-  const {
-    topicPage: topicPageContext,
-    event: eventContext,
-    selectedTopic,
-  } = useContext(StoreContext);
+  const { topicPage: topicPageContext, selectedTopic } =
+    useContext(StoreContext);
   const { eventsReady } = usePageSession('topic');
 
   const showTopic = async (
@@ -103,7 +100,7 @@ export default function TopicPage() {
               <section className="absolute w-full h-content z-30 bg-transparent">
                 <ModalComment
                   store={topicPageContext.modalComment}
-                  events={eventContext.events}
+                  topics={[selectedTopic.value]}
                 />
               </section>
             </>
