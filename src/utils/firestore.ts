@@ -4,12 +4,15 @@ import { getFirestore } from 'firebase/firestore';
 import {
   EMULATOR_FIREBASE_CONFIG,
   connectEmulators,
+  initEmulatorsViaPageOrigin,
   isEmulatorEnabled,
 } from './firebaseEmulator';
 
 const useEmulator = isEmulatorEnabled(
   import.meta.env.VITE_USE_FIREBASE_EMULATOR
 );
+const useEmulatorProxy =
+  useEmulator && isEmulatorEnabled(import.meta.env.VITE_DEV_DEMO);
 
 // Your web app's Firebase configuration
 const firebaseConfig = useEmulator
@@ -19,12 +22,21 @@ const firebaseConfig = useEmulator
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
-const db = getFirestore(app);
-const auth = getAuth(app);
+const initServices = () => {
+  if (useEmulatorProxy) {
+    return initEmulatorsViaPageOrigin(app);
+  }
 
-if (useEmulator) {
-  connectEmulators(db, auth);
-}
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  if (useEmulator) {
+    connectEmulators(db, auth);
+  }
+
+  return { db, auth };
+};
+
+const { db, auth } = initServices();
 
 export { db, auth };

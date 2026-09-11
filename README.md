@@ -85,12 +85,15 @@ Other commands:
 
 | Command                                   | Description                                                                                                  |
 | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `pnpm dev:demo`                           | `pnpm dev` for sharing: reachable from other devices, or from an HTTPS tunnel pointed at port 5173.          |
 | `pnpm emulators`                          | Emulators + seed only, without Vite. Useful when running the dev server separately.                          |
 | `pnpm seed:emulator`                      | Wipe and re-seed running emulators, back to the exact initial state.                                         |
 | `pnpm dev:prod`                           | Dev server against the **real** project. Use deliberately.                                                   |
 | `pnpm firestore:backup [file]`            | Lossless JSON backup of `events`, `topics`, `comments`, `writers` into `out/`. Read-only.                    |
 | `pnpm firestore:restore <file> [--force]` | Restore a backup (upsert by id, never deletes). Refuses to touch the real project without `--force`.         |
 | `pnpm firestore:dump`                     | CSV export for analysis. Lossy on purpose (flattens `parent_comment_ids`, stringifies types) — not a backup. |
+
+`pnpm dev:demo` binds Vite and the emulators (via `firebase.demo.json`) to all interfaces and lets Vite accept any `Host` header. The app reaches Firestore and Auth through a Vite proxy on its own origin, so forwarding port 5173 alone is enough for an HTTPS tunnel (e.g. Tailscale Funnel), while the Emulator UI stays LAN-only on port 4000. Anyone on that network can open the Emulator UI and sign in with the seeded admin. Keep it to trusted networks.
 
 ## Backup and restore
 
