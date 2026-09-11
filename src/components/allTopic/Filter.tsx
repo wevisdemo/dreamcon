@@ -60,7 +60,7 @@ export default function Filter(props: PropTypes) {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedValue(searchText);
-    }, 500); // delay in ms
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -181,8 +181,8 @@ export default function Filter(props: PropTypes) {
   }, [categoryRef]);
 
   return (
-    <div className="bg-white w-full rounded-[16px] py-[16px] flex flex-col gap-[16px]">
-      <div className="flex items-center gap-[18px] w-full pl-[24px]">
+    <div className="bg-white w-full rounded-2xl py-4 flex flex-col gap-4">
+      <div className="flex items-center gap-4.5 w-full pl-6">
         <div className="relative">
           {props.filter.selectedEvent === null ? (
             <DefaultFilterEvent
@@ -198,24 +198,24 @@ export default function Filter(props: PropTypes) {
               isOwner={isEventOwner(props.filter.selectedEvent)}
             />
           )}
-          <p className="absolute whitespace-nowrap text-b2 text-white wv-bold wv-ibmplex px-[16px] py-[8px] top-[-24px] left-[-50%] bg-blue6 rounded-l-full rounded-tr-full shrink-0">
+          <p className="absolute whitespace-nowrap text-b2 text-white wv-bold wv-ibmplex px-4 py-2 -top-6 -left-1/2 bg-blue-6 rounded-l-full rounded-tr-full shrink-0">
             สำรวจข้อถกเถียง
           </p>
         </div>
-        <div className="w-[12px] h-[12px] bg-blue2 rounded-full shrink-0" />
+        <div className="w-3 h-3 bg-blue-2 rounded-full shrink-0" />
         <div className="relative overflow-hidden w-full]">
           <div
-            className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
+            className={`z-20 absolute top-0 right-0 h-full w-11.5 bg-gradient-to-l from-white to-transparent pointer-events-none ${
               showEventGradient.right ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-300`}
           />
           <div
-            className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
+            className={`z-20 absolute top-0 left-0 h-full w-11.5 bg-gradient-to-r from-white to-transparent pointer-events-none ${
               showEventGradient.left ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-300`}
           />
           <div
-            className="flex gap-[16px] w-full overflow-scroll no-scrollbar relative"
+            className="flex gap-4 w-full overflow-scroll no-scrollbar relative"
             {...eventFilterEvents}
             ref={eventFilterRef}
           >
@@ -237,42 +237,26 @@ export default function Filter(props: PropTypes) {
           </div>
         </div>
       </div>
-      <div className="flex gap-[12px] items-center justify-between w-full px-[24px]">
-        <div className="flex gap-[4px] items-center w-full shrink-2">
-          <span className="text-blue7 text-nowrap">เรียงลำดับ:</span>
-          <div className="flex w-[130px] text-b3">
+      <div className="flex gap-3 items-center justify-between w-full px-6">
+        <div className="flex gap-1 items-center w-full shrink-2">
+          <span className="text-blue-7 text-nowrap">เรียงลำดับ:</span>
+          <div className="flex w-32.5 text-b3">
             <button
-              style={{
-                backgroundColor:
-                  props.filter.sortedBy === 'most-commented'
-                    ? '#2579F5'
-                    : 'transparent',
-                color:
-                  props.filter.sortedBy === 'most-commented'
-                    ? '#FFFFFF'
-                    : '#95D0FF',
-                borderColor:
-                  props.filter.sortedBy === 'most-commented'
-                    ? '#1C4CD3'
-                    : '#95D0FF',
-              }}
-              className="w-full py-[6px] rounded-l-[48px] border-[1px] border-solid"
+              className={`w-full py-1.5 rounded-l-full border border-solid ${
+                props.filter.sortedBy === 'most-commented'
+                  ? 'bg-blue-6 text-white border-blue-7'
+                  : 'text-blue-3 border-blue-3'
+              }`}
               onClick={() => handleSortChange('most-commented')}
             >
               มากที่สุด
             </button>
             <button
-              style={{
-                backgroundColor:
-                  props.filter.sortedBy === 'latest'
-                    ? '#2579F5'
-                    : 'transparent',
-                color:
-                  props.filter.sortedBy === 'latest' ? '#FFFFFF' : '#95D0FF',
-                borderColor:
-                  props.filter.sortedBy === 'latest' ? '#1C4CD3' : '#95D0FF',
-              }}
-              className="w-full py-[6px] rounded-r-[48px] border-[1px] border-solid"
+              className={`w-full py-1.5 rounded-r-full border border-solid ${
+                props.filter.sortedBy === 'latest'
+                  ? 'bg-blue-6 text-white border-blue-7'
+                  : 'text-blue-3 border-blue-3'
+              }`}
               onClick={() => handleSortChange('latest')}
             >
               ล่าสุด
@@ -280,31 +264,31 @@ export default function Filter(props: PropTypes) {
           </div>
         </div>
 
-        <div className="flex gap-[4px] items-center w-full overflow-x-scroll">
-          <span className="text-blue7 text-nowrap">หัวข้อ:</span>
+        <div className="flex gap-1 items-center w-full overflow-x-scroll">
+          <span className="text-blue-7 text-nowrap">หัวข้อ:</span>
           <div className="relative overflow-hidden w-full]">
             <div
-              className={`z-20 absolute top-0 right-0 h-full w-[46px] bg-gradient-to-l from-white to-transparent pointer-events-none ${
+              className={`z-20 absolute top-0 right-0 h-full w-11.5 bg-gradient-to-l from-white to-transparent pointer-events-none ${
                 showCategoryGradient.right ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
             />
             <div
-              className={`z-20 absolute top-0 left-0 h-full w-[46px] bg-gradient-to-r from-white to-transparent pointer-events-none ${
+              className={`z-20 absolute top-0 left-0 h-full w-11.5 bg-gradient-to-r from-white to-transparent pointer-events-none ${
                 showCategoryGradient.left ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
             />
             <div
-              className="flex overflow-scroll text-b3 gap-[8px] no-scrollbar"
+              className="flex overflow-scroll text-b3 gap-2 no-scrollbar"
               {...categoryEvents}
               ref={categoryRef}
             >
               {topicFilterCategories.map(category => (
                 <button
                   key={category}
-                  className={`whitespace-nowrap px-[12px] py-[6px] border-solid border-[1.5px] rounded-[48px] ${
+                  className={`whitespace-nowrap px-3 py-1.5 border-solid border-[1.5px] rounded-full ${
                     props.filter.category === category
-                      ? 'bg-blue6 text-white'
-                      : 'border-blue3 text-blue3'
+                      ? 'bg-blue-6 text-white'
+                      : 'border-blue-3 text-blue-3'
                   }`}
                   onClick={() => handleCategoryChange(category)}
                 >
@@ -314,18 +298,18 @@ export default function Filter(props: PropTypes) {
             </div>
           </div>
         </div>
-        <div className="relative w-[150px]">
+        <div className="relative w-37.5">
           <input
             type="text"
             placeholder="ค้นหา"
-            className="bg-white w-[150px] border border-blue3 outline-none px-[8px] py-[6px] rounded-[48px]"
+            className="bg-white w-37.5 border border-blue-3 outline-none px-2 py-1.5 rounded-full"
             value={searchText}
             onChange={e => {
               handleSearchTextChange(e.target.value);
             }}
           />
           <img
-            className="absolute right-[8px] top-1/2 transform -translate-y-1/2"
+            className="absolute right-2 top-1/2 transform -translate-y-1/2"
             src="/icon/search.svg"
             alt="search-icon"
           />

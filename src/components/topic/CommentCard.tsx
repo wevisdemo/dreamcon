@@ -8,7 +8,7 @@ import { StoreContext } from '../../store';
 import Tooltip from '@mui/material/Tooltip';
 interface PropTypes {
   comment: Comment;
-  bgColor: string;
+  bgClass: string;
   roundedTl?: boolean;
   roundedTr?: boolean;
   roundedBl?: boolean;
@@ -66,20 +66,20 @@ export default function CommentCard(props: PropTypes) {
   const viewColor = () => {
     switch (props.comment.comment_view) {
       case CommentView.AGREE:
-        return 'lightGreen';
+        return 'bg-green-light';
       case CommentView.PARTIAL_AGREE:
-        return 'lightYellow';
+        return 'bg-yellow-3';
       case CommentView.DISAGREE:
-        return 'lightRed';
+        return 'bg-red-2';
     }
   };
 
   const roundedClass = () => {
     let classes = '';
-    if (props.roundedTl) classes += 'rounded-tl-[16px] ';
-    if (props.roundedTr) classes += 'rounded-tr-[16px] ';
-    if (props.roundedBl) classes += 'rounded-bl-[16px] ';
-    if (props.roundedBr) classes += 'rounded-br-[16px] ';
+    if (props.roundedTl) classes += 'rounded-tl-2xl ';
+    if (props.roundedTr) classes += 'rounded-tr-2xl ';
+    if (props.roundedBl) classes += 'rounded-bl-2xl ';
+    if (props.roundedBr) classes += 'rounded-br-2xl ';
     return classes;
   };
 
@@ -111,11 +111,11 @@ export default function CommentCard(props: PropTypes) {
               <span>
                 <span className="wv-bold">ลาก</span> เพื่อย้าย
               </span>
-              <div className="flex gap-[1px]">
-                <span className="flex justify-center align-center w-[16px] h-[16px] text-gray3 rounded-[2px] border-gray4 border-[1px]">
+              <div className="flex gap-0.25">
+                <span className="flex justify-center align-center w-4 h-4 text-gray-3 rounded-xs border-gray-4 border">
                   ⌘
                 </span>
-                <span className="flex justify-center align-center w-[16px] h-[16px] text-gray3 rounded-[2px] border-gray4 border-[1px]">
+                <span className="flex justify-center align-center w-4 h-4 text-gray-3 rounded-xs border-gray-4 border">
                   X
                 </span>
               </div>
@@ -126,8 +126,7 @@ export default function CommentCard(props: PropTypes) {
           classes={{ tooltip: 'tooltip-1' }}
         >
           <img
-            style={{ transform: 'translate(0, -50%)' }}
-            className="absolute left-[-24px] top-[50%] w-[24px] h-[24px]"
+            className="absolute -left-6 top-1/2 -translate-y-1/2 w-6 h-6"
             src="/icon/six-dot.svg"
             alt="six-dot-icon"
           />
@@ -136,25 +135,23 @@ export default function CommentCard(props: PropTypes) {
 
       <div
         aria-describedby={popoverID}
-        className={`p-[10px] ${roundedClass()} text-b3 flex justify-between border-[2px] ${
-          props.isOver ? 'border-dashed border-blue4' : 'border-transparent'
+        className={`p-2.5 ${props.bgClass} ${roundedClass()} text-b3 flex justify-between border-2 ${
+          props.isOver ? 'border-dashed border-blue-4' : 'border-transparent'
         } ${
           hovered && props.canEdit
-            ? 'hover:border-blue6 hover:cursor-pointer'
+            ? 'hover:border-blue-6 hover:cursor-pointer'
             : ''
         } `}
-        style={{ backgroundColor: props.bgColor }}
       >
-        <div className="flex flex-1 gap-[10px]">
-          <div className={`w-[12px] h-[12px] rounded-full bg-${viewColor()}`} />
+        <div className="flex flex-1 gap-2.5">
+          <div className={`w-3 h-3 rounded-full ${viewColor()}`} />
           <span className="flex-1">{props.comment.reason}</span>
         </div>
-        <div className="flex items-start justify-between w-[40px]">
+        <div className="flex items-start justify-between w-10">
           {showAddComment() && (
             <BubblePlusIcon
               data-dndkit-disable-drag
-              color="#979797"
-              className="w-[18px] h-[18px]"
+              className="w-4.5 h-4.5 text-gray-5"
               onClick={e => {
                 e.stopPropagation();
                 onClickAddComment();
@@ -166,7 +163,7 @@ export default function CommentCard(props: PropTypes) {
               data-dndkit-disable-drag
               src="/icon/menu.svg"
               alt="menu-icon"
-              className="w-[18px] h-[18px]"
+              className="w-4.5 h-4.5"
               onClick={e => {
                 e.stopPropagation();
                 handleClickMenu(e);

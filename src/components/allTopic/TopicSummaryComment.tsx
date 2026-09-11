@@ -16,15 +16,15 @@ export default function TopicSummaryComment(props: PropTypes) {
     <div className="flex flex-col ">
       {getCommentsByView(CommentView.AGREE).length > 0 && (
         <div
-          className={`w-full flex py-[8px] gap-[8px]`}
+          className={`w-full flex py-2 gap-2`}
           style={{
             height: `${getHeightOfCommentsCount(
               getCommentsByView(CommentView.AGREE).length
             )}px`,
           }}
         >
-          <div className="w-[12px] h-full rounded-[48px] bg-lightGreen"></div>
-          <p className="text-label text-gray5 flex gap-[8px]">
+          <div className="w-3 h-full rounded-full bg-green-light"></div>
+          <p className="text-label text-gray-5 flex gap-2">
             <span>{getCommentsByView(CommentView.AGREE).length}</span>
             <span>เห็นด้วย..</span>
           </p>
@@ -32,15 +32,15 @@ export default function TopicSummaryComment(props: PropTypes) {
       )}
       {getCommentsByView(CommentView.PARTIAL_AGREE).length > 0 && (
         <div
-          className={`w-full flex py-[8px] gap-[8px]`}
+          className={`w-full flex py-2 gap-2`}
           style={{
             height: `${getHeightOfCommentsCount(
               getCommentsByView(CommentView.PARTIAL_AGREE).length
             )}px`,
           }}
         >
-          <div className="w-[12px] h-full rounded-[48px] bg-lightYellow"></div>
-          <p className="text-label text-gray5 flex gap-[8px]">
+          <div className="w-3 h-full rounded-full bg-yellow-3"></div>
+          <p className="text-label text-gray-5 flex gap-2">
             <span>{getCommentsByView(CommentView.PARTIAL_AGREE).length}</span>
             <span>เห็นด้วยบางส่วน..</span>
           </p>
@@ -48,15 +48,15 @@ export default function TopicSummaryComment(props: PropTypes) {
       )}
       {getCommentsByView(CommentView.DISAGREE).length > 0 && (
         <div
-          className={`w-full flex py-[8px] gap-[8px]`}
+          className={`w-full flex py-2 gap-2`}
           style={{
             height: `${getHeightOfCommentsCount(
               getCommentsByView(CommentView.DISAGREE).length
             )}px`,
           }}
         >
-          <div className="w-[12px] h-full rounded-[48px] bg-lightRed"></div>
-          <p className="text-label text-gray5 flex gap-[8px]">
+          <div className="w-3 h-full rounded-full bg-red-2"></div>
+          <p className="text-label text-gray-5 flex gap-2">
             <span>{getCommentsByView(CommentView.DISAGREE).length}</span>
             <span>ไม่เห็นด้วย..</span>
           </p>

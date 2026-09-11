@@ -1,8 +1,8 @@
 export default function TokenExpiredPage() {
   return (
-    <div className="w-screen h-screen bg-blue2 flex flex-col gap-[24px] items-center justify-center text-blue7 text-center">
+    <div className="w-screen h-screen bg-blue-2 flex flex-col gap-6 items-center justify-center text-blue-7 text-center">
       <img
-        className="h-[45px]"
+        className="h-11.25"
         src="/logo/dream-con-logo-white.svg"
         alt="dreamcon-logo"
       />
@@ -15,7 +15,7 @@ export default function TokenExpiredPage() {
       </p>
       <p>
         or head back to the{' '}
-        <a className="!text-blue7 !underline" href="/">
+        <a className="!text-blue-7 !underline" href="/">
           homepage
         </a>
       </p>

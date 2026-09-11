@@ -19,9 +19,8 @@ const DefaultLayout: React.FC<{
   return (
     <div className="flex flex-col w-screen h-screen">
       {getNav(page)}
-      <main className="pt-[64px] min-h-screen h-full flex flex-col w-full">
+      <main className="pt-16 min-h-screen h-full flex flex-col w-full">
         {children}
-        {/* <div className="w-full h-full bg-blue2"></div> */}
       </main>
     </div>
   );

@@ -67,8 +67,8 @@ export default function ModalEvent(props: PropTypes) {
 
   const getConfirmStyle = () =>
     validatePayload(payload)
-      ? 'rounded-[48px] py-[10px] px-[16px] bg-[#2579F5] text-button text-white wv-ibmplex wv-bold shadow-md'
-      : 'rounded-[48px] py-[10px] px-[16px] bg-[#E8E8E8] text-button text-[#979797] wv-ibmplex wv-bold';
+      ? 'rounded-full py-2.5 px-4 bg-blue-6 text-button text-white wv-ibmplex wv-bold shadow-md'
+      : 'rounded-full py-2.5 px-4 bg-gray-2 text-button text-gray-5 wv-ibmplex wv-bold';
 
   const onSubmit = () => {
     switch (props.mode) {
@@ -99,43 +99,43 @@ export default function ModalEvent(props: PropTypes) {
       className="fixed w-full h-full inset-0 bg-black/50 flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="w-full h-auto max-w-[830px] bg-white md:rounded-lg shadow-lg">
-        <div className="flex items-center px-[16px] pt-[24px] pb-[16px] border-solid border-b-[1px] border-gray3 relative">
-          <h2 className="heading-5 text-blue7 wv-ibmplex wv-bold flex-1 w-full text-center">
+      <div className="w-full h-auto max-w-207.5 bg-white md:rounded-lg shadow-lg">
+        <div className="flex items-center px-4 pt-6 pb-4 border-solid border-b border-gray-3 relative">
+          <h2 className="heading-5 text-blue-7 wv-ibmplex wv-bold flex-1 w-full text-center">
             {props.mode === 'edit' ? 'แก้ไขข้อมูลวงสนทนา' : 'เพิ่มวงสนทนาใหม่'}
           </h2>
           <button
-            className="text-label text-gray5 wv-ibmplex underline absolute right-[16px]"
+            className="text-label text-gray-5 wv-ibmplex underline absolute right-4"
             onClick={handleClose}
           >
             ยกเลิก
           </button>
         </div>
-        <div className="p-[24px] flex flex-col gap-[16px]">
-          <div className="flex justify-between items-center gap-[16px]">
+        <div className="p-6 flex flex-col gap-4">
+          <div className="flex justify-between items-center gap-4">
             <div className="w-1/2">
-              <label className="block text-blue7 mb-[12px]">ชื่อที่แสดง</label>
+              <label className="block text-blue-7 mb-3">ชื่อที่แสดง</label>
               <input
                 type="text"
                 value={payload?.display_name || ''}
                 onChange={e =>
                   setPayload({ ...payload, display_name: e.target.value })
                 }
-                className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+                className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
                 placeholder="กรอกชื่อที่แสดง"
               />
             </div>
             <div className="w-1/2">
-              <label className="block text-blue7 mb-[12px]">รูปภาพ</label>
-              <div className="overflow-x-scroll flex-nowrap flex gap-[8px]">
+              <label className="block text-blue-7 mb-3">รูปภาพ</label>
+              <div className="overflow-x-scroll flex-nowrap flex gap-2">
                 {eventAvatars.map((avatar, index) => (
                   <img
                     key={index}
                     src={avatar}
                     alt={`Avatar ${index}`}
-                    className={`w-[35px] h-[35px] rounded-full cursor-pointer ${
+                    className={`w-8.75 h-8.75 rounded-full cursor-pointer ${
                       payload.avatar_url === avatar
-                        ? 'border-2 border-gray8'
+                        ? 'border-2 border-gray-8'
                         : ''
                     }`}
                     onClick={() =>
@@ -147,12 +147,12 @@ export default function ModalEvent(props: PropTypes) {
             </div>
           </div>
           <div>
-            <label className="block text-blue7 mb-[12px]">
+            <label className="block text-blue-7 mb-3">
               ชื่อเต็ม ภาษาอังกฤษ
             </label>
             <input
               type="text"
-              className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+              className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
               onChange={e =>
                 setPayload({ ...payload, title_en: e.target.value })
               }
@@ -161,12 +161,10 @@ export default function ModalEvent(props: PropTypes) {
             />
           </div>
           <div>
-            <label className="block text-blue7 mb-[12px]">
-              ชื่อเต็ม ภาษาไทย
-            </label>
+            <label className="block text-blue-7 mb-3">ชื่อเต็ม ภาษาไทย</label>
             <input
               type="text"
-              className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+              className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
               onChange={e =>
                 setPayload({ ...payload, title_th: e.target.value })
               }
@@ -175,21 +173,21 @@ export default function ModalEvent(props: PropTypes) {
             />
           </div>
           <div>
-            <label className="block text-blue7 mb-[12px]">คำอธิบาย</label>
+            <label className="block text-blue-7 mb-3">คำอธิบาย</label>
             <textarea
               value={payload?.description || ''}
               onChange={e =>
                 setPayload({ ...payload, description: e.target.value })
               }
-              className="w-full p-[10px] bg-gray1 border border-gray3 rounded-lg focus:outline-none resize-none h-48"
+              className="w-full p-2.5 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none resize-none h-48"
               placeholder="กรอกคำอธิบาย"
             ></textarea>
           </div>
           <div>
-            <label className="block text-blue7 mb-[12px]">ลิงก์ข่าว</label>
+            <label className="block text-blue-7 mb-3">ลิงก์ข่าว</label>
             <input
               type="text"
-              className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+              className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
               onChange={e =>
                 setPayload({ ...payload, news_link: e.target.value })
               }
@@ -197,12 +195,12 @@ export default function ModalEvent(props: PropTypes) {
               placeholder="กรอกลิงก์ข่าว"
             />
           </div>
-          <div className="flex gap-[16px]">
+          <div className="flex gap-4">
             <div className="flex-1">
-              <label className="block text-blue7 mb-[12px]">สถานที่</label>
+              <label className="block text-blue-7 mb-3">สถานที่</label>
               <input
                 type="text"
-                className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+                className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
                 onChange={e =>
                   setPayload({ ...payload, location: e.target.value })
                 }
@@ -211,11 +209,11 @@ export default function ModalEvent(props: PropTypes) {
               />
             </div>
             <div className="flex-1">
-              <label className="block text-blue7 mb-[12px]">วันที่จัด</label>
+              <label className="block text-blue-7 mb-3">วันที่จัด</label>
               <div className="relative">
                 <span
-                  className={`absolute p-[4px] bg-gray1 left-[10px] top-[50%] transform-[translateY(-50%)] text-center ${
-                    payload.date ? '' : 'text-gray5'
+                  className={`absolute p-1 bg-gray-1 left-2.5 top-1/2 -translate-y-1/2 text-center ${
+                    payload.date ? '' : 'text-gray-5'
                   }`}
                 >
                   {payload?.date
@@ -224,7 +222,7 @@ export default function ModalEvent(props: PropTypes) {
                 </span>
                 <input
                   type="date"
-                  className="w-full px-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+                  className="w-full px-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
                   onChange={e =>
                     setPayload({ ...payload, date: e.target.value })
                   }
@@ -237,13 +235,11 @@ export default function ModalEvent(props: PropTypes) {
               </div>
             </div>
             <div className="">
-              <label className="block text-blue7 mb-[12px]">
-                จำนวนผู้เข้าร่วม
-              </label>
-              <div className="flex gap-[10px] items-center">
+              <label className="block text-blue-7 mb-3">จำนวนผู้เข้าร่วม</label>
+              <div className="flex gap-2.5 items-center">
                 <input
                   type="number"
-                  className="w-[70px] p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+                  className="w-17.5 p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
                   placeholder="กรอกจำนวนผู้เข้าร่วม"
                   onChange={e =>
                     setPayload({
@@ -255,16 +251,14 @@ export default function ModalEvent(props: PropTypes) {
                   }
                   value={payload?.participants || ''}
                 />
-                <span className="text-gray5">คน</span>
+                <span className="text-gray-5">คน</span>
               </div>
             </div>
             <div className="flex-1">
-              <label className="block text-blue7 mb-[12px]">
-                กลุ่มเป้าหมาย
-              </label>
+              <label className="block text-blue-7 mb-3">กลุ่มเป้าหมาย</label>
               <input
                 type="text"
-                className="w-full p-[10px] h-[35px] bg-gray1 border border-gray3 rounded-lg focus:outline-none"
+                className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
                 placeholder="กรอกกลุ่มเป้าหมาย"
                 onChange={e =>
                   setPayload({ ...payload, target_group: e.target.value })

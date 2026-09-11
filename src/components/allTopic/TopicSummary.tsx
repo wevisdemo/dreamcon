@@ -21,8 +21,8 @@ export default function TopicSummary(props: PropTypes) {
   const { clipboard: clipboardContext } = useContext(StoreContext);
 
   const getBorderClass = () => {
-    if (props.isOver && !props.isSelected) return 'border-dashed border-blue4';
-    else if (props.isSelected) return 'border-blue6';
+    if (props.isOver && !props.isSelected) return 'border-dashed border-blue-4';
+    else if (props.isSelected) return 'border-blue-6';
     else return 'border-transparent';
   };
 
@@ -37,7 +37,7 @@ export default function TopicSummary(props: PropTypes) {
 
   return (
     <div
-      className={`bg-white rounded-[16px] p-[24px] relative flex flex-col gap-[16px] border-[2px] ${
+      className={`bg-white rounded-2xl p-6 relative flex flex-col gap-4 border-2 ${
         hovered && !props.isSelected ? 'hover:drop-shadow-xl' : ''
       }
       ${getBorderClass()} hover:cursor-pointer`}
@@ -49,31 +49,25 @@ export default function TopicSummary(props: PropTypes) {
     >
       {props.isPinned && (
         <img
-          className="absolute top-[-12px] left-[24px] bg-white h-[24px] w-[24px] rounded-full border-blue6 border-[2px]"
+          className="absolute -top-3 left-6 bg-white h-6 w-6 rounded-full border-blue-6 border-2"
           src="/icon/pin-blue.svg"
           alt="icon-pin-blue"
         />
       )}
       {hovered && !props.isSelected && !props.hideSideScreenIcon && (
-        <SideScreenIcon
-          className="h-[24px] w-[24px] absolute top-[5px] right-[8px] hover:cursor-pointer"
-          color="#D9D9D9"
-        />
+        <SideScreenIcon className="h-6 w-6 absolute top-1.25 right-2 hover:cursor-pointer text-[#D9D9D9]" />
       )}
       {props.isSelected && !props.hideSideScreenIcon && (
-        <SideScreenIcon
-          className="h-[24px] w-[24px] absolute top-[5px] right-[8px] hover:cursor-pointer"
-          color="#2579F5"
-        />
+        <SideScreenIcon className="h-6 w-6 absolute top-1.25 right-2 hover:cursor-pointer text-blue-6" />
       )}
       <p className="text-b2 wv-bold wv-ibmplex"> {props.topic.title} </p>
-      <div className="flex justify-between items-center h-[32px]">
-        <p className="text-accent underline text-b3">
+      <div className="flex justify-between items-center h-8">
+        <p className="text-blue-6 underline text-b3">
           {props.topic.comments.length || 0} ความคิดเห็น
         </p>
         {!props.isSelected && !props.isReadOnly && (
           <button
-            className="px-[12px] py-[6px] border-solid border-[1.5px] border-gray2 rounded-[48px] hover:bg-gray2"
+            className="px-3 py-1.5 border-solid border-[1.5px] border-gray-2 rounded-full hover:bg-gray-2"
             onClick={e => {
               e.stopPropagation();
               props.onAddComment();

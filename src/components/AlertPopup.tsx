@@ -35,13 +35,13 @@ export default function AlertPopup({
     <>
       {visible && (
         <div
-          className={`flex flex-wrap items-center justify-center gap-2 text-gray8 text-b3 p-4 rounded-2xl shadow-sm ${
-            mode === 'error' ? 'bg-lightRed' : 'bg-green3'
+          className={`flex flex-wrap items-center justify-center gap-2 text-gray-8 text-b3 p-4 rounded-2xl shadow-sm ${
+            mode === 'error' ? 'bg-red-2' : 'bg-green-3'
           }`}
         >
           <span className={mode === 'error' ? undefined : 'wv-bold'}>
             {mode === 'error' && title && (
-              <span className="font-bold text-red-700">{title} </span>
+              <span className="font-bold text-red-7">{title} </span>
             )}
             {mode === 'error' && message}
             {mode === 'copy' && '🎉 คัดลอกไปยังคลิปบอร์ดแล้ว'}
@@ -49,7 +49,7 @@ export default function AlertPopup({
           </span>
           {mode === 'error' ? (
             <span
-              className="text-gray7 underline px-0.5 hover:cursor-pointer"
+              className="text-gray-7 underline px-0.5 hover:cursor-pointer"
               onClick={onClose}
             >
               ปิด
@@ -60,7 +60,7 @@ export default function AlertPopup({
                 <span className=" px-0.5 ">hover ตำแหน่งที่ต้องการย้าย</span>
               ) : (
                 <span
-                  className="text-accent underline px-0.5 hover:cursor-pointer"
+                  className="text-blue-6 underline px-0.5 hover:cursor-pointer"
                   onClick={() => {
                     onUndo?.();
                     onClose();
@@ -70,11 +70,11 @@ export default function AlertPopup({
                 </span>
               )}
 
-              <span className="flex justify-center align-center w-4 h-4 text-gray7 rounded-xs border-gray5 border">
+              <span className="flex justify-center align-center w-4 h-4 text-gray-7 rounded-xs border-gray-5 border">
                 ⌘
               </span>
 
-              <span className="flex justify-center align-center w-4 h-4 text-gray7 rounded-xs border-gray5 border">
+              <span className="flex justify-center align-center w-4 h-4 text-gray-7 rounded-xs border-gray-5 border">
                 {mode === 'copy' ? 'V' : 'Z'}
               </span>
             </div>

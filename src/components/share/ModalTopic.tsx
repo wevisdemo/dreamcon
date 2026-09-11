@@ -70,31 +70,31 @@ export default function ModalTopic(props: PropTypes) {
       className="w-full h-screen inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="w-full md:max-w-[480px] bg-white md:rounded-lg shadow-lg">
-        <div className="flex justify-between items-center p-[16px] mt-[8px] border-solid border-b-[1px] border-[#D4D4D4] relative">
+      <div className="w-full md:max-w-120 bg-white md:rounded-lg shadow-lg">
+        <div className="flex justify-between items-center p-4 mt-2 border-solid border-b border-gray-3 relative">
           <Dropdown
             onSelect={v => setCategory(v as TopicCategory)}
             options={topicCategories}
             placeholder="เลือกหัวข้อ"
           />
-          <p className="absolute wv-ibmplex text-b2 text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%]  translate-x-[-50%] bg-white px-[8px]">
+          <p className="absolute wv-ibmplex text-b2 text-blue-7 wv-bold left-1/2 top-1/2 -translate-y-1/2  -translate-x-1/2 bg-white px-2">
             {props.mode === 'create'
               ? 'เพิ่มข้อถกเถียงใหม่'
               : 'แก้ไขข้อถกเถียง'}
           </p>
 
           <div
-            className="text-gray5 wv-ibmplex underline hover:cursor-pointer"
+            className="text-gray-5 wv-ibmplex underline hover:cursor-pointer"
             onClick={handleClose}
           >
             ยกเลิก
           </div>
         </div>
 
-        <div className="p-[16px] h-full flex flex-col">
-          <div className="flex gap-[8px] items-center">
+        <div className="p-4 h-full flex flex-col">
+          <div className="flex gap-2 items-center">
             <img
-              className="rounded-full w-[25px] h-[25px]"
+              className="rounded-full w-6.25 h-6.25"
               src={props.createdByEvent.avatar_url}
               alt={`avatar-event-${props.createdByEvent.display_name}`}
             />
@@ -102,14 +102,12 @@ export default function ModalTopic(props: PropTypes) {
               {props.createdByEvent.display_name}
             </span>
           </div>
-          <div className="w-full rounded-[5px] border border-[1px] border-gray1 overflow-hidden mt-[16px]">
-            <div className="px-[10px] py-[8px] bg-gray2">
-              คุณมีข้อถกเถียงว่า...
-            </div>
-            <div className="w-full bg-gray1 relative">
+          <div className="w-full rounded-[5px] border border-gray-1 overflow-hidden mt-4">
+            <div className="px-2.5 py-2 bg-gray-2">คุณมีข้อถกเถียงว่า...</div>
+            <div className="w-full bg-gray-1 relative">
               <TextareaAutosize
                 id="topic-title-text-area"
-                className="w-full bg-gray1 p-[10px] text-black resize-none overflow-hidden focus:outline-none"
+                className="w-full bg-gray-1 p-2.5 text-black resize-none overflow-hidden focus:outline-none"
                 value={text}
                 onChange={e => setText(e.target.value)}
                 autoFocus
@@ -118,7 +116,7 @@ export default function ModalTopic(props: PropTypes) {
               />
               {canSubmit() && (
                 <img
-                  className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
+                  className="w-4.5 h-4.5 absolute bottom-2.5 right-2.5 hover:cursor-pointer"
                   src="/icon/upload.svg"
                   alt="upload-icon"
                   onClick={onSubmit}
@@ -126,7 +124,7 @@ export default function ModalTopic(props: PropTypes) {
               )}
             </div>
           </div>
-          <span className="text-[#6E6E6E]">{text.length}/140</span>
+          <span className="text-gray-7">{text.length}/140</span>
         </div>
       </div>
     </div>

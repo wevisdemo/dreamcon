@@ -10,32 +10,26 @@ interface PropTypes {
 
 export default function MenuPopover(props: PropTypes) {
   return (
-    <div className="w-[180px] flex flex-col gap-[1px] bg-white rounded-[8px] border-[1px] overflow-hidden border-gray3 wv-ibmplexlooped">
+    <div className="w-45 flex flex-col gap-0.25 bg-white rounded-lg border overflow-hidden border-gray-3 wv-ibmplexlooped">
       {props.canEdit && (
         <div
-          className="w-full flex items-center px-[16px] py-[12px] gap-[8px] hover:bg-gray1 hover:cursor-pointer"
+          className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
           data-dndkit-disable-drag
           onClick={props.onClickEdit}
         >
           <img
-            style={{ pointerEvents: 'none' }}
-            className="w-[16px] h-[16px]"
+            className="pointer-events-none w-4 h-4"
             src="/icon/pen.svg"
             alt="pen-icon"
           />
-          <span
-            style={{ pointerEvents: 'none' }}
-            className="text-black text-b3 "
-          >
-            แก้ไข
-          </span>
+          <span className="pointer-events-none text-black text-b3 ">แก้ไข</span>
         </div>
       )}
 
       {props.hasPin && (
         <div
           data-dndkit-disable-drag
-          className="w-full flex items-center px-[16px] py-[12px] gap-[8px] hover:bg-gray1 hover:cursor-pointer"
+          className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
           onClick={() => {
             if (props.isPinned) {
               props.onClickUnpin?.();
@@ -45,15 +39,11 @@ export default function MenuPopover(props: PropTypes) {
           }}
         >
           <img
-            style={{ pointerEvents: 'none' }}
-            className="w-[20px] h-[20px]"
+            className="pointer-events-none w-5 h-5"
             src={props.isPinned ? '/icon/unpin.svg' : '/icon/pin.svg'}
             alt="pin-icon"
           />
-          <span
-            style={{ pointerEvents: 'none' }}
-            className="text-black text-b3"
-          >
+          <span className="pointer-events-none text-black text-b3">
             {props.isPinned ? 'ถอนหมุด' : 'ปักหมุด'}
           </span>
         </div>
@@ -62,21 +52,15 @@ export default function MenuPopover(props: PropTypes) {
       {props.canEdit && (
         <div
           data-dndkit-disable-drag
-          className="w-full flex items-center px-[16px] py-[12px] gap-[8px] hover:bg-gray1 hover:cursor-pointer"
+          className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
           onClick={props.onClickDelete}
         >
           <img
-            style={{ pointerEvents: 'none' }}
-            className="w-[16px] h-[16px]"
+            className="pointer-events-none w-4 h-4"
             src="/icon/bin.svg"
             alt="bin-icon"
           />
-          <span
-            style={{ pointerEvents: 'none' }}
-            className="text-[#B30000] text-b3"
-          >
-            ลบ
-          </span>
+          <span className="pointer-events-none text-red-7 text-b3">ลบ</span>
         </div>
       )}
     </div>

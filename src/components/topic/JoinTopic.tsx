@@ -6,23 +6,23 @@ const commentViewOptions = [
   {
     view: CommentView.AGREE,
     label: 'เห็นด้วย',
-    color: 'hover:bg-lightGreen border-lightGreen',
-    background: 'bg-lightGreen',
-    mutedBackground: 'bg-lightGreen/25',
+    color: 'hover:bg-green-light border-green-light',
+    background: 'bg-green-light',
+    mutedBackground: 'bg-green-light/25',
   },
   {
     view: CommentView.PARTIAL_AGREE,
     label: 'เห็นด้วยบ้าง',
-    color: 'hover:bg-lightYellow border-lightYellow',
-    background: 'bg-lightYellow',
-    mutedBackground: 'bg-lightYellow/25',
+    color: 'hover:bg-yellow-3 border-yellow-3',
+    background: 'bg-yellow-3',
+    mutedBackground: 'bg-yellow-3/25',
   },
   {
     view: CommentView.DISAGREE,
     label: 'ไม่เห็นด้วย',
-    color: 'hover:bg-lightRed border-lightRed',
-    background: 'bg-lightRed',
-    mutedBackground: 'bg-lightRed/25',
+    color: 'hover:bg-red-2 border-red-2',
+    background: 'bg-red-2',
+    mutedBackground: 'bg-red-2/25',
   },
 ];
 
@@ -61,12 +61,12 @@ export default function JoinTopic(props: PropTypes) {
 
   if (props.canJoin) {
     return (
-      <div className="flex flex-row gap-2 px-4 py-5 bg-blue5 rounded-2xl items-center">
+      <div className="flex flex-row gap-2 px-4 py-5 bg-blue-5 rounded-2xl items-center">
         <p className="text-b3 font-bold flex-1">
           วงสนทนาของคุณพูดเรื่องเดียวกันหรือไม่
         </p>
         <button
-          className="py-2.5 px-4 bg-blue4 hover:bg-blue3 border-white border-1 rounded-full text-label"
+          className="py-2.5 px-4 bg-blue-4 hover:bg-blue-3 border-white border-1 rounded-full text-label"
           onClick={props.onJoinTopic}
         >
           + ใช่ เพิ่มวงของฉัน
@@ -76,7 +76,7 @@ export default function JoinTopic(props: PropTypes) {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-blue3 rounded-2xl">
+    <div className="flex flex-col gap-4 p-4 bg-blue-3 rounded-2xl">
       <p className="text-b3 font-bold flex-1">
         วงสนทนาของคุณมีความคิดเห็นต่อยอดว่า..
       </p>
@@ -88,7 +88,7 @@ export default function JoinTopic(props: PropTypes) {
               commentView === option.view
                 ? option.background
                 : option.mutedBackground
-            } ${option.color} border-solid border rounded-[48px] w-full`}
+            } ${option.color} border-solid border rounded-full w-full`}
             onClick={() => handleSelectCommentView(option.view)}
           >
             {option.label}
@@ -98,13 +98,13 @@ export default function JoinTopic(props: PropTypes) {
       {commentView && activeEvent && (
         <div className="flex flex-col gap-2">
           <div>
-            <div className="px-2.5 py-2 bg-gray2 flex gap-1 text-label-sm border border-gray3 border-b-0 rounded-t">
+            <div className="px-2.5 py-2 bg-gray-2 flex gap-1 text-label-sm border border-gray-3 border-b-0 rounded-t">
               <span>ความคิดเห็นของ</span>
               <img src="/icon/community.svg" alt="icon-community" />
               <span className="font-semibold">{activeEvent.display_name}</span>
             </div>
             <textarea
-              className="w-full p-2.5 text-b3 bg-gray1 resize-none focus:outline-none border border-t-0 border-gray3 rounded-b"
+              className="w-full p-2.5 text-b3 bg-gray-1 resize-none focus:outline-none border border-t-0 border-gray-3 rounded-b"
               name="add-comment-in-topic-card"
               id="add-comment-in-topic-card"
               rows={3}
@@ -122,7 +122,7 @@ export default function JoinTopic(props: PropTypes) {
           </div>
           {canSubmit() && (
             <button
-              className="w-full py-2.5 flex items-center justify-center gap-2 hover:bg-blue2 border-2 rounded-full wv-ibmplex text-button font-bold"
+              className="w-full py-2.5 flex items-center justify-center gap-2 hover:bg-blue-2 border-2 rounded-full wv-ibmplex text-button font-bold"
               onClick={handleAddComment}
             >
               <svg className="w-3" viewBox="0 0 17 18" fill="none">

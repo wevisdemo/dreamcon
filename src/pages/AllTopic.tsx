@@ -140,8 +140,8 @@ export default function AllTopic() {
         {isPageLoading && <FullPageLoader />}
         <div className="min-w-screen flex h-full">
           <section
-            className={`bg-blue2 ${
-              selectedTopic.value ? 'w-[60%]' : 'w-full'
+            className={`bg-blue-2 ${
+              selectedTopic.value ? 'w-3/5' : 'w-full'
             } h-full flex flex-col items-center duration-300 ease-in relative`}
           >
             <section className="absolute w-full h-content z-30 bg-transparent">
@@ -166,7 +166,7 @@ export default function AllTopic() {
             </section>
             <section
               ref={observerRef}
-              className="p-[60px] w-full h-full flex justify-center overflow-scroll relative"
+              className="p-15 w-full h-full flex justify-center overflow-scroll relative"
             >
               <TopicListSection
                 topics={displayTopics ?? []}
@@ -181,7 +181,7 @@ export default function AllTopic() {
           </section>
           <section
             className={`${
-              selectedTopic.value ? 'w-[40%]' : 'w-0'
+              selectedTopic.value ? 'w-2/5' : 'w-0'
             } overflow-hidden h-full flex flex-col items-center duration-300 ease-in relative`}
           >
             <section className="absolute w-full h-content z-30 bg-transparent">
@@ -191,18 +191,18 @@ export default function AllTopic() {
               />
             </section>
             <section className="w-full h-full">
-              <div className="w-full px-[10px] py-[4px] bg-gray2 flex justify-between items-center">
-                <div className="flex items-center gap-[10px]">
+              <div className="w-full px-2.5 py-1 bg-gray-2 flex justify-between items-center">
+                <div className="flex items-center gap-2.5">
                   <button onClick={() => selectedTopic.setValue(null)}>
                     <img
-                      className="w-[24px] h-[24px]"
+                      className="w-6 h-6"
                       src="/icon/double-arrow-right.svg"
                       alt="double-arrow-right-icon"
                     />
                   </button>
                   <button onClick={openTopicPage}>
                     <img
-                      className="w-[24px] h-[24px]"
+                      className="w-6 h-6"
                       src="/icon/expand-wide.svg"
                       alt="expand-icon"
                     />
@@ -212,7 +212,7 @@ export default function AllTopic() {
                   <ShareTopicLink topicId={selectedTopic.value.id} />
                 )}
               </div>
-              <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
+              <div className="p-6 bg-blue-4 w-full h-full overflow-scroll">
                 {selectedTopic.value ? (
                   <TopicTemplate
                     topic={selectedTopic.value}

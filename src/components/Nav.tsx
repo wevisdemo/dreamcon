@@ -22,12 +22,12 @@ export default function Nav(): ReactElement {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-[64px] bg-white flex items-center justify-between pl-[16px] pr-[48px] z-40">
-      <div className="flex items-center gap-[24px]">
+    <nav className="fixed top-0 left-0 w-full h-16 bg-white flex items-center justify-between pl-4 pr-12 z-40">
+      <div className="flex items-center gap-6">
         {isReadOnly() && (
           <a href="/">
             <img
-              className="h-[40px]"
+              className="h-10"
               src="/dreamcon-logo-blue.png"
               alt="dreamcon-logo"
             />
@@ -38,27 +38,27 @@ export default function Nav(): ReactElement {
           <a
             href="/topics/?mode=view"
             target="_blank"
-            className="flex text-blue3 gap-[8px] items-center px-[16px] py-[5.5px] bg-blue1 rounded-[48px] font-bold ml-[24px]"
+            className="flex text-blue-3 gap-2 items-center px-4 py-[5.5px] bg-blue-1 rounded-full font-bold ml-6"
           >
             <span>preview</span>
-            <NewTabIcon className="h-[16px] w-[16px]" color="#95D0FF" />
+            <NewTabIcon className="h-4 w-4 text-blue-3" />
           </a>
         )}
       </div>
       {isReadOnly() && (
         <div className="flex ">
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-button ${
-              currentPage.value === 'about' ? 'bg-blue2' : ''
+            className={`px-4 h-full py-5.5 wv-ibmplex !text-black !font-bold text-button ${
+              currentPage.value === 'about' ? 'bg-blue-2' : ''
             }`}
             href="/about"
           >
             เกี่ยวกับโครงการ
           </a>
           <a
-            className={`px-[16px] h-full py-[22px] wv-ibmplex !text-black !font-bold text-button ${
+            className={`px-4 h-full py-5.5 wv-ibmplex !text-black !font-bold text-button ${
               currentPage.value === 'all-topic' || currentPage.value === 'topic'
-                ? 'bg-blue2'
+                ? 'bg-blue-2'
                 : ''
             }`}
             href="/topics"
@@ -68,17 +68,17 @@ export default function Nav(): ReactElement {
         </div>
       )}
       {getWriterEvent() && !isReadOnly() && (
-        <div className="flex items-center gap-[16px] ">
-          <span className="text-gray5">สร้างข้อถกเถียงของ</span>
+        <div className="flex items-center gap-4 ">
+          <span className="text-gray-5">สร้างข้อถกเถียงของ</span>
           <div
-            className="flex gap-[8px] items-center pl-[16px] hover:cursor-pointer"
+            className="flex gap-2 items-center pl-4 hover:cursor-pointer"
             onClick={e => {
               e.stopPropagation();
               setAnchorMenu(e.currentTarget);
             }}
           >
             <img
-              className="rounded-full w-[25px] h-[25px]"
+              className="rounded-full w-6.25 h-6.25"
               src={getWriterEvent()?.avatar_url}
               alt={`avatar-event-${getWriterEvent()?.display_name}`}
             />
@@ -105,7 +105,7 @@ export default function Nav(): ReactElement {
         disableRestoreFocus
       >
         <button
-          className="p-[8px] bg-blue1"
+          className="p-2 bg-blue-1"
           onClick={() => {
             logout();
             setAnchorMenu(null);

@@ -32,7 +32,6 @@ export default function CommentAndChildren(props: PropTypes) {
     homePage: homePageContext,
     topicPage: topicPageContext,
     currentPage,
-    // selectedTopic,
     event: eventContext,
     user: userContext,
     mode: modeContext,
@@ -40,11 +39,6 @@ export default function CommentAndChildren(props: PropTypes) {
 
   const { deleteCommentWithChildren } = useDeleteCommentWithChildren();
   const { isWriterOwner } = usePermission();
-
-  //rounded top-left if previous has children OR is parent
-  //rounded top-right if parent
-  //rounded bottom-right is ultimate last child
-  //rounded bottom-left if has child and last child in that level or is parent
 
   const isLastUltimateLastChild = (
     currentComment: Comment,
@@ -104,28 +98,28 @@ export default function CommentAndChildren(props: PropTypes) {
     return !hasSameEventChildren;
   };
 
-  const getCardBGColor = (comment: Comment): string => {
+  const getCardBgClass = (comment: Comment): string => {
     const hasChildren = comment.comments.length > 0;
     if (hasChildren) {
       switch (props.level % 3) {
         case 0:
-          return '#FFFFFF';
+          return 'bg-white';
         case 1:
-          return '#f5fbff';
+          return 'bg-[#f5fbff]';
         case 2:
-          return '#cae8ff';
+          return 'bg-[#cae8ff]';
       }
     } else {
       switch (props.level % 3) {
         case 0:
-          return '#cae8ff';
+          return 'bg-[#cae8ff]';
         case 1:
-          return '#FFFFFF';
+          return 'bg-white';
         case 2:
-          return '#f5fbff';
+          return 'bg-[#f5fbff]';
       }
     }
-    return '#FFFFFF';
+    return 'bg-white';
   };
 
   const handleAddComment = (comment: Comment) => {
@@ -247,9 +241,9 @@ export default function CommentAndChildren(props: PropTypes) {
           {isOver => (
             <>
               {showHeaderEvent(props.comment) && (
-                <div className="flex gap-[8px] items-center text-label-sm pl-[4px] my-[4px]">
+                <div className="flex gap-2 items-center text-label-sm pl-1 my-1">
                   <img
-                    className="rounded-full w-[25px] h-[25px]"
+                    className="rounded-full w-6.25 h-6.25"
                     src={showHeaderEvent(props.comment)?.avatar_url}
                     alt={`avatar-event-${
                       showHeaderEvent(props.comment)?.display_name
@@ -263,7 +257,7 @@ export default function CommentAndChildren(props: PropTypes) {
               )}
               <CommentCard
                 comment={comment}
-                bgColor={getCardBGColor(comment)}
+                bgClass={getCardBgClass(comment)}
                 roundedBl={isRoundedBL(comment, nextComment)}
                 roundedBr={isRoundedBR(comment, nextComment)}
                 roundedTl={isRoundedTL(previousComment)}
@@ -276,7 +270,7 @@ export default function CommentAndChildren(props: PropTypes) {
                 canAddComment={canAddComment()}
               />
               {findEvent(comment) && (
-                <div className="text-label-sm text-blue7 pt-2 pl-2">
+                <div className="text-label-sm text-blue-7 pt-2 pl-2">
                   จากวง{' '}
                   <span className="underline font-bold">
                     {findEvent(comment)?.display_name}
@@ -287,7 +281,7 @@ export default function CommentAndChildren(props: PropTypes) {
           )}
         </Droppable>
         {sortedChildrenComments(props.comment).length > 0 && (
-          <div className="ml-[35px]">
+          <div className="ml-8.75">
             <CommentWrapper
               comments={sortedChildrenComments(props.comment)}
               level={props.level + 1}

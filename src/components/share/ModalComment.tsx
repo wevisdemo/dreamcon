@@ -99,11 +99,11 @@ export default function ModalComment(props: PropTypes) {
   const viewColor = (comment: Comment) => {
     switch (comment.comment_view) {
       case CommentView.AGREE:
-        return 'lightGreen';
+        return 'bg-green-light';
       case CommentView.PARTIAL_AGREE:
-        return 'lightYellow';
+        return 'bg-yellow-3';
       case CommentView.DISAGREE:
-        return 'lightRed';
+        return 'bg-red-2';
     }
   };
 
@@ -112,17 +112,17 @@ export default function ModalComment(props: PropTypes) {
       className="w-full h-screen inset-0 bg-transparent flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
-      <div className="flex flex-col w-full md:max-w-[480px] bg-white md:rounded-lg shadow-lg m-[20px] rounded-[8px] overflow-hidden">
-        <div className="flex flex-col gap-[12px] bg-gray1 p-[16px] border-solid border-b-[1px] border-[#D4D4D4]">
-          <div className="flex justify-end items-center mt-[8px] relative">
-            <p className="absolute wv-ibmplex text-b2 text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] px-[8px]">
+      <div className="flex flex-col w-full md:max-w-120 bg-white md:rounded-lg shadow-lg m-5 rounded-lg overflow-hidden">
+        <div className="flex flex-col gap-3 bg-gray-1 p-4 border-solid border-b border-gray-3">
+          <div className="flex justify-end items-center mt-2 relative">
+            <p className="absolute wv-ibmplex text-b2 text-blue-7 wv-bold left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 px-2">
               {state.mode === 'create'
                 ? 'เพิ่มข้อถกเถียงต่อยอด'
                 : 'แก้ไขข้อถกเถียงต่อยอด'}
             </p>
 
             <div
-              className="text-gray5 wv-ibmplex underline hover:cursor-pointer"
+              className="text-gray-5 wv-ibmplex underline hover:cursor-pointer"
               onClick={handleClose}
             >
               ยกเลิก
@@ -130,9 +130,9 @@ export default function ModalComment(props: PropTypes) {
           </div>
           {state.mode === 'create' && (
             <>
-              <div className="flex gap-[8px] items-center">
+              <div className="flex gap-2 items-center">
                 <img
-                  className="rounded-full w-[25px] h-[25px]"
+                  className="rounded-full w-6.25 h-6.25"
                   src={getParentEvent()?.avatar_url}
                   alt={`avatar-event-${getParentEvent()?.display_name}`}
                 />
@@ -140,12 +140,12 @@ export default function ModalComment(props: PropTypes) {
                   {getParentEvent()?.display_name}
                 </span>
               </div>
-              <div className="p-[10px] rounded-[16px] bg-white">
+              <div className="p-2.5 rounded-2xl bg-white">
                 {state.fromTopic && state.fromTopic.title}
                 {state.fromComment && (
-                  <div className="flex gap-[8px] items-center">
+                  <div className="flex gap-2 items-center">
                     <div
-                      className={`w-[12px] h-[12px] rounded-full bg-${viewColor(
+                      className={`w-3 h-3 rounded-full ${viewColor(
                         state.fromComment
                       )}`}
                     />
@@ -156,51 +156,51 @@ export default function ModalComment(props: PropTypes) {
             </>
           )}
         </div>
-        <div className="p-[16px] flex flex-col space-y-[12px]">
+        <div className="p-4 flex flex-col space-y-3">
           <p>คุณคิดอย่างไรกับข้อถกเถียงนี้</p>
-          <div className="flex space-x-[8px]">
+          <div className="flex space-x-2">
             <button
-              className={`py-[10px] ${
+              className={`py-2.5 ${
                 commentView === CommentView.AGREE
-                  ? 'bg-lightGreen'
-                  : 'bg-lightGreen/25'
-              } hover:bg-lightGreen border-solid border-[1px] border-lightGreen rounded-[48px] w-full`}
+                  ? 'bg-green-light'
+                  : 'bg-green-light/25'
+              } hover:bg-green-light border-solid border border-green-light rounded-full w-full`}
               onClick={() => setCommentView(CommentView.AGREE)}
             >
               เห็นด้วย
             </button>
             <button
-              className={`py-[10px] ${
+              className={`py-2.5 ${
                 commentView === CommentView.PARTIAL_AGREE
-                  ? 'bg-lightYellow'
-                  : 'bg-lightYellow/25'
-              } hover:bg-lightYellow border-solid border-[1px] border-lightYellow rounded-[48px] w-full`}
+                  ? 'bg-yellow-3'
+                  : 'bg-yellow-3/25'
+              } hover:bg-yellow-3 border-solid border border-yellow-3 rounded-full w-full`}
               onClick={() => setCommentView(CommentView.PARTIAL_AGREE)}
             >
               เห็นด้วยบ้าง
             </button>
             <button
-              className={`py-[10px] ${
+              className={`py-2.5 ${
                 commentView === CommentView.DISAGREE
-                  ? 'bg-lightRed'
-                  : 'bg-lightRed/25'
-              } hover:bg-lightRed border-solid border-[1px] border-lightRed rounded-[48px] w-full
+                  ? 'bg-red-2'
+                  : 'bg-red-2/25'
+              } hover:bg-red-2 border-solid border border-red-2 rounded-full w-full
           `}
               onClick={() => setCommentView(CommentView.DISAGREE)}
             >
               ไม่เห็นด้วย
             </button>
           </div>
-          <div className="w-full rounded-[5px] border border-[1px] border-gray1 overflow-hidden">
-            <div className="px-[10px] py-[8px] bg-gray2 flex gap-[4px]">
+          <div className="w-full rounded-[5px] border border-gray-1 overflow-hidden">
+            <div className="px-2.5 py-2 bg-gray-2 flex gap-1">
               <span>ความคิดเห็นของ</span>
               <img src="/icon/community.svg" alt="icon-community" />
               <span>{createdByEvent?.display_name}</span>
             </div>
-            <div className="w-full bg-gray1 relative">
+            <div className="w-full bg-gray-1 relative">
               <TextareaAutosize
                 id="topic-title-text-area"
-                className="w-full bg-gray1 p-[10px] text-black resize-none overflow-hidden focus:outline-none"
+                className="w-full bg-gray-1 p-2.5 text-black resize-none overflow-hidden focus:outline-none"
                 value={text}
                 onChange={e => setText(e.target.value)}
                 autoFocus
@@ -209,7 +209,7 @@ export default function ModalComment(props: PropTypes) {
               />
               {canSubmit() && (
                 <img
-                  className="w-[18px] h-[18px] absolute bottom-[10px] right-[10px] hover:cursor-pointer"
+                  className="w-4.5 h-4.5 absolute bottom-2.5 right-2.5 hover:cursor-pointer"
                   src="/icon/upload.svg"
                   alt="upload-icon"
                   onClick={onSubmit}
@@ -217,7 +217,7 @@ export default function ModalComment(props: PropTypes) {
               )}
             </div>
           </div>
-          <span className="text-[#6E6E6E]">{text.length}/140</span>
+          <span className="text-gray-7">{text.length}/140</span>
         </div>
       </div>
     </div>

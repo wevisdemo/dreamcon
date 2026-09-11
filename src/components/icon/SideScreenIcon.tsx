@@ -1,6 +1,5 @@
 interface PropTypes {
   className?: string;
-  color?: string;
 }
 
 export default function SideScreenIcon(props: PropTypes) {
@@ -31,7 +30,7 @@ export default function SideScreenIcon(props: PropTypes) {
           width="16"
           height="12"
           rx="1.6"
-          stroke={props.color || '#2579F5'}
+          stroke="currentColor"
           strokeWidth="1.6"
         />
         <rect
@@ -40,7 +39,7 @@ export default function SideScreenIcon(props: PropTypes) {
           width="6.4"
           height="8.8"
           rx="0.8"
-          fill={props.color || '#2579F5'}
+          fill="currentColor"
         />
       </g>
     </svg>

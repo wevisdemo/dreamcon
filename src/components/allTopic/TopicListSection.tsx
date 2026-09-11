@@ -46,11 +46,11 @@ export default function TopicListSection(props: PropTypes) {
     return props.lightWeightTopics.length;
   };
   return (
-    <div className="max-w-[920px] flex flex-col items-center gap-[24px] w-full">
+    <div className="max-w-230 flex flex-col items-center gap-6 w-full">
       {!isReadOnly() && (
         <>
           <img
-            className="h-[45px]"
+            className="h-11.25"
             src="/logo/dream-con-logo-white.svg"
             alt="dreamcon-logo"
           />
@@ -59,27 +59,23 @@ export default function TopicListSection(props: PropTypes) {
               <button
                 onMouseEnter={() => setHoveredAddTopic(true)}
                 onMouseLeave={() => setHoveredAddTopic(false)}
-                className={`flex items-center gap-[8px] py-[10px] px-[60px] bg-blue6 rounded-[48px] text-white ${
+                className={`flex items-center gap-2 py-2.5 px-15 bg-blue-6 rounded-full text-white ${
                   isOver
-                    ? 'border-blue7 border-[2px]'
-                    : 'border-transparent border-[2px]'
+                    ? 'border-blue-7 border-2'
+                    : 'border-transparent border-2'
                 }`}
                 onClick={handleAddTopic}
               >
-                <img
-                  className="w-[24px] h-[24px]"
-                  src="/icon/plus.svg"
-                  alt="plus-icon"
-                />
+                <img className="w-6 h-6" src="/icon/plus.svg" alt="plus-icon" />
                 <span className="text-b2 wv-bold wv-ibmplex">
                   เพิ่มข้อถกเถียงใหม่
                 </span>
               </button>
             )}
           </Droppable>
-          <div className="flex flex-col items-center gap-[4px] max-w-[600px] text-center text-blue7 text-b3 wv-ibmplex">
+          <div className="flex flex-col items-center gap-1 max-w-150 text-center text-blue-7 text-b3 wv-ibmplex">
             <img
-              className="w-[16px] h-[16px]"
+              className="w-4 h-4"
               src="/icon/warning.svg"
               alt="warning-icon"
             />

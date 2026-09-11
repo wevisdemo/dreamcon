@@ -5,7 +5,7 @@ interface Props {
 }
 export default function Hero(props: Props) {
   return (
-    <div className="flex flex-col gap-0 md:gap-[16px]">
+    <div className="flex flex-col gap-0 md:gap-4">
       <div className="flex justify-between">
         <img src="/icon/cloud-1.svg" alt="cloud-1" />
         <img src="/icon/cloud-2.svg" alt="cloud-2" />
@@ -15,11 +15,11 @@ export default function Hero(props: Props) {
           className="md:block hidden"
         />
       </div>
-      <div className="flex flex-col gap-[14px]">
+      <div className="flex flex-col gap-3.5">
         {props.navigateLink && (
           <a
             href={props.navigateLink}
-            className="wv-ibmplex wv-bold text-[#1C4CD3] underline "
+            className="wv-ibmplex wv-bold text-blue-7 underline "
           >
             {props.textNavigate}
           </a>

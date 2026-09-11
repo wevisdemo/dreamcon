@@ -7,10 +7,10 @@ interface PropTypes {
 
 export default function TooltipEventInfo(props: PropTypes) {
   return (
-    <div className="w-[360px] flex flex-col wv-ibmplexlooped text-black">
-      <div className="h-fit p-[16px] bg-white rounded-[8px] flex flex-col gap-[16px] text-b3">
-        <div className="flex gap-[16px] justify-between">
-          <div className="flex flex-col gap-[6px]">
+    <div className="w-90 flex flex-col wv-ibmplexlooped text-black">
+      <div className="h-fit p-4 bg-white rounded-lg flex flex-col gap-4 text-b3">
+        <div className="flex gap-4 justify-between">
+          <div className="flex flex-col gap-1.5">
             <h2 className="heading-5 wv-ibmplex font-bold">
               {props.event.title_en}
             </h2>
@@ -18,39 +18,39 @@ export default function TooltipEventInfo(props: PropTypes) {
           </div>
           <a
             href={props.event.news_link}
-            className="flex text-blue7 items-center h-fit"
+            className="flex text-blue-7 items-center h-fit"
           >
             ลิงก์ข่าว
             <img
               src="/icon/new-tab.svg"
               alt="icon-new-tab"
-              className="w-[12px] h-[12px]"
+              className="w-3 h-3"
             />
           </a>
         </div>
-        <div className="flex flex-col gap-[6px]">
-          <p className="text-b3 mt-[8px]">{props.event.description}</p>
-          <ul className="text-label-sm text-gray7 flex flex-col gap-[2px]">
-            <li className="flex items-center gap-[8px]">
+        <div className="flex flex-col gap-1.5">
+          <p className="text-b3 mt-2">{props.event.description}</p>
+          <ul className="text-label-sm text-gray-7 flex flex-col gap-0.5">
+            <li className="flex items-center gap-2">
               <img src="/icon/location.svg" alt="location-icon" /> ที่{' '}
               {props.event.location}
             </li>
-            <li className="flex items-center gap-[8px]">
+            <li className="flex items-center gap-2">
               <img src="/icon/clock.svg" alt="clock-icon" /> จัดขึ้นวันที่{' '}
               {props.event.date}
             </li>
-            <li className="flex items-center gap-[8px]">
+            <li className="flex items-center gap-2">
               <img src="/icon/target.svg" alt="target-icon" /> กลุ่มเป้าหมาย:{' '}
               {props.event.target_group}
             </li>
-            <li className="flex items-center gap-[8px]">
+            <li className="flex items-center gap-2">
               <img src="/icon/participant.svg" alt="participant-icon" />{' '}
               จำนวนผู้เข้าร่วม: {props.event.participants} คน
             </li>
           </ul>
         </div>
-        <div className="w-full bg-blue2 py-[5px] px-[8px] rounded-[5px] text-blue7 flex justify-between">
-          <span className="text-blue7 wv-bold">
+        <div className="w-full bg-blue-2 py-1.25 px-2 rounded-[5px] text-blue-7 flex justify-between">
+          <span className="text-blue-7 wv-bold">
             สร้าง {props.event.topic_counts} ข้อถกเถียง
           </span>
           <span

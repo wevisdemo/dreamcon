@@ -41,7 +41,6 @@ export default function LoginPage() {
       navigate('/admin', { replace: true });
     } catch (error) {
       console.error('Error signing in:', error);
-      // Handle error (e.g., show an error message)
     }
   };
   const validateInputs = (
@@ -62,20 +61,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen bg-blue2">
+    <div className="flex justify-center items-center h-screen w-screen bg-blue-2">
       <form
-        className="text-center p-8 flex flex-col gap-[32px]"
+        className="text-center p-8 flex flex-col gap-8"
         onSubmit={handleSubmit}
       >
         <h1 className="heading-2 wv-ibmplex font-bold ">เข้าสู่ระบบ</h1>
         <div className="">
           <div
-            className={`w-[364px] py-[16px] px-[20px] flex items-center bg-blue1 rounded-[10px] gap-[8px] ${
-              validInputs.username ? '' : 'border-2 border-red-500'
+            className={`w-91 py-4 px-5 flex items-center bg-blue-1 rounded-[10px] gap-2 ${
+              validInputs.username ? '' : 'border-2 border-red-5'
             }`}
           >
             <img
-              className="w-[18px] h-[18px]"
+              className="w-4.5 h-4.5"
               src="/icon/profile.svg"
               alt="icon-profile"
             />
@@ -98,15 +97,11 @@ export default function LoginPage() {
         </div>
         <div className="">
           <div
-            className={`w-[364px] py-[16px] px-[20px] flex items-center bg-blue1 rounded-[10px] gap-[8px] ${
-              validInputs.password ? '' : 'border-2 border-red-500'
+            className={`w-91 py-4 px-5 flex items-center bg-blue-1 rounded-[10px] gap-2 ${
+              validInputs.password ? '' : 'border-2 border-red-5'
             }`}
           >
-            <img
-              className="w-[18px] h-[18px]"
-              src="/icon/lock.svg"
-              alt="icon-lock"
-            />
+            <img className="w-4.5 h-4.5" src="/icon/lock.svg" alt="icon-lock" />
             <input
               type="password"
               name="password"
@@ -117,7 +112,7 @@ export default function LoginPage() {
         </div>
         <button
           type="submit"
-          className="bg-accent text-white px-6 py-2 rounded-md font-bold hover:bg-blue-700"
+          className="bg-blue-6 text-white px-6 py-2 rounded-md font-bold hover:bg-blue-7"
         >
           Login
         </button>

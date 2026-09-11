@@ -13,46 +13,37 @@ const ViewerLayout: React.FC<{
     <DefaultLayout>
       <>
         {isReadOnly() && (
-          <section id="hero" className="px-[24px] bg-[#BDE6FF] w-full">
-            <div className="max-w-[960px] w-full m-auto">
+          <section id="hero" className="px-6 bg-blue-2 w-full">
+            <div className="max-w-240 w-full m-auto">
               <Hero heroTitle="ข้อถกเถียงต่อยอด" />
             </div>
           </section>
         )}
         <section
           id="content"
-          className={`${isReadOnly() ? 'max-h-[656px] h-full' : 'h-full'}`}
+          className={`${isReadOnly() ? 'max-h-164 h-full' : 'h-full'}`}
         >
           {children}
         </section>
         {isReadOnly() && (
           <>
-            <div className="bg-[#BDE6FF] h-[40px] flex items-end">
-              <div
-                style={{ backgroundImage: "url('/icon/ellipse.svg')" }}
-                className="bg-repeat w-full h-[16px]"
-              />
+            <div className="bg-blue-2 h-10 flex items-end">
+              <div className="bg-[url('/icon/ellipse.svg')] bg-repeat w-full h-4" />
             </div>
 
-            <section
-              id="description"
-              className="px-[24px] py-[32px] md:py-[64px] bg-[#D2FED6]"
-            >
-              <div className="max-w-[960px] w-full m-auto">
+            <section id="description" className="px-6 py-8 md:py-16 bg-green-3">
+              <div className="max-w-240 w-full m-auto">
                 <Description />
               </div>
             </section>
 
-            <div className="bg-[#FFFFFF] h-[40px] flex relative pb-[24px]">
-              <div
-                style={{ backgroundImage: "url('/icon/ellipse.svg')" }}
-                className="bg-repeat w-full h-[16px] absolute top-[-2px] rotate-180"
-              />
+            <div className="bg-white h-10 flex relative pb-6">
+              <div className="bg-[url('/icon/ellipse.svg')] bg-repeat w-full h-4 absolute -top-0.5 rotate-180" />
             </div>
-            <section className="py-[48px]">
-              <div className="flex justify-between max-w-[960px] w-full m-auto space-x-[24px]">
-                <div className="flex flex-col w-[50%]">
-                  <span className="text-[#1C4CD3] text-b2 wv-bold">
+            <section className="py-12">
+              <div className="flex justify-between max-w-240 w-full m-auto space-x-6">
+                <div className="flex flex-col w-1/2">
+                  <span className="text-blue-7 text-b2 wv-bold">
                     จะเกิดอะไรขึ้นต่อไป
                   </span>
                   <span className="text-b2">
@@ -60,21 +51,21 @@ const ViewerLayout: React.FC<{
                     เราจะคอยส่งข่าวให้คุณรู้!
                   </span>
                 </div>
-                <div className="flex w-[50%] items-start">
+                <div className="flex w-1/2 items-start">
                   <input
-                    className="w-full h-[40px] p-[16px] text-b3 border-[1px] border-solid border-[#D4D4D4] rounded-[48px]"
+                    className="w-full h-10 p-4 text-b3 border border-solid border-gray-3 rounded-full"
                     type="text"
                     name="email-enter"
                     id="email-enter"
                     placeholder="ใส่อีเมลของคุณ"
                   />
-                  <button className="flex mx-auto w-fit py-[10px] px-[54px] items-center justify-center border-solid border-[1px] rounded-[48px] border-[#E8E8E8] bg-[#2579F5] wv-ibmplex wv-bold text-button text-[#FFFFFF]">
+                  <button className="flex mx-auto w-fit py-2.5 px-13.5 items-center justify-center border-solid border rounded-full border-gray-2 bg-blue-6 wv-ibmplex wv-bold text-button text-white">
                     ติดตาม
                   </button>
                 </div>
               </div>
             </section>
-            <section className="bg-[#2579F5] py-[48px] px-[24px]">
+            <section className="bg-blue-6 py-12 px-6">
               <Footer />
             </section>
           </>

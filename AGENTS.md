@@ -11,6 +11,7 @@
 - After any task that touches user-facing behaviour, run `pnpm test` and make it pass before declaring the task done
 - E2E specs sit next to their page and share its name (`src/pages/AllTopic.tsx` → `src/pages/AllTopic.spec.ts`); shared setup and helpers live in `src/utils/e2e/`. When changing a page, modal, permission or auth flow, update that page's spec in the same change; a flow spanning pages belongs to the page it starts from
 - Tests run against the seeded emulator; if a test needs new fixed data, extend `src/script/seedEmulator.ts` rather than creating it ad hoc in the test
+- Colours only from the `@theme` palette tokens in `src/App.css` (`gray-1..8`, `blue/green/red/yellow-1..10`, `green-light`, `white`, `black`); the default Tailwind palette, font-size scale and container scale are disabled. Spacing and sizes come from the numeric scale (any multiple of 0.25, e.g. `gap-1.5`, `max-w-240`); arbitrary `[…]` only for values with no scale or palette equivalent. Build class names in full, never by string interpolation (`bg-${color}`)
 
 ## Typography
 

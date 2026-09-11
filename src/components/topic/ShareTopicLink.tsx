@@ -14,11 +14,11 @@ export default function ShareTopicLink({ topicId }: { topicId: string }) {
 
   return (
     <div
-      className="flex gap-[4px] items-center hover:cursor-pointer"
+      className="flex gap-1 items-center hover:cursor-pointer"
       onClick={handleCopy}
     >
-      <ChainIcon color={copied ? '#4999FA' : '#979797'} />
-      <span className={copied ? 'text-[#4999FA]' : 'text-gray5'}>
+      <ChainIcon className={copied ? 'text-blue-5' : 'text-gray-5'} />
+      <span className={copied ? 'text-blue-5' : 'text-gray-5'}>
         {copied ? 'คัดลอกแล้ว!' : 'แชร์ลิงก์'}
       </span>
     </div>

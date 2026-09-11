@@ -1,6 +1,6 @@
 export default function Description() {
   return (
-    <div className="flex flex-col gap-[24px] text-b2">
+    <div className="flex flex-col gap-6 text-b2">
       <p>
         เราได้นำหัวข้อยอดนิยมจากแบบสอบถามออนไลน์มาตั้งเป็นหัวข้อหลักสำหรับตั้งต้นข้อถกเถียง
         ทั้งแบบออนไลน์ในเว็บไซต์นี้ หรือวงพูดคุยที่จัดโดยผู้จัดกระบวนการภายนอก

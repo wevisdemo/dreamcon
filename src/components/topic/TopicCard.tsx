@@ -80,7 +80,7 @@ export default function TopicCard(props: PropTypes) {
     modeContext.value !== 'view' && canManageTopic(props.topic);
 
   return (
-    <div className="w-full p-4 bg-white rounded-2xl shadow-[0px 4px 16px rgba(0, 0, 0, 0.1)] flex flex-col gap-2.5">
+    <div className="w-full p-4 bg-white rounded-2xl shadow-card flex flex-col gap-2.5">
       <div className="flex justify-between items-start">
         {isEditingMode ? (
           <Dropdown
@@ -89,7 +89,7 @@ export default function TopicCard(props: PropTypes) {
             placeholder={props.topic.category}
           />
         ) : (
-          <div className="badge px-2 py-1 rounded-[48px] bg-accent text-white w-fit">
+          <div className="badge px-2 py-1 rounded-full bg-blue-6 text-white w-fit">
             {props.topic.category}
           </div>
         )}
@@ -166,7 +166,7 @@ export default function TopicCard(props: PropTypes) {
               />
               <div className="absolute bottom-2.5 right-2.5 flex gap-2">
                 <span
-                  className="wv-ibmplex text-gray5 font-semibold underline hover:cursor-pointer"
+                  className="wv-ibmplex text-gray-5 font-semibold underline hover:cursor-pointer"
                   onClick={() => {
                     resetEditTopic();
                   }}
@@ -181,7 +181,7 @@ export default function TopicCard(props: PropTypes) {
                 />
               </div>
             </div>
-            <span className=" text-label-sm text-gray5">
+            <span className=" text-label-sm text-gray-5">
               {topicTitle.length}/140
             </span>
           </>

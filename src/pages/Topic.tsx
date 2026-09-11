@@ -78,13 +78,13 @@ export default function TopicPage() {
     <DefaultLayout>
       <CommentDndContext>
         {(!selectedTopic.value || !eventsReady) && <FullPageLoader />}
-        <div className="relative bg-[#6EB7FE] w-screen h-full flex flex-col items-center">
+        <div className="relative bg-blue-4 w-screen h-full flex flex-col items-center">
           {selectedTopic.value && (
             <>
-              <div className="w-full h-[32px] bg-gray2 flex justify-center items-center">
-                <div className="w-full max-w-[920px] flex">
+              <div className="w-full h-8 bg-gray-2 flex justify-center items-center">
+                <div className="w-full max-w-230 flex">
                   <a
-                    className="text-accent text-label wv-ibmplex underline!"
+                    className="text-blue-6 text-label wv-ibmplex underline!"
                     href={topicsUrl()}
                   >
                     กลับหน้าหลัก
@@ -92,7 +92,7 @@ export default function TopicPage() {
                 </div>
                 <ShareTopicLink topicId={selectedTopic.value.id} />
               </div>
-              <section className="py-[24px] overflow-scroll w-full flex justify-center">
+              <section className="py-6 overflow-scroll w-full flex justify-center">
                 <TopicTemplate
                   topic={selectedTopic.value}
                   onDeleted={() => {

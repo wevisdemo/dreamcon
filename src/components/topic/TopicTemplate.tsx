@@ -89,13 +89,13 @@ export default function TopicTemplate(props: PropTypes) {
   };
 
   return (
-    <div className="max-w-[920px] w-full py-6">
+    <div className="max-w-230 w-full py-6">
       {(editTopicLoading || addCommentLoading || deleteTopicLoading) && (
         <FullPageLoader />
       )}
       <div className="flex w-full items-stretch">
         <div className="w-6 h-auto relative overflow-hidden">
-          <div className="absolute w-12 left-0 top-1/2 rounded-2xl border-solid border-2 border-blue3 h-screen"></div>
+          <div className="absolute w-12 left-0 top-1/2 rounded-2xl border-solid border-2 border-blue-3 h-screen"></div>
         </div>
         <div className="w-full h-full header-section flex flex-col gap-3">
           <TopicCard
@@ -142,10 +142,10 @@ export default function TopicTemplate(props: PropTypes) {
         <div className="comment-section-body flex flex-col gap-6">
           <div className="view-wrapper mt-4">
             <div className="relative">
-              <p className="relative bg-lightGreen px-2.5 py-1 w-fit rounded-2xl text-b3 z-10">
+              <p className="relative bg-green-light px-2.5 py-1 w-fit rounded-2xl text-b3 z-10">
                 {getCommentsByView(CommentView.AGREE).length} เห็นด้วย
               </p>
-              <div className="absolute w-10 -left-6 bottom-1/2 rounded-bl-2xl border-solid border-l-2 border-b-2 border-blue3 h-[1000vh]"></div>
+              <div className="absolute w-10 -left-6 bottom-1/2 rounded-bl-2xl border-solid border-l-2 border-b-2 border-blue-3 h-[1000vh]"></div>
             </div>
             <CommentWrapper
               comments={getCommentsByView(CommentView.AGREE)}
@@ -156,11 +156,11 @@ export default function TopicTemplate(props: PropTypes) {
           </div>
           <div className="view-wrapper">
             <div className="relative">
-              <p className="relative bg-lightYellow px-2.5 py-1 w-fit rounded-2xl text-b3 z-10">
+              <p className="relative bg-yellow-3 px-2.5 py-1 w-fit rounded-2xl text-b3 z-10">
                 {getCommentsByView(CommentView.PARTIAL_AGREE).length}{' '}
                 เห็นด้วยบางส่วน
               </p>
-              <div className="absolute w-10 -left-6 bottom-1/2 rounded-bl-2xl border-solid border-l-2 border-b-2 border-blue3 h-[1000vh]"></div>
+              <div className="absolute w-10 -left-6 bottom-1/2 rounded-bl-2xl border-solid border-l-2 border-b-2 border-blue-3 h-[1000vh]"></div>
             </div>
             <CommentWrapper
               comments={getCommentsByView(CommentView.PARTIAL_AGREE)}
@@ -171,10 +171,10 @@ export default function TopicTemplate(props: PropTypes) {
           </div>
           <div className="view-wrapper">
             <div className="relative">
-              <p className="relative bg-lightRed px-2.5 py-1 w-fit rounded-2xl text-b3 z-10">
+              <p className="relative bg-red-2 px-2.5 py-1 w-fit rounded-2xl text-b3 z-10">
                 {getCommentsByView(CommentView.DISAGREE).length} ไม่เห็นด้วย
               </p>
-              <div className="absolute w-10 -left-6 bottom-1/2 rounded-bl-2xl border-solid border-l-2 border-b-2 border-blue3 h-[1000vh]"></div>
+              <div className="absolute w-10 -left-6 bottom-1/2 rounded-bl-2xl border-solid border-l-2 border-b-2 border-blue-3 h-[1000vh]"></div>
             </div>
             <CommentWrapper
               comments={getCommentsByView(CommentView.DISAGREE)}

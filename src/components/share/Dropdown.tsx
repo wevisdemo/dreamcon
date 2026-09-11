@@ -23,20 +23,20 @@ const Dropdown: React.FC<DropdownProps> = ({
   };
 
   return (
-    <div className="dropdown relative w-[116px] z-30">
+    <div className="dropdown relative w-29 z-30">
       <button
-        className="dropdown-toggle flex justify-between gap-[4px] bg-blue6 px-[12px] py-[5px] rounded-[48px] text-white w-[116px]"
+        className="dropdown-toggle flex justify-between gap-1 bg-blue-6 px-3 py-1.25 rounded-full text-white w-29"
         onClick={handleToggle}
       >
         <span className="truncate">{selectedOption || placeholder}</span>
         <img className="hover:cursor-pointer" src="/icon/arrow-down.svg" />
       </button>
       {isOpen && (
-        <ul className="dropdown-menu absolute top-[100%] left-0 bg-white w-[116px] border border-gray3 text-blue7 rounded-[12px] overflow-hidden">
+        <ul className="dropdown-menu absolute top-full left-0 bg-white w-29 border border-gray-3 text-blue-7 rounded-xl overflow-hidden">
           {options.map((option, index) => (
             <li
               key={index}
-              className="dropdown-item px-[16px] py-[6px] hover:bg-gray1 hover:cursor-pointer"
+              className="dropdown-item px-4 py-1.5 hover:bg-gray-1 hover:cursor-pointer"
               onClick={() => handleSelect(option)}
             >
               {option}

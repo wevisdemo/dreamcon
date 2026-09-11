@@ -1,24 +1,72 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-lightGreen: #ccffcb;
-  --color-lightRed: #ffd6d3;
-  --color-lightYellow: #fffa8d;
-  --color-accent: #2579f5;
-  --color-blue1: #e7f7ff;
-  --color-blue2: #bde6ff;
-  --color-blue3: #95d0ff;
-  --color-blue4: #6eb7fe;
-  --color-blue5: #4999fa;
-  --color-blue6: #2579f5;
-  --color-blue7: #1c4cd3;
-  --color-gray1: #f8f8f8;
-  --color-gray2: #e8e8e8;
-  --color-gray3: #d4d4d4;
-  --color-gray5: #979797;
-  --color-gray7: #6e6e6e;
-  --color-gray8: #454343;
-  --color-green3: #d2fed6;
+  --color-*: initial;
+  --text-*: initial;
+  --container-*: initial;
+  --tracking-*: initial;
+  --blur-*: initial;
+
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-gray-1: #f8f8f8;
+  --color-gray-2: #e8e8e8;
+  --color-gray-3: #d4d4d4;
+  --color-gray-4: #ababab;
+  --color-gray-5: #979797;
+  --color-gray-6: #828282;
+  --color-gray-7: #6e6e6e;
+  --color-gray-8: #454343;
+
+  --color-blue-1: #e7f7ff;
+  --color-blue-2: #bde6ff;
+  --color-blue-3: #95d0ff;
+  --color-blue-4: #6eb7fe;
+  --color-blue-5: #4999fa;
+  --color-blue-6: #2579f5;
+  --color-blue-7: #1c4cd3;
+  --color-blue-8: #1526b1;
+  --color-blue-9: #130e8c;
+  --color-blue-10: #1a0966;
+
+  --color-green-1: #f4fff3;
+  --color-green-2: #e2fee2;
+  --color-green-3: #d2fed6;
+  --color-green-4: #c1fdce;
+  --color-green-5: #a7dbb5;
+  --color-green-6: #8eba9c;
+  --color-green-7: #749882;
+  --color-green-8: #5a7666;
+  --color-green-9: #40544a;
+  --color-green-10: #27332d;
+  --color-green-light: #ccffcb;
+
+  --color-red-1: #ffeeed;
+  --color-red-2: #ffd6d3;
+  --color-red-3: #ffa59e;
+  --color-red-4: #fe8d85;
+  --color-red-5: #ff4638;
+  --color-red-6: #e71000;
+  --color-red-7: #b30000;
+  --color-red-8: #940000;
+  --color-red-9: #760202;
+  --color-red-10: #480000;
+
+  --color-yellow-1: #fffedc;
+  --color-yellow-2: #fffdc4;
+  --color-yellow-3: #fffa8d;
+  --color-yellow-4: #ffdb3d;
+  --color-yellow-5: #ffc115;
+  --color-yellow-6: #cc9600;
+  --color-yellow-7: #b77700;
+  --color-yellow-8: #7f5300;
+  --color-yellow-9: #5c3c00;
+  --color-yellow-10: #412a00;
+
+  --shadow-card: 0 4px 16px rgb(0 0 0 / 0.1);
 
   --text-num: 76px;
   --text-num--line-height: 1.2;

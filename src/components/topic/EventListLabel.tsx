@@ -16,7 +16,7 @@ export default function EventListLabel(props: PropTypes) {
     eventId;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-label-sm text-blue7 py-3">
+    <div className="flex flex-wrap items-center gap-2 text-label-sm text-blue-7 py-3">
       <span>ข้อถกเถียงจาก {props.eventIds.length} วงสนทนา:</span>
       {props.eventIds.map((eventId, index) => {
         const isActiveEvent = eventId === props.activeEventId;
