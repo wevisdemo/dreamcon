@@ -90,7 +90,9 @@ export const useEvent = () => {
         event.topic_counts = topicCountsMap[event.id] || 0;
       });
 
-      return events;
+      return events.sort(
+        (a, b) => b.created_at.getTime() - a.created_at.getTime()
+      );
     } catch (err) {
       console.error('Error fetching documents: ', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');

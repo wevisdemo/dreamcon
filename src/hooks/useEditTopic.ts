@@ -25,10 +25,10 @@ export const useEditTopic = () => {
   const editTopic = async (
     topic: Topic,
     changes: Pick<AddOrEditTopicPayload, 'title' | 'category'>
-  ) => {
+  ): Promise<boolean> => {
     if (!canManageTopic(topic)) {
       setError('You do not have permission to edit this topic');
-      return;
+      return false;
     }
 
     const TopicDBPayload: UpdateTopicDBPayload = {
@@ -38,33 +38,30 @@ export const useEditTopic = () => {
       notified_at: new Date(),
     };
 
-    await writeTopic(topic.id, TopicDBPayload);
+    return writeTopic(topic.id, TopicDBPayload);
   };
 
-  const joinTopic = async (topicId: string) => {
+  const joinTopic = async (topic: Topic): Promise<boolean> => {
     const writerEventId = getWriterEvent()?.id;
     if (!writerEventId) {
       setError('Only a writer can add an event to a topic');
-      return;
+      return false;
     }
-    await writeTopicEvents(topicId, arrayUnion(writerEventId));
+    return writeTopicEvents(topic.id, arrayUnion(writerEventId));
   };
 
-  /**
-   * `currentEventIds` are the ids stored before this edit. A topic must keep at
-   * least one event, which is what `firestore.rules` enforces on its side.
-   */
-  const leaveTopic = async (topicId: string, currentEventIds: string[]) => {
+  /** A topic must keep at least one event, which is what `firestore.rules` enforces on its side. */
+  const leaveTopic = async (topic: Topic): Promise<boolean> => {
     const writerEventId = getWriterEvent()?.id;
     if (!writerEventId) {
       setError('Only a writer can remove an event from a topic');
-      return;
+      return false;
     }
-    if (currentEventIds.length < 2) {
+    if (topic.event_ids.length < 2) {
       setError('A topic must stay linked to at least one event');
-      return;
+      return false;
     }
-    await writeTopicEvents(topicId, arrayRemove(writerEventId));
+    return writeTopicEvents(topic.id, arrayRemove(writerEventId));
   };
 
   /**
@@ -81,16 +78,18 @@ export const useEditTopic = () => {
   const writeTopic = async (
     topicId: string,
     payload: UpdateData<DocumentData>
-  ) => {
+  ): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
     try {
       await updateDoc(doc(db, `topics/${topicId}`), payload);
       console.log('Document updated with ID:', topicId);
+      return true;
     } catch (err) {
       console.error('Error updating document:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      return false;
     } finally {
       setLoading(false);
     }

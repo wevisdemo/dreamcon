@@ -32,11 +32,11 @@ export const useMoveComment = () => {
   const moveCommentToComment = async (
     comment: Comment,
     newParentId: string
-  ) => {
+  ): Promise<boolean> => {
     const commentId = comment.id;
     if (!commentId || !newParentId) {
       setError('Missing comment ID or new parent ID');
-      return;
+      return false;
     }
 
     setLoading(true);
@@ -96,18 +96,23 @@ export const useMoveComment = () => {
       });
 
       console.log('Comment moved successfully:', commentId);
+      return true;
     } catch (err) {
       console.error('Error moving comment:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const moveCommentToTopic = async (commentId: string, newTopicId: string) => {
+  const moveCommentToTopic = async (
+    commentId: string,
+    newTopicId: string
+  ): Promise<boolean> => {
     if (!commentId || !newTopicId) {
       setError('Missing comment ID or new topic ID');
-      return;
+      return false;
     }
 
     setLoading(true);
@@ -158,9 +163,11 @@ export const useMoveComment = () => {
       console.log(
         `Comment ${commentId} moved to topic ${newTopicId} successfully.`
       );
+      return true;
     } catch (err) {
       console.error('Error moving comment to topic:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      return false;
     } finally {
       setLoading(false);
     }

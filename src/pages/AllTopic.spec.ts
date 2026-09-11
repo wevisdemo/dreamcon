@@ -210,4 +210,34 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(page.getByText('140/140')).toBeVisible();
     await expect(page.locator('img[alt="upload-icon"]')).toBeVisible();
   });
+
+  test('pastes a comment onto the add-topic button as a new topic, then undoes it', async ({
+    page,
+  }) => {
+    await page.goto('/topics');
+    await waitForLoaded(page);
+    const cardCount = await page.locator(TOPIC_CARDS).count();
+
+    await page
+      .getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร')
+      .click();
+    await page
+      .locator('.comment-section')
+      .getByText('ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ', {
+        exact: true,
+      })
+      .locator('../..')
+      .hover();
+    await page.keyboard.press('Control+x');
+    await expect(page.getByText('คัดลอกไปยังคลิปบอร์ดแล้ว')).toBeVisible();
+
+    await page.getByRole('button', { name: ADD_TOPIC }).hover();
+    await page.keyboard.press('Control+v');
+    await expect(page.getByText('ย้ายแล้ว!')).toBeVisible();
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(cardCount + 1);
+
+    await waitForLoaded(page);
+    await page.keyboard.press('Control+z');
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(cardCount);
+  });
 });

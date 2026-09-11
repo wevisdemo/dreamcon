@@ -130,7 +130,10 @@ const restore = async (file: string, force: boolean) => {
   }
 
   const parsed = JSON.parse(fs.readFileSync(file, 'utf8')) as Backup;
-  const unknown = Object.keys(parsed.collections ?? {}).filter(
+  if (!parsed.collections) {
+    throw new Error(`Backup file has no "collections" object: ${file}`);
+  }
+  const unknown = Object.keys(parsed.collections).filter(
     name => !COLLECTIONS.includes(name)
   );
   if (unknown.length > 0) {

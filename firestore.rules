@@ -17,11 +17,11 @@ function isEventUnchanged() {
 }
 
 // A topic may gain or lose exactly one event per update, and never end up empty.
+// Docs that predate the field read as an empty list, so they follow the same rule.
 function isEventIdsValid() {
-  let oldIds = resource.data.event_ids.toSet();
-  let newIds = request.resource.data.event_ids.toSet();
-  return !('event_ids' in resource.data)
-    || oldIds == newIds
+  let oldIds = resource.data.get('event_ids', []).toSet();
+  let newIds = request.resource.data.get('event_ids', []).toSet();
+  return oldIds == newIds
     || (newIds.size() == oldIds.size() + 1 && newIds.hasAll(oldIds))
     || (oldIds.size() == newIds.size() + 1 && oldIds.hasAll(newIds) && newIds.size() > 0)
 }

@@ -1,10 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { StoreContext } from '../../store';
 import { CommentView } from '../../types/comment';
 import { Topic, TopicCategory } from '../../types/topic';
+import { useAddComment } from '../../hooks/useAddComment';
+import { useDeleteTopicWithChildren } from '../../hooks/useDeleteTopicWithChildren';
+import { useEditTopic } from '../../hooks/useEditTopic';
 import { usePermission } from '../../hooks/usePermission';
+import { useShowError } from '../../hooks/useShowError';
 import { flattenComments, linkedEventIds } from '../../utils/mapping';
-import AlertPopup from '../AlertPopup';
+import FullPageLoader from '../FullPageLoader';
 import CommentWrapper from './CommentWrapper';
 import EventListLabel from './EventListLabel';
 import JoinTopic from './JoinTopic';
@@ -12,20 +16,22 @@ import TopicCard from './TopicCard';
 
 interface PropTypes {
   topic: Topic;
-  onChangeTopicCategory: (category: TopicCategory) => void;
-  onChangeTopicTitle: (title: string) => void;
-  onJoinTopic: () => void;
-  onLeaveTopic: () => void;
-  onDeleteTopic: () => void;
-  onAddComment: (commentView: CommentView, reason: string) => void;
-  onPinTopic: () => void;
-  onUnpinTopic: () => void;
+  onDeleted?: () => void;
 }
 
 export default function TopicTemplate(props: PropTypes) {
   const { pin: pinContext } = useContext(StoreContext);
   const { isReadOnly, getWriterEvent } = usePermission();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const showError = useShowError();
+  const {
+    editTopic,
+    joinTopic,
+    leaveTopic,
+    loading: editTopicLoading,
+  } = useEditTopic();
+  const { addNewComment, loading: addCommentLoading } = useAddComment();
+  const { deleteTopicWithChildren, loading: deleteTopicLoading } =
+    useDeleteTopicWithChildren();
 
   const activeEvent = getWriterEvent();
   const linkedEvents = linkedEventIds(props.topic);
@@ -37,9 +43,11 @@ export default function TopicTemplate(props: PropTypes) {
     props.topic.event_ids[0] === activeEvent.id;
   const canLeave = isMember && !isOnlyEvent;
 
-  useEffect(() => {
-    setErrorMessage(null);
-  }, [props.topic]);
+  const alertIfNotSaved = async (save: Promise<boolean>) => {
+    if (!(await save)) {
+      showError({ title: 'บันทึกไม่สำเร็จ', message: 'กรุณาลองใหม่อีกครั้ง' });
+    }
+  };
 
   const handleLeaveTopic = () => {
     if (!activeEvent) return;
@@ -47,12 +55,31 @@ export default function TopicTemplate(props: PropTypes) {
       comment => comment.event_ids[0] === activeEvent.id
     );
     if (ownComments.length > 0) {
-      setErrorMessage(
-        `เพราะวงสนทนาของคุณมี ${ownComments.length} ความคิดเห็นในข้อถกเถียงนี้`
-      );
+      showError({
+        title: 'ลบไม่ได้',
+        message: `เพราะวงสนทนาของคุณมี ${ownComments.length} ความคิดเห็นในข้อถกเถียงนี้`,
+      });
       return;
     }
-    props.onLeaveTopic();
+    alertIfNotSaved(leaveTopic(props.topic));
+  };
+
+  const handleAddComment = (commentView: CommentView, reason: string) => {
+    addNewComment({
+      parent_topic_id: props.topic.id,
+      parent_comment_ids: [],
+      comment_view: commentView,
+      reason,
+      event_ids: activeEvent ? [activeEvent.id] : [],
+    });
+  };
+
+  const handleDeleteTopic = async () => {
+    if (await deleteTopicWithChildren(props.topic)) {
+      props.onDeleted?.();
+    } else {
+      showError({ title: 'ลบไม่สำเร็จ', message: 'กรุณาลองใหม่อีกครั้ง' });
+    }
   };
 
   const getCommentsByView = (view: CommentView) => {
@@ -61,19 +88,11 @@ export default function TopicTemplate(props: PropTypes) {
     );
   };
 
-  const handleOnDeleteTopic = () => {
-    props.onDeleteTopic();
-  };
-
-  // TODO: duplicated
-  const isTopicPinned = (topic: Topic) => {
-    return pinContext.pinnedTopics.some(
-      pinnedTopic => pinnedTopic === topic.id
-    );
-  };
-
   return (
     <div className="max-w-[920px] w-full py-6">
+      {(editTopicLoading || addCommentLoading || deleteTopicLoading) && (
+        <FullPageLoader />
+      )}
       <div className="flex w-full items-stretch">
         <div className="w-6 h-auto relative overflow-hidden">
           <div className="absolute w-12 left-0 top-1/2 rounded-2xl border-solid border-2 border-blue3 h-screen"></div>
@@ -81,12 +100,23 @@ export default function TopicTemplate(props: PropTypes) {
         <div className="w-full h-full header-section flex flex-col gap-3">
           <TopicCard
             topic={props.topic}
-            isPinned={isTopicPinned(props.topic)}
-            onChangeTopicCategory={props.onChangeTopicCategory}
-            onChangeTopicTitle={props.onChangeTopicTitle}
-            onDeleteTopic={handleOnDeleteTopic}
-            onPinTopic={props.onPinTopic}
-            onUnpinTopic={props.onUnpinTopic}
+            isPinned={pinContext.pinnedTopics.includes(props.topic.id)}
+            onChangeTopicCategory={category =>
+              alertIfNotSaved(
+                editTopic(props.topic, { title: props.topic.title, category })
+              )
+            }
+            onChangeTopicTitle={title =>
+              alertIfNotSaved(
+                editTopic(props.topic, {
+                  title,
+                  category: props.topic.category as TopicCategory,
+                })
+              )
+            }
+            onDeleteTopic={handleDeleteTopic}
+            onPinTopic={() => pinContext.pinTopic(props.topic.id)}
+            onUnpinTopic={() => pinContext.unpinTopic(props.topic.id)}
           />
         </div>
       </div>
@@ -102,17 +132,8 @@ export default function TopicTemplate(props: PropTypes) {
           <JoinTopic
             key={props.topic.id}
             canJoin={canJoin}
-            onJoinTopic={props.onJoinTopic}
-            onAddComment={props.onAddComment}
-          />
-        )}
-        {errorMessage && (
-          <AlertPopup
-            mode="error"
-            title="ลบไม่ได้"
-            message={errorMessage}
-            visible
-            onClose={() => setErrorMessage(null)}
+            onJoinTopic={() => alertIfNotSaved(joinTopic(props.topic))}
+            onAddComment={handleAddComment}
           />
         )}
         <p className="text-b2 wv-bold wv-ibmplex mt-6">

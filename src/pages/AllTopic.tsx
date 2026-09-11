@@ -1,602 +1,153 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import TopicListSection from '../components/allTopic/TopicListSection';
-import TopicTemplate from '../components/topic/TopicTemplate';
-import ModalComment from '../components/share/ModalComment';
-import { StoreContext } from '../store';
-import ModalTopic from '../components/share/ModalTopic';
-import { SmartPointerSensor } from '../utils/SmartSenson';
-import {
-  CollisionDetection,
-  DndContext,
-  DragEndEvent,
-  DragOverlay,
-  DragStartEvent,
-  pointerWithin,
-  rectIntersection,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  DraggableCommentProps,
-  DroppableData,
-  DroppableDataComment,
-  DroppableDataTopic,
-  MoveCommentEvent,
-} from '../types/dragAndDrop';
-import CommentAndChildren from '../components/topic/CommentAndChildren';
-import {
-  LightWeightTopic,
-  ModalTopicPayload,
-  Topic,
-  TopicCategory,
-} from '../types/topic';
-import {
-  collection,
-  query,
-  onSnapshot,
-  Unsubscribe,
-  // limit,
-  // orderBy,
-} from 'firebase/firestore';
-import { db } from '../utils/firestore';
-import { AddOrEditCommentPayload, Comment } from '../types/comment';
-import { useAddTopic } from '../hooks/useAddTopic';
-import { useEditTopic } from '../hooks/useEditTopic';
-import { useAddComment } from '../hooks/useAddComment';
-import { useEditComment } from '../hooks/useEditComment';
-import { useDeleteTopicWithChildren } from '../hooks/useDeleteTopicWithChildren';
-import { useMoveComment } from '../hooks/useMoveComment';
-import { useConvertCommentToTopic } from '../hooks/useConvertCommentToTopic';
-import FullPageLoader from '../components/FullPageLoader';
-import AlertPopup from '../components/AlertPopup';
-import { useHotkeys } from 'react-hotkeys-hook';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
-import { DreamConEvent } from '../types/event';
-import { useEvent } from '../hooks/useEvent';
-import { TopicFilter } from '../types/home';
-import ChainIcon from '../components/icon/ChainIcon';
+import { collection, onSnapshot } from 'firebase/firestore';
+import TopicListSection from '../components/allTopic/TopicListSection';
+import FullPageLoader from '../components/FullPageLoader';
+import ModalComment from '../components/share/ModalComment';
+import ModalTopic from '../components/share/ModalTopic';
+import CommentDndContext from '../components/topic/CommentDndContext';
+import ShareTopicLink from '../components/topic/ShareTopicLink';
+import TopicTemplate from '../components/topic/TopicTemplate';
+import { useAddTopic } from '../hooks/useAddTopic';
+import { usePageSession } from '../hooks/usePageSession';
+import { usePermission } from '../hooks/usePermission';
 import { useTopic } from '../hooks/useTopic';
 import ViewerLayout from '../layouts/viewer';
-import { usePermission } from '../hooks/usePermission';
+import { StoreContext } from '../store';
+import { DreamConEvent } from '../types/event';
+import { TopicFilter } from '../types/home';
+import { ModalTopicPayload, Topic } from '../types/topic';
+import { db } from '../utils/firestore';
+import { selectTopicIds } from '../utils/topicFilter';
+
+const PAGE_SIZE = 12;
 
 export default function AllTopic() {
-  const sensors = useSensors(useSensor(SmartPointerSensor));
-  const [itemLimit, setItemLimit] = useState(12);
-  const [showCopyAlert, setShowCopyAlert] = useState(false);
-  const [showPasteAlert, setShowPasteAlert] = useState(false);
-  const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
-  const [previousMoveCommentEvent, setPreviousMoveCommentEvent] =
-    useState<MoveCommentEvent | null>(null);
-  const observerRef = useRef<HTMLElement | null>(null);
-  const [draggedCommentProps, setDraggedCommentProps] =
-    useState<DraggableCommentProps | null>(null);
   const {
     homePage: homePageContext,
-    currentPage,
-    clipboard: clipboardContext,
-    user: userContext,
     event: eventContext,
     selectedTopic,
     pin: pinContext,
-    mode: modeContext,
   } = useContext(StoreContext);
-  const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
-  const {
-    editTopic,
-    joinTopic,
-    leaveTopic,
-    loading: editTopicLoading,
-  } = useEditTopic();
-  const { addNewComment, loading: addNewCommentLoading } = useAddComment();
-  const { editComment, loading: editCommentLoading } = useEditComment();
-  const { deleteTopicWithChildren, loading: deleteTopicLoading } =
-    useDeleteTopicWithChildren();
-  const {
-    moveCommentToComment,
-    moveCommentToTopic,
-    undoMoveCommentToComment,
-    undoMoveCommentToTopic,
-    loading: moveCommentLoading,
-  } = useMoveComment();
-  const {
-    convertCommentToTopic,
-    undoConvertCommentToTopic,
-    loading: convertCommentLoading,
-  } = useConvertCommentToTopic();
-  const { getEvents, loading: eventLoading } = useEvent();
-  const [firstTimeLoading, setFirstTimeLoading] = useState(true);
-  const { loginFromToken, setUserStoreFromToken } = useAuth();
   const location = useLocation();
-  const [events, setEvents] = useState<DreamConEvent[]>([]);
+  const { eventsReady } = usePageSession('all-topic');
+  const { getWriterEvent } = usePermission();
+  const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
+  const { getLightWeightTopics, getTopicByIds } = useTopic();
+  const [lightWeightTopicsLoaded, setLightWeightTopicsLoaded] = useState(false);
+  const [displayTopics, setDisplayTopics] = useState<Topic[] | null>(null);
+  const [itemLimit, setItemLimit] = useState(PAGE_SIZE);
   const [topicFilter, setTopicFilter] = useState<TopicFilter>({
     selectedEvent: null,
     sortedBy: 'latest',
     category: 'ทั้งหมด',
     searchText: '',
   });
-  const { getLightWeightTopics, getTopicByIds } = useTopic();
-  const [topicLink, setTopicLink] = useState<string>('');
-  const [readyToFetchParams, setReadyToFetchParams] = useState(false);
-  const { isReadOnly } = usePermission();
+  const observerRef = useRef<HTMLElement | null>(null);
+  const lightWeightTopics = homePageContext.lightWeightTopics.state;
 
   useEffect(() => {
-    if (readyToFetchParams) {
-      doToken();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- run the token flow only once params become available
-  }, [readyToFetchParams]);
+    if (!eventsReady) return;
+    const eventId = new URLSearchParams(location.search).get('event');
+    const event = eventContext.events.find(event => event.id === eventId);
+    if (event) setTopicFilter(filter => ({ ...filter, selectedEvent: event }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- apply the ?event= filter once, when the events arrive
+  }, [eventsReady]);
 
   useEffect(() => {
-    manageMode();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-evaluate mode only when the signed-in user changes
-  }, [userContext.userState]);
-
-  const fetchLightWeightTopics = async () => {
-    const topics = await getLightWeightTopics();
-    homePageContext.lightWeightTopics.setState(topics);
-    return topics;
-  };
-
-  const doToken = async () => {
-    const params = new URLSearchParams(location.search);
-    const writerToken = params.get('writer');
-
-    if (writerToken) {
-      try {
-        await loginFromToken(writerToken);
-        params.delete('writer');
-        window.location.href = `${location.pathname}?${params.toString()}`;
-        return;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        // do nothing
-      }
-    }
-
-    setUserStoreFromToken();
-    manageMode();
-    manageEvent();
-  };
-
-  const manageEvent = () => {
-    const params = new URLSearchParams(location.search);
-    const eventID = params.get('event');
-    if (eventID) {
-      const event = events.find(event => event.id === eventID);
-      if (event) {
-        setTopicFilter({ ...topicFilter, selectedEvent: event });
-      }
-    }
-  };
-
-  const manageMode = () => {
-    const params = new URLSearchParams(location.search);
-    const mode = params.get('mode');
-    switch (mode) {
-      case 'view':
-        modeContext.setValue('view');
-        break;
-      default: {
-        if (userContext.userState?.role === 'writer') {
-          modeContext.setValue('write');
-        }
-      }
-    }
-
-    return;
-  };
-
-  const fetchTopic2 = async (
-    lightWeightTopics: LightWeightTopic[],
-    itemLimit: number,
-    topicFilter: TopicFilter,
-    pinnedIDs: string[]
-  ) => {
-    const query = getQueryTopicIds(
-      lightWeightTopics,
-      topicFilter,
-      itemLimit,
-      pinnedIDs
-    );
-    if (query.length === 0) {
-      setDisplayTopics([]);
-      return [];
-    }
-    const topics = await getTopicByIds(query);
-    setDisplayTopics(topics);
-    // setFirstTimeLoading(false);
-    return topics;
-  };
-
-  const refreshTopicsWithLoading = async (
-    lightWeightTopics: LightWeightTopic[],
-    itemLimit: number,
-    topicFilter: TopicFilter,
-    pinnedIDs: string[]
-  ) => {
-    setFirstTimeLoading(true);
-    await fetchTopic2(lightWeightTopics, itemLimit, topicFilter, pinnedIDs);
-    setFirstTimeLoading(false);
-  };
-
-  const fetchTopicAfterSubscribe = useCallback(async () => {
-    const lightWeightTopics = await fetchLightWeightTopics();
-    fetchTopic2(
-      lightWeightTopics,
-      itemLimit,
-      topicFilter,
-      pinContext.pinnedTopics
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetchers are redefined every render; re-create only when the query inputs change
-  }, [itemLimit, topicFilter, pinContext.pinnedTopics]);
-
-  const latestFunctionRef = useRef(fetchTopicAfterSubscribe);
-
-  useEffect(() => {
-    latestFunctionRef.current = fetchTopicAfterSubscribe;
-  }, [fetchTopicAfterSubscribe]);
-
-  useEffect(() => {
-    refreshTopicsWithLoading(
-      homePageContext.lightWeightTopics.state,
-      itemLimit,
-      topicFilter,
-      pinContext.pinnedTopics
-    );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [itemLimit, topicFilter, pinContext.pinnedTopics]);
-
-  useEffect(() => {
-    fetchFirstTime();
-    const unsubscribeTopic = subscribeTopics();
-    const unsubscribeEvent = subscribeEvents();
-    return () => {
-      unsubscribeTopic();
-      unsubscribeEvent();
-    };
+    return onSnapshot(collection(db, 'topics'), async () => {
+      homePageContext.lightWeightTopics.setState(await getLightWeightTopics());
+      setLightWeightTopicsLoaded(true);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- subscribe once on mount; the cleanup unsubscribes
   }, []);
 
-  const fetchFirstTime = async () => {
-    currentPage.setValue('all-topic');
-    await fetchEvents();
-    const topicLW = await fetchLightWeightTopics();
-    let pinnedTopics: string[] = [];
-    if (!isReadOnly) {
-      pinnedTopics = pinContext.getPinnedTopics();
-    }
-    await fetchTopic2(topicLW, itemLimit, topicFilter, pinnedTopics);
-    setFirstTimeLoading(false);
-  };
+  useEffect(() => {
+    if (!lightWeightTopicsLoaded) return;
+    let cancelled = false;
+    getTopicByIds(
+      selectTopicIds(
+        lightWeightTopics,
+        topicFilter,
+        itemLimit,
+        pinContext.pinnedTopics
+      )
+    ).then(topics => {
+      if (!cancelled) setDisplayTopics(topics);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- getTopicByIds is redefined every render
+  }, [
+    lightWeightTopicsLoaded,
+    lightWeightTopics,
+    topicFilter,
+    itemLimit,
+    pinContext.pinnedTopics,
+  ]);
+
+  useEffect(() => {
+    if (!displayTopics || !selectedTopic.value) return;
+    const selectedId = selectedTopic.value.id;
+    selectedTopic.setValue(
+      displayTopics.find(topic => topic.id === selectedId) ?? null
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh the side panel only when the list changes
+  }, [displayTopics]);
 
   useEffect(() => {
     const observer = observerRef.current;
-    observer?.addEventListener('scroll', handleScroll);
-
-    return () => {
-      observer?.removeEventListener('scroll', handleScroll);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-attach only when the rendered list changes; handleScroll is redefined every render
+    observer?.addEventListener('scroll', loadMoreAtScrollEnd);
+    return () => observer?.removeEventListener('scroll', loadMoreAtScrollEnd);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-attach only when the rendered list changes; the handler is redefined every render
   }, [displayTopics]);
 
-  useEffect(() => {
-    clipboardContext.subscribeMoveComment(subscribeClipboardEvent);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-subscribe only when the store callback identity changes
-  }, [clipboardContext.subscribeMoveComment]);
-
-  useEffect(() => {
-    clipboardContext.subscribeCopyComment(subscribeCopyComment);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-subscribe only when the store callback identity changes
-  }, [clipboardContext.subscribeCopyComment]);
-
-  useEffect(() => {
-    refreshSelectedTopicFromDisplayTopic(displayTopics);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- refresh only when the rendered list changes
-  }, [displayTopics]);
-
-  useHotkeys('Meta+z, ctrl+z', () => {
-    handleUndoMoveComment();
-  });
-
-  const handleUndoMoveComment = async () => {
-    if (!previousMoveCommentEvent) return;
-    const { comment, droppableData } = previousMoveCommentEvent;
-    switch (droppableData.type) {
-      case 'convert-to-topic': {
-        if (!previousMoveCommentEvent.initialTopic) return;
-        const topic = previousMoveCommentEvent.initialTopic;
-        await undoConvertCommentToTopic(comment, topic);
-        break;
-      }
-      case 'topic': {
-        await undoMoveCommentToTopic(comment, droppableData.topic);
-        break;
-      }
-      case 'comment': {
-        await undoMoveCommentToComment(comment);
-        break;
-      }
-    }
-    setPreviousMoveCommentEvent(null);
-    setShowPasteAlert(false);
-  };
-
-  const handleScroll = () => {
-    if (!observerRef.current) return;
+  const loadMoreAtScrollEnd = () => {
+    if (!observerRef.current || !displayTopics) return;
+    if (displayTopics.length < itemLimit) return;
     const { scrollTop, clientHeight, scrollHeight } = observerRef.current;
     if (scrollTop + clientHeight >= scrollHeight - 10) {
-      fetchMoreTopics(); // Load more topics when scrolled to bottom
+      setItemLimit(itemLimit + PAGE_SIZE);
     }
   };
 
-  const subscribeCopyComment = () => {
-    setShowPasteAlert(false);
-    setShowCopyAlert(true);
-    setPreviousMoveCommentEvent(null);
-  };
-
-  const isPageLoading = () => {
-    return (
-      firstTimeLoading ||
-      addNewTopicLoading ||
-      editTopicLoading ||
-      addNewCommentLoading ||
-      editCommentLoading ||
-      deleteTopicLoading ||
-      moveCommentLoading ||
-      convertCommentLoading ||
-      eventLoading
-    );
-  };
-
-  const fetchEvents = async () => {
-    const events = await getEvents();
-    events.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-    setEvents(events);
-    eventContext.setEvents(events);
-
-    setReadyToFetchParams(true);
-  };
-
-  const getQueryTopicIds = (
-    lightWeightTopics: LightWeightTopic[],
-    topicFilter: TopicFilter,
-    limit: number,
-    pinList: string[]
-  ) => {
-    const filteredTopic = lightWeightTopics.filter(topic => {
-      // regex to check if topic.title contains the search text
-      const regex = new RegExp(topicFilter.searchText, 'i');
-      // sorted by filter
-      const isFilteredByEvent =
-        topicFilter.selectedEvent === null ||
-        topic.event_ids.includes(topicFilter.selectedEvent.id);
-      const isFilteredByCategory =
-        topicFilter.category === 'ทั้งหมด' ||
-        topic.category === topicFilter.category;
-      return (
-        regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
-      );
-    });
-    // sort by latest or most-commented
-    filteredTopic
-      .sort((a, b) => {
-        if (topicFilter.sortedBy === 'latest') {
-          return (
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-          );
-        } else if (topicFilter.sortedBy === 'most-commented') {
-          return b.comment_level1_count - a.comment_level1_count;
-        }
-        return 0;
-      })
-      // sort pinned topics to the top
-      .sort((a, b) => {
-        const aPinnedIndex = pinList.indexOf(a.id);
-        const bPinnedIndex = pinList.indexOf(b.id);
-        if (aPinnedIndex !== -1 && bPinnedIndex === -1) {
-          return -1;
-        } else if (aPinnedIndex === -1 && bPinnedIndex !== -1) {
-          return 1;
-        } else {
-          return 0;
-        }
-      });
-    const topicIds = filteredTopic.map(topic => topic.id);
-    return topicIds.slice(0, limit);
-  };
-
-  const fetchMoreTopics = async () => {
-    if (displayTopics.length < itemLimit) return;
-    const limitCount = itemLimit + 12;
-    setItemLimit(limitCount);
-  };
-
-  const subscribeTopics = (): Unsubscribe => {
-    const topicsQuery = query(collection(db, 'topics'));
-    const unsubscribe = onSnapshot(topicsQuery, async () => {
-      await latestFunctionRef.current();
-    });
-    return unsubscribe;
-  };
-
-  const subscribeEvents = (): Unsubscribe => {
-    const eventsQuery = query(collection(db, 'events'));
-    const unsubscribe = onSnapshot(eventsQuery, () => {
-      fetchEvents();
-    });
-    return unsubscribe;
-  };
-
-  const subscribeClipboardEvent = (
-    copiedComment: Comment,
-    droppableData: DroppableData
-  ) => {
-    handleMoveComment(copiedComment, droppableData);
-  };
-
-  const handleMoveComment = (
-    copiedComment: Comment,
-    droppableData: DroppableData
-  ) => {
-    const { type } = droppableData;
-    setPreviousMoveCommentEvent({ comment: copiedComment, droppableData });
-    switch (type) {
-      case 'topic': {
-        const destinationTopic = (droppableData as DroppableDataTopic).topic;
-        handleDropToTopic(copiedComment, destinationTopic);
-        break;
-      }
-      case 'comment': {
-        const destinationComment = (droppableData as DroppableDataComment)
-          .comment;
-        handleDropToComment(copiedComment, destinationComment);
-        break;
-      }
-      case 'convert-to-topic': {
-        handleDropToAddTopic(copiedComment);
-      }
-    }
-  };
-
-  const getMainSectionWidth = () => {
-    return selectedTopic.value ? 'w-[60%]' : 'w-full';
-  };
-  const getSideSectionWidth = () => {
-    return selectedTopic.value
-      ? 'w-[40%] overflow-hidden'
-      : 'w-0 overflow-hidden';
-  };
-
-  const redirectToTopicPage = () => {
+  const openTopicPage = () => {
     if (!selectedTopic.value) return;
     const params = new URLSearchParams(location.search);
-    const hostUrl = window.location.origin;
-
-    window.location.href = `${hostUrl}/topics/${
+    window.location.href = `${window.location.origin}/topics/${
       selectedTopic.value.id
     }?${params.toString()}`;
   };
 
-  const handleOnSubmitTopic = async (
-    mode: 'create' | 'edit',
+  // The topic modal is only opened in create mode; topics are edited in place.
+  const handleCreateTopic = async (
+    _mode: 'create' | 'edit',
     payload: ModalTopicPayload
   ) => {
-    switch (mode) {
-      case 'create': {
-        // TODO: validate
-        let eventID = '';
-        if (userContext.userState?.role == 'writer') {
-          eventID = userContext.userState?.event.id;
-        }
-        if (!eventID) return;
-        await addNewTopic({ ...payload, event_ids: [eventID] });
-        break;
-      }
-      case 'edit': {
-        const topic = displayTopics.find(topic => topic.id === payload.id);
-        if (!topic) return;
-        await editTopic(topic, {
-          title: payload.title,
-          category: payload.category,
-        });
-        break;
-      }
-    }
+    const writerEvent = getWriterEvent();
+    if (!writerEvent) return;
+    await addNewTopic({ ...payload, event_ids: [writerEvent.id] });
   };
 
-  const refreshSelectedTopicFromDisplayTopic = (topics: Topic[]) => {
-    if (!selectedTopic) return;
-    const topic = topics.find(topic => topic.id === selectedTopic.value?.id);
-    if (!topic) {
-      selectedTopic.setValue(null);
-    } else {
-      selectedTopic.setValue(topic);
-    }
-  };
-
-  const handleOnSubmitComment = async (
-    mode: 'create' | 'edit',
-    payload: AddOrEditCommentPayload
-  ) => {
-    switch (mode) {
-      case 'create':
-        await addNewComment(payload);
-        break;
-      case 'edit':
-        await editComment(payload);
-        break;
-    }
-  };
-
-  const handleOnDeleteTopic = async (topic: Topic | null) => {
-    if (!topic) return;
-    await deleteTopicWithChildren(topic);
-    selectedTopic.setValue(null);
-  };
-
-  const getCreatedByEvent = () => {
-    if (userContext.userState?.role === 'writer') {
-      return userContext.userState?.event;
-    }
-  };
-
-  const collisionDetectionPointer: CollisionDetection = args => {
-    const pointerCollisions = pointerWithin(args);
-    if (pointerCollisions.length > 0) {
-      return pointerCollisions;
-    }
-
-    return rectIntersection(args);
-  };
+  // Snapshot refreshes and filter changes update the list in place without blocking the page.
+  const isPageLoading =
+    displayTopics === null || !eventsReady || addNewTopicLoading;
 
   return (
     <ViewerLayout>
-      <DndContext
-        collisionDetection={collisionDetectionPointer}
-        onDragEnd={handleDragEnd}
-        onDragStart={handleDragStart}
-        sensors={sensors}
-      >
-        {isPageLoading() ? <FullPageLoader /> : null}
+      <CommentDndContext>
+        {isPageLoading && <FullPageLoader />}
         <div className="min-w-screen flex h-full">
           <section
-            className={`bg-blue2 ${getMainSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
+            className={`bg-blue2 ${
+              selectedTopic.value ? 'w-[60%]' : 'w-full'
+            } h-full flex flex-col items-center duration-300 ease-in relative`}
           >
             <section className="absolute w-full h-content z-30 bg-transparent">
               <ModalComment
-                events={events}
-                mode={homePageContext.modalCommentMainSection.state.mode}
-                defaultState={
-                  homePageContext.modalCommentMainSection.state.defaultState
-                }
-                isOpen={
-                  homePageContext.modalCommentMainSection.state.isModalOpen
-                }
-                onClose={() => {
-                  homePageContext.modalCommentMainSection.dispatch({
-                    type: 'CLOSE_MODAL',
-                  });
-                }}
-                parentCommentIds={
-                  homePageContext.modalCommentMainSection.state.parentCommentIds
-                }
-                parentTopicId={
-                  homePageContext.modalCommentMainSection.state.parentTopicId
-                }
-                createdByEvent={getCreatedByEvent() as DreamConEvent}
-                onSubmit={handleOnSubmitComment}
-                fromTopic={
-                  homePageContext.modalCommentMainSection.state.fromTopic
-                }
-                fromComment={
-                  homePageContext.modalCommentMainSection.state.fromComment
-                }
+                store={homePageContext.modalCommentMainSection}
+                events={eventContext.events}
               />
               <ModalTopic
                 mode={homePageContext.modalTopicMainSection.state.mode}
@@ -609,8 +160,8 @@ export default function AllTopic() {
                     type: 'CLOSE_MODAL',
                   });
                 }}
-                createdByEvent={getCreatedByEvent() as DreamConEvent}
-                onSubmit={handleOnSubmitTopic}
+                createdByEvent={getWriterEvent() as DreamConEvent}
+                onSubmit={handleCreateTopic}
               />
             </section>
             <section
@@ -618,60 +169,25 @@ export default function AllTopic() {
               className="p-[60px] w-full h-full flex justify-center overflow-scroll relative"
             >
               <TopicListSection
-                topics={displayTopics}
-                lightWeightTopics={homePageContext.lightWeightTopics.state}
+                topics={displayTopics ?? []}
+                lightWeightTopics={lightWeightTopics}
                 selectedTopic={selectedTopic.value}
                 setSelectedTopic={selectedTopic.setValue}
-                events={events}
+                events={eventContext.events}
                 topicFilter={topicFilter}
                 setTopicFilter={setTopicFilter}
               />
             </section>
-            <AlertPopup
-              visible={showCopyAlert}
-              onClose={() => setShowCopyAlert(false)}
-              onUndo={() => handleUndoMoveComment()}
-              mode="copy"
-            />
-            <AlertPopup
-              visible={showPasteAlert}
-              onClose={() => setShowPasteAlert(false)}
-              onUndo={() => handleUndoMoveComment()}
-              mode="paste"
-            />
           </section>
           <section
-            className={`${getSideSectionWidth()} h-full flex flex-col items-center duration-300 ease-in relative`}
+            className={`${
+              selectedTopic.value ? 'w-[40%]' : 'w-0'
+            } overflow-hidden h-full flex flex-col items-center duration-300 ease-in relative`}
           >
             <section className="absolute w-full h-content z-30 bg-transparent">
               <ModalComment
-                events={events}
-                mode={homePageContext.modalCommentSideSection.state.mode}
-                defaultState={
-                  homePageContext.modalCommentSideSection.state.defaultState
-                }
-                isOpen={
-                  homePageContext.modalCommentSideSection.state.isModalOpen
-                }
-                onClose={() => {
-                  homePageContext.modalCommentSideSection.dispatch({
-                    type: 'CLOSE_MODAL',
-                  });
-                }}
-                parentCommentIds={
-                  homePageContext.modalCommentSideSection.state.parentCommentIds
-                }
-                parentTopicId={
-                  homePageContext.modalCommentSideSection.state.parentTopicId
-                }
-                createdByEvent={getCreatedByEvent() as DreamConEvent}
-                fromTopic={
-                  homePageContext.modalCommentSideSection.state.fromTopic
-                }
-                fromComment={
-                  homePageContext.modalCommentSideSection.state.fromComment
-                }
-                onSubmit={handleOnSubmitComment}
+                store={homePageContext.modalCommentSideSection}
+                events={eventContext.events}
               />
             </section>
             <section className="w-full h-full">
@@ -684,7 +200,7 @@ export default function AllTopic() {
                       alt="double-arrow-right-icon"
                     />
                   </button>
-                  <button onClick={redirectToTopicPage}>
+                  <button onClick={openTopicPage}>
                     <img
                       className="w-[24px] h-[24px]"
                       src="/icon/expand-wide.svg"
@@ -692,69 +208,15 @@ export default function AllTopic() {
                     />
                   </button>
                 </div>
-                <div
-                  className="flex gap-[4px] items-center hover:cursor-pointer"
-                  onClick={async () => {
-                    const hostUrl = window.location.origin;
-                    const topicLink =
-                      hostUrl + '/topics/' + selectedTopic.value?.id;
-                    await navigator.clipboard.writeText(topicLink);
-                    setTopicLink(topicLink);
-                  }}
-                >
-                  <ChainIcon color={topicLink ? '#4999FA' : '#979797'} />
-                  <span className={topicLink ? 'text-[#4999FA]' : 'text-gray5'}>
-                    {topicLink ? 'คัดลอกแล้ว!' : 'แชร์ลิงก์'}
-                  </span>
-                </div>
+                {selectedTopic.value && (
+                  <ShareTopicLink topicId={selectedTopic.value.id} />
+                )}
               </div>
               <div className="p-[24px] bg-blue4 w-full h-full overflow-scroll">
                 {selectedTopic.value ? (
                   <TopicTemplate
                     topic={selectedTopic.value}
-                    onAddComment={(commentView, reason) => {
-                      addNewComment({
-                        comment_view: commentView,
-                        reason,
-                        parent_topic_id: selectedTopic.value?.id,
-                        parent_comment_ids: [],
-                        event_ids: [getCreatedByEvent()?.id ?? ''].filter(
-                          Boolean
-                        ),
-                      });
-                    }}
-                    onChangeTopicTitle={newTitle => {
-                      if (!selectedTopic.value) return;
-                      editTopic(selectedTopic.value, {
-                        title: newTitle,
-                        category: selectedTopic.value.category as TopicCategory,
-                      });
-                    }}
-                    onChangeTopicCategory={newCategory => {
-                      if (!selectedTopic.value) return;
-                      editTopic(selectedTopic.value, {
-                        title: selectedTopic.value.title,
-                        category: newCategory,
-                      });
-                    }}
-                    onJoinTopic={() => {
-                      joinTopic(selectedTopic.value?.id ?? '');
-                    }}
-                    onLeaveTopic={() => {
-                      leaveTopic(
-                        selectedTopic.value?.id ?? '',
-                        selectedTopic.value?.event_ids ?? []
-                      );
-                    }}
-                    onDeleteTopic={() =>
-                      handleOnDeleteTopic(selectedTopic.value || null)
-                    }
-                    onPinTopic={() => {
-                      pinContext.pinTopic(selectedTopic.value?.id || '');
-                    }}
-                    onUnpinTopic={() => {
-                      pinContext.unpinTopic(selectedTopic.value?.id || '');
-                    }}
+                    onDeleted={() => selectedTopic.setValue(null)}
                   />
                 ) : (
                   <div className=" w-full h-full" />
@@ -763,82 +225,7 @@ export default function AllTopic() {
             </section>
           </section>
         </div>
-        <DragOverlay>
-          {draggedCommentProps ? (
-            <CommentAndChildren
-              comment={draggedCommentProps.comment}
-              previousComment={draggedCommentProps.previousComment}
-              nextComment={draggedCommentProps.nextComment}
-              level={draggedCommentProps.level}
-              isLastChildOfParent={draggedCommentProps.isLastChildOfParent}
-              parent={draggedCommentProps.parent}
-            />
-          ) : null}
-        </DragOverlay>
-      </DndContext>
+      </CommentDndContext>
     </ViewerLayout>
   );
-
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event;
-    setDraggedCommentProps(active.data.current as DraggableCommentProps);
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { over, active } = event;
-    if (!active || !over) return;
-    const draggedCommentProps = active.data.current as DraggableCommentProps;
-    const draggedComment = draggedCommentProps.comment;
-    const droppableData = over?.data.current as DroppableData;
-
-    handleMoveComment(draggedComment, droppableData);
-  }
-
-  async function handleDropToTopic(
-    draggedComment: Comment,
-    destinationTopic: Topic
-  ) {
-    if (draggedComment.parent_topic_id === destinationTopic.id) return;
-    await moveCommentToTopic(draggedComment.id, destinationTopic.id);
-    setShowCopyAlert(false);
-    setShowPasteAlert(true);
-  }
-
-  async function handleDropToComment(
-    draggedComment: Comment,
-    destinationComment: Comment
-  ) {
-    // Prevent dropping to itself
-    if (draggedComment.id === destinationComment.id) return;
-    // Prevent dropping to its last parent
-    if (draggedComment.parent_comment_ids.length !== 0) {
-      if (
-        draggedComment.parent_comment_ids[
-          destinationComment.parent_comment_ids.length - 1
-        ] === destinationComment.id
-      )
-        return;
-    }
-    // prevent dropping to its children
-    if (destinationComment.parent_comment_ids.includes(draggedComment.id))
-      return;
-    await moveCommentToComment(draggedComment, destinationComment.id);
-    setShowCopyAlert(false);
-    setShowPasteAlert(true);
-  }
-
-  async function handleDropToAddTopic(draggedComment: Comment) {
-    const eventID = getCreatedByEvent()?.id;
-    if (!eventID) return;
-    const topic = await convertCommentToTopic(draggedComment, eventID);
-    if (!topic) return;
-    setPreviousMoveCommentEvent({
-      comment: draggedComment,
-      droppableData: { type: 'convert-to-topic' },
-      initialTopic: topic,
-    });
-    // fetchTopics();
-    setShowCopyAlert(false);
-    setShowPasteAlert(true);
-  }
 }

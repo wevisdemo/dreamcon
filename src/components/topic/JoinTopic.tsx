@@ -50,9 +50,8 @@ export default function JoinTopic(props: PropTypes) {
   };
 
   const handleAddComment = () => {
-    if (newCommentText.trim().length > 0 && commentView !== null) {
-      props.onAddComment(commentView, newCommentText);
-    }
+    if (!newCommentText.trim() || commentView === null) return;
+    props.onAddComment(commentView, newCommentText);
     setCommentView(CommentView.AGREE);
     setNewCommentText('');
   };

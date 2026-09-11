@@ -142,6 +142,34 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await expect(page.getByText(reply, { exact: true })).toBeVisible();
   });
+
+  test('moves a comment with cut and paste, then undoes it', async ({
+    page,
+  }) => {
+    const moved = 'ควรระบุให้ครอบคลุมการแสดงออกทางศิลปะด้วย';
+    const disagreeView = page.locator('.view-wrapper').nth(2);
+
+    await page.goto('/topics/tp-rights');
+    await waitForLoaded(page);
+    await expect(disagreeView.getByText(moved)).toHaveCount(0);
+
+    await commentCard(page, moved).hover();
+    await page.keyboard.press('Control+x');
+    await expect(page.getByText('คัดลอกไปยังคลิปบอร์ดแล้ว')).toBeVisible();
+
+    await commentCard(
+      page,
+      'ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ'
+    ).hover();
+    await page.keyboard.press('Control+v');
+    await expect(page.getByText('ย้ายแล้ว!')).toBeVisible();
+    await expect(disagreeView.getByText(moved)).toBeVisible();
+
+    await waitForLoaded(page);
+    await page.keyboard.press('Control+z');
+    await expect(disagreeView.getByText(moved)).toHaveCount(0);
+    await expect(page.getByText(moved)).toBeVisible();
+  });
 });
 
 test.describe('signed in as the Online writer', () => {

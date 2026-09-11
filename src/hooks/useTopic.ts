@@ -58,21 +58,23 @@ export const useTopic = () => {
   const getTopicByIds = async (topicIds: string[]): Promise<Topic[]> => {
     setLoading(true);
     setError(null);
-    const topicIdsList = topicIds;
-    if (topicIdsList.length === 0) {
+    if (topicIds.length === 0) {
       setLoading(false);
       return [];
     }
     const chunkSize = 30;
     const chunks = [];
-    for (let i = 0; i < topicIdsList.length; i += chunkSize) {
-      chunks.push(topicIdsList.slice(i, i + chunkSize));
+    for (let i = 0; i < topicIds.length; i += chunkSize) {
+      chunks.push(topicIds.slice(i, i + chunkSize));
     }
     try {
       const results = await Promise.all(
         chunks.map(chunk => getSeparatedTopicsByIds(chunk))
       );
-      return results.flat();
+      const topicsById = new Map(
+        results.flat().map(topic => [topic.id, topic])
+      );
+      return topicIds.flatMap(id => topicsById.get(id) ?? []);
     } catch (err) {
       console.error('Error fetching topics by ids: ', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
@@ -121,16 +123,9 @@ export const useTopic = () => {
       }
       commentsByTopic[topicId].push(commentDB);
     });
-    // Map comments to topics
-    const fineTopics = topics
-      .map(topic => {
-        const comments = commentsByTopic[topic.id] || [];
-        return convertTopicDBToTopic(topic, comments);
-      })
-      .sort((a, b) => {
-        return a.created_at > b.created_at ? -1 : 1;
-      });
-    return fineTopics;
+    return topics.map(topic =>
+      convertTopicDBToTopic(topic, commentsByTopic[topic.id] || [])
+    );
   };
 
   const getTopicsByFilter = async (filter: {

@@ -5,7 +5,7 @@ import {
   initialModalCommentState,
   modalCommentReducer,
 } from './modalComment';
-import { LightWeightTopic, Topic } from '../types/topic';
+import { LightWeightTopic } from '../types/topic';
 import {
   initialModalTopicState,
   initialTopicModalStore,
@@ -14,10 +14,6 @@ import {
 } from './modalTopic';
 
 export interface HomePageStore {
-  selectedTopic: {
-    state: Topic | null;
-    setState: React.Dispatch<React.SetStateAction<Topic | null>>;
-  };
   modalCommentMainSection: CommentModalStore;
   modalTopicMainSection: TopicModalStore;
   modalCommentSideSection: CommentModalStore;
@@ -28,10 +24,6 @@ export interface HomePageStore {
 }
 
 export const initialHomePageState: HomePageStore = {
-  selectedTopic: {
-    state: null,
-    setState: () => null,
-  },
   modalCommentMainSection: initialCommentModalStore,
   modalTopicMainSection: initialTopicModalStore,
   modalCommentSideSection: initialCommentModalStore,
@@ -42,8 +34,6 @@ export const initialHomePageState: HomePageStore = {
 };
 
 export const useHomePageStore = (): HomePageStore => {
-  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
-
   const [modalCommentMainSection, dispatchModalCommentMainSection] = useReducer(
     modalCommentReducer,
     initialModalCommentState
@@ -62,10 +52,6 @@ export const useHomePageStore = (): HomePageStore => {
   >([]);
 
   return {
-    selectedTopic: {
-      state: selectedTopic,
-      setState: setSelectedTopic,
-    },
     modalCommentMainSection: {
       state: modalCommentMainSection,
       dispatch: dispatchModalCommentMainSection,

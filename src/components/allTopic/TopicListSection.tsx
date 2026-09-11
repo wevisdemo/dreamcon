@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { LightWeightTopic, Topic } from '../../types/topic';
 import TopicWrapper from './TopicWrapper';
 import { StoreContext } from '../../store';
@@ -20,60 +20,10 @@ interface PropTypes {
 }
 
 export default function TopicListSection(props: PropTypes) {
-  const {
-    homePage: homePageContext,
-    clipboard: clipboardContext,
-    pin: pinContext,
-  } = useContext(StoreContext);
+  const { homePage: homePageContext, clipboard: clipboardContext } =
+    useContext(StoreContext);
   const [hoveredAddTopic, setHoveredAddTopic] = useState(false);
-  const [displayTopics, setDisplayTopics] = useState<Topic[]>([]);
   const { isReadOnly } = usePermission();
-  useEffect(() => {
-    const filteredTopics = props.topics.filter(topic => {
-      // regex to check if topic.title contains the search text
-      const regex = new RegExp(props.topicFilter.searchText, 'i');
-      // sorted by filter
-      const isFilteredByEvent =
-        props.topicFilter.selectedEvent === null ||
-        topic.event_ids.includes(props.topicFilter.selectedEvent.id);
-      const isFilteredByCategory =
-        props.topicFilter.category === 'ทั้งหมด' ||
-        topic.category === props.topicFilter.category;
-      return (
-        regex.test(topic.title) && isFilteredByEvent && isFilteredByCategory
-      );
-    });
-
-    // sort by latest or most-commented
-    if (props.topicFilter.sortedBy === 'latest') {
-      filteredTopics.sort((a, b) => {
-        return (
-          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-        );
-      });
-    } else if (props.topicFilter.sortedBy === 'most-commented') {
-      filteredTopics.sort((a, b) => {
-        return b.comments.length - a.comments.length;
-      });
-    }
-
-    const pinnedTopicIds = pinContext.pinnedTopics;
-
-    //sort pinned topics to the top
-    filteredTopics.sort((a, b) => {
-      const aPinnedIndex = pinnedTopicIds.indexOf(a.id);
-      const bPinnedIndex = pinnedTopicIds.indexOf(b.id);
-      if (aPinnedIndex !== -1 && bPinnedIndex === -1) {
-        return -1;
-      } else if (aPinnedIndex === -1 && bPinnedIndex !== -1) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-
-    setDisplayTopics(filteredTopics);
-  }, [props.topics, props.topicFilter, pinContext.pinnedTopics]);
 
   const handleAddTopic = () => {
     homePageContext.modalTopicMainSection.dispatch({
@@ -149,7 +99,7 @@ export default function TopicListSection(props: PropTypes) {
         allTopicCount={allTopicCount()}
       />
       <TopicWrapper
-        topics={displayTopics}
+        topics={props.topics}
         selectedTopic={props.selectedTopic}
         setSelectedTopic={props.setSelectedTopic}
       />

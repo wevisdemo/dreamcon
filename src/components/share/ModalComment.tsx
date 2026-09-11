@@ -1,38 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import {
-  AddOrEditCommentPayload,
-  Comment,
-  CommentView,
-} from '../../types/comment';
+import { Comment, CommentView } from '../../types/comment';
 import { DreamConEvent } from '../../types/event';
-import { Topic } from '../../types/topic';
+import { CommentModalStore } from '../../store/modalComment';
+import { useAddComment } from '../../hooks/useAddComment';
+import { useEditComment } from '../../hooks/useEditComment';
+import { usePermission } from '../../hooks/usePermission';
 import { TextareaAutosize } from '@mui/material';
+import FullPageLoader from '../FullPageLoader';
 
-// TODO: refactor to reduce props
 interface PropTypes {
-  mode: 'create' | 'edit';
-  defaultState?: Comment;
-  isOpen: boolean;
-  createdByEvent: DreamConEvent;
+  store: CommentModalStore;
   events: DreamConEvent[];
-  fromTopic?: Topic;
-  fromComment?: Comment;
-  onClose: () => void;
-  onSubmit: (mode: 'create' | 'edit', payload: AddOrEditCommentPayload) => void;
-  parentTopicId?: string;
-  parentCommentIds?: string[];
 }
 
 export default function ModalComment(props: PropTypes) {
+  const { state } = props.store;
   const [text, setText] = useState<string>('');
   const [commentView, setCommentView] = useState<CommentView | null>(
     CommentView.AGREE
   );
+  const { getWriterEvent } = usePermission();
+  const { addNewComment, loading: addCommentLoading } = useAddComment();
+  const { editComment, loading: editCommentLoading } = useEditComment();
   useEffect(() => {
-    setText(props.defaultState?.reason || '');
-    setCommentView(props.defaultState?.comment_view || CommentView.AGREE);
-  }, [props.defaultState]);
-  if (!props.isOpen) return null;
+    setText(state.defaultState?.reason || '');
+    setCommentView(state.defaultState?.comment_view || CommentView.AGREE);
+  }, [state.defaultState]);
+  // Submitting closes the modal right away, so the save runs while it is closed.
+  if (!state.isModalOpen) {
+    return addCommentLoading || editCommentLoading ? <FullPageLoader /> : null;
+  }
+
+  const createdByEvent = getWriterEvent();
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -43,21 +42,21 @@ export default function ModalComment(props: PropTypes) {
   const handleClose = () => {
     setText('');
     setCommentView(CommentView.AGREE);
-    props.onClose();
+    props.store.dispatch({ type: 'CLOSE_MODAL' });
   };
 
   const getParentEvent = (): DreamConEvent | null => {
-    if (props.fromTopic) {
+    if (state.fromTopic) {
       const event = props.events.find(
-        event => event.id === props.fromTopic?.event_ids[0]
+        event => event.id === state.fromTopic?.event_ids[0]
       );
       if (event) {
         return event;
       }
     }
-    if (props.fromComment) {
+    if (state.fromComment) {
       const event = props.events.find(
-        event => event.id === props.fromComment?.event_ids[0]
+        event => event.id === state.fromComment?.event_ids[0]
       );
       if (event) {
         return event;
@@ -68,24 +67,24 @@ export default function ModalComment(props: PropTypes) {
 
   const onSubmit = () => {
     if (commentView && text) {
-      switch (props.mode) {
+      switch (state.mode) {
         case 'edit':
-          props.onSubmit(props.mode, {
-            id: props.defaultState?.id,
+          editComment({
+            id: state.defaultState?.id,
             comment_view: commentView,
             reason: text,
-            parent_comment_ids: props.defaultState?.parent_comment_ids,
-            parent_topic_id: props.defaultState?.parent_topic_id,
-            event_ids: props.defaultState?.event_ids ?? [],
+            parent_comment_ids: state.defaultState?.parent_comment_ids,
+            parent_topic_id: state.defaultState?.parent_topic_id,
+            event_ids: state.defaultState?.event_ids ?? [],
           });
           break;
         case 'create':
-          props.onSubmit(props.mode, {
+          addNewComment({
             comment_view: commentView,
             reason: text,
-            parent_comment_ids: props.parentCommentIds,
-            parent_topic_id: props.parentTopicId,
-            event_ids: [props.createdByEvent.id],
+            parent_comment_ids: state.parentCommentIds,
+            parent_topic_id: state.parentTopicId,
+            event_ids: createdByEvent ? [createdByEvent.id] : [],
           });
           break;
       }
@@ -117,7 +116,7 @@ export default function ModalComment(props: PropTypes) {
         <div className="flex flex-col gap-[12px] bg-gray1 p-[16px] border-solid border-b-[1px] border-[#D4D4D4]">
           <div className="flex justify-end items-center mt-[8px] relative">
             <p className="absolute wv-ibmplex text-b2 text-blue7 wv-bold left-[50%] top-[50%] translate-y-[-50%] translate-x-[-50%] px-[8px]">
-              {props.mode === 'create'
+              {state.mode === 'create'
                 ? 'เพิ่มข้อถกเถียงต่อยอด'
                 : 'แก้ไขข้อถกเถียงต่อยอด'}
             </p>
@@ -129,7 +128,7 @@ export default function ModalComment(props: PropTypes) {
               ยกเลิก
             </div>
           </div>
-          {props.mode === 'create' && (
+          {state.mode === 'create' && (
             <>
               <div className="flex gap-[8px] items-center">
                 <img
@@ -142,15 +141,15 @@ export default function ModalComment(props: PropTypes) {
                 </span>
               </div>
               <div className="p-[10px] rounded-[16px] bg-white">
-                {props.fromTopic && props.fromTopic.title}
-                {props.fromComment && (
+                {state.fromTopic && state.fromTopic.title}
+                {state.fromComment && (
                   <div className="flex gap-[8px] items-center">
                     <div
                       className={`w-[12px] h-[12px] rounded-full bg-${viewColor(
-                        props.fromComment
+                        state.fromComment
                       )}`}
                     />
-                    <span className="flex-1">{props.fromComment.reason}</span>
+                    <span className="flex-1">{state.fromComment.reason}</span>
                   </div>
                 )}
               </div>
@@ -196,7 +195,7 @@ export default function ModalComment(props: PropTypes) {
             <div className="px-[10px] py-[8px] bg-gray2 flex gap-[4px]">
               <span>ความคิดเห็นของ</span>
               <img src="/icon/community.svg" alt="icon-community" />
-              <span>{props.createdByEvent.display_name}</span>
+              <span>{createdByEvent?.display_name}</span>
             </div>
             <div className="w-full bg-gray1 relative">
               <TextareaAutosize

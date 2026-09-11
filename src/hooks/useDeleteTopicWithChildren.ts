@@ -16,24 +16,24 @@ export const useDeleteTopicWithChildren = () => {
   const [error, setError] = useState<string | null>(null);
   const { canManageTopic, getWriterEvent } = usePermission();
 
-  const deleteTopicWithChildren = async (topic: Topic) => {
+  const deleteTopicWithChildren = async (topic: Topic): Promise<boolean> => {
     const topicId = topic.id;
     if (!topicId) {
       setError('No topic ID provided for deletion');
-      return;
+      return false;
     }
 
     const writerEvent = getWriterEvent();
     if (!writerEvent) {
       setError('No writer event found');
       setLoading(false);
-      return;
+      return false;
     }
 
     if (!canManageTopic(topic)) {
       setError('You do not have permission to delete this topic');
       setLoading(false);
-      return;
+      return false;
     }
 
     setLoading(true);
@@ -65,9 +65,11 @@ export const useDeleteTopicWithChildren = () => {
         'Topic and all related comments deleted successfully:',
         topicId
       );
+      return true;
     } catch (err) {
       console.error('Error deleting topic:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      return false;
     } finally {
       setLoading(false);
     }

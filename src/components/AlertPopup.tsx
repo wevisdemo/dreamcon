@@ -35,7 +35,7 @@ export default function AlertPopup({
     <>
       {visible && (
         <div
-          className={`fixed bottom-6 right-6 flex flex-wrap items-center justify-center gap-2 z-50 text-gray8 text-b3 p-4 rounded-2xl shadow-sm ${
+          className={`flex flex-wrap items-center justify-center gap-2 text-gray8 text-b3 p-4 rounded-2xl shadow-sm ${
             mode === 'error' ? 'bg-lightRed' : 'bg-green3'
           }`}
         >
