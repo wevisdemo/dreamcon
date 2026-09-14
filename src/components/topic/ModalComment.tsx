@@ -8,10 +8,10 @@ import { useLeaveEvent } from '../../hooks/useLeaveEvent';
 import { usePermission } from '../../hooks/usePermission';
 import { useAlertIfNotSaved } from '../../hooks/useShowError';
 import { flattenComments, linkedEventIds } from '../../utils/mapping';
-import FullPageLoader from '../FullPageLoader';
-import EventListLabel from '../topic/EventListLabel';
+import FullPageLoader from '../ui/FullPageLoader';
+import EventListLabel from './EventListLabel';
 import JoinAndComment from './JoinAndComment';
-import Modal from './Modal';
+import Modal from '../ui/Modal';
 
 interface PropTypes {
   store: CommentModalStore;

@@ -45,9 +45,4 @@ export interface AddOrEditEventPayload {
 
 export type CreateEventDBPayload = Omit<DreamConEvent, 'id' | 'topic_counts'>;
 
-export type UpdateEventDBPayload = Omit<
-  DreamConEvent,
-  'id' | 'topic_counts' | 'created_at'
->;
-
 export type DreamConEventDB = Omit<DreamConEvent, 'topic_counts'>;

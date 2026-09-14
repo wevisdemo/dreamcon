@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { LightWeightTopic, Topic } from '../../types/topic';
 import TopicWrapper from './TopicWrapper';
 import { StoreContext } from '../../store';
-import { Droppable } from '../Droppable';
+import { Droppable } from '../topic/Droppable';
 import { useHotkeys } from 'react-hotkeys-hook';
 import Filter from './Filter';
 import { TopicFilter } from '../../types/home';

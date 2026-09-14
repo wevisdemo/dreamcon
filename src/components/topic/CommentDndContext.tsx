@@ -23,8 +23,8 @@ import { useMoveComment } from '../../hooks/useMoveComment';
 import { usePermission } from '../../hooks/usePermission';
 import { ErrorAlert, ShowErrorContext } from '../../hooks/useShowError';
 import { SmartPointerSensor } from '../../utils/SmartSenson';
-import AlertPopup from '../AlertPopup';
-import FullPageLoader from '../FullPageLoader';
+import AlertPopup from '../ui/AlertPopup';
+import FullPageLoader from '../ui/FullPageLoader';
 import CommentAndChildren from './CommentAndChildren';
 
 const collisionDetectionPointer: CollisionDetection = args => {

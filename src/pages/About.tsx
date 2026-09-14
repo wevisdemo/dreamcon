@@ -1,6 +1,6 @@
 import DefaultLayout from '../layouts/default';
-import Footer from '../components/Footer';
-import Hero from '../components/Hero';
+import Footer from '../components/layout/Footer';
+import Hero from '../components/layout/Hero';
 import { externalEvents } from '../data/about';
 import ExternalEventCard from '../components/about/ExternalEventCard';
 import { useContext, useEffect } from 'react';

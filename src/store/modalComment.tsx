@@ -1,7 +1,7 @@
 import { Comment } from '../types/comment';
 
 /** Holds ids only: the modal reads the live topic and comment from the page. */
-export interface ModalCommentState {
+interface ModalCommentState {
   isModalOpen: boolean;
   defaultState?: Comment;
   parentTopicId?: string;
@@ -20,7 +20,7 @@ export interface ActionEditCommentPayload {
   defaultState: Comment;
 }
 
-export type ModalCommentAction =
+type ModalCommentAction =
   | {
       type: 'OPEN_MODAL';
       payload: ActionCreateCommentPayload | ActionEditCommentPayload;

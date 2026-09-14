@@ -84,7 +84,6 @@ export const useEditTopic = () => {
 
     try {
       await updateDoc(doc(db, `topics/${topicId}`), payload);
-      console.log('Document updated with ID:', topicId);
       return true;
     } catch (err) {
       console.error('Error updating document:', err);

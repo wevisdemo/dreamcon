@@ -78,7 +78,7 @@ export type TopicCategory = (typeof topicCategories)[number];
  * array, which the retired `'ไม่ระบุ'` migrates to. It only excludes the others:
  * picking it means the topic fits none of them, so combining is contradictory.
  */
-export const EXCLUSIVE_CATEGORY: TopicCategory = 'อื่น ๆ';
+const EXCLUSIVE_CATEGORY: TopicCategory = 'อื่น ๆ';
 
 export const disabledCategories = (selected: string[]): string[] =>
   selected.includes(EXCLUSIVE_CATEGORY)

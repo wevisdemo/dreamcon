@@ -1,7 +1,7 @@
 import React from 'react';
-import Hero from '../components/Hero';
-import Description from '../components/Description';
-import Footer from '../components/Footer';
+import Hero from '../components/layout/Hero';
+import Description from '../components/layout/Description';
+import Footer from '../components/layout/Footer';
 import { usePermission } from '../hooks/usePermission';
 import DefaultLayout from './default';
 

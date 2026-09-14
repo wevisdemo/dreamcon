@@ -1,11 +1,10 @@
 import { ReactElement, useContext, useState } from 'react';
-import useAuth from '../hooks/useAuth';
-import { StoreContext } from '../store';
+import useAuth from '../../hooks/useAuth';
+import { StoreContext } from '../../store';
 import { Popover } from '@mui/material';
 import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
-import { usePermission } from '../hooks/usePermission';
+import { usePermission } from '../../hooks/usePermission';
 
-// todo: if has some tabs later, we have to handle state
 export default function Nav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);

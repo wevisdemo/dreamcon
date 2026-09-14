@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { CommentView } from '../../types/comment';
 import { usePermission } from '../../hooks/usePermission';
-import TextComposer from './TextComposer';
+import TextComposer from '../ui/TextComposer';
 
 const commentViewOptions = [
   {

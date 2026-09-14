@@ -4,7 +4,7 @@ import AddCommentIcon from '@material-symbols/svg-700/rounded/maps_ugc.svg?react
 import MoreVertIcon from '@material-symbols/svg-700/rounded/more_vert.svg?react';
 import DraggableDotsIcon from '../icon/DraggableDotsIcon';
 import Popover from '@mui/material/Popover';
-import MenuPopover from '../share/MenuPopover';
+import MenuPopover from './MenuPopover';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { StoreContext } from '../../store';
 import Tooltip from '@mui/material/Tooltip';

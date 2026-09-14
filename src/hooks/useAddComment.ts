@@ -50,8 +50,6 @@ export const useAddComment = () => {
         transaction.update(parentDocRef, {
           notified_at: timeNow,
         });
-
-        console.log('Document written with ID: ', docRef.id);
       });
       return true;
     } catch (err) {

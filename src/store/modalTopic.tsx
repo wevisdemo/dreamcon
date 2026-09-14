@@ -1,6 +1,6 @@
 import { Topic } from '../types/topic';
 
-export interface ModalTopicState {
+interface ModalTopicState {
   isModalOpen: boolean;
   defaultState?: Topic;
   mode: 'create' | 'edit';
@@ -15,7 +15,7 @@ interface ActionEditPayload {
   defaultState: Topic;
 }
 
-export type ModalTopicAction =
+type ModalTopicAction =
   | {
       type: 'OPEN_MODAL';
       payload: ActionCreatePayload | ActionEditPayload;

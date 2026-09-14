@@ -4,14 +4,14 @@ import {
   ActionEditCommentPayload,
 } from '../../store/modalComment';
 import { Comment } from '../../types/comment';
-import { Draggable } from '../Draggable';
+import { Draggable } from './Draggable';
 import CommentCard from './CommentCard';
 import CommentWrapper from './CommentWrapper';
 import EventListLabel from './EventListLabel';
 import { StoreContext } from '../../store';
 import { DraggableCommentProps } from '../../types/dragAndDrop';
-import { Droppable } from '../Droppable';
-import FullPageLoader from '../FullPageLoader';
+import { Droppable } from './Droppable';
+import FullPageLoader from '../ui/FullPageLoader';
 import { useDeleteCommentWithChildren } from '../../hooks/useDeleteCommentWithChildren';
 import { useLeaveEvent } from '../../hooks/useLeaveEvent';
 import { usePermission } from '../../hooks/usePermission';

@@ -9,8 +9,8 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import FullPageLoader from '../components/FullPageLoader';
-import ModalComment from '../components/share/ModalComment';
+import FullPageLoader from '../components/ui/FullPageLoader';
+import ModalComment from '../components/topic/ModalComment';
 import CommentDndContext from '../components/topic/CommentDndContext';
 import ShareTopicLink from '../components/topic/ShareTopicLink';
 import TopicTemplate from '../components/topic/TopicTemplate';

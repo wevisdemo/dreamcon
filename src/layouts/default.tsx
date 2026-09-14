@@ -1,24 +1,14 @@
 import React from 'react';
-import Nav from '../components/Nav';
-import AdminNav from '../components/AdminNav';
+import Nav from '../components/layout/Nav';
+import AdminNav from '../components/layout/AdminNav';
 
 const DefaultLayout: React.FC<{
-  page?: string;
+  admin?: boolean;
   children: React.ReactNode;
-}> = ({ page, children }) => {
-  const getNav = (page: string | undefined) => {
-    switch (page) {
-      case 'admin':
-        return <AdminNav />;
-      case 'viewer':
-        return <Nav />;
-      default:
-        return <Nav />;
-    }
-  };
+}> = ({ admin, children }) => {
   return (
     <div className="flex flex-col w-screen h-screen">
-      {getNav(page)}
+      {admin ? <AdminNav /> : <Nav />}
       <main className="pt-16 min-h-screen h-full flex flex-col w-full">
         {children}
       </main>

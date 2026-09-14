@@ -3,7 +3,7 @@ import Masonry from '@mui/lab/Masonry';
 import { Topic } from '../../types/topic';
 import TopicSummary from './TopicSummary';
 import { StoreContext } from '../../store';
-import { Droppable } from '../Droppable';
+import { Droppable } from '../topic/Droppable';
 import EmptyTopic from './EmptyTopic';
 
 interface PropTypes {

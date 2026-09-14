@@ -1,11 +1,10 @@
 import { ReactElement, useState } from 'react';
-import useAuth from '../hooks/useAuth';
+import useAuth from '../../hooks/useAuth';
 import { Popover } from '@mui/material';
 import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
-import ProfileIcon from './icon/ProfileIcon';
-import { usePermission } from '../hooks/usePermission';
+import ProfileIcon from '../icon/ProfileIcon';
+import { usePermission } from '../../hooks/usePermission';
 
-// todo: if has some tabs later, we have to handle state
 export default function AdminNav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
   const openMenu = Boolean(anchorMenu);

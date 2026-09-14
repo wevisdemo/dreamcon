@@ -93,7 +93,6 @@ export const useEditComment = () => {
           notified_at: new Date(),
         });
       });
-      console.log('Document updated with ID:', comment.id);
       return true;
     } catch (err) {
       console.error('Error updating document:', err);

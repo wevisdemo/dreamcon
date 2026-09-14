@@ -11,17 +11,17 @@ export type DroppableData =
   | DroppableDataComment
   | DroppableConvertToTopic;
 
-export interface DroppableDataTopic {
+interface DroppableDataTopic {
   type: 'topic';
   topic: Topic;
 }
 
-export interface DroppableDataComment {
+interface DroppableDataComment {
   type: 'comment';
   comment: Comment;
 }
 
-export interface DroppableConvertToTopic {
+interface DroppableConvertToTopic {
   type: 'convert-to-topic';
 }
 

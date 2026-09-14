@@ -43,28 +43,21 @@ export const useDeleteTopicWithChildren = () => {
       await runTransaction(db, async transaction => {
         const commentsCollection = collection(db, 'comments');
 
-        // Step 1: Find comments with this topic ID
         const commentsQuery = query(
           commentsCollection,
           where('parent_topic_id', '==', topicId)
         );
         const commentsSnapshot = await getDocs(commentsQuery);
 
-        // Step 2: Delete all related comments in the transaction
         commentsSnapshot.docs.forEach(docSnapshot => {
           const commentRef = doc(db, `comments/${docSnapshot.id}`);
           transaction.delete(commentRef);
         });
 
-        // Step 3: Delete the topic itself
         const topicDocRef = doc(db, `topics/${topicId}`);
         transaction.delete(topicDocRef);
       });
 
-      console.log(
-        'Topic and all related comments deleted successfully:',
-        topicId
-      );
       return true;
     } catch (err) {
       console.error('Error deleting topic:', err);

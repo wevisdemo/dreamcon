@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { DreamConEventDB } from '../types/event';
 import { Writer } from '../types/writer';
 
-export type UserState = WriterRoleState | UserRoleState;
+type UserState = WriterRoleState | UserRoleState;
 
-export interface WriterRoleState {
+interface WriterRoleState {
   role: 'writer';
   writer: Writer;
   event: DreamConEventDB;
 }
 
-export interface UserRoleState {
+interface UserRoleState {
   role: 'user';
 }
 

@@ -48,8 +48,6 @@ export const useEvent = () => {
       await runTransaction(db, async transaction => {
         const docRef = doc(eventsCollection);
         transaction.set(docRef, eventDBPayload);
-
-        console.log('Document written with ID: ', docRef.id);
       });
     } catch (err) {
       console.error('Error adding document: ', err);
@@ -75,7 +73,6 @@ export const useEvent = () => {
             updated_at: doc.data()?.updated_at.toDate(),
           }) as DreamConEvent
       );
-      // get topic counts
       const topicsCollection = collection(db, 'topics');
       const topicCountsMap: Record<string, number> = {};
       const topicsSnapshot = await getDocs(topicsCollection);
@@ -122,7 +119,6 @@ export const useEvent = () => {
 
       await runTransaction(db, async transaction => {
         transaction.update(eventDocRef, updatedPayload);
-        console.log('Document updated with ID: ', id);
       });
     } catch (err) {
       console.error('Error updating document: ', err);

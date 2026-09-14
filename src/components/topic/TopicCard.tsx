@@ -7,12 +7,12 @@ import {
 } from '../../types/topic';
 import Tooltip from '@mui/material/Tooltip';
 import { Popover } from '@mui/material';
-import MenuPopover from '../share/MenuPopover';
-import Dropdown from '../share/Dropdown';
+import MenuPopover from './MenuPopover';
+import Dropdown from '../ui/Dropdown';
 import { StoreContext } from '../../store';
 import { usePermission } from '../../hooks/usePermission';
 import MoreVertIcon from '@material-symbols/svg-700/rounded/more_vert.svg?react';
-import TextComposer from '../share/TextComposer';
+import TextComposer from '../ui/TextComposer';
 
 interface PropTypes {
   topic: Topic;

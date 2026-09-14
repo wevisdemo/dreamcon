@@ -50,10 +50,9 @@ export const linkedEventIds = (parent: CommentParent): string[] => [
   ),
 ];
 
-export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
+const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
   const commentMap: Map<string, Comment> = new Map();
 
-  // Convert CommentDB objects to Comment and store in map
   commentDBList.forEach(commentDB => {
     commentMap.set(commentDB.id, {
       ...commentDB,
@@ -69,10 +68,8 @@ export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
     if (!comment) return;
 
     if (comment.parent_comment_ids.length === 0) {
-      // No parent, it's a root comment
       rootComments.push(comment);
     } else {
-      // Find the direct parent (last ID in parent_comment_ids)
       const parentId =
         comment.parent_comment_ids[comment.parent_comment_ids.length - 1];
       const parentComment = commentMap.get(parentId);
@@ -80,7 +77,6 @@ export const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
       if (parentComment) {
         parentComment.comments.push(comment);
       } else {
-        // If no valid parent is found, treat it as root (should not happen normally)
         rootComments.push(comment);
       }
     }

@@ -3,7 +3,7 @@ import { useTopic } from '../hooks/useTopic';
 import TopicSummary from '../components/allTopic/TopicSummary';
 import { Topic } from '../types/topic';
 import DefaultLayout from '../layouts/default';
-import Footer from '../components/Footer';
+import Footer from '../components/layout/Footer';
 import { StoreContext } from '../store';
 import ArrowForwardIcon from '@material-symbols/svg-700/rounded/arrow_forward.svg?react';
 import KeyboardArrowDownIcon from '@material-symbols/svg-700/rounded/keyboard_arrow_down.svg?react';

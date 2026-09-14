@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../utils/firestore'; // Adjust based on your file structure
+import { db } from '../utils/firestore';
 import { AddOrEditTopicPayload, CreateTopicDBPayload } from '../types/topic';
 
 export const useAddTopic = () => {
@@ -30,8 +30,7 @@ export const useAddTopic = () => {
         notified_at: timeNow,
       };
 
-      const docRef = await addDoc(topicsCollection, TopicDBPayload);
-      console.log('Document written with ID:', docRef.id);
+      await addDoc(topicsCollection, TopicDBPayload);
     } catch (err) {
       console.error('Error adding document:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');

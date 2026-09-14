@@ -6,7 +6,7 @@ import ModalEvent from '../components/admin/ModalEvent';
 import { AddOrEditEventPayload, DreamConEvent } from '../types/event';
 import { useEvent } from '../hooks/useEvent';
 import { useWriter } from '../hooks/useWriter';
-import FullPageLoader from '../components/FullPageLoader';
+import FullPageLoader from '../components/ui/FullPageLoader';
 import DefaultLayout from '../layouts/default';
 import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
 
@@ -149,7 +149,7 @@ const AdminPage = () => {
   };
 
   return (
-    <DefaultLayout page="admin">
+    <DefaultLayout admin>
       {isPageLoading() ? <FullPageLoader /> : null}
       <div className="h-full w-screen bg-blue-2 flex justify-center relative overflow-auto">
         <main className="max-w-235 w-full py-8 flex flex-col">

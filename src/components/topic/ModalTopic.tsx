@@ -6,10 +6,10 @@ import {
   TopicCategory,
 } from '../../types/topic';
 import { useEffect, useState } from 'react';
-import Dropdown from './Dropdown';
+import Dropdown from '../ui/Dropdown';
 import { DreamConEvent } from '../../types/event';
-import TextComposer from './TextComposer';
-import Modal from './Modal';
+import TextComposer from '../ui/TextComposer';
+import Modal from '../ui/Modal';
 
 interface PropTypes {
   mode: 'create' | 'edit';
