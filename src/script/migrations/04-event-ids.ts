@@ -1,10 +1,17 @@
 /**
- * One-time migration: topics/comments `event_id: string` -> `event_ids: string[]`.
+ * One-time migration:
+ *   - topics/comments `event_id: string` -> `event_ids: string[]`
+ *   - topics `category: string` -> `categories: string[]` ('ไม่ระบุ' or missing -> [])
+ *   - topics: renames retired category strings (see RENAMED_CATEGORIES), also
+ *     inside an existing `categories` array, so a re-run fixes docs migrated
+ *     before the rename was added
  *
  *   VITE_USE_FIREBASE_EMULATOR=true pnpm tsx src/script/migrations/04-event-ids.ts [--apply] [--drop-legacy]
  *
- * Dry-run by default. `--apply` writes. `--drop-legacy` also deletes `event_id`.
- * Idempotent: docs that already have an `event_ids` array are skipped.
+ * Dry-run by default. `--apply` writes. `--drop-legacy` also deletes `event_id`
+ * and `category`.
+ * Idempotent: docs that already have every target array are skipped.
+ * `category` needs no rules step; `firestore.rules` never referenced it.
  *
  * This runs through the client SDK, so production security rules apply.
  * Prod rollout order:
@@ -30,6 +37,12 @@ import {
   isEmulatorEnabled,
 } from '../../utils/firebaseEmulator';
 
+/** Retired category strings, renamed in place on both `category` and `categories`. */
+const RENAMED_CATEGORIES: Record<string, string> = {
+  รัฐสภา: 'ฝ่ายนิติบัญญัติ',
+  'ศาล รธน.': 'ฝ่ายตุลาการ',
+};
+
 const apply = process.argv.includes('--apply');
 const dropLegacy = process.argv.includes('--drop-legacy');
 const BATCH_SIZE = 500;
@@ -40,23 +53,49 @@ const target = useEmulator
   ? `emulator (${EMULATOR_FIREBASE_CONFIG.projectId})`
   : `PRODUCTION (${db.app.options.projectId})`;
 console.log(
-  `[migrate] target: ${target} | mode: ${apply ? 'APPLY' : 'dry-run'}${dropLegacy ? ' + drop legacy event_id' : ''}`
+  `[migrate] target: ${target} | mode: ${apply ? 'APPLY' : 'dry-run'}${dropLegacy ? ' + drop legacy event_id/category' : ''}`
 );
 
 const migrateCollection = async (name: string) => {
+  const withCategories = name === 'topics';
   const snapshot = await getDocs(collection(db, name));
-  const pending: { ref: DocumentReference; eventIds: string[] }[] = [];
+  const pending: {
+    ref: DocumentReference;
+    eventIds: string[];
+    categories?: string[];
+  }[] = [];
   let skipped = 0;
   let missing = 0;
 
   snapshot.docs.forEach(d => {
     const data = d.data();
     const hasEventIds = Array.isArray(data.event_ids);
-    if (hasEventIds && !(dropLegacy && 'event_id' in data)) {
+
+    /**
+     * An empty `categories` next to a legacy `category` is not migrated data:
+     * the new app writes `[]` for a doc it read before this script ran. Deriving
+     * from the legacy field in that case keeps a re-run from letting
+     * `--drop-legacy` delete the only copy of the category.
+     */
+    const current = Array.isArray(data.categories) ? data.categories : null;
+    const legacy =
+      data.category && data.category !== 'ไม่ระบุ' ? [data.category] : [];
+    const categories = (current?.length ? current : legacy).map(
+      (category: string) => RENAMED_CATEGORIES[category] ?? category
+    );
+    const categoriesUpToDate =
+      !withCategories ||
+      (current !== null &&
+        current.length === categories.length &&
+        current.every((c: string, i: number) => c === categories[i]));
+
+    const hasLegacy =
+      'event_id' in data || (withCategories && 'category' in data);
+    if (hasEventIds && categoriesUpToDate && !(dropLegacy && hasLegacy)) {
       skipped += 1;
       return;
     }
-    if (!data.event_id) missing += 1;
+    if (!hasEventIds && !data.event_id) missing += 1;
     pending.push({
       ref: d.ref,
       eventIds: hasEventIds
@@ -64,6 +103,7 @@ const migrateCollection = async (name: string) => {
         : data.event_id
           ? [data.event_id]
           : [],
+      ...(withCategories && { categories }),
     });
   });
 
@@ -74,10 +114,16 @@ const migrateCollection = async (name: string) => {
 
   for (let i = 0; i < pending.length; i += BATCH_SIZE) {
     const batch = writeBatch(db);
-    pending.slice(i, i + BATCH_SIZE).forEach(({ ref, eventIds }) =>
+    pending.slice(i, i + BATCH_SIZE).forEach(({ ref, eventIds, categories }) =>
       batch.update(ref, {
         event_ids: eventIds,
-        ...(dropLegacy ? { event_id: deleteField() } : {}),
+        ...(categories && { categories }),
+        ...(dropLegacy
+          ? {
+              event_id: deleteField(),
+              ...(withCategories && { category: deleteField() }),
+            }
+          : {}),
       })
     );
     await batch.commit();

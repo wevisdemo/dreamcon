@@ -1,6 +1,17 @@
 import { CommentDB, Comment } from '../types/comment';
 import { Topic, TopicDB } from '../types/topic';
 
+/**
+ * Falls back to the legacy `category` until `04-event-ids.ts --drop-legacy` has
+ * run, so topics still keep their category between `--apply` and the deploy.
+ */
+export const readCategories = (data: {
+  categories?: string[];
+  category?: string;
+}): string[] =>
+  data.categories ??
+  (data.category && data.category !== 'ไม่ระบุ' ? [data.category] : []);
+
 export const convertTopicDBToTopic = (
   topicDB: TopicDB,
   commentDBs: CommentDB[]
@@ -14,7 +25,7 @@ export const convertTopicDBToTopic = (
     updated_at: topicDB.updated_at,
     notified_at: topicDB.notified_at,
     event_ids: topicDB.event_ids ?? [],
-    category: topicDB.category,
+    categories: readCategories(topicDB),
   };
 };
 

@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { CommentView } from '../../types/comment';
 import { usePermission } from '../../hooks/usePermission';
-import ArrowUpwardIcon from '@material-symbols/svg-700/rounded/arrow_upward.svg?react';
-import CommunityIcon from '../icon/CommunityIcon';
+import TextComposer from './TextComposer';
 
 const commentViewOptions = [
   {
@@ -63,13 +62,10 @@ export default function JoinAndComment(props: PropTypes) {
   const style = colorStyle[props.color ?? 'blue'];
 
   const handleAddComment = () => {
-    if (!newCommentText.trim()) return;
     props.onAddComment(commentView, newCommentText);
     setCommentView(CommentView.AGREE);
     setNewCommentText('');
   };
-
-  const canSubmit = () => newCommentText.trim().length > 0;
 
   if (props.canJoin) {
     return (
@@ -110,40 +106,15 @@ export default function JoinAndComment(props: PropTypes) {
         ))}
       </div>
       {activeEvent && (
-        <div className="flex flex-col gap-2">
-          <div>
-            <div className="px-2.5 py-2 bg-gray-2 flex gap-1 text-label-sm border border-gray-3 border-b-0 rounded-t">
-              <span>ความคิดเห็นของ</span>
-              <CommunityIcon className="text-gray-8" aria-hidden />
-              <span className="font-semibold">{activeEvent.display_name}</span>
-            </div>
-            <textarea
-              className="w-full p-2.5 text-b3 bg-gray-1 resize-none focus:outline-none border border-t-0 border-gray-3 rounded-b"
-              name={props.textareaId}
-              id={props.textareaId}
-              rows={3}
-              value={newCommentText}
-              onChange={e => setNewCommentText(e.target.value)}
-              onKeyDown={e => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleAddComment();
-                }
-              }}
-              placeholder="เพราะว่า...(140ตัวอักษร)"
-              maxLength={140}
-            />
-          </div>
-          {canSubmit() && (
-            <button
-              className="w-full py-2.5 flex items-center justify-center gap-2 hover:bg-blue-2 border-2 rounded-full wv-ibmplex text-button font-bold"
-              onClick={handleAddComment}
-            >
-              <ArrowUpwardIcon className="w-4.5 h-4.5" aria-hidden />
-              ส่ง
-            </button>
-          )}
-        </div>
+        <TextComposer
+          id={props.textareaId}
+          label="ความคิดเห็นของ"
+          eventName={activeEvent.display_name}
+          value={newCommentText}
+          onChange={setNewCommentText}
+          onSubmit={handleAddComment}
+          placeholder="เพราะว่า...(140ตัวอักษร)"
+        />
       )}
     </div>
   );

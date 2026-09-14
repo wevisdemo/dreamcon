@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { db } from '../utils/firestore';
 import { LightWeightTopic, Topic, TopicDB } from '../types/topic';
 import { CommentDB } from '../types/comment';
-import { convertTopicDBToTopic } from '../utils/mapping';
+import { convertTopicDBToTopic, readCategories } from '../utils/mapping';
 
 export const useTopic = () => {
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ export const useTopic = () => {
           return {
             id: doc.id,
             title: data.title,
-            category: data.category,
+            categories: readCategories(data),
             created_at: data.created_at.toDate(),
             event_ids: data.event_ids ?? [],
             comment_level1_count: commentLv1Count,

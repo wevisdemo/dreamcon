@@ -24,7 +24,7 @@ export const useEditTopic = () => {
   /** Takes the whole topic because permission depends on its comments. */
   const editTopic = async (
     topic: Topic,
-    changes: Pick<AddOrEditTopicPayload, 'title' | 'category'>
+    changes: Pick<AddOrEditTopicPayload, 'title' | 'categories'>
   ): Promise<boolean> => {
     if (!canManage(topic)) {
       setError('You do not have permission to edit this topic');
@@ -33,7 +33,7 @@ export const useEditTopic = () => {
 
     const TopicDBPayload: UpdateTopicDBPayload = {
       title: changes.title,
-      category: changes.category,
+      categories: changes.categories,
       updated_at: new Date(),
       notified_at: new Date(),
     };

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { StoreContext } from '../../store';
 import { CommentView } from '../../types/comment';
-import { Topic, TopicCategory } from '../../types/topic';
+import { Topic } from '../../types/topic';
 import { useAddComment } from '../../hooks/useAddComment';
 import { useDeleteTopicWithChildren } from '../../hooks/useDeleteTopicWithChildren';
 import { useEditTopic } from '../../hooks/useEditTopic';
@@ -73,18 +73,8 @@ export default function TopicTemplate(props: PropTypes) {
           <TopicCard
             topic={props.topic}
             isPinned={pinContext.pinnedTopics.includes(props.topic.id)}
-            onChangeTopicCategory={category =>
-              alertIfNotSaved(
-                editTopic(props.topic, { title: props.topic.title, category })
-              )
-            }
-            onChangeTopicTitle={title =>
-              alertIfNotSaved(
-                editTopic(props.topic, {
-                  title,
-                  category: props.topic.category as TopicCategory,
-                })
-              )
+            onChangeTopic={(title, categories) =>
+              alertIfNotSaved(editTopic(props.topic, { title, categories }))
             }
             onDeleteTopic={handleDeleteTopic}
             onPinTopic={() => pinContext.pinTopic(props.topic.id)}

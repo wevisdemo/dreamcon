@@ -97,7 +97,7 @@ export default function TopicPage() {
                   }}
                 />
               </section>
-              <section className="absolute w-full h-content z-30 bg-transparent">
+              <section className="absolute inset-0 z-30 pointer-events-none">
                 <ModalComment
                   store={topicPageContext.modalComment}
                   topics={[selectedTopic.value]}

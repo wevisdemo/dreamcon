@@ -1,4 +1,3 @@
-import React from 'react';
 import { Comment, CommentView } from '../../types/comment';
 import { Topic } from '../../types/topic';
 import { CommentModalStore } from '../../store/modalComment';
@@ -12,6 +11,7 @@ import { flattenComments, linkedEventIds } from '../../utils/mapping';
 import FullPageLoader from '../FullPageLoader';
 import EventListLabel from '../topic/EventListLabel';
 import JoinAndComment from './JoinAndComment';
+import Modal from './Modal';
 
 interface PropTypes {
   store: CommentModalStore;
@@ -58,12 +58,6 @@ export default function ModalComment(props: PropTypes) {
   const eventIds = target ? linkedEventIds(target) : [];
   const color = target && !('title' in target) ? 'gray' : 'blue';
   const canJoin = !!activeEvent && !eventIds.includes(activeEvent.id);
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      handleClose();
-    }
-  };
 
   const handleClose = () => {
     props.store.dispatch({ type: 'CLOSE_MODAL' });
@@ -114,67 +108,53 @@ export default function ModalComment(props: PropTypes) {
   };
 
   return (
-    <div
-      className="w-full h-screen inset-0 bg-transparent flex items-center justify-center z-50"
-      onClick={handleBackdropClick}
-    >
+    <>
       {loading && <FullPageLoader />}
-      <div className="flex flex-col w-full md:max-w-120 bg-white md:rounded-lg shadow-lg m-5 rounded-lg overflow-hidden">
-        <div className="wv-ibmplex text-blue-7 text-b2 font-bold text-center flex flex-col pb-4 pt-5 border-solid border-b border-gray-2">
-          {title()}
-        </div>
-        <div className="flex flex-col gap-3 p-4">
-          {target && !isEdit && (
-            <>
-              <div className="p-2.5 rounded-2xl bg-white">
-                {'title' in target ? (
-                  target.title
-                ) : (
-                  <div className="flex gap-2 items-center">
-                    <div
-                      className={`w-3 h-3 rounded-full ${viewColor(target)}`}
-                    />
-                    <span className="flex-1">{target.reason}</span>
-                  </div>
-                )}
-              </div>
-              <EventListLabel
-                label="จากวงสนทนา:"
-                className="pt-3"
-                color={color}
-                eventIds={eventIds}
-                activeEventId={activeEvent?.id}
-                canLeave={canLeave(target)}
-                onLeave={() => leave(target)}
-              />
-            </>
-          )}
-          {target ? (
-            <JoinAndComment
-              textareaId="add-comment-in-modal"
+      <Modal title={title()} onClose={handleClose}>
+        {target && !isEdit && (
+          <>
+            <div className="p-2.5 rounded-2xl bg-white">
+              {'title' in target ? (
+                target.title
+              ) : (
+                <div className="flex gap-2 items-center">
+                  <div
+                    className={`w-3 h-3 rounded-full ${viewColor(target)}`}
+                  />
+                  <span className="flex-1">{target.reason}</span>
+                </div>
+              )}
+            </div>
+            <EventListLabel
+              label="จากวงสนทนา:"
+              className="pt-3"
               color={color}
-              canJoin={!isEdit && canJoin}
-              defaultState={isEdit && !('title' in target) ? target : undefined}
-              onJoin={() => handleJoin(target)}
-              onAddComment={(commentView, reason) =>
-                handleSubmit(target, commentView, reason)
-              }
+              eventIds={eventIds}
+              activeEventId={activeEvent?.id}
+              canLeave={canLeave(target)}
+              onLeave={() => leave(target)}
             />
-          ) : (
-            <p>
-              {targetCommentId
-                ? 'ความคิดเห็นนี้ถูกลบแล้ว'
-                : 'ข้อถกเถียงนี้ถูกลบแล้ว'}
-            </p>
-          )}
-          <button
-            className="text-gray-5 wv-ibmplex underline hover:cursor-pointer"
-            onClick={handleClose}
-          >
-            ยกเลิก
-          </button>
-        </div>
-      </div>
-    </div>
+          </>
+        )}
+        {target ? (
+          <JoinAndComment
+            textareaId="add-comment-in-modal"
+            color={color}
+            canJoin={!isEdit && canJoin}
+            defaultState={isEdit && !('title' in target) ? target : undefined}
+            onJoin={() => handleJoin(target)}
+            onAddComment={(commentView, reason) =>
+              handleSubmit(target, commentView, reason)
+            }
+          />
+        ) : (
+          <p>
+            {targetCommentId
+              ? 'ความคิดเห็นนี้ถูกลบแล้ว'
+              : 'ข้อถกเถียงนี้ถูกลบแล้ว'}
+          </p>
+        )}
+      </Modal>
+    </>
   );
 }

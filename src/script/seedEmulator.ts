@@ -82,13 +82,12 @@ const events: DreamConEventDB[] = [
   },
 ];
 
-/** Every category in `topicCategories` appears at least once. */
 const topics: TopicDB[] = [
   {
     id: 'tp-rights',
     ref_id: 'SHEET-001',
     title: 'รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร',
-    category: 'สิทธิเสรีภาพ',
+    categories: ['สิทธิเสรีภาพ'],
     event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-28),
     updated_at: daysFromSeed(-3),
@@ -97,7 +96,7 @@ const topics: TopicDB[] = [
   {
     id: 'tp-parliament',
     title: 'ที่มาของสมาชิกวุฒิสภาควรเป็นแบบใด',
-    category: 'รัฐสภา',
+    categories: ['ฝ่ายนิติบัญญัติ'],
     event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-27),
     updated_at: daysFromSeed(-2),
@@ -107,7 +106,7 @@ const topics: TopicDB[] = [
     // No comments: covers the "topic without comment" UI and 0 in sort-by-count.
     id: 'tp-court',
     title: 'ศาลรัฐธรรมนูญควรมีอำนาจตรวจสอบเรื่องใดบ้าง',
-    category: 'ศาล รธน.',
+    categories: ['ฝ่ายตุลาการ'],
     event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-26),
     updated_at: daysFromSeed(-26),
@@ -116,7 +115,7 @@ const topics: TopicDB[] = [
   {
     id: 'tp-environment',
     title: 'สิทธิในสิ่งแวดล้อมที่ดีควรถูกบัญญัติไว้หรือไม่',
-    category: 'สิ่งแวดล้อม',
+    categories: ['สิ่งแวดล้อม'],
     event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-24),
     updated_at: daysFromSeed(-4),
@@ -125,7 +124,7 @@ const topics: TopicDB[] = [
   {
     id: 'tp-welfare',
     title: 'รัฐสวัสดิการถ้วนหน้าควรเป็นหน้าที่ของรัฐหรือไม่',
-    category: 'สวัสดิการ',
+    categories: ['สวัสดิการ'],
     event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-22),
     updated_at: daysFromSeed(-6),
@@ -134,7 +133,7 @@ const topics: TopicDB[] = [
   {
     id: 'tp-other',
     title: 'ประเด็นอื่น ๆ ที่อยากเห็นในรัฐธรรมนูญฉบับใหม่',
-    category: 'อื่น ๆ',
+    categories: ['อื่น ๆ'],
     event_ids: ['ev-bangkok'],
     created_at: daysFromSeed(-21),
     updated_at: daysFromSeed(-7),
@@ -144,7 +143,7 @@ const topics: TopicDB[] = [
     id: 'tp-local',
     ref_id: 'SHEET-002',
     title: 'ท้องถิ่นควรมีอำนาจจัดเก็บภาษีของตัวเองหรือไม่',
-    category: 'การปกครองส่วนท้องถิ่น',
+    categories: ['การปกครองส่วนท้องถิ่น', 'สวัสดิการ'],
     event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-18),
     updated_at: daysFromSeed(-5),
@@ -153,7 +152,7 @@ const topics: TopicDB[] = [
   {
     id: 'tp-education',
     title: 'รัฐควรรับรองสิทธิการศึกษาฟรีถึงระดับใด',
-    category: 'การศึกษา',
+    categories: ['การศึกษา'],
     event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-16),
     updated_at: daysFromSeed(-8),
@@ -162,7 +161,7 @@ const topics: TopicDB[] = [
   {
     id: 'tp-unspecified',
     title: 'ข้อเสนอที่ยังไม่ได้จัดหมวดหมู่',
-    category: 'ไม่ระบุ',
+    categories: [],
     event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-14),
     updated_at: daysFromSeed(-14),
@@ -172,7 +171,7 @@ const topics: TopicDB[] = [
     // Newest topic: shows up first under the "latest" sort.
     id: 'tp-ssr',
     title: 'สสร. ควรมาจากการเลือกตั้งทั้งหมดหรือไม่',
-    category: 'สสร.',
+    categories: ['สสร.'],
     event_ids: ['ev-chiangmai'],
     created_at: daysFromSeed(-1),
     updated_at: daysFromSeed(-1),

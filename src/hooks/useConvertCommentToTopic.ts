@@ -46,7 +46,7 @@ export const useConvertCommentToTopic = () => {
           created_at: timeNow,
           updated_at: timeNow,
           notified_at: timeNow,
-          category: 'ไม่ระบุ',
+          categories: [],
           event_ids: [event_id],
         };
         await transaction.set(newTopicDocRef, topicPayload);
@@ -102,7 +102,7 @@ export const useConvertCommentToTopic = () => {
         created_at: timeNow,
         updated_at: timeNow,
         notified_at: timeNow,
-        category: 'ไม่ระบุ',
+        categories: [],
         event_ids: [event_id],
       };
     } catch (err) {

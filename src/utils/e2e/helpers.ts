@@ -22,16 +22,26 @@ export async function loginAsAdmin(page: Page, password = ADMIN_PASSWORD) {
   await page.getByRole('button', { name: 'Login' }).click();
 }
 
-/** Topic forms submit through an upload icon, not a button. */
-export const submitForm = (page: Page) =>
-  page.getByLabel('ส่ง', { exact: true }).click();
+export const submitButton = (page: Page) =>
+  page.getByRole('button', { name: 'ส่ง', exact: true });
+
+export const submitForm = (page: Page) => submitButton(page).first().click();
 
 /** `FullPageLoader` is a full-screen overlay that swallows clicks while any hook is loading. */
 export async function waitForLoaded(page: Page) {
   await expect(page.locator('.animate-spin')).toHaveCount(0);
 }
 
-export async function selectDropdown(page: Page, option: string) {
-  await page.locator('.dropdown-toggle').click();
-  await page.locator('.dropdown-item', { hasText: option }).first().click();
+/** The category menu is a checkbox list, so it stays open until the toggle is clicked again. */
+export async function selectDropdown(page: Page, ...options: string[]) {
+  const toggle = page.locator('.dropdown-toggle').first();
+  await toggle.click();
+  for (const option of options) {
+    await page
+      .locator('.dropdown-item', { hasText: option })
+      .first()
+      .getByRole('checkbox')
+      .click();
+  }
+  await toggle.click();
 }

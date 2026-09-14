@@ -146,7 +146,7 @@ export default function AllTopic() {
               selectedTopic.value ? 'w-3/5' : 'w-full'
             } h-full flex flex-col items-center duration-300 ease-in relative`}
           >
-            <section className="absolute w-full h-content z-30 bg-transparent">
+            <section className="absolute inset-0 z-30 pointer-events-none">
               <ModalComment
                 store={homePageContext.modalCommentMainSection}
                 topics={displayTopics ?? []}
@@ -186,7 +186,7 @@ export default function AllTopic() {
               selectedTopic.value ? 'w-2/5' : 'w-0'
             } overflow-hidden h-full flex flex-col items-center duration-300 ease-in relative`}
           >
-            <section className="absolute w-full h-content z-30 bg-transparent">
+            <section className="absolute inset-0 z-30 pointer-events-none">
               <ModalComment
                 store={homePageContext.modalCommentSideSection}
                 topics={displayTopics ?? []}

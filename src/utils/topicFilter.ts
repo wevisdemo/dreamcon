@@ -19,7 +19,8 @@ export const selectTopicIds = (
         topic.title.toLowerCase().includes(search) &&
         (filter.selectedEvent === null ||
           topic.event_ids.includes(filter.selectedEvent.id)) &&
-        (filter.category === 'ทั้งหมด' || topic.category === filter.category)
+        (filter.category === 'ทั้งหมด' ||
+          topic.categories.includes(filter.category))
     )
     .sort(
       (a, b) =>

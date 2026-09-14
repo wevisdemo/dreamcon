@@ -103,7 +103,7 @@ const mapArgumentsToTopic = (
       ref_id: arg.ArgumentId,
       title: arg.Argument,
       event_ids: event ? [event.id] : [],
-      category: arg.Tag,
+      categories: [arg.Tag].filter(tag => tag && tag !== 'ไม่ระบุ'),
       created_at: new Date(),
       updated_at: new Date(),
       notified_at: new Date(),

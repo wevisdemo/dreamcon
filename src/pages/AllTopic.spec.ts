@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import {
   loginAsWriter,
   selectDropdown,
+  submitButton,
   submitForm,
   TOPIC_CARDS,
   waitForLoaded,
@@ -66,12 +67,28 @@ test.describe('anonymous', () => {
   });
 
   test('filters by category', async ({ page }) => {
-    await page.getByRole('button', { name: 'ศาล รธน.', exact: true }).click();
+    await page
+      .getByRole('button', { name: 'ฝ่ายตุลาการ', exact: true })
+      .click();
 
     await expect(page.locator(TOPIC_CARDS)).toHaveCount(1);
     await expect(
       page.getByText('ศาลรัฐธรรมนูญควรมีอำนาจตรวจสอบเรื่องใดบ้าง')
     ).toBeVisible();
+  });
+
+  test('shows a topic under every one of its categories', async ({ page }) => {
+    const twoCategoryTitle = 'ท้องถิ่นควรมีอำนาจจัดเก็บภาษีของตัวเองหรือไม่';
+
+    await page
+      .getByRole('button', { name: 'การปกครองส่วนท้องถิ่น', exact: true })
+      .click();
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(1);
+    await expect(page.getByText(twoCategoryTitle)).toBeVisible();
+
+    await page.getByRole('button', { name: 'สวัสดิการ', exact: true }).click();
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(2);
+    await expect(page.getByText(twoCategoryTitle)).toBeVisible();
   });
 
   test('sorts by comment count and by recency', async ({ page }) => {
@@ -173,7 +190,8 @@ test.describe('signed in as the Bangkok writer', () => {
     await waitForLoaded(page);
 
     await page.getByRole('button', { name: ADD_TOPIC }).click();
-    await selectDropdown(page, 'สิทธิเสรีภาพ');
+    await selectDropdown(page, 'สิทธิเสรีภาพ', 'การศึกษา');
+    await expect(page.locator('.dropdown-toggle')).toHaveText(/\+1/);
     await page.locator('#topic-title-text-area').fill(title);
     await submitForm(page);
 
@@ -181,7 +199,10 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(card).toBeVisible();
 
     await card.click();
-    await expect(page.locator('.badge')).toHaveText('สิทธิเสรีภาพ');
+    await expect(page.locator('.badge')).toHaveText([
+      'สิทธิเสรีภาพ',
+      'การศึกษา',
+    ]);
     await expect(page.getByText('ข้อถกเถียงจาก')).toHaveText(
       /ข้อถกเถียงจาก 1 วงสนทนา/
     );
@@ -204,11 +225,145 @@ test.describe('signed in as the Bangkok writer', () => {
     await waitForLoaded(page);
 
     await page.getByRole('button', { name: ADD_TOPIC }).click();
-    await expect(page.getByLabel('ส่ง', { exact: true })).toHaveCount(0);
+    await expect(submitButton(page)).toHaveCount(0);
 
-    await page.locator('#topic-title-text-area').fill('x'.repeat(141));
-    await expect(page.getByText('140/140')).toBeVisible();
-    await expect(page.getByLabel('ส่ง', { exact: true })).toBeVisible();
+    const textarea = page.locator('#topic-title-text-area');
+    await textarea.fill('x'.repeat(141));
+    await expect(textarea).toHaveValue('x'.repeat(140));
+    await expect(submitButton(page)).toBeVisible();
+  });
+
+  test('enter in the title submits the modal', async ({ page }) => {
+    const title = `E2E enter ${Date.now()}`;
+
+    await page.goto('/topics');
+    await waitForLoaded(page);
+
+    await page.getByRole('button', { name: ADD_TOPIC }).click();
+    await selectDropdown(page, 'สิทธิเสรีภาพ');
+    await page.locator('#topic-title-text-area').fill(title);
+    await page.keyboard.press('Enter');
+
+    const card = page.getByText(title, { exact: true });
+    await expect(card).toBeVisible();
+
+    await card.click();
+    await page.getByLabel('เมนู').first().click();
+    await menuAction(page, 'ลบ');
+    await expect(page.getByText(title, { exact: true })).toHaveCount(0);
+  });
+
+  test('the modal closes on backdrop click or escape without growing the page', async ({
+    page,
+  }) => {
+    await page.goto('/topics');
+    await waitForLoaded(page);
+
+    const pageFits = () =>
+      page.evaluate(() => {
+        const el = document.scrollingElement as Element;
+        return el.scrollHeight <= el.clientHeight;
+      });
+    const dialog = page.getByRole('dialog');
+
+    expect(await pageFits()).toBe(true);
+
+    await page.getByRole('button', { name: ADD_TOPIC }).click();
+    await expect(dialog).toBeVisible();
+    expect(await pageFits()).toBe(true);
+
+    await page
+      .locator('section.z-30 > div')
+      .first()
+      .click({ position: { x: 5, y: 5 } });
+    await expect(dialog).toHaveCount(0);
+
+    await page.getByRole('button', { name: ADD_TOPIC }).click();
+    await expect(dialog).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveCount(0);
+  });
+
+  test('edits a topic categories from the card in one session', async ({
+    page,
+  }) => {
+    await page.goto('/topics');
+    await waitForLoaded(page);
+
+    await page
+      .getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร')
+      .click();
+    await page.getByLabel('เมนู').first().click();
+    await menuAction(page, 'แก้ไข');
+
+    await selectDropdown(page, 'การศึกษา', 'สวัสดิการ');
+    await expect(page.locator('.dropdown-toggle')).toHaveText(/\+2/);
+    await submitForm(page);
+
+    await expect(page.locator('.badge')).toHaveText([
+      'สิทธิเสรีภาพ',
+      'การศึกษา',
+      'สวัสดิการ',
+    ]);
+    await expect(
+      page.getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร', {
+        exact: true,
+      })
+    ).toHaveCount(2);
+
+    // Restore the seeded categories so later tests still see this topic as seeded.
+    await page.getByLabel('เมนู').first().click();
+    await menuAction(page, 'แก้ไข');
+    await selectDropdown(page, 'การศึกษา', 'สวัสดิการ');
+    await submitForm(page);
+    await expect(page.locator('.badge')).toHaveText(['สิทธิเสรีภาพ']);
+  });
+
+  test('refuses to save a topic card with no category', async ({ page }) => {
+    await page.goto('/topics');
+    await waitForLoaded(page);
+
+    // A topic with no comments, so this writer is allowed to edit it.
+    await page.getByText('ศาลรัฐธรรมนูญควรมีอำนาจตรวจสอบเรื่องใดบ้าง').click();
+    await page.getByLabel('เมนู').first().click();
+    await menuAction(page, 'แก้ไข');
+
+    await selectDropdown(page, 'ฝ่ายตุลาการ'); // unticks the only category
+    await submitForm(page);
+
+    await expect(page.getByText('*ยังไม่ได้เลือกหัวข้อ')).toBeVisible();
+    await page.getByText('ยกเลิก', { exact: true }).click();
+    await expect(page.locator('.badge')).toHaveText(['ฝ่ายตุลาการ']);
+  });
+
+  test('cannot combine อื่น ๆ with any other category', async ({ page }) => {
+    await page.goto('/topics');
+    await waitForLoaded(page);
+
+    await page.getByRole('button', { name: ADD_TOPIC }).click();
+    const option = (name: string) =>
+      page.locator('.dropdown-item', { hasText: name }).first();
+
+    await page.locator('.dropdown-toggle').click();
+    await option('อื่น ๆ').getByRole('checkbox').check();
+    await expect(option('สิทธิเสรีภาพ').getByRole('checkbox')).toBeDisabled();
+
+    await option('อื่น ๆ').getByRole('checkbox').uncheck();
+    await option('สิทธิเสรีภาพ').getByRole('checkbox').check();
+    await expect(option('อื่น ๆ').getByRole('checkbox')).toBeDisabled();
+  });
+
+  test('refuses to create a topic without a category', async ({ page }) => {
+    await page.goto('/topics');
+    await waitForLoaded(page);
+    const cardCount = await page.locator(TOPIC_CARDS).count();
+
+    await page.getByRole('button', { name: ADD_TOPIC }).click();
+    await page.locator('#topic-title-text-area').fill('ข้อถกเถียงไร้หมวดหมู่');
+    await submitForm(page);
+
+    await expect(page.getByText('*ยังไม่ได้เลือกหัวข้อ')).toBeVisible();
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(cardCount);
   });
 
   test('pastes a comment onto the add-topic button as a new topic, then undoes it', async ({
