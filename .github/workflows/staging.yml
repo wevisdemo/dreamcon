@@ -42,9 +42,8 @@ jobs:
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
           SSH_USER: ${{ secrets.STAGING_SSH_USER }}
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
-          SSH_FINGERPRINT: ${{ secrets.STAGING_SSH_FINGERPRINT }}
         run: |
-          : "${SSH_HOST:?}" "${SSH_USER:?}" "${SSH_KEY:?}" "${SSH_FINGERPRINT:?}"
+          : "${SSH_HOST:?}" "${SSH_USER:?}" "${SSH_KEY:?}"
           docker build --build-arg VITE_BASE_URL="${BASE_URL:?}" -t dreamcon-demo:latest .
           docker save dreamcon-demo:latest | gzip > dreamcon-demo.tar.gz
 
@@ -54,7 +53,6 @@ jobs:
           host: ${{ secrets.STAGING_SSH_HOST }}
           username: ${{ secrets.STAGING_SSH_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
-          fingerprint: ${{ secrets.STAGING_SSH_FINGERPRINT }}
           port: ${{ vars.STAGING_SSH_PORT || 22 }}
           source: dreamcon-demo.tar.gz
           target: /tmp
@@ -65,7 +63,6 @@ jobs:
           host: ${{ secrets.STAGING_SSH_HOST }}
           username: ${{ secrets.STAGING_SSH_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
-          fingerprint: ${{ secrets.STAGING_SSH_FINGERPRINT }}
           port: ${{ vars.STAGING_SSH_PORT || 22 }}
           script: |
             set -e

@@ -126,15 +126,14 @@ demo.dreamcon.example.com {
 
 The server needs Docker, a deploy user in the `docker` group and a reverse proxy on the same Docker network. Configure these in the repository settings:
 
-| Kind     | Name                      | Value                                                                                            |
-| -------- | ------------------------- | ------------------------------------------------------------------------------------------------ |
-| Secret   | `STAGING_SSH_HOST`        | Server hostname or IP                                                                            |
-| Secret   | `STAGING_SSH_USER`        | Deploy user, in the `docker` group                                                               |
-| Secret   | `STAGING_SSH_KEY`         | Private key whose public half is in that user's `~/.ssh/authorized_keys`                         |
-| Secret   | `STAGING_SSH_FINGERPRINT` | SHA256 fingerprint of the server's host key (`ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`) |
-| Variable | `STAGING_BASE_URL`        | Public URL of the staging site, used in the OG tags                                              |
-| Variable | `STAGING_SSH_PORT`        | Optional, defaults to 22                                                                         |
-| Variable | `STAGING_NETWORK`         | Optional Docker network to join, defaults to `server`                                            |
+| Kind     | Name               | Value                                                                    |
+| -------- | ------------------ | ------------------------------------------------------------------------ |
+| Secret   | `STAGING_SSH_HOST` | Server hostname or IP                                                    |
+| Secret   | `STAGING_SSH_USER` | Deploy user, in the `docker` group                                       |
+| Secret   | `STAGING_SSH_KEY`  | Private key whose public half is in that user's `~/.ssh/authorized_keys` |
+| Variable | `STAGING_BASE_URL` | Public URL of the staging site, used in the OG tags                      |
+| Variable | `STAGING_SSH_PORT` | Optional, defaults to 22                                                 |
+| Variable | `STAGING_NETWORK`  | Optional Docker network to join, defaults to `server`                    |
 
 All secrets and `STAGING_BASE_URL` are required; the build step fails fast when one is missing.
 
