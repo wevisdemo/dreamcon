@@ -7,12 +7,9 @@ Because the constitution may sometimes feel distant, we invite everyone to share
 
 ## Environment
 
-| Name       | URL                                  |
-| ---------- | ------------------------------------ |
-| Staging    | https://dreamcon-staging.wevis.info/ |
-| Production | https://dreamcon.wevis.info/         |
-
-Using Github Actions for staging auto deployment. Production is still done manually.
+| Name       | URL                          |
+| ---------- | ---------------------------- |
+| Production | https://dreamcon.wevis.info/ |
 
 ## Stack
 
@@ -96,9 +93,15 @@ Other commands:
 | `pnpm firestore:restore <file> [--force]` | Restore a backup (upsert by id, never deletes). Refuses to touch the real project without `--force`.         |
 | `pnpm firestore:dump`                     | CSV export for analysis. Lossy on purpose (flattens `parent_comment_ids`, stringifies types) — not a backup. |
 
-## Demo image
+## Demo
 
-The `Dockerfile` packages a self-contained demo: the production build running against the seeded emulators, with no Firebase project needed.
+A self-contained demo: the production build running against the seeded emulators, with no Firebase project needed. Run it directly on http://localhost:5173:
+
+```
+pnpm demo
+```
+
+Or as a Docker image:
 
 ```
 docker build --build-arg VITE_BASE_URL=http://localhost:5173 -t dreamcon-demo .
@@ -109,33 +112,9 @@ docker run --rm -p 5173:5173 dreamcon-demo
 - The emulators are re-seeded on every start and keep data in memory, so a restart resets everything to the seed.
 - The Plausible analytics tag is left out of any build with `VITE_USE_FIREBASE_EMULATOR=true`.
 - It takes 30–60 s after start before the app answers.
+- The Firestore emulator runs on Java with no memory cap, so on a shared server give the container a limit (`docker run --memory …`).
 
 > Anyone who can reach the demo can sign in with the seeded admin. Keep that in mind before exposing it.
-
-### Staging deploy
-
-`.github/workflows/staging.yml` builds the image on every push to `main` (or manually), copies it to the server over SSH and restarts the `dreamcon-demo` container there. No registry is involved. The container publishes no port: it joins the server's Docker network, where Caddy reaches it by container name, and old images of this project are pruned by the `project=dreamcon-demo` label.
-
-Add the site to the server's `Caddyfile`:
-
-```
-demo.dreamcon.example.com {
-	reverse_proxy dreamcon-demo:5173
-}
-```
-
-The server needs Docker, a deploy user in the `docker` group and a reverse proxy on the same Docker network. Configure these in the repository settings:
-
-| Kind     | Name               | Value                                                                    |
-| -------- | ------------------ | ------------------------------------------------------------------------ |
-| Secret   | `STAGING_SSH_HOST` | Server hostname or IP                                                    |
-| Secret   | `STAGING_SSH_USER` | Deploy user, in the `docker` group                                       |
-| Secret   | `STAGING_SSH_KEY`  | Private key whose public half is in that user's `~/.ssh/authorized_keys` |
-| Variable | `STAGING_BASE_URL` | Public URL of the staging site, used in the OG tags                      |
-| Variable | `STAGING_SSH_PORT` | Optional, defaults to 22                                                 |
-| Variable | `STAGING_NETWORK`  | Optional Docker network to join, defaults to `server`                    |
-
-All secrets and `STAGING_BASE_URL` are required; the build step fails fast when one is missing.
 
 ## Backup and restore
 
