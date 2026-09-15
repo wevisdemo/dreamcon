@@ -5,11 +5,14 @@
 Dream Constitution is a project that gathers the opinions of Thai people to serve as a hub of ideas for drafting a people's constitution.  
 Because the constitution may sometimes feel distant, we invite everyone to share their diverse dreams and ideas, weaving them into a single story. These ideas will then be passed on to those responsible for drafting the new constitution, so it can truly reflect the will of the people.
 
-## URL
+## Environment
 
-| Environment | URL                          |
-| ----------- | ---------------------------- |
-| Production  | https://dreamcon.wevis.info/ |
+| Name       | URL                                  |
+| ---------- | ------------------------------------ |
+| Staging    | https://dreamcon-staging.wevis.info/ |
+| Production | https://dreamcon.wevis.info/         |
+
+Using Github Actions for staging auto deployment. Production is still done manually.
 
 ## Stack
 
@@ -80,6 +83,7 @@ How the safety net works:
 
 - `.env.development` sets `VITE_USE_FIREBASE_EMULATOR=true`, and Vite only loads that file in dev mode (`vite build` is unaffected).
 - When the flag is on, `src/utils/firestore.ts` ignores `VITE_FIREBASE_CONFIG` entirely and initializes Firebase with the project id `demo-dreamcon`. The `demo-` prefix makes the Firebase SDKs refuse to contact any real Google backend, so a broken emulator connection fails loudly instead of silently falling through to production.
+- The browser reaches the emulators through a Vite proxy on the page's own origin (`vite.config.ts`), so the same code works in the demo image behind HTTPS. The proxy refuses the emulators' `Bearer owner` admin token, which would bypass `firestore.rules`.
 
 Other commands:
 
@@ -91,6 +95,48 @@ Other commands:
 | `pnpm firestore:backup [file]`            | Lossless JSON backup of `events`, `topics`, `comments`, `writers` into `out/`. Read-only.                    |
 | `pnpm firestore:restore <file> [--force]` | Restore a backup (upsert by id, never deletes). Refuses to touch the real project without `--force`.         |
 | `pnpm firestore:dump`                     | CSV export for analysis. Lossy on purpose (flattens `parent_comment_ids`, stringifies types) — not a backup. |
+
+## Demo image
+
+The `Dockerfile` packages a self-contained demo: the production build running against the seeded emulators, with no Firebase project needed.
+
+```
+docker build --build-arg VITE_BASE_URL=http://localhost:5173 -t dreamcon-demo .
+docker run --rm -p 5173:5173 dreamcon-demo
+```
+
+- The app is built with `VITE_USE_FIREBASE_EMULATOR=true`, then served by `vite preview`, which also proxies Firestore and Auth on the same origin. Publishing port 5173 alone is enough, including behind an HTTPS reverse proxy or tunnel. The emulators themselves and the Emulator UI are not exposed.
+- The emulators are re-seeded on every start and keep data in memory, so a restart resets everything to the seed.
+- The Plausible analytics tag is left out of any build with `VITE_USE_FIREBASE_EMULATOR=true`.
+- It takes 30–60 s after start before the app answers.
+
+> Anyone who can reach the demo can sign in with the seeded admin. Keep that in mind before exposing it.
+
+### Staging deploy
+
+`.github/workflows/staging.yml` builds the image on every push to `main` (or manually), copies it to the server over SSH and restarts the `dreamcon-demo` container there. No registry is involved. The container publishes no port: it joins the server's Docker network, where Caddy reaches it by container name, and old images of this project are pruned by the `project=dreamcon-demo` label.
+
+Add the site to the server's `Caddyfile`:
+
+```
+demo.dreamcon.example.com {
+	reverse_proxy dreamcon-demo:5173
+}
+```
+
+The server needs Docker, a deploy user in the `docker` group and a reverse proxy on the same Docker network. Configure these in the repository settings:
+
+| Kind     | Name                      | Value                                                                                            |
+| -------- | ------------------------- | ------------------------------------------------------------------------------------------------ |
+| Secret   | `STAGING_SSH_HOST`        | Server hostname or IP                                                                            |
+| Secret   | `STAGING_SSH_USER`        | Deploy user, in the `docker` group                                                               |
+| Secret   | `STAGING_SSH_KEY`         | Private key whose public half is in that user's `~/.ssh/authorized_keys`                         |
+| Secret   | `STAGING_SSH_FINGERPRINT` | SHA256 fingerprint of the server's host key (`ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`) |
+| Variable | `STAGING_BASE_URL`        | Public URL of the staging site, used in the OG tags                                              |
+| Variable | `STAGING_SSH_PORT`        | Optional, defaults to 22                                                                         |
+| Variable | `STAGING_NETWORK`         | Optional Docker network to join, defaults to `server`                                            |
+
+All secrets and `STAGING_BASE_URL` are required; the build step fails fast when one is missing.
 
 ## Backup and restore
 

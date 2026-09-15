@@ -2,8 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import {
-  connectEmulators,
   EMULATOR_FIREBASE_CONFIG,
+  initEmulatorsViaPageOrigin,
   isEmulatorEnabled,
 } from './firebaseEmulator';
 
@@ -19,12 +19,8 @@ const firebaseConfig = useEmulator
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-if (useEmulator) {
-  connectEmulators(db, auth);
-}
+const { db, auth } = useEmulator
+  ? initEmulatorsViaPageOrigin(app)
+  : { db: getFirestore(app), auth: getAuth(app) };
 
 export { db, auth };

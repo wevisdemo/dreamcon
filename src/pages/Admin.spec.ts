@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { loginAsAdmin, TOPIC_CARDS, waitForLoaded } from '../utils/e2e/helpers';
+import { EMULATOR_FIREBASE_CONFIG } from '../utils/firebaseEmulator';
 
 const eventCards = (page: Page) =>
   page.getByRole('button', { name: 'แชร์ลิงก์' });
@@ -59,6 +60,29 @@ test('"create a debate" opens the topic page filtered to that event', async ({
     page.getByRole('button', { name: 'เพิ่มข้อถกเถียงใหม่' })
   ).toBeVisible();
   await expect(page.locator(TOPIC_CARDS)).toHaveCount(6);
+});
+
+test('the app origin refuses the emulator owner token', async ({ request }) => {
+  const writer = `/v1/projects/${EMULATOR_FIREBASE_CONFIG.projectId}/databases/(default)/documents/writers/e2e-owner-probe`;
+  const owner = 'Bearer owner';
+
+  expect((await request.patch(writer, { data: {} })).status()).toBe(403);
+  expect(
+    (
+      await request.patch(writer, {
+        data: {},
+        headers: { Authorization: owner },
+      })
+    ).status()
+  ).toBe(404);
+  expect(
+    (
+      await request.patch(
+        `${writer}?$httpHeaders=${encodeURIComponent(`Authorization: ${owner}`)}`,
+        { data: {} }
+      )
+    ).status()
+  ).toBe(404);
 });
 
 test('creates a new event', async ({ page }) => {

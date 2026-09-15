@@ -1,0 +1,76 @@
+name: Deploy demo to staging
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency: staging
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      HUSKY: 0
+      VITE_USE_FIREBASE_EMULATOR: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Run e2e tests
+        run: nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm test"
+
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        shell: bash
+        env:
+          BASE_URL: ${{ vars.STAGING_BASE_URL }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          SSH_FINGERPRINT: ${{ secrets.STAGING_SSH_FINGERPRINT }}
+        run: |
+          : "${SSH_HOST:?}" "${SSH_USER:?}" "${SSH_KEY:?}" "${SSH_FINGERPRINT:?}"
+          docker build --build-arg VITE_BASE_URL="${BASE_URL:?}" -t dreamcon-demo:latest .
+          docker save dreamcon-demo:latest | gzip > dreamcon-demo.tar.gz
+
+      - name: Upload image
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          fingerprint: ${{ secrets.STAGING_SSH_FINGERPRINT }}
+          port: ${{ vars.STAGING_SSH_PORT || 22 }}
+          source: dreamcon-demo.tar.gz
+          target: /tmp
+
+      - name: Restart container
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          fingerprint: ${{ secrets.STAGING_SSH_FINGERPRINT }}
+          port: ${{ vars.STAGING_SSH_PORT || 22 }}
+          script: |
+            set -e
+            docker load < /tmp/dreamcon-demo.tar.gz && rm /tmp/dreamcon-demo.tar.gz
+            docker rm -f dreamcon-demo || true
+            docker run -d --name dreamcon-demo --restart unless-stopped \
+              --network ${{ vars.STAGING_NETWORK || 'server' }} dreamcon-demo:latest
+            docker image prune -af --filter label=project=dreamcon-demo

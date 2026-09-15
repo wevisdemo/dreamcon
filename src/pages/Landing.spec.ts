@@ -13,6 +13,11 @@ test('shows the three latest topics and links onward', async ({ page }) => {
   await expect(page).toHaveURL('/topics/tp-ssr');
 });
 
+test('warns that the seeded data is a demo', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText('เว็บไซต์สาธิต')).toBeVisible();
+});
+
 test('links to the about page', async ({ page }) => {
   await page.goto('/');
   await page
