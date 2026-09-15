@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { db } from '../utils/firestore';
 import {
-  doc,
   collection,
-  query,
-  where,
+  doc,
   getDocs,
+  query,
   runTransaction,
+  where,
 } from 'firebase/firestore';
-import { usePermission } from './usePermission';
 import { Topic } from '../types/topic';
+import { db } from '../utils/firestore';
+import { usePermission } from './usePermission';
 
 export const useDeleteTopicWithChildren = () => {
   const [loading, setLoading] = useState(false);

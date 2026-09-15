@@ -1,10 +1,10 @@
+import React, { useEffect, useState } from 'react';
 import { eventAvatars } from '../../data/event';
 import {
   AddOrEditEventPayload,
   defaultAddOrEditEventPayload,
   DreamConEvent,
 } from '../../types/event';
-import React, { useEffect, useState } from 'react';
 
 interface PropTypes {
   mode: 'create' | 'edit';
@@ -96,44 +96,44 @@ export default function ModalEvent(props: PropTypes) {
 
   return (
     <div
-      className="fixed w-full h-full inset-0 bg-black/50 flex items-center justify-center z-50"
+      className="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-black/50"
       onClick={handleBackdropClick}
     >
-      <div className="w-full h-auto max-w-207.5 bg-white md:rounded-lg shadow-lg">
-        <div className="flex items-center px-4 pt-6 pb-4 border-solid border-b border-gray-3 relative">
-          <h2 className="heading-5 text-blue-7 wv-ibmplex wv-bold flex-1 w-full text-center">
+      <div className="h-auto w-full max-w-207.5 bg-white shadow-lg md:rounded-lg">
+        <div className="relative flex items-center border-b border-solid border-gray-3 px-4 pt-6 pb-4">
+          <h2 className="wv-ibmplex wv-bold w-full flex-1 text-center heading-5 text-blue-7">
             {props.mode === 'edit' ? 'แก้ไขข้อมูลวงสนทนา' : 'เพิ่มวงสนทนาใหม่'}
           </h2>
           <button
-            className="text-label text-gray-5 wv-ibmplex underline absolute right-4"
+            className="wv-ibmplex absolute right-4 text-label text-gray-5 underline"
             onClick={handleClose}
           >
             ยกเลิก
           </button>
         </div>
-        <div className="p-6 flex flex-col gap-4">
-          <div className="flex justify-between items-center gap-4">
+        <div className="flex flex-col gap-4 p-6">
+          <div className="flex items-center justify-between gap-4">
             <div className="w-1/2">
-              <label className="block text-blue-7 mb-3">ชื่อที่แสดง</label>
+              <label className="mb-3 block text-blue-7">ชื่อที่แสดง</label>
               <input
                 type="text"
                 value={payload?.display_name || ''}
                 onChange={e =>
                   setPayload({ ...payload, display_name: e.target.value })
                 }
-                className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+                className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
                 placeholder="กรอกชื่อที่แสดง"
               />
             </div>
             <div className="w-1/2">
-              <label className="block text-blue-7 mb-3">รูปภาพ</label>
-              <div className="overflow-x-scroll flex-nowrap flex gap-2">
+              <label className="mb-3 block text-blue-7">รูปภาพ</label>
+              <div className="flex flex-nowrap gap-2 overflow-x-scroll">
                 {eventAvatars.map((avatar, index) => (
                   <img
                     key={index}
                     src={avatar}
                     alt={`Avatar ${index}`}
-                    className={`w-8.75 h-8.75 rounded-full cursor-pointer ${
+                    className={`h-8.75 w-8.75 cursor-pointer rounded-full ${
                       payload.avatar_url === avatar
                         ? 'border-2 border-gray-8'
                         : ''
@@ -147,12 +147,12 @@ export default function ModalEvent(props: PropTypes) {
             </div>
           </div>
           <div>
-            <label className="block text-blue-7 mb-3">
+            <label className="mb-3 block text-blue-7">
               ชื่อเต็ม ภาษาอังกฤษ
             </label>
             <input
               type="text"
-              className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+              className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
               onChange={e =>
                 setPayload({ ...payload, title_en: e.target.value })
               }
@@ -161,10 +161,10 @@ export default function ModalEvent(props: PropTypes) {
             />
           </div>
           <div>
-            <label className="block text-blue-7 mb-3">ชื่อเต็ม ภาษาไทย</label>
+            <label className="mb-3 block text-blue-7">ชื่อเต็ม ภาษาไทย</label>
             <input
               type="text"
-              className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+              className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
               onChange={e =>
                 setPayload({ ...payload, title_th: e.target.value })
               }
@@ -173,21 +173,21 @@ export default function ModalEvent(props: PropTypes) {
             />
           </div>
           <div>
-            <label className="block text-blue-7 mb-3">คำอธิบาย</label>
+            <label className="mb-3 block text-blue-7">คำอธิบาย</label>
             <textarea
               value={payload?.description || ''}
               onChange={e =>
                 setPayload({ ...payload, description: e.target.value })
               }
-              className="w-full p-2.5 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none resize-none h-48"
+              className="h-48 w-full resize-none rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
               placeholder="กรอกคำอธิบาย"
             ></textarea>
           </div>
           <div>
-            <label className="block text-blue-7 mb-3">ลิงก์ข่าว</label>
+            <label className="mb-3 block text-blue-7">ลิงก์ข่าว</label>
             <input
               type="text"
-              className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+              className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
               onChange={e =>
                 setPayload({ ...payload, news_link: e.target.value })
               }
@@ -197,10 +197,10 @@ export default function ModalEvent(props: PropTypes) {
           </div>
           <div className="flex gap-4">
             <div className="flex-1">
-              <label className="block text-blue-7 mb-3">สถานที่</label>
+              <label className="mb-3 block text-blue-7">สถานที่</label>
               <input
                 type="text"
-                className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+                className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
                 onChange={e =>
                   setPayload({ ...payload, location: e.target.value })
                 }
@@ -209,10 +209,10 @@ export default function ModalEvent(props: PropTypes) {
               />
             </div>
             <div className="flex-1">
-              <label className="block text-blue-7 mb-3">วันที่จัด</label>
+              <label className="mb-3 block text-blue-7">วันที่จัด</label>
               <div className="relative">
                 <span
-                  className={`absolute p-1 bg-gray-1 left-2.5 top-1/2 -translate-y-1/2 text-center ${
+                  className={`absolute top-1/2 left-2.5 -translate-y-1/2 bg-gray-1 p-1 text-center ${
                     payload.date ? '' : 'text-gray-5'
                   }`}
                 >
@@ -222,7 +222,7 @@ export default function ModalEvent(props: PropTypes) {
                 </span>
                 <input
                   type="date"
-                  className="w-full px-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+                  className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 px-2.5 focus:outline-none"
                   onChange={e =>
                     setPayload({ ...payload, date: e.target.value })
                   }
@@ -235,11 +235,11 @@ export default function ModalEvent(props: PropTypes) {
               </div>
             </div>
             <div className="">
-              <label className="block text-blue-7 mb-3">จำนวนผู้เข้าร่วม</label>
-              <div className="flex gap-2.5 items-center">
+              <label className="mb-3 block text-blue-7">จำนวนผู้เข้าร่วม</label>
+              <div className="flex items-center gap-2.5">
                 <input
                   type="number"
-                  className="w-17.5 p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+                  className="h-8.75 w-17.5 rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
                   placeholder="กรอกจำนวนผู้เข้าร่วม"
                   onChange={e =>
                     setPayload({
@@ -255,10 +255,10 @@ export default function ModalEvent(props: PropTypes) {
               </div>
             </div>
             <div className="flex-1">
-              <label className="block text-blue-7 mb-3">กลุ่มเป้าหมาย</label>
+              <label className="mb-3 block text-blue-7">กลุ่มเป้าหมาย</label>
               <input
                 type="text"
-                className="w-full p-2.5 h-8.75 bg-gray-1 border border-gray-3 rounded-lg focus:outline-none"
+                className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"
                 placeholder="กรอกกลุ่มเป้าหมาย"
                 onChange={e =>
                   setPayload({ ...payload, target_group: e.target.value })

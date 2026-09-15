@@ -1,15 +1,15 @@
 import React from 'react';
-import Nav from '../components/layout/Nav';
 import AdminNav from '../components/layout/AdminNav';
+import Nav from '../components/layout/Nav';
 
 const DefaultLayout: React.FC<{
   admin?: boolean;
   children: React.ReactNode;
 }> = ({ admin, children }) => {
   return (
-    <div className="flex flex-col w-screen h-screen">
+    <div className="flex h-screen w-screen flex-col">
       {admin ? <AdminNav /> : <Nav />}
-      <main className="pt-16 min-h-screen h-full flex flex-col w-full">
+      <main className="flex h-full min-h-screen w-full flex-col pt-16">
         {children}
       </main>
     </div>

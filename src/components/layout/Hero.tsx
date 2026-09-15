@@ -12,14 +12,14 @@ export default function Hero(props: Props) {
         <img
           src="/icon/cloud-3.svg"
           alt="cloud-3"
-          className="md:block hidden"
+          className="hidden md:block"
         />
       </div>
       <div className="flex flex-col gap-3.5">
         {props.navigateLink && (
           <a
             href={props.navigateLink}
-            className="wv-ibmplex wv-bold text-blue-7 underline "
+            className="wv-ibmplex wv-bold text-blue-7 underline"
           >
             {props.textNavigate}
           </a>
@@ -32,7 +32,7 @@ export default function Hero(props: Props) {
         <img
           src="/icon/cloud-6.svg"
           alt="cloud-6"
-          className="md:block hidden"
+          className="hidden md:block"
         />
       </div>
     </div>

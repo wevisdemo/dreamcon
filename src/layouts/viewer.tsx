@@ -1,7 +1,7 @@
 import React from 'react';
-import Hero from '../components/layout/Hero';
 import Description from '../components/layout/Description';
 import Footer from '../components/layout/Footer';
+import Hero from '../components/layout/Hero';
 import { usePermission } from '../hooks/usePermission';
 import DefaultLayout from './default';
 
@@ -13,37 +13,37 @@ const ViewerLayout: React.FC<{
     <DefaultLayout>
       <>
         {isReadOnly() && (
-          <section id="hero" className="px-6 bg-blue-2 w-full">
-            <div className="max-w-240 w-full m-auto">
+          <section id="hero" className="w-full bg-blue-2 px-6">
+            <div className="m-auto w-full max-w-240">
               <Hero heroTitle="ข้อถกเถียงต่อยอด" />
             </div>
           </section>
         )}
         <section
           id="content"
-          className={`${isReadOnly() ? 'max-h-164 h-full' : 'h-full'}`}
+          className={`${isReadOnly() ? 'h-full max-h-164' : 'h-full'}`}
         >
           {children}
         </section>
         {isReadOnly() && (
           <>
-            <div className="bg-blue-2 h-10 flex items-end">
-              <div className="bg-[url('/icon/ellipse.svg')] bg-repeat w-full h-4" />
+            <div className="flex h-10 items-end bg-blue-2">
+              <div className="h-4 w-full bg-[url('/icon/ellipse.svg')] bg-repeat" />
             </div>
 
-            <section id="description" className="px-6 py-8 md:py-16 bg-green-3">
-              <div className="max-w-240 w-full m-auto">
+            <section id="description" className="bg-green-3 px-6 py-8 md:py-16">
+              <div className="m-auto w-full max-w-240">
                 <Description />
               </div>
             </section>
 
-            <div className="bg-white h-10 flex relative pb-6">
-              <div className="bg-[url('/icon/ellipse.svg')] bg-repeat w-full h-4 absolute -top-0.5 rotate-180" />
+            <div className="relative flex h-10 bg-white pb-6">
+              <div className="absolute -top-0.5 h-4 w-full rotate-180 bg-[url('/icon/ellipse.svg')] bg-repeat" />
             </div>
             <section className="py-12">
-              <div className="flex justify-between max-w-240 w-full m-auto space-x-6">
-                <div className="flex flex-col w-1/2">
-                  <span className="text-blue-7 text-b2 wv-bold">
+              <div className="m-auto flex w-full max-w-240 justify-between space-x-6">
+                <div className="flex w-1/2 flex-col">
+                  <span className="wv-bold text-b2 text-blue-7">
                     จะเกิดอะไรขึ้นต่อไป
                   </span>
                   <span className="text-b2">
@@ -53,19 +53,19 @@ const ViewerLayout: React.FC<{
                 </div>
                 <div className="flex w-1/2 items-start">
                   <input
-                    className="w-full h-10 p-4 text-b3 border border-solid border-gray-3 rounded-full"
+                    className="h-10 w-full rounded-full border border-solid border-gray-3 p-4 text-b3"
                     type="text"
                     name="email-enter"
                     id="email-enter"
                     placeholder="ใส่อีเมลของคุณ"
                   />
-                  <button className="flex mx-auto w-fit py-2.5 px-13.5 items-center justify-center border-solid border rounded-full border-gray-2 bg-blue-6 wv-ibmplex wv-bold text-button text-white">
+                  <button className="wv-ibmplex wv-bold mx-auto flex w-fit items-center justify-center rounded-full border border-solid border-gray-2 bg-blue-6 px-13.5 py-2.5 text-button text-white">
                     ติดตาม
                   </button>
                 </div>
               </div>
             </section>
-            <section className="bg-blue-6 py-12 px-6">
+            <section className="bg-blue-6 px-6 py-12">
               <Footer />
             </section>
           </>

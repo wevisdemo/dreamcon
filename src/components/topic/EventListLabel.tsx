@@ -30,7 +30,7 @@ export default function EventListLabel(props: PropTypes) {
           <span key={eventId} className="flex items-center gap-2">
             {index > 0 && <span>|</span>}
             <span
-              className={`flex flex-row gap-1 items-center font-bold underline ${isActiveEvent ? 'text-black' : ''}`}
+              className={`flex flex-row items-center gap-1 font-bold underline ${isActiveEvent ? 'text-black' : ''}`}
             >
               {eventDisplayName(eventId)}
               {props.canLeave && isActiveEvent && (
@@ -40,7 +40,7 @@ export default function EventListLabel(props: PropTypes) {
                   aria-label="ถอนวงของฉันออก"
                 >
                   <DeleteIcon
-                    className="w-3 h-3 hover:cursor-pointer text-gray-8 hover:text-red-7"
+                    className="h-3 w-3 text-gray-8 hover:cursor-pointer hover:text-red-7"
                     aria-hidden
                   />
                 </button>

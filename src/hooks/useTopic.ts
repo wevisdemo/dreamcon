@@ -1,17 +1,17 @@
+import { useState } from 'react';
 import {
   collection,
-  query,
-  where,
-  getDocs,
+  documentId,
   getCountFromServer,
+  getDocs,
   limit,
   orderBy,
-  documentId,
+  query,
+  where,
 } from 'firebase/firestore';
-import { useState } from 'react';
-import { db } from '../utils/firestore';
-import { LightWeightTopic, Topic, TopicDB } from '../types/topic';
 import { CommentDB } from '../types/comment';
+import { LightWeightTopic, Topic, TopicDB } from '../types/topic';
+import { db } from '../utils/firestore';
 import { convertTopicDBToTopic, readCategories } from '../utils/mapping';
 
 export const useTopic = () => {

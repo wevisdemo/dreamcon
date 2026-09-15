@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import EventCard from '../components/admin/EventCard';
-import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import EventCard from '../components/admin/EventCard';
 import ModalEvent from '../components/admin/ModalEvent';
-import { AddOrEditEventPayload, DreamConEvent } from '../types/event';
+import FullPageLoader from '../components/ui/FullPageLoader';
 import { useEvent } from '../hooks/useEvent';
 import { useWriter } from '../hooks/useWriter';
-import FullPageLoader from '../components/ui/FullPageLoader';
 import DefaultLayout from '../layouts/default';
-import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
+import { AddOrEditEventPayload, DreamConEvent } from '../types/event';
 
 enum RoomSortOption {
   LATEST_EVENT,
@@ -151,38 +151,38 @@ const AdminPage = () => {
   return (
     <DefaultLayout admin>
       {isPageLoading() ? <FullPageLoader /> : null}
-      <div className="h-full w-screen bg-blue-2 flex justify-center relative overflow-auto">
-        <main className="max-w-235 w-full py-8 flex flex-col">
-          <div className="flex justify-center gap-3 items-center mb-4">
+      <div className="relative flex h-full w-screen justify-center overflow-auto bg-blue-2">
+        <main className="flex w-full max-w-235 flex-col py-8">
+          <div className="mb-4 flex items-center justify-center gap-3">
             <div className="flex flex-col items-center">
-              <div className="relative flex flex-col items-center wv-ibmplex text-center">
-                <div className=" top-0 bg-white w-full px-4 py-2 rounded-l-[20px] rounded-tr-[20px] text-blue-7 text-b2 font-bold">
+              <div className="wv-ibmplex relative flex flex-col items-center text-center">
+                <div className="top-0 w-full rounded-l-[20px] rounded-tr-[20px] bg-white px-4 py-2 text-b2 font-bold text-blue-7">
                   ทั้งหมด
                 </div>
-                <div className="bg-white rounded-full h-21.5 w-21.5 flex items-center justify-center heading-2 font-bold text-blue-7">
+                <div className="flex h-21.5 w-21.5 items-center justify-center rounded-full bg-white heading-2 font-bold text-blue-7">
                   {displayEvents.length}
                 </div>
-                <div className=" bottom-0 bg-white w-full px-2 rounded-full text-blue-7 font-bold">
+                <div className="bottom-0 w-full rounded-full bg-white px-2 font-bold text-blue-7">
                   วงสนทนา
                 </div>
               </div>
             </div>
             <div
-              className="flex flex-col gap-4 items-center justify-center w-37.5 h-37.5 border-2 border-dashed border-blue-7 rounded-full wv-ibmplex hover:cursor-pointer"
+              className="wv-ibmplex flex h-37.5 w-37.5 flex-col items-center justify-center gap-4 rounded-full border-2 border-dashed border-blue-7 hover:cursor-pointer"
               onClick={() => {
                 setModalEvent({ ...modalEvent, isOpen: true });
               }}
             >
-              <div className="text-blue-7 heading-1 leading-none">+</div>
-              <div className="text-blue-7 text-b2 font-bold">เพิ่มวงสนทนา</div>
+              <div className="heading-1 leading-none text-blue-7">+</div>
+              <div className="text-b2 font-bold text-blue-7">เพิ่มวงสนทนา</div>
             </div>
           </div>
-          <div className="flex justify-between items-center mb-4 gap-7.5 text-b3">
-            <div className="flex gap-1 items-center">
-              <span className="text-blue-7 text-nowrap">เรียงลำดับ:</span>
+          <div className="mb-4 flex items-center justify-between gap-7.5 text-b3">
+            <div className="flex items-center gap-1">
+              <span className="text-nowrap text-blue-7">เรียงลำดับ:</span>
               <div className="flex w-128 text-b3">
                 <button
-                  className={`w-full py-1.5 rounded-l-full border border-solid border-blue-7 ${
+                  className={`w-full rounded-l-full border border-solid border-blue-7 py-1.5 ${
                     sortBy === RoomSortOption.LATEST_EVENT
                       ? 'bg-blue-7 text-white'
                       : 'text-blue-7'
@@ -192,7 +192,7 @@ const AdminPage = () => {
                   วันที่จัดล่าสุด
                 </button>
                 <button
-                  className={`w-full py-1.5 border-y border-solid border-blue-7 ${
+                  className={`w-full border-y border-solid border-blue-7 py-1.5 ${
                     sortBy === RoomSortOption.LATEST_CREATED
                       ? 'bg-blue-7 text-white'
                       : 'text-blue-7'
@@ -202,7 +202,7 @@ const AdminPage = () => {
                   เพิ่มล่าสุด
                 </button>
                 <button
-                  className={`w-full py-1.5 rounded-r-full border border-solid border-blue-7 ${
+                  className={`w-full rounded-r-full border border-solid border-blue-7 py-1.5 ${
                     sortBy === RoomSortOption.POPULAR
                       ? 'bg-blue-7 text-white'
                       : 'text-blue-7'
@@ -221,10 +221,10 @@ const AdminPage = () => {
                 value={searchText}
                 type="text"
                 placeholder="ค้นหา"
-                className="bg-white w-full border border-blue-3 outline-none p-2 rounded-full"
+                className="w-full rounded-full border border-blue-3 bg-white p-2 outline-none"
               />
               <SearchIcon
-                className="absolute right-5 top-1/2 transform -translate-y-1/2 hover:cursor-pointer w-4 h-4 text-blue-5"
+                className="absolute top-1/2 right-5 h-4 w-4 -translate-y-1/2 transform text-blue-5 hover:cursor-pointer"
                 aria-hidden
                 onClick={() => {}}
               />

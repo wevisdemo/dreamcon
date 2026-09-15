@@ -28,14 +28,14 @@ export default function TextComposer(props: PropTypes) {
       <div>
         <label
           htmlFor={props.id}
-          className="px-2.5 py-2 bg-gray-2 flex gap-1 text-label-sm border border-gray-3 border-b-0 rounded-t items-center"
+          className="flex items-center gap-1 rounded-t border border-b-0 border-gray-3 bg-gray-2 px-2.5 py-2 text-label-sm"
         >
           <span>{props.label}</span>
           <CommunityIcon className="text-gray-8" aria-hidden />
           <span className="font-semibold">{props.eventName}</span>
         </label>
         <textarea
-          className="w-full p-2.5 text-b3 bg-gray-1 resize-none focus:outline-none border border-t-0 border-gray-3 rounded-b"
+          className="w-full resize-none rounded-b border border-t-0 border-gray-3 bg-gray-1 p-2.5 text-b3 focus:outline-none"
           name={props.id}
           id={props.id}
           rows={ROWS}
@@ -54,10 +54,10 @@ export default function TextComposer(props: PropTypes) {
       </div>
       {canSubmit && (
         <button
-          className="w-full py-2.5 flex items-center justify-center gap-2 hover:bg-blue-2 border-2 rounded-full wv-ibmplex text-button font-bold"
+          className="wv-ibmplex flex w-full items-center justify-center gap-2 rounded-full border-2 py-2.5 text-button font-bold hover:bg-blue-2"
           onClick={handleSubmit}
         >
-          <ArrowUpwardIcon className="w-4.5 h-4.5" aria-hidden />
+          <ArrowUpwardIcon className="h-4.5 w-4.5" aria-hidden />
           ส่ง
         </button>
       )}

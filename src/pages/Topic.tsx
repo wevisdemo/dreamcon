@@ -1,5 +1,4 @@
 import { useContext, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   collection,
   doc,
@@ -9,11 +8,12 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import FullPageLoader from '../components/ui/FullPageLoader';
-import ModalComment from '../components/topic/ModalComment';
+import { useParams } from 'react-router-dom';
 import CommentDndContext from '../components/topic/CommentDndContext';
+import ModalComment from '../components/topic/ModalComment';
 import ShareTopicLink from '../components/topic/ShareTopicLink';
 import TopicTemplate from '../components/topic/TopicTemplate';
+import FullPageLoader from '../components/ui/FullPageLoader';
 import { usePageSession } from '../hooks/usePageSession';
 import DefaultLayout from '../layouts/default';
 import { StoreContext } from '../store';
@@ -75,13 +75,13 @@ export default function TopicPage() {
     <DefaultLayout>
       <CommentDndContext>
         {(!selectedTopic.value || !eventsReady) && <FullPageLoader />}
-        <div className="relative bg-blue-4 w-screen h-full flex flex-col items-center">
+        <div className="relative flex h-full w-screen flex-col items-center bg-blue-4">
           {selectedTopic.value && (
             <>
-              <div className="w-full h-8 bg-gray-2 flex justify-center items-center">
-                <div className="w-full max-w-230 flex">
+              <div className="flex h-8 w-full items-center justify-center bg-gray-2">
+                <div className="flex w-full max-w-230">
                   <a
-                    className="text-blue-6 text-label wv-ibmplex underline!"
+                    className="wv-ibmplex text-label text-blue-6 underline!"
                     href={topicsUrl()}
                   >
                     กลับหน้าหลัก
@@ -89,7 +89,7 @@ export default function TopicPage() {
                 </div>
                 <ShareTopicLink topicId={selectedTopic.value.id} />
               </div>
-              <section className="py-6 overflow-scroll w-full flex justify-center">
+              <section className="flex w-full justify-center overflow-scroll py-6">
                 <TopicTemplate
                   topic={selectedTopic.value}
                   onDeleted={() => {
@@ -97,7 +97,7 @@ export default function TopicPage() {
                   }}
                 />
               </section>
-              <section className="absolute inset-0 z-30 pointer-events-none">
+              <section className="pointer-events-none absolute inset-0 z-30">
                 <ModalComment
                   store={topicPageContext.modalComment}
                   topics={[selectedTopic.value]}

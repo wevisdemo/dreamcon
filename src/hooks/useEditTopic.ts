@@ -5,15 +5,15 @@ import {
   doc,
   DocumentData,
   FieldValue,
-  updateDoc,
   UpdateData,
+  updateDoc,
 } from 'firebase/firestore';
-import { db } from '../utils/firestore';
 import {
   AddOrEditTopicPayload,
   Topic,
   UpdateTopicDBPayload,
 } from '../types/topic';
+import { db } from '../utils/firestore';
 import { usePermission } from './usePermission';
 
 export const useEditTopic = () => {

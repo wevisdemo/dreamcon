@@ -31,11 +31,11 @@ import {
   writeBatch,
   type DocumentReference,
 } from 'firebase/firestore';
-import { initDB } from '../firestore';
 import {
   EMULATOR_FIREBASE_CONFIG,
   isEmulatorEnabled,
 } from '../../utils/firebaseEmulator';
+import { initDB } from '../firestore';
 
 /** Retired category strings, renamed in place on both `category` and `categories`. */
 const RENAMED_CATEGORIES: Record<string, string> = {

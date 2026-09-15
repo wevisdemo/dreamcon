@@ -1,9 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
+import { Helmet, HelmetProvider } from '@dr.pogodin/react-helmet';
 import App from './App.tsx';
 import { BASE_URL } from './const/app';
-import { HelmetProvider, Helmet } from '@dr.pogodin/react-helmet';
 
 const ogTitle = 'DreamCon';
 const ogDescription = 'พาความฝันของพวกเรา มาสร้างอนาคตประเทศไทยไปด้วยกัน';

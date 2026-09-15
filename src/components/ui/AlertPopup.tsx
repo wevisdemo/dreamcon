@@ -35,7 +35,7 @@ export default function AlertPopup({
     <>
       {visible && (
         <div
-          className={`flex flex-wrap items-center justify-center gap-2 text-gray-8 text-b3 p-4 rounded-2xl shadow-sm ${
+          className={`flex flex-wrap items-center justify-center gap-2 rounded-2xl p-4 text-b3 text-gray-8 shadow-sm ${
             mode === 'error' ? 'bg-red-2' : 'bg-green-3'
           }`}
         >
@@ -49,7 +49,7 @@ export default function AlertPopup({
           </span>
           {mode === 'error' ? (
             <span
-              className="text-gray-7 underline px-0.5 hover:cursor-pointer"
+              className="px-0.5 text-gray-7 underline hover:cursor-pointer"
               onClick={onClose}
             >
               ปิด
@@ -57,10 +57,10 @@ export default function AlertPopup({
           ) : (
             <div className="flex items-center justify-center gap-0.5">
               {mode === 'copy' ? (
-                <span className=" px-0.5 ">hover ตำแหน่งที่ต้องการย้าย</span>
+                <span className="px-0.5">hover ตำแหน่งที่ต้องการย้าย</span>
               ) : (
                 <span
-                  className="text-blue-6 underline px-0.5 hover:cursor-pointer"
+                  className="px-0.5 text-blue-6 underline hover:cursor-pointer"
                   onClick={() => {
                     onUndo?.();
                     onClose();
@@ -70,11 +70,11 @@ export default function AlertPopup({
                 </span>
               )}
 
-              <span className="flex justify-center align-center w-4 h-4 text-gray-7 rounded-xs border-gray-5 border">
+              <span className="align-center flex h-4 w-4 justify-center rounded-xs border border-gray-5 text-gray-7">
                 ⌘
               </span>
 
-              <span className="flex justify-center align-center w-4 h-4 text-gray-7 rounded-xs border-gray-5 border">
+              <span className="align-center flex h-4 w-4 justify-center rounded-xs border border-gray-5 text-gray-7">
                 {mode === 'copy' ? 'V' : 'Z'}
               </span>
             </div>

@@ -1,6 +1,6 @@
 import type { Auth } from 'firebase/auth';
-import type { Firestore } from 'firebase/firestore';
 import { connectAuthEmulator } from 'firebase/auth';
+import type { Firestore } from 'firebase/firestore';
 import { connectFirestoreEmulator } from 'firebase/firestore';
 
 export const EMULATOR_HOST = '127.0.0.1';

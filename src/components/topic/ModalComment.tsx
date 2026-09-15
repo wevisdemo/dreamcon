@@ -1,17 +1,17 @@
-import { Comment, CommentView } from '../../types/comment';
-import { Topic } from '../../types/topic';
-import { CommentModalStore } from '../../store/modalComment';
 import { useAddComment } from '../../hooks/useAddComment';
 import { useEditComment } from '../../hooks/useEditComment';
 import { useEditTopic } from '../../hooks/useEditTopic';
 import { useLeaveEvent } from '../../hooks/useLeaveEvent';
 import { usePermission } from '../../hooks/usePermission';
 import { useAlertIfNotSaved } from '../../hooks/useShowError';
+import { CommentModalStore } from '../../store/modalComment';
+import { Comment, CommentView } from '../../types/comment';
+import { Topic } from '../../types/topic';
 import { flattenComments, linkedEventIds } from '../../utils/mapping';
 import FullPageLoader from '../ui/FullPageLoader';
+import Modal from '../ui/Modal';
 import EventListLabel from './EventListLabel';
 import JoinAndComment from './JoinAndComment';
-import Modal from '../ui/Modal';
 
 interface PropTypes {
   store: CommentModalStore;
@@ -113,13 +113,13 @@ export default function ModalComment(props: PropTypes) {
       <Modal title={title()} onClose={handleClose}>
         {target && !isEdit && (
           <>
-            <div className="p-2.5 rounded-2xl bg-white">
+            <div className="rounded-2xl bg-white p-2.5">
               {'title' in target ? (
                 target.title
               ) : (
-                <div className="flex gap-2 items-center">
+                <div className="flex items-center gap-2">
                   <div
-                    className={`w-3 h-3 rounded-full ${viewColor(target)}`}
+                    className={`h-3 w-3 rounded-full ${viewColor(target)}`}
                   />
                   <span className="flex-1">{target.reason}</span>
                 </div>

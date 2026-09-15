@@ -13,18 +13,18 @@ export default function TopicSummaryComment(props: PropTypes) {
     return baseNumber + count * 4;
   };
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       {getCommentsByView(CommentView.AGREE).length > 0 && (
         <div
-          className={`w-full flex py-2 gap-2`}
+          className={`flex w-full gap-2 py-2`}
           style={{
             height: `${getHeightOfCommentsCount(
               getCommentsByView(CommentView.AGREE).length
             )}px`,
           }}
         >
-          <div className="w-3 h-full rounded-full bg-green-light"></div>
-          <p className="text-label text-gray-5 flex gap-2">
+          <div className="h-full w-3 rounded-full bg-green-light"></div>
+          <p className="flex gap-2 text-label text-gray-5">
             <span>{getCommentsByView(CommentView.AGREE).length}</span>
             <span>เห็นด้วย..</span>
           </p>
@@ -32,15 +32,15 @@ export default function TopicSummaryComment(props: PropTypes) {
       )}
       {getCommentsByView(CommentView.PARTIAL_AGREE).length > 0 && (
         <div
-          className={`w-full flex py-2 gap-2`}
+          className={`flex w-full gap-2 py-2`}
           style={{
             height: `${getHeightOfCommentsCount(
               getCommentsByView(CommentView.PARTIAL_AGREE).length
             )}px`,
           }}
         >
-          <div className="w-3 h-full rounded-full bg-yellow-3"></div>
-          <p className="text-label text-gray-5 flex gap-2">
+          <div className="h-full w-3 rounded-full bg-yellow-3"></div>
+          <p className="flex gap-2 text-label text-gray-5">
             <span>{getCommentsByView(CommentView.PARTIAL_AGREE).length}</span>
             <span>เห็นด้วยบางส่วน..</span>
           </p>
@@ -48,15 +48,15 @@ export default function TopicSummaryComment(props: PropTypes) {
       )}
       {getCommentsByView(CommentView.DISAGREE).length > 0 && (
         <div
-          className={`w-full flex py-2 gap-2`}
+          className={`flex w-full gap-2 py-2`}
           style={{
             height: `${getHeightOfCommentsCount(
               getCommentsByView(CommentView.DISAGREE).length
             )}px`,
           }}
         >
-          <div className="w-3 h-full rounded-full bg-red-2"></div>
-          <p className="text-label text-gray-5 flex gap-2">
+          <div className="h-full w-3 rounded-full bg-red-2"></div>
+          <p className="flex gap-2 text-label text-gray-5">
             <span>{getCommentsByView(CommentView.DISAGREE).length}</span>
             <span>ไม่เห็นด้วย..</span>
           </p>

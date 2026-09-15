@@ -1,15 +1,15 @@
 import { useContext, useEffect, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { collection, onSnapshot } from 'firebase/firestore';
-import TopicListSection from '../components/allTopic/TopicListSection';
-import FullPageLoader from '../components/ui/FullPageLoader';
-import ExpandWideIcon from '../components/icon/ExpandWideIcon';
 import KeyboardDoubleArrowRightIcon from '@material-symbols/svg-700/rounded/keyboard_double_arrow_right.svg?react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { useLocation } from 'react-router-dom';
+import TopicListSection from '../components/allTopic/TopicListSection';
+import ExpandWideIcon from '../components/icon/ExpandWideIcon';
+import CommentDndContext from '../components/topic/CommentDndContext';
 import ModalComment from '../components/topic/ModalComment';
 import ModalTopic from '../components/topic/ModalTopic';
-import CommentDndContext from '../components/topic/CommentDndContext';
 import ShareTopicLink from '../components/topic/ShareTopicLink';
 import TopicTemplate from '../components/topic/TopicTemplate';
+import FullPageLoader from '../components/ui/FullPageLoader';
 import { useAddTopic } from '../hooks/useAddTopic';
 import { usePageSession } from '../hooks/usePageSession';
 import { usePermission } from '../hooks/usePermission';
@@ -140,13 +140,13 @@ export default function AllTopic() {
     <ViewerLayout>
       <CommentDndContext>
         {isPageLoading && <FullPageLoader />}
-        <div className="min-w-screen flex h-full">
+        <div className="flex h-full min-w-screen">
           <section
             className={`bg-blue-2 ${
               selectedTopic.value ? 'w-3/5' : 'w-full'
-            } h-full flex flex-col items-center duration-300 ease-in relative`}
+            } relative flex h-full flex-col items-center duration-300 ease-in`}
           >
-            <section className="absolute inset-0 z-30 pointer-events-none">
+            <section className="pointer-events-none absolute inset-0 z-30">
               <ModalComment
                 store={homePageContext.modalCommentMainSection}
                 topics={displayTopics ?? []}
@@ -168,7 +168,7 @@ export default function AllTopic() {
             </section>
             <section
               ref={observerRef}
-              className="p-15 w-full h-full flex justify-center overflow-scroll relative"
+              className="relative flex h-full w-full justify-center overflow-scroll p-15"
             >
               <TopicListSection
                 topics={displayTopics ?? []}
@@ -184,23 +184,23 @@ export default function AllTopic() {
           <section
             className={`${
               selectedTopic.value ? 'w-2/5' : 'w-0'
-            } overflow-hidden h-full flex flex-col items-center duration-300 ease-in relative`}
+            } relative flex h-full flex-col items-center overflow-hidden duration-300 ease-in`}
           >
-            <section className="absolute inset-0 z-30 pointer-events-none">
+            <section className="pointer-events-none absolute inset-0 z-30">
               <ModalComment
                 store={homePageContext.modalCommentSideSection}
                 topics={displayTopics ?? []}
               />
             </section>
-            <section className="w-full h-full">
-              <div className="w-full px-2.5 py-1 bg-gray-2 flex justify-between items-center">
+            <section className="h-full w-full">
+              <div className="flex w-full items-center justify-between bg-gray-2 px-2.5 py-1">
                 <div className="flex items-center gap-2.5">
                   <button
                     onClick={() => selectedTopic.setValue(null)}
                     aria-label="ปิดแผงด้านข้าง"
                   >
                     <KeyboardDoubleArrowRightIcon
-                      className="w-6 h-6 text-gray-5"
+                      className="h-6 w-6 text-gray-5"
                       aria-hidden
                     />
                   </button>
@@ -209,7 +209,7 @@ export default function AllTopic() {
                     aria-label="เปิดหน้าข้อถกเถียง"
                   >
                     <ExpandWideIcon
-                      className="w-6 h-6 text-gray-5"
+                      className="h-6 w-6 text-gray-5"
                       aria-hidden
                     />
                   </button>
@@ -218,14 +218,14 @@ export default function AllTopic() {
                   <ShareTopicLink topicId={selectedTopic.value.id} />
                 )}
               </div>
-              <div className="p-6 bg-blue-4 w-full h-full overflow-scroll">
+              <div className="h-full w-full overflow-scroll bg-blue-4 p-6">
                 {selectedTopic.value ? (
                   <TopicTemplate
                     topic={selectedTopic.value}
                     onDeleted={() => selectedTopic.setValue(null)}
                   />
                 ) : (
-                  <div className=" w-full h-full" />
+                  <div className="h-full w-full" />
                 )}
               </div>
             </section>

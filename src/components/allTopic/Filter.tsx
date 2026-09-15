@@ -1,16 +1,16 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
+import { useDraggable } from 'react-use-draggable-scroll';
+import { StoreContext } from '../../store';
 import { DreamConEvent } from '../../types/event';
 import {
   TopicFilter,
   topicFilterCategories,
   TopicFilterCategory,
 } from '../../types/home';
+import { LightWeightTopic } from '../../types/topic';
 import DefaultFilterEvent from './DefaultFilterEvent';
 import FilterEvent from './FilterEvent';
-import { StoreContext } from '../../store';
-import { LightWeightTopic } from '../../types/topic';
-import { useDraggable } from 'react-use-draggable-scroll';
-import SearchIcon from '@material-symbols/svg-700/rounded/search.svg?react';
 
 interface PropTypes {
   allTopicCount: number;
@@ -182,8 +182,8 @@ export default function Filter(props: PropTypes) {
   }, [categoryRef]);
 
   return (
-    <div className="bg-white w-full rounded-2xl py-4 flex flex-col gap-4">
-      <div className="flex items-center gap-4.5 w-full pl-6">
+    <div className="flex w-full flex-col gap-4 rounded-2xl bg-white py-4">
+      <div className="flex w-full items-center gap-4.5 pl-6">
         <div className="relative">
           {props.filter.selectedEvent === null ? (
             <DefaultFilterEvent
@@ -199,24 +199,24 @@ export default function Filter(props: PropTypes) {
               isOwner={isEventOwner(props.filter.selectedEvent)}
             />
           )}
-          <p className="absolute whitespace-nowrap text-b2 text-white wv-bold wv-ibmplex px-4 py-2 -top-6 -left-1/2 bg-blue-6 rounded-l-full rounded-tr-full shrink-0">
+          <p className="wv-bold wv-ibmplex absolute -top-6 -left-1/2 shrink-0 rounded-l-full rounded-tr-full bg-blue-6 px-4 py-2 text-b2 whitespace-nowrap text-white">
             สำรวจข้อถกเถียง
           </p>
         </div>
-        <div className="w-3 h-3 bg-blue-2 rounded-full shrink-0" />
-        <div className="relative overflow-hidden w-full]">
+        <div className="h-3 w-3 shrink-0 rounded-full bg-blue-2" />
+        <div className="w-full] relative overflow-hidden">
           <div
-            className={`z-20 absolute top-0 right-0 h-full w-11.5 bg-gradient-to-l from-white to-transparent pointer-events-none ${
+            className={`pointer-events-none absolute top-0 right-0 z-20 h-full w-11.5 bg-gradient-to-l from-white to-transparent ${
               showEventGradient.right ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-300`}
           />
           <div
-            className={`z-20 absolute top-0 left-0 h-full w-11.5 bg-gradient-to-r from-white to-transparent pointer-events-none ${
+            className={`pointer-events-none absolute top-0 left-0 z-20 h-full w-11.5 bg-gradient-to-r from-white to-transparent ${
               showEventGradient.left ? 'opacity-100' : 'opacity-0'
             } transition-opacity duration-300`}
           />
           <div
-            className="flex gap-4 w-full overflow-scroll no-scrollbar relative"
+            className="no-scrollbar relative flex w-full gap-4 overflow-scroll"
             {...eventFilterEvents}
             ref={eventFilterRef}
           >
@@ -238,25 +238,25 @@ export default function Filter(props: PropTypes) {
           </div>
         </div>
       </div>
-      <div className="flex gap-3 items-center justify-between w-full px-6">
-        <div className="flex gap-1 items-center w-full shrink-2">
-          <span className="text-blue-7 text-nowrap">เรียงลำดับ:</span>
+      <div className="flex w-full items-center justify-between gap-3 px-6">
+        <div className="flex w-full shrink-2 items-center gap-1">
+          <span className="text-nowrap text-blue-7">เรียงลำดับ:</span>
           <div className="flex w-32.5 text-b3">
             <button
-              className={`w-full py-1.5 rounded-l-full border border-solid ${
+              className={`w-full rounded-l-full border border-solid py-1.5 ${
                 props.filter.sortedBy === 'most-commented'
-                  ? 'bg-blue-6 text-white border-blue-7'
-                  : 'text-blue-3 border-blue-3'
+                  ? 'border-blue-7 bg-blue-6 text-white'
+                  : 'border-blue-3 text-blue-3'
               }`}
               onClick={() => handleSortChange('most-commented')}
             >
               มากที่สุด
             </button>
             <button
-              className={`w-full py-1.5 rounded-r-full border border-solid ${
+              className={`w-full rounded-r-full border border-solid py-1.5 ${
                 props.filter.sortedBy === 'latest'
-                  ? 'bg-blue-6 text-white border-blue-7'
-                  : 'text-blue-3 border-blue-3'
+                  ? 'border-blue-7 bg-blue-6 text-white'
+                  : 'border-blue-3 text-blue-3'
               }`}
               onClick={() => handleSortChange('latest')}
             >
@@ -265,28 +265,28 @@ export default function Filter(props: PropTypes) {
           </div>
         </div>
 
-        <div className="flex gap-1 items-center w-full overflow-x-scroll">
-          <span className="text-blue-7 text-nowrap">หัวข้อ:</span>
-          <div className="relative overflow-hidden w-full]">
+        <div className="flex w-full items-center gap-1 overflow-x-scroll">
+          <span className="text-nowrap text-blue-7">หัวข้อ:</span>
+          <div className="w-full] relative overflow-hidden">
             <div
-              className={`z-20 absolute top-0 right-0 h-full w-11.5 bg-gradient-to-l from-white to-transparent pointer-events-none ${
+              className={`pointer-events-none absolute top-0 right-0 z-20 h-full w-11.5 bg-gradient-to-l from-white to-transparent ${
                 showCategoryGradient.right ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
             />
             <div
-              className={`z-20 absolute top-0 left-0 h-full w-11.5 bg-gradient-to-r from-white to-transparent pointer-events-none ${
+              className={`pointer-events-none absolute top-0 left-0 z-20 h-full w-11.5 bg-gradient-to-r from-white to-transparent ${
                 showCategoryGradient.left ? 'opacity-100' : 'opacity-0'
               } transition-opacity duration-300`}
             />
             <div
-              className="flex overflow-scroll text-b3 gap-2 no-scrollbar"
+              className="no-scrollbar flex gap-2 overflow-scroll text-b3"
               {...categoryEvents}
               ref={categoryRef}
             >
               {topicFilterCategories.map(category => (
                 <button
                   key={category}
-                  className={`whitespace-nowrap px-3 py-1.5 border-solid border-[1.5px] rounded-full ${
+                  className={`rounded-full border-[1.5px] border-solid px-3 py-1.5 whitespace-nowrap ${
                     props.filter.category === category
                       ? 'bg-blue-6 text-white'
                       : 'border-blue-3 text-blue-3'
@@ -303,14 +303,14 @@ export default function Filter(props: PropTypes) {
           <input
             type="text"
             placeholder="ค้นหา"
-            className="bg-white w-37.5 border border-blue-3 outline-none px-2 py-1.5 rounded-full"
+            className="w-37.5 rounded-full border border-blue-3 bg-white px-2 py-1.5 outline-none"
             value={searchText}
             onChange={e => {
               handleSearchTextChange(e.target.value);
             }}
           />
           <SearchIcon
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-blue-5"
+            className="absolute top-1/2 right-2 h-4 w-4 -translate-y-1/2 transform text-blue-5"
             aria-hidden
           />
         </div>

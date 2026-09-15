@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import KeyboardArrowDownIcon from '@material-symbols/svg-700/rounded/keyboard_arrow_down.svg?react';
 import CheckIcon from '@material-symbols/svg-700/rounded/check.svg?react';
+import KeyboardArrowDownIcon from '@material-symbols/svg-700/rounded/keyboard_arrow_down.svg?react';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 interface DropdownProps {
   options: readonly string[];
@@ -45,17 +45,17 @@ const Dropdown: React.FC<DropdownProps> = ({
     <ClickAwayListener onClickAway={() => setIsOpen(false)}>
       <div className="dropdown relative z-30 w-full">
         <button
-          className="dropdown-toggle flex justify-between gap-1 bg-blue-6 px-4 py-2.5 rounded-full text-white w-full"
+          className="dropdown-toggle flex w-full justify-between gap-1 rounded-full bg-blue-6 px-4 py-2.5 text-white"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className="truncate">{label}</span>
           <KeyboardArrowDownIcon
-            className="w-4 h-4 shrink-0 self-center hover:cursor-pointer"
+            className="h-4 w-4 shrink-0 self-center hover:cursor-pointer"
             aria-hidden
           />
         </button>
         {isOpen && (
-          <ul className="dropdown-menu absolute top-full left-0 bg-white w-full border border-gray-3 text-blue-7 rounded-xl overflow-y-auto max-h-72">
+          <ul className="dropdown-menu absolute top-full left-0 max-h-72 w-full overflow-y-auto rounded-xl border border-gray-3 bg-white text-blue-7">
             {items.map(option => (
               <li
                 key={option}
@@ -64,7 +64,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 }`}
               >
                 <label
-                  className={`flex gap-2 items-center px-4 py-2 ${
+                  className={`flex items-center gap-2 px-4 py-2 ${
                     isDisabled(option)
                       ? 'hover:cursor-not-allowed'
                       : 'hover:cursor-pointer'
@@ -73,13 +73,13 @@ const Dropdown: React.FC<DropdownProps> = ({
                   <span className="relative flex shrink-0">
                     <input
                       type="checkbox"
-                      className="peer appearance-none w-3 h-3 rounded-sm bg-transparent border-[1.5px] border-blue-7 checked:bg-blue-7 disabled:border-gray-4"
+                      className="peer h-3 w-3 appearance-none rounded-sm border-[1.5px] border-blue-7 bg-transparent checked:bg-blue-7 disabled:border-gray-4"
                       checked={selected.includes(option)}
                       disabled={isDisabled(option)}
                       onChange={() => toggle(option)}
                     />
                     <CheckIcon
-                      className="hidden peer-checked:block absolute inset-0 w-3 h-3 text-white pointer-events-none"
+                      className="pointer-events-none absolute inset-0 hidden h-3 w-3 text-white peer-checked:block"
                       aria-hidden
                     />
                   </span>

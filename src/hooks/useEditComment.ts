@@ -8,8 +8,8 @@ import {
   runTransaction,
   UpdateData,
 } from 'firebase/firestore';
-import { db } from '../utils/firestore';
 import { Comment, UpdateCommentDBPayload } from '../types/comment';
+import { db } from '../utils/firestore';
 import { usePermission } from './usePermission';
 
 export const useEditComment = () => {

@@ -1,8 +1,8 @@
-import { collection, getDocs } from 'firebase/firestore';
-import { csvFormat } from 'd3-dsv';
-import { initDB } from './firestore';
 import * as fs from 'fs';
 import * as path from 'path';
+import { csvFormat } from 'd3-dsv';
+import { collection, getDocs } from 'firebase/firestore';
+import { initDB } from './firestore';
 
 const { db } = initDB();
 

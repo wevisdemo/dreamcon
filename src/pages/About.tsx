@@ -1,9 +1,9 @@
-import DefaultLayout from '../layouts/default';
+import { useContext, useEffect } from 'react';
+import ExternalEventCard from '../components/about/ExternalEventCard';
 import Footer from '../components/layout/Footer';
 import Hero from '../components/layout/Hero';
 import { externalEvents } from '../data/about';
-import ExternalEventCard from '../components/about/ExternalEventCard';
-import { useContext, useEffect } from 'react';
+import DefaultLayout from '../layouts/default';
 import { StoreContext } from '../store';
 
 export default function AboutPage() {
@@ -14,18 +14,18 @@ export default function AboutPage() {
   return (
     <DefaultLayout>
       <div className="w-full">
-        <section id="hero" className="px-6 bg-blue-2 w-full">
-          <div className="max-w-240 w-full m-auto">
+        <section id="hero" className="w-full bg-blue-2 px-6">
+          <div className="m-auto w-full max-w-240">
             <Hero heroTitle="เกี่ยวกับโครงการ" />
           </div>
         </section>
-        <div className="bg-blue-2 h-10 flex items-end">
-          <div className="bg-[url('/icon/ellipse.svg')] bg-repeat w-full h-4" />
+        <div className="flex h-10 items-end bg-blue-2">
+          <div className="h-4 w-full bg-[url('/icon/ellipse.svg')] bg-repeat" />
         </div>
         <section className="bg-green-3 px-6 py-12 md:py-16" id="content">
-          <div className="w-full max-w-240 m-auto">
-            <div className="w-full flex flex-col md:flex-row gap-10 text-b2">
-              <div className="w-full md:w-1/2 flex flex-col gap-4">
+          <div className="m-auto w-full max-w-240">
+            <div className="flex w-full flex-col gap-10 text-b2 md:flex-row">
+              <div className="flex w-full flex-col gap-4 md:w-1/2">
                 <span>
                   Dream Con หรือ Dream Conversation for Constitution คือ
                   โครงการระดมความคิดเห็นของคนไทยเกี่ยวกับรัฐธรรมนูญในฝัน
@@ -41,8 +41,8 @@ export default function AboutPage() {
                   Enterprises
                 </span>
               </div>
-              <div className="w-full md:w-1/2 flex flex-col gap-4">
-                <h4 className="heading-4 wv-ibmplex font-bold">
+              <div className="flex w-full flex-col gap-4 md:w-1/2">
+                <h4 className="wv-ibmplex heading-4 font-bold">
                   แผนการดำเนินงาน
                 </h4>
 
@@ -50,7 +50,7 @@ export default function AboutPage() {
                   <span>
                     Dream Constitution มีแผนการดำเนินการแบ่งออกเป็น 3 ระยะ
                   </span>
-                  <ul className="list-disc list-outside px-6">
+                  <ul className="list-outside list-disc px-6">
                     <li>
                       <p>
                         <span className="font-bold">ระยะที่ 1</span> -
@@ -77,12 +77,12 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col md:flex-row gap-2 justify-between items-center mt-7.5">
-              <h4 className="heading-4 wv-ibmplex font-bold">
+            <div className="mt-7.5 flex flex-col items-center justify-between gap-2 md:flex-row">
+              <h4 className="wv-ibmplex heading-4 font-bold">
                 จัดทำโครงการโดย
               </h4>
-              <div className="w-full md:w-auto flex md:space-x-4 justify-between">
-                <div className="flex md:flex-row flex-col md:space-x-4 space-y-4 md:space-y-0 md:items-center">
+              <div className="flex w-full justify-between md:w-auto md:space-x-4">
+                <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
                   <a target="_blank" href="https://wevis.info/">
                     <img
                       className="h-8"
@@ -106,7 +106,7 @@ export default function AboutPage() {
                     />
                   </a>
                 </div>
-                <div className="flex md:flex-row flex-col md:space-x-4 space-y-4 md:space-y-0 md:items-center">
+                <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
                   <a target="_blank" href="https://101pub.org/">
                     <img
                       className="h-8"
@@ -137,30 +137,30 @@ export default function AboutPage() {
         </section>
         <section className="bg-blue-2 py-12" id="influence">
           <div className="flex flex-col gap-6">
-            <h2 className="w-full max-w-240 m-auto px-6  heading-2 wv-ibmplex font-bold ">
+            <h2 className="wv-ibmplex m-auto w-full max-w-240 px-6 heading-2 font-bold">
               หากคุณสนใจเรื่องนี้
             </h2>
-            <p className="w-full max-w-240 m-auto px-6  text-b2">
+            <p className="m-auto w-full max-w-240 px-6 text-b2">
               ระหว่างนี้สามารถไปเยี่ยมชมโปรเจกต์อื่น
               ที่เกี่ยวกับเรื่องรัฐธรรมนูญได้
             </p>
 
-            <div className="flex flex-col md:flex-row gap-6 overflow-x-auto">
+            <div className="flex flex-col gap-6 overflow-x-auto md:flex-row">
               {externalEvents.map((event, index) => (
-                <div className="shrink-0 m-auto">
+                <div className="m-auto shrink-0">
                   <ExternalEventCard event={event} key={index} />
                 </div>
               ))}
             </div>
           </div>
         </section>
-        <div className="bg-white h-10 flex relative pb-6">
-          <div className="bg-[url('/icon/ellipse-3.svg')] bg-repeat w-full h-4 absolute -top-0.5" />
+        <div className="relative flex h-10 bg-white pb-6">
+          <div className="absolute -top-0.5 h-4 w-full bg-[url('/icon/ellipse-3.svg')] bg-repeat" />
         </div>
         <section className="py-12">
-          <div className="flex justify-between max-w-240 w-full m-auto space-x-6">
-            <div className="flex flex-col w-1/2">
-              <span className="text-blue-7 text-b2 wv-bold">
+          <div className="m-auto flex w-full max-w-240 justify-between space-x-6">
+            <div className="flex w-1/2 flex-col">
+              <span className="wv-bold text-b2 text-blue-7">
                 จะเกิดอะไรขึ้นต่อไป
               </span>
               <span className="text-b2">
@@ -170,19 +170,19 @@ export default function AboutPage() {
             </div>
             <div className="flex w-1/2 items-start">
               <input
-                className="w-full h-10 p-4 text-b3 border border-solid border-gray-3 rounded-full"
+                className="h-10 w-full rounded-full border border-solid border-gray-3 p-4 text-b3"
                 type="text"
                 name="email-enter"
                 id="email-enter"
                 placeholder="ใส่อีเมลของคุณ"
               />
-              <button className="flex mx-auto w-fit py-2.5 px-13.5 items-center justify-center border-solid border rounded-full border-gray-2 bg-blue-6 wv-ibmplex wv-bold text-button text-white">
+              <button className="wv-ibmplex wv-bold mx-auto flex w-fit items-center justify-center rounded-full border border-solid border-gray-2 bg-blue-6 px-13.5 py-2.5 text-button text-white">
                 ติดตาม
               </button>
             </div>
           </div>
         </section>
-        <section className="bg-blue-6 py-12 px-6">
+        <section className="bg-blue-6 px-6 py-12">
           <Footer />
         </section>
       </div>

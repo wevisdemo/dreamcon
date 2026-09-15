@@ -1,9 +1,9 @@
 import { ReactElement, useState } from 'react';
-import useAuth from '../../hooks/useAuth';
-import { Popover } from '@mui/material';
 import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
-import ProfileIcon from '../icon/ProfileIcon';
+import { Popover } from '@mui/material';
+import useAuth from '../../hooks/useAuth';
 import { usePermission } from '../../hooks/usePermission';
+import ProfileIcon from '../icon/ProfileIcon';
 
 export default function AdminNav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
@@ -18,7 +18,7 @@ export default function AdminNav(): ReactElement {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-16 bg-white flex items-center justify-between pl-4 pr-12 z-20">
+    <nav className="fixed top-0 left-0 z-20 flex h-16 w-full items-center justify-between bg-white pr-12 pl-4">
       <div className="flex items-center gap-6">
         <img
           className="h-10"
@@ -29,7 +29,7 @@ export default function AdminNav(): ReactElement {
           <a
             href="/?mode=view"
             target="_blank"
-            className="flex text-blue-3 gap-2 items-center px-4 py-[5.5px] bg-blue-1 rounded-full font-bold"
+            className="flex items-center gap-2 rounded-full bg-blue-1 px-4 py-[5.5px] font-bold text-blue-3"
           >
             <span>view site</span>
             <OpenInNewIcon className="h-4 w-4 text-blue-3" aria-hidden />
@@ -38,14 +38,14 @@ export default function AdminNav(): ReactElement {
       </div>
 
       <div
-        className="flex gap-2 items-center pl-4 hover:cursor-pointer"
+        className="flex items-center gap-2 pl-4 hover:cursor-pointer"
         onClick={e => {
           e.stopPropagation();
           setAnchorMenu(e.currentTarget);
         }}
       >
         <ProfileIcon
-          className="rounded-full bg-blue-1 p-1 w-6.25 h-6.25 text-[#1C1C1C]"
+          className="h-6.25 w-6.25 rounded-full bg-blue-1 p-1 text-[#1C1C1C]"
           aria-hidden
         />
         <span className="wv-bold">Admin</span>
@@ -69,7 +69,7 @@ export default function AdminNav(): ReactElement {
         disableRestoreFocus
       >
         <button
-          className="p-2 bg-blue-1"
+          className="bg-blue-1 p-2"
           onClick={() => {
             logout();
             setAnchorMenu(null);

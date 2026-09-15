@@ -1,9 +1,9 @@
 import { ReactElement, useContext, useState } from 'react';
-import useAuth from '../../hooks/useAuth';
-import { StoreContext } from '../../store';
-import { Popover } from '@mui/material';
 import OpenInNewIcon from '@material-symbols/svg-700/rounded/open_in_new.svg?react';
+import { Popover } from '@mui/material';
+import useAuth from '../../hooks/useAuth';
 import { usePermission } from '../../hooks/usePermission';
+import { StoreContext } from '../../store';
 
 export default function Nav(): ReactElement {
   const [anchorMenu, setAnchorMenu] = useState<null | HTMLElement>(null);
@@ -21,7 +21,7 @@ export default function Nav(): ReactElement {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full h-16 bg-white flex items-center justify-between pl-4 pr-12 z-40">
+    <nav className="fixed top-0 left-0 z-40 flex h-16 w-full items-center justify-between bg-white pr-12 pl-4">
       <div className="flex items-center gap-6">
         {isReadOnly() && (
           <a href="/">
@@ -37,7 +37,7 @@ export default function Nav(): ReactElement {
           <a
             href="/topics/?mode=view"
             target="_blank"
-            className="flex text-blue-3 gap-2 items-center px-4 py-[5.5px] bg-blue-1 rounded-full font-bold ml-6"
+            className="ml-6 flex items-center gap-2 rounded-full bg-blue-1 px-4 py-[5.5px] font-bold text-blue-3"
           >
             <span>preview</span>
             <OpenInNewIcon className="h-4 w-4 text-blue-3" aria-hidden />
@@ -45,9 +45,9 @@ export default function Nav(): ReactElement {
         )}
       </div>
       {isReadOnly() && (
-        <div className="flex ">
+        <div className="flex">
           <a
-            className={`px-4 h-full py-5.5 wv-ibmplex !text-black !font-bold text-button ${
+            className={`wv-ibmplex h-full px-4 py-5.5 text-button !font-bold !text-black ${
               currentPage.value === 'about' ? 'bg-blue-2' : ''
             }`}
             href="/about"
@@ -55,7 +55,7 @@ export default function Nav(): ReactElement {
             เกี่ยวกับโครงการ
           </a>
           <a
-            className={`px-4 h-full py-5.5 wv-ibmplex !text-black !font-bold text-button ${
+            className={`wv-ibmplex h-full px-4 py-5.5 text-button !font-bold !text-black ${
               currentPage.value === 'all-topic' || currentPage.value === 'topic'
                 ? 'bg-blue-2'
                 : ''
@@ -67,17 +67,17 @@ export default function Nav(): ReactElement {
         </div>
       )}
       {getWriterEvent() && !isReadOnly() && (
-        <div className="flex items-center gap-4 ">
+        <div className="flex items-center gap-4">
           <span className="text-gray-5">สร้างข้อถกเถียงของ</span>
           <div
-            className="flex gap-2 items-center pl-4 hover:cursor-pointer"
+            className="flex items-center gap-2 pl-4 hover:cursor-pointer"
             onClick={e => {
               e.stopPropagation();
               setAnchorMenu(e.currentTarget);
             }}
           >
             <img
-              className="rounded-full w-6.25 h-6.25"
+              className="h-6.25 w-6.25 rounded-full"
               src={getWriterEvent()?.avatar_url}
               alt={`avatar-event-${getWriterEvent()?.display_name}`}
             />
@@ -104,7 +104,7 @@ export default function Nav(): ReactElement {
         disableRestoreFocus
       >
         <button
-          className="p-2 bg-blue-1"
+          className="bg-blue-1 p-2"
           onClick={() => {
             logout();
             setAnchorMenu(null);

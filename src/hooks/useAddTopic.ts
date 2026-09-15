@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
-import { db } from '../utils/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { AddOrEditTopicPayload, CreateTopicDBPayload } from '../types/topic';
+import { db } from '../utils/firestore';
 
 export const useAddTopic = () => {
   const [loading, setLoading] = useState(false);

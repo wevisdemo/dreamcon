@@ -1,16 +1,16 @@
 import React, { useReducer, useState } from 'react';
+import { LightWeightTopic } from '../types/topic';
 import {
   CommentModalStore,
   initialCommentModalStore,
   initialModalCommentState,
   modalCommentReducer,
 } from './modalComment';
-import { LightWeightTopic } from '../types/topic';
 import {
   initialModalTopicState,
   initialTopicModalStore,
-  TopicModalStore,
   modalTopicReducer,
+  TopicModalStore,
 } from './modalTopic';
 
 export interface HomePageStore {

@@ -1,5 +1,5 @@
-import { Topic, TopicDB } from './topic';
 import { Comment } from './comment';
+import { Topic, TopicDB } from './topic';
 
 export interface DraggableCommentProps {
   comment: Comment;
@@ -7,9 +7,7 @@ export interface DraggableCommentProps {
 }
 
 export type DroppableData =
-  | DroppableDataTopic
-  | DroppableDataComment
-  | DroppableConvertToTopic;
+  DroppableDataTopic | DroppableDataComment | DroppableConvertToTopic;
 
 interface DroppableDataTopic {
   type: 'topic';

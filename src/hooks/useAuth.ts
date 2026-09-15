@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import Cookies from 'js-cookie';
-import { useWriter } from './useWriter';
-import { StoreContext } from '../store';
-import { useEvent } from './useEvent';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import Cookies from 'js-cookie';
+import { StoreContext } from '../store';
 import { auth } from '../utils/firestore';
+import { useEvent } from './useEvent';
+import { useWriter } from './useWriter';
 
 const useAuth = () => {
   const { getEventByID } = useEvent();

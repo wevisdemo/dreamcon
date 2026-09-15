@@ -1,18 +1,18 @@
 import { useContext, useEffect, useState } from 'react';
+import MoreVertIcon from '@material-symbols/svg-700/rounded/more_vert.svg?react';
+import { Popover } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import { usePermission } from '../../hooks/usePermission';
+import { StoreContext } from '../../store';
 import {
   disabledCategories,
   Topic,
   topicCategories,
   TopicCategory,
 } from '../../types/topic';
-import Tooltip from '@mui/material/Tooltip';
-import { Popover } from '@mui/material';
-import MenuPopover from './MenuPopover';
 import Dropdown from '../ui/Dropdown';
-import { StoreContext } from '../../store';
-import { usePermission } from '../../hooks/usePermission';
-import MoreVertIcon from '@material-symbols/svg-700/rounded/more_vert.svg?react';
 import TextComposer from '../ui/TextComposer';
+import MenuPopover from './MenuPopover';
 
 interface PropTypes {
   topic: Topic;
@@ -96,7 +96,7 @@ export default function TopicCard(props: PropTypes) {
 
   if (isEditingMode) {
     return (
-      <div className="w-full p-4 bg-white rounded-2xl shadow-card flex flex-col gap-3">
+      <div className="flex w-full flex-col gap-3 rounded-2xl bg-white p-4 shadow-card">
         <Dropdown
           selected={categories}
           onChange={c => {
@@ -118,12 +118,12 @@ export default function TopicCard(props: PropTypes) {
           autoFocus
         />
         {showCategoryError && (
-          <span className="text-label text-center text-red-6">
+          <span className="text-center text-label text-red-6">
             *ยังไม่ได้เลือกหัวข้อ
           </span>
         )}
         <button
-          className="text-gray-5 wv-ibmplex underline hover:cursor-pointer"
+          className="wv-ibmplex text-gray-5 underline hover:cursor-pointer"
           onClick={resetEditTopic}
         >
           ยกเลิก
@@ -133,19 +133,19 @@ export default function TopicCard(props: PropTypes) {
   }
 
   return (
-    <div className="w-full p-4 bg-white rounded-2xl shadow-card flex flex-col gap-2.5">
-      <div className="flex justify-between items-start">
+    <div className="flex w-full flex-col gap-2.5 rounded-2xl bg-white p-4 shadow-card">
+      <div className="flex items-start justify-between">
         <div className="flex flex-wrap gap-1">
           {props.topic.categories.map(category => (
             <div
               key={category}
-              className="badge px-2 py-1 rounded-full bg-blue-6 text-white"
+              className="badge rounded-full bg-blue-6 px-2 py-1 text-white"
             >
               {category}
             </div>
           ))}
           {!props.topic.categories.length ? (
-            <div className="badge px-2 py-1 rounded-full border border-blue-6 text-blue-6">
+            <div className="badge rounded-full border border-blue-6 px-2 py-1 text-blue-6">
               ไม่ระบุ
             </div>
           ) : null}
@@ -154,7 +154,7 @@ export default function TopicCard(props: PropTypes) {
         {!isReadOnly() && (
           <>
             <MoreVertIcon
-              className="w-4.5 h-4.5 hover:cursor-pointer text-gray-5"
+              className="h-4.5 w-4.5 text-gray-5 hover:cursor-pointer"
               aria-label="เมนู"
               onClick={e => {
                 e.stopPropagation();
@@ -219,7 +219,7 @@ export default function TopicCard(props: PropTypes) {
           classes={{ tooltip: 'tooltip-1' }}
         >
           <h2
-            className="p-2.5 wv-ibmplex heading-4 wv-bold"
+            className="wv-ibmplex wv-bold p-2.5 heading-4"
             onClick={() => {
               if (hasPermissionToEdit()) {
                 setIsEditingMode(true);

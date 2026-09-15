@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { Topic } from '../../types/topic';
-import TopicSummaryComment from './TopicSummaryComment';
 import AddCommentIcon from '@material-symbols/svg-700/rounded/maps_ugc.svg?react';
-import PinIcon from '../icon/PinIcon';
-import SideScreenIcon from '../icon/SideScreenIcon';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { StoreContext } from '../../store';
+import { Topic } from '../../types/topic';
+import PinIcon from '../icon/PinIcon';
+import SideScreenIcon from '../icon/SideScreenIcon';
+import TopicSummaryComment from './TopicSummaryComment';
 
 interface PropTypes {
   topic: Topic;
@@ -39,10 +39,9 @@ export default function TopicSummary(props: PropTypes) {
 
   return (
     <div
-      className={`bg-white rounded-2xl p-6 relative flex flex-col gap-4 border-2 ${
+      className={`relative flex flex-col gap-4 rounded-2xl border-2 bg-white p-6 ${
         hovered && !props.isSelected ? 'hover:drop-shadow-xl' : ''
-      }
-      ${getBorderClass()} hover:cursor-pointer`}
+      } ${getBorderClass()} hover:cursor-pointer`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onClick={() => {
@@ -51,32 +50,32 @@ export default function TopicSummary(props: PropTypes) {
     >
       {props.isPinned && (
         <PinIcon
-          className="absolute -top-3 left-6 bg-white h-6 w-6 rounded-full border-blue-6 border-2 text-blue-6"
+          className="absolute -top-3 left-6 h-6 w-6 rounded-full border-2 border-blue-6 bg-white text-blue-6"
           role="img"
           aria-label="ปักหมุดแล้ว"
         />
       )}
       {hovered && !props.isSelected && !props.hideSideScreenIcon && (
-        <SideScreenIcon className="h-6 w-6 absolute top-1.25 right-2 hover:cursor-pointer text-[#D9D9D9]" />
+        <SideScreenIcon className="absolute top-1.25 right-2 h-6 w-6 text-[#D9D9D9] hover:cursor-pointer" />
       )}
       {props.isSelected && !props.hideSideScreenIcon && (
-        <SideScreenIcon className="h-6 w-6 absolute top-1.25 right-2 hover:cursor-pointer text-blue-6" />
+        <SideScreenIcon className="absolute top-1.25 right-2 h-6 w-6 text-blue-6 hover:cursor-pointer" />
       )}
-      <p className="text-b2 wv-bold wv-ibmplex"> {props.topic.title} </p>
-      <div className="flex justify-between items-center h-8">
-        <p className="text-blue-6 underline text-b3">
+      <p className="wv-bold wv-ibmplex text-b2"> {props.topic.title} </p>
+      <div className="flex h-8 items-center justify-between">
+        <p className="text-b3 text-blue-6 underline">
           {props.topic.comments.length || 0} ความคิดเห็น
         </p>
         {!props.isSelected && !props.isReadOnly && (
           <button
-            className="px-3 py-1.5 border-solid border-[1.5px] border-gray-2 rounded-full hover:bg-gray-2"
+            className="rounded-full border-[1.5px] border-solid border-gray-2 px-3 py-1.5 hover:bg-gray-2"
             aria-label="เพิ่มข้อถกเถียงต่อยอด"
             onClick={e => {
               e.stopPropagation();
               props.onAddComment();
             }}
           >
-            <AddCommentIcon className="w-4.5 h-4.5 text-blue-5" aria-hidden />
+            <AddCommentIcon className="h-4.5 w-4.5 text-blue-5" aria-hidden />
           </button>
         )}
       </div>

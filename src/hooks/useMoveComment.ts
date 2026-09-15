@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { db } from '../utils/firestore';
 import {
-  doc,
   collection,
-  query,
-  where,
+  doc,
   getDocs,
+  query,
   runTransaction,
+  where,
 } from 'firebase/firestore';
 import { Comment } from '../types/comment';
 import { Topic } from '../types/topic';
+import { db } from '../utils/firestore';
 
 export const useMoveComment = () => {
   const [loading, setLoading] = useState(false);

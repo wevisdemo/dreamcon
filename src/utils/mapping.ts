@@ -1,4 +1,4 @@
-import { CommentDB, Comment } from '../types/comment';
+import { Comment, CommentDB } from '../types/comment';
 import { Topic, TopicDB } from '../types/topic';
 
 /**

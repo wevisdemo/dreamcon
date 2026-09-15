@@ -1,11 +1,12 @@
+import * as fs from 'fs';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import * as XLSX from 'xlsx';
+import { CommentView, CreateCommentDBPayload } from '../../types/comment';
+import { DreamConEventDB } from '../../types/event';
+import { TopicDB } from '../../types/topic';
 // import { collection, getDocs, query, where } from 'firebase/firestore';
 import { initDB } from '../firestore';
-import { DreamConEventDB } from '../../types/event';
-import * as XLSX from 'xlsx';
-import * as fs from 'fs';
-import { TopicDB } from '../../types/topic';
-import { CommentView, CreateCommentDBPayload } from '../../types/comment';
+
 const { db } = initDB();
 
 const newEventDisplays = ['Dream Con x The Active', 'TIJ Youth Dialogue'];

@@ -2,8 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import {
-  EMULATOR_FIREBASE_CONFIG,
   connectEmulators,
+  EMULATOR_FIREBASE_CONFIG,
   isEmulatorEnabled,
 } from './firebaseEmulator';
 

@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { DreamConEvent } from '../../types/event';
 import {
   disabledCategories,
   ModalTopicPayload,
@@ -5,11 +7,9 @@ import {
   topicCategories,
   TopicCategory,
 } from '../../types/topic';
-import { useEffect, useState } from 'react';
 import Dropdown from '../ui/Dropdown';
-import { DreamConEvent } from '../../types/event';
-import TextComposer from '../ui/TextComposer';
 import Modal from '../ui/Modal';
+import TextComposer from '../ui/TextComposer';
 
 interface PropTypes {
   mode: 'create' | 'edit';
@@ -90,7 +90,7 @@ export default function ModalTopic(props: PropTypes) {
         autoFocus
       />
       {showCategoryError && (
-        <span className="text-label text-center text-red-6">
+        <span className="text-center text-label text-red-6">
           *ยังไม่ได้เลือกหัวข้อ
         </span>
       )}

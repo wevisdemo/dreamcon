@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { CommentView } from '../../types/comment';
 import { usePermission } from '../../hooks/usePermission';
+import { CommentView } from '../../types/comment';
 import TextComposer from '../ui/TextComposer';
 
 const commentViewOptions = [
@@ -70,13 +70,13 @@ export default function JoinAndComment(props: PropTypes) {
   if (props.canJoin) {
     return (
       <div
-        className={`flex flex-row gap-2 px-4 py-5 ${style.joinCard} rounded-2xl items-center`}
+        className={`flex flex-row gap-2 px-4 py-5 ${style.joinCard} items-center rounded-2xl`}
       >
-        <p className="text-b3 font-bold flex-1">
+        <p className="flex-1 text-b3 font-bold">
           วงสนทนาของคุณพูดเรื่องเดียวกันหรือไม่
         </p>
         <button
-          className={`py-2.5 px-4 ${style.joinButton} border-1 rounded-full text-label`}
+          className={`px-4 py-2.5 ${style.joinButton} rounded-full border-1 text-label`}
           onClick={props.onJoin}
         >
           + ใช่ เพิ่มวงของฉัน
@@ -87,7 +87,7 @@ export default function JoinAndComment(props: PropTypes) {
 
   return (
     <div className={`flex flex-col gap-4 p-4 ${style.commentCard} rounded-2xl`}>
-      <p className="text-b3 font-bold flex-1">
+      <p className="flex-1 text-b3 font-bold">
         วงสนทนาของคุณมีความคิดเห็นต่อยอดว่า..
       </p>
       <div className="flex gap-2">
@@ -98,7 +98,7 @@ export default function JoinAndComment(props: PropTypes) {
               commentView === option.view
                 ? option.background
                 : option.mutedBackground
-            } ${option.color} border-solid border rounded-full w-full`}
+            } ${option.color} w-full rounded-full border border-solid`}
             onClick={() => setCommentView(option.view)}
           >
             {option.label}

@@ -1,23 +1,23 @@
 import React, { createContext, ReactNode } from 'react';
-import {
-  HomePageStore,
-  initialHomePageState,
-  useHomePageStore,
-} from './homePage';
-import {
-  initialTopicPageState,
-  TopicPageStore,
-  useTopicPageStore,
-} from './topicPage';
+import { Topic } from '../types/topic';
 import {
   ClipboardStore,
   initialClipboardStore,
   useClipboardStore,
 } from './clipboard';
-import { initialUserStore, UserStore, useUserStore } from './user';
 import { EventStore, useEventStore } from './event';
-import { Topic } from '../types/topic';
-import { PinStore, initialPinStore, usePinStore } from './pin';
+import {
+  HomePageStore,
+  initialHomePageState,
+  useHomePageStore,
+} from './homePage';
+import { initialPinStore, PinStore, usePinStore } from './pin';
+import {
+  initialTopicPageState,
+  TopicPageStore,
+  useTopicPageStore,
+} from './topicPage';
+import { initialUserStore, UserStore, useUserStore } from './user';
 
 interface State {
   user: UserStore;

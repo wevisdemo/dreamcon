@@ -3,8 +3,8 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import 'dotenv/config';
 import {
-  EMULATOR_FIREBASE_CONFIG,
   connectEmulators,
+  EMULATOR_FIREBASE_CONFIG,
   isEmulatorEnabled,
 } from '../utils/firebaseEmulator';
 

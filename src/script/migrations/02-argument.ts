@@ -1,10 +1,14 @@
-import { collection, getDocs } from 'firebase/firestore';
-import { DreamConEventDB } from '../../types/event';
-import * as XLSX from 'xlsx';
 import * as fs from 'fs';
-import { initDB } from '../firestore';
+import {
+  addDoc,
+  collection,
+  CollectionReference,
+  getDocs,
+} from 'firebase/firestore';
+import * as XLSX from 'xlsx';
+import { DreamConEventDB } from '../../types/event';
 import { CreateTopicDBPayload, TopicDB } from '../../types/topic';
-import { addDoc, CollectionReference } from 'firebase/firestore';
+import { initDB } from '../firestore';
 
 const { db } = initDB();
 

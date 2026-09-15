@@ -7,18 +7,18 @@
  * Unlike `dumpFirestore.ts` (a lossy CSV export for analysis), this keeps
  * types, arrays and missing fields intact so a restore reproduces the source.
  */
+import * as fs from 'fs';
+import * as path from 'path';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import {
-  Timestamp,
   collection,
   doc,
   getDocs,
+  Timestamp,
   writeBatch,
 } from 'firebase/firestore';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import * as fs from 'fs';
-import * as path from 'path';
-import { initDB } from './firestore';
 import { isEmulatorEnabled } from '../utils/firebaseEmulator';
+import { initDB } from './firestore';
 
 const OUTPUT_DIR = 'out';
 const COLLECTIONS = ['events', 'topics', 'comments', 'writers'];

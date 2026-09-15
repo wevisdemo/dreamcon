@@ -5,15 +5,14 @@
  * every startup begins from exactly the same state. Edit the fixtures below to
  * change what "initial state" means.
  */
-import { doc, writeBatch } from 'firebase/firestore';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { initDB } from './firestore';
+import { doc, writeBatch } from 'firebase/firestore';
+import { eventAvatars } from '../data/event';
 import { CommentView } from '../types/comment';
 import type { CommentDB } from '../types/comment';
 import type { DreamConEventDB } from '../types/event';
 import type { TopicDB } from '../types/topic';
 import type { Writer } from '../types/writer';
-import { eventAvatars } from '../data/event';
 import {
   ADMIN_EMAIL,
   ADMIN_PASSWORD,
@@ -22,6 +21,7 @@ import {
   EMULATOR_HOST,
   FIRESTORE_EMULATOR_PORT,
 } from '../utils/firebaseEmulator';
+import { initDB } from './firestore';
 
 // Force emulator mode so this script can never reach the production project.
 // `initDB` reads this when it is called, below.

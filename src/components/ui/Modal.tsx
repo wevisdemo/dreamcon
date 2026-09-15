@@ -20,25 +20,25 @@ export default function Modal(props: PropTypes) {
 
   return (
     <div
-      className="w-full h-full pointer-events-auto flex items-center justify-center"
+      className="pointer-events-auto flex h-full w-full items-center justify-center"
       onClick={handleBackdropClick}
     >
       <div
         role="dialog"
         aria-modal
         aria-labelledby={titleId}
-        className="flex flex-col w-full md:max-w-120 shadow-lg m-5"
+        className="m-5 flex w-full flex-col shadow-lg md:max-w-120"
       >
         <h2
           id={titleId}
-          className="wv-ibmplex text-blue-7 bg-white rounded-t-lg text-b2 font-bold text-center pb-4 pt-5 border-solid border-b border-gray-2"
+          className="wv-ibmplex rounded-t-lg border-b border-solid border-gray-2 bg-white pt-5 pb-4 text-center text-b2 font-bold text-blue-7"
         >
           {props.title}
         </h2>
-        <div className="flex flex-col gap-3 p-4 bg-gray-1 rounded-b-lg">
+        <div className="flex flex-col gap-3 rounded-b-lg bg-gray-1 p-4">
           {props.children}
           <button
-            className="text-gray-5 wv-ibmplex underline hover:cursor-pointer mt-1"
+            className="wv-ibmplex mt-1 text-gray-5 underline hover:cursor-pointer"
             onClick={props.onClose}
           >
             ยกเลิก

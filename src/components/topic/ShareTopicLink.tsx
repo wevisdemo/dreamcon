@@ -14,7 +14,7 @@ export default function ShareTopicLink({ topicId }: { topicId: string }) {
 
   return (
     <div
-      className="flex gap-1 items-center hover:cursor-pointer"
+      className="flex items-center gap-1 hover:cursor-pointer"
       onClick={handleCopy}
     >
       <ChainIcon className={copied ? 'text-blue-5' : 'text-gray-5'} />

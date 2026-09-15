@@ -1,9 +1,10 @@
+import { useState } from 'react';
 import {
   collection,
   doc,
-  runTransaction,
-  getDocs,
   getDoc,
+  getDocs,
+  runTransaction,
 } from 'firebase/firestore';
 import {
   AddOrEditEventPayload,
@@ -12,7 +13,6 @@ import {
   DreamConEventDB,
 } from '../types/event';
 import { db } from '../utils/firestore';
-import { useState } from 'react';
 
 export const useEvent = () => {
   const [loading, setLoading] = useState(false);

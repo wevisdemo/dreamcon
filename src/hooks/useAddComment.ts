@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { collection, doc, runTransaction } from 'firebase/firestore';
-import { db } from '../utils/firestore';
 import {
   AddOrEditCommentPayload,
   CreateCommentDBPayload,
 } from '../types/comment';
+import { db } from '../utils/firestore';
 
 export const useAddComment = () => {
   const [loading, setLoading] = useState(false);

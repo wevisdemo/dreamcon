@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   collection,
   doc,
@@ -7,13 +8,12 @@ import {
   runTransaction,
   where,
 } from 'firebase/firestore';
-import { useState } from 'react';
-import { db } from '../utils/firestore';
 import {
   CreateWritePayload,
   CreateWriterDBPayload,
   Writer,
 } from '../types/writer';
+import { db } from '../utils/firestore';
 
 // filepath: /Users/petchsongpon/projects/wevis/dreamcon/src/hooks/useWriter.ts
 

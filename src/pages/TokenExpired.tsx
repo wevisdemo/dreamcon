@@ -1,6 +1,6 @@
 export default function TokenExpiredPage() {
   return (
-    <div className="w-screen h-screen bg-blue-2 flex flex-col gap-6 items-center justify-center text-blue-7 text-center">
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-6 bg-blue-2 text-center text-blue-7">
       <img
         className="h-11.25"
         src="/logo/dream-con-logo-white.svg"

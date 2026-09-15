@@ -1,5 +1,5 @@
-import EditIcon from '@material-symbols/svg-700/rounded/edit.svg?react';
 import DeleteIcon from '@material-symbols/svg-700/rounded/delete.svg?react';
+import EditIcon from '@material-symbols/svg-700/rounded/edit.svg?react';
 import PinIcon from '../icon/PinIcon';
 import UnpinIcon from '../icon/UnpinIcon';
 
@@ -17,25 +17,25 @@ export default function MenuPopover(props: PropTypes) {
   const PinToggleIcon = props.isPinned ? UnpinIcon : PinIcon;
 
   return (
-    <div className="w-45 flex flex-col gap-0.25 bg-white rounded-lg border overflow-hidden border-gray-3 wv-ibmplexlooped">
+    <div className="wv-ibmplexlooped flex w-45 flex-col gap-0.25 overflow-hidden rounded-lg border border-gray-3 bg-white">
       {props.canEdit && (
         <div
-          className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
+          className="flex w-full items-center gap-2 px-4 py-3 hover:cursor-pointer hover:bg-gray-1"
           data-dndkit-disable-drag
           onClick={props.onClickEdit}
         >
           <EditIcon
-            className="pointer-events-none w-4 h-4 text-gray-8"
+            className="pointer-events-none h-4 w-4 text-gray-8"
             aria-hidden
           />
-          <span className="pointer-events-none text-black text-b3 ">แก้ไข</span>
+          <span className="pointer-events-none text-b3 text-black">แก้ไข</span>
         </div>
       )}
 
       {props.hasPin && (
         <div
           data-dndkit-disable-drag
-          className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
+          className="flex w-full items-center gap-2 px-4 py-3 hover:cursor-pointer hover:bg-gray-1"
           onClick={() => {
             if (props.isPinned) {
               props.onClickUnpin?.();
@@ -45,10 +45,10 @@ export default function MenuPopover(props: PropTypes) {
           }}
         >
           <PinToggleIcon
-            className="pointer-events-none w-5 h-5 text-gray-8"
+            className="pointer-events-none h-5 w-5 text-gray-8"
             aria-hidden
           />
-          <span className="pointer-events-none text-black text-b3">
+          <span className="pointer-events-none text-b3 text-black">
             {props.isPinned ? 'ถอนหมุด' : 'ปักหมุด'}
           </span>
         </div>
@@ -57,14 +57,14 @@ export default function MenuPopover(props: PropTypes) {
       {props.canEdit && (
         <div
           data-dndkit-disable-drag
-          className="w-full flex items-center px-4 py-3 gap-2 hover:bg-gray-1 hover:cursor-pointer"
+          className="flex w-full items-center gap-2 px-4 py-3 hover:cursor-pointer hover:bg-gray-1"
           onClick={props.onClickDelete}
         >
           <DeleteIcon
-            className="pointer-events-none w-4 h-4 text-red-7"
+            className="pointer-events-none h-4 w-4 text-red-7"
             aria-hidden
           />
-          <span className="pointer-events-none text-red-7 text-b3">ลบ</span>
+          <span className="pointer-events-none text-b3 text-red-7">ลบ</span>
         </div>
       )}
     </div>

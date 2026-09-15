@@ -20,39 +20,39 @@ export default function EventCard(props: PropTypes) {
   const [alreadyClickLink, setAlreadyClickLink] = useState<boolean>(false);
 
   return (
-    <div className="bg-white px-4 py-6 rounded-[15px] max-w-235 w-full flex">
-      <div className="flex flex-col items-center max-w-37.5 w-full gap-4">
-        <div className="w-6.25 h-6.25 flex items-center justify-center text-blue-6 border-1 border-blue-6 rounded-full text-label font-bold">
+    <div className="flex w-full max-w-235 rounded-[15px] bg-white px-4 py-6">
+      <div className="flex w-full max-w-37.5 flex-col items-center gap-4">
+        <div className="flex h-6.25 w-6.25 items-center justify-center rounded-full border-1 border-blue-6 text-label font-bold text-blue-6">
           {props.index}
         </div>
         <img
           src={props.event.avatar_url}
           alt="event-avatar"
-          className="w-24 h-24 rounded-full"
+          className="h-24 w-24 rounded-full"
         />
-        <p className="font-bold text-center text-b2">
+        <p className="text-center text-b2 font-bold">
           {props.event.display_name}
         </p>
         <button
-          className="flex gap-2 items-center px-4 py-1 bg-blue-1 text-blue-6 font-bold rounded-full"
+          className="flex items-center gap-2 rounded-full bg-blue-1 px-4 py-1 font-bold text-blue-6"
           onClick={props.onClickEdit}
         >
-          <EditIcon className="w-4 h-4" aria-hidden />
+          <EditIcon className="h-4 w-4" aria-hidden />
           แก้ไขข้อมูล
         </button>
       </div>
 
-      <div className="flex w-full h-auto gap-4">
-        <div className="w-1/2 h-fit p-4 bg-gray-1 rounded-lg flex flex-col gap-4 text-b3">
+      <div className="flex h-auto w-full gap-4">
+        <div className="flex h-fit w-1/2 flex-col gap-4 rounded-lg bg-gray-1 p-4 text-b3">
           <div className="flex flex-col gap-1.5">
-            <h2 className="heading-5 wv-ibmplex font-bold">
+            <h2 className="wv-ibmplex heading-5 font-bold">
               {props.event.title_en}
             </h2>
             <p className="">{props.event.title_th}</p>
           </div>
           <div className="flex flex-col gap-1.5">
-            <p className="text-b3 mt-2">{props.event.description}</p>
-            <ul className="text-label-sm text-gray-7 flex flex-col gap-0.5">
+            <p className="mt-2 text-b3">{props.event.description}</p>
+            <ul className="flex flex-col gap-0.5 text-label-sm text-gray-7">
               <li className="flex items-center gap-2">
                 <LocationIcon aria-hidden /> ที่ {props.event.location}
               </li>
@@ -70,27 +70,27 @@ export default function EventCard(props: PropTypes) {
             </ul>
           </div>
 
-          <p className="flex gap-1 text-blue-7 text-label-sm">
+          <p className="flex gap-1 text-label-sm text-blue-7">
             ลิงก์ข่าว{' '}
-            <a href={props.event.news_link} className="underline ">
+            <a href={props.event.news_link} className="underline">
               {props.event.news_link}
             </a>
           </p>
         </div>
 
-        <div className="w-1/2 h-full flex flex-col gap-4">
-          <p className="text-blue-7 font-bold text-right">
+        <div className="flex h-full w-1/2 flex-col gap-4">
+          <p className="text-right font-bold text-blue-7">
             สร้าง {props.event.topic_counts} ข้อถกเถียง
           </p>
           <button
-            className="w-full h-full flex flex-col justify-center items-center gap-2 bg-blue-1 text-blue-6 font-bold rounded-lg"
+            className="flex h-full w-full flex-col items-center justify-center gap-2 rounded-lg bg-blue-1 font-bold text-blue-6"
             onClick={props.onClickCreateDebate}
           >
-            <OpenInNewIcon className="w-4 h-4" aria-hidden />
+            <OpenInNewIcon className="h-4 w-4" aria-hidden />
             <p>สร้างข้อถกเถียงของวงสนทนานี้</p>
           </button>
           <button
-            className="flex gap-2 items-center justify-center py-2 bg-blue-2 text-blue-7 font-bold rounded-lg"
+            className="flex items-center justify-center gap-2 rounded-lg bg-blue-2 py-2 font-bold text-blue-7"
             onClick={() => {
               setAlreadyClickLink(true);
               props.onClickShareLink();

@@ -1,22 +1,22 @@
 import { useContext } from 'react';
+import { useDeleteCommentWithChildren } from '../../hooks/useDeleteCommentWithChildren';
+import { useLeaveEvent } from '../../hooks/useLeaveEvent';
+import { usePermission } from '../../hooks/usePermission';
+import { useShowError } from '../../hooks/useShowError';
+import { StoreContext } from '../../store';
 import {
   ActionCreateCommentPayload,
   ActionEditCommentPayload,
 } from '../../store/modalComment';
 import { Comment } from '../../types/comment';
-import { Draggable } from './Draggable';
+import { DraggableCommentProps } from '../../types/dragAndDrop';
+import { linkedEventIds } from '../../utils/mapping';
+import FullPageLoader from '../ui/FullPageLoader';
 import CommentCard from './CommentCard';
 import CommentWrapper from './CommentWrapper';
-import EventListLabel from './EventListLabel';
-import { StoreContext } from '../../store';
-import { DraggableCommentProps } from '../../types/dragAndDrop';
+import { Draggable } from './Draggable';
 import { Droppable } from './Droppable';
-import FullPageLoader from '../ui/FullPageLoader';
-import { useDeleteCommentWithChildren } from '../../hooks/useDeleteCommentWithChildren';
-import { useLeaveEvent } from '../../hooks/useLeaveEvent';
-import { usePermission } from '../../hooks/usePermission';
-import { useShowError } from '../../hooks/useShowError';
-import { linkedEventIds } from '../../utils/mapping';
+import EventListLabel from './EventListLabel';
 
 export default function CommentAndChildren(props: DraggableCommentProps) {
   const comment = props.comment;
@@ -92,7 +92,7 @@ export default function CommentAndChildren(props: DraggableCommentProps) {
       data={{ comment, level: props.level }}
       disabled={!hasPermissionToEdit()}
     >
-      <div className="w-full flex flex-col">
+      <div className="flex w-full flex-col">
         {leaveLoading && <FullPageLoader />}
         <Droppable
           id={`droppable-comment-${comment.id}`}

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { auth } from '../utils/firestore';
-import { useNavigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
 import LockIcon from '@material-symbols/svg-700/rounded/lock.svg?react';
+import { useNavigate } from 'react-router-dom';
 import ProfileIcon from '../components/icon/ProfileIcon';
+import useAuth from '../hooks/useAuth';
+import { auth } from '../utils/firestore';
 
 export default function LoginPage() {
   const [validInputs, setValidInputs] = useState<{
@@ -63,24 +63,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen w-screen bg-blue-2">
+    <div className="flex h-screen w-screen items-center justify-center bg-blue-2">
       <form
-        className="text-center p-8 flex flex-col gap-8"
+        className="flex flex-col gap-8 p-8 text-center"
         onSubmit={handleSubmit}
       >
-        <h1 className="heading-2 wv-ibmplex font-bold ">เข้าสู่ระบบ</h1>
+        <h1 className="wv-ibmplex heading-2 font-bold">เข้าสู่ระบบ</h1>
         <div className="">
           <div
-            className={`w-91 py-4 px-5 flex items-center bg-blue-1 rounded-[10px] gap-2 ${
+            className={`flex w-91 items-center gap-2 rounded-[10px] bg-blue-1 px-5 py-4 ${
               validInputs.username ? '' : 'border-2 border-red-5'
             }`}
           >
-            <ProfileIcon className="w-4.5 h-4.5 text-[#1C1C1C]" aria-hidden />
+            <ProfileIcon className="h-4.5 w-4.5 text-[#1C1C1C]" aria-hidden />
             <input
               type="text"
               name="username"
               placeholder="Username"
-              className="border-none outline-none flex-1 placeholder:text-[#1C1C1C]"
+              className="flex-1 border-none outline-none placeholder:text-[#1C1C1C]"
               onKeyDown={e => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
@@ -95,22 +95,22 @@ export default function LoginPage() {
         </div>
         <div className="">
           <div
-            className={`w-91 py-4 px-5 flex items-center bg-blue-1 rounded-[10px] gap-2 ${
+            className={`flex w-91 items-center gap-2 rounded-[10px] bg-blue-1 px-5 py-4 ${
               validInputs.password ? '' : 'border-2 border-red-5'
             }`}
           >
-            <LockIcon className="w-4.5 h-4.5 text-[#1C1C1C]" aria-hidden />
+            <LockIcon className="h-4.5 w-4.5 text-[#1C1C1C]" aria-hidden />
             <input
               type="password"
               name="password"
               placeholder="Password"
-              className="border-none outline-none flex-1 placeholder:text-[#1C1C1C]"
+              className="flex-1 border-none outline-none placeholder:text-[#1C1C1C]"
             />
           </div>
         </div>
         <button
           type="submit"
-          className="bg-blue-6 text-white px-6 py-2 rounded-md font-bold hover:bg-blue-7"
+          className="rounded-md bg-blue-6 px-6 py-2 font-bold text-white hover:bg-blue-7"
         >
           Login
         </button>

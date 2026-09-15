@@ -8,7 +8,7 @@ interface PropTypes {
 
 export default function CommentWrapper(props: PropTypes) {
   return (
-    <div className="comment-wrapper flex flex-col gap-4 mt-2.5">
+    <div className="comment-wrapper mt-2.5 flex flex-col gap-4">
       {props.comments.map(comment => (
         <CommentAndChildren
           key={comment.id}

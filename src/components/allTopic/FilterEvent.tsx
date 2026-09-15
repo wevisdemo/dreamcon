@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { DreamConEvent } from '../../types/event';
-import { Tooltip } from '@mui/material';
 import InfoIcon from '@material-symbols/svg-700/outlined/info.svg?react';
+import { Tooltip } from '@mui/material';
+import { DreamConEvent } from '../../types/event';
 import TooltipEventInfo from './TooltipEventInfo';
 
 interface PropTypes {
@@ -62,7 +62,7 @@ export default function FilterEvent(props: PropTypes) {
 
   return (
     <div
-      className="flex items-center flex-col shrink-0 relative h-28 justify-end"
+      className="relative flex h-28 shrink-0 flex-col items-center justify-end"
       onMouseEnter={() => {
         setHovered(true);
       }}
@@ -72,16 +72,16 @@ export default function FilterEvent(props: PropTypes) {
     >
       {!props.isSelected && props.highlightedTopic && !props.isOwner && (
         <>
-          <div className="z-20 absolute w-1.5 h-1.5 rounded-full bg-white right-1.5 top-6 shadow-sm" />
+          <div className="absolute top-6 right-1.5 z-20 h-1.5 w-1.5 rounded-full bg-white shadow-sm" />
           <div
             ref={autoScrollRef}
             style={{
               whiteSpace: 'nowrap',
               overflow: 'hidden',
             }}
-            className={`z-10 w-21 text-label-sm text-center absolute bg-white rounded-full right-0 top-0 py-1 ${
+            className={`absolute top-0 right-0 z-10 w-21 rounded-full bg-white py-1 text-center text-label-sm ${
               shouldScroll ? 'px-2' : ''
-            } shadow-sm rounded-full overflow-hidden`}
+            } overflow-hidden rounded-full shadow-sm`}
           >
             {props.highlightedTopic}
           </div>
@@ -89,36 +89,36 @@ export default function FilterEvent(props: PropTypes) {
       )}
       {!props.isSelected && props.isOwner && (
         <>
-          <div className="z-20 absolute w-1.5 h-1.5 rounded-full bg-black right-1.5 top-6 shadow-sm" />
-          <div className="z-10 w-21 text-label-sm text-white text-center absolute bg-black rounded-full right-0 top-0 py-1 shadow-sm rounded-full overflow-hidden wv-ibmplex whitespace-nowrap">
+          <div className="absolute top-6 right-1.5 z-20 h-1.5 w-1.5 rounded-full bg-black shadow-sm" />
+          <div className="wv-ibmplex absolute top-0 right-0 z-10 w-21 overflow-hidden rounded-full bg-black py-1 text-center text-label-sm whitespace-nowrap text-white shadow-sm">
             วงสนทนาของคุณ
           </div>
         </>
       )}
       <div
-        className={`w-18.75 h-18.75 rounded-full cursor-pointer flex items-center justify-center relative overflow-hidden border-2 ${
+        className={`relative flex h-18.75 w-18.75 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 ${
           !props.isSelected && hovered ? 'border-gray-5' : 'border-transparent'
         }`}
         onClick={() => props.onClick(props.event)}
       >
         {props.isSelected && (
-          <span className="text-b1 text-white wv-bold absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.4)]">
+          <span className="wv-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-b1 text-white drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.4)]">
             {props.event.topic_counts}
           </span>
         )}
         <img
           src={props.event.avatar_url}
           alt={`Avatar of ${props.event.display_name}`}
-          className={`w-18.75 h-18.75 pointer-events-none`}
+          className={`pointer-events-none h-18.75 w-18.75`}
         />
       </div>
 
-      <div className="relative  px-1.25">
+      <div className="relative px-1.25">
         <p
-          className={`text-label-sm text-gray-5 px-1.25 py-0.75 text-center ${
+          className={`px-1.25 py-0.75 text-center text-label-sm text-gray-5 ${
             props.isSelected
-              ? 'bg-blue-6 rounded-full text-white wv-semibold whitespace-nowrap'
-              : 'truncate w-18.75'
+              ? 'wv-semibold rounded-full bg-blue-6 whitespace-nowrap text-white'
+              : 'w-18.75 truncate'
           }`}
         >
           {props.isOwner && props.isSelected
@@ -137,8 +137,8 @@ export default function FilterEvent(props: PropTypes) {
             className="hover:cursor-pointer"
             classes={{ tooltip: 'tooltip-2' }}
           >
-            <div className="absolute w-2.5 h-2.5 -right-1.25 top-1/2 -translate-y-1/2 ">
-              <InfoIcon className="w-2.5 h-2.5 text-gray-5" />
+            <div className="absolute top-1/2 -right-1.25 h-2.5 w-2.5 -translate-y-1/2">
+              <InfoIcon className="h-2.5 w-2.5 text-gray-5" />
             </div>
           </Tooltip>
         )}

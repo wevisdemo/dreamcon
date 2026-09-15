@@ -11,6 +11,10 @@ import {
   useSensors,
 } from '@dnd-kit/core';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { useConvertCommentToTopic } from '../../hooks/useConvertCommentToTopic';
+import { useMoveComment } from '../../hooks/useMoveComment';
+import { usePermission } from '../../hooks/usePermission';
+import { ErrorAlert, ShowErrorContext } from '../../hooks/useShowError';
 import { StoreContext } from '../../store';
 import { Comment } from '../../types/comment';
 import {
@@ -18,10 +22,6 @@ import {
   DroppableData,
   MoveCommentEvent,
 } from '../../types/dragAndDrop';
-import { useConvertCommentToTopic } from '../../hooks/useConvertCommentToTopic';
-import { useMoveComment } from '../../hooks/useMoveComment';
-import { usePermission } from '../../hooks/usePermission';
-import { ErrorAlert, ShowErrorContext } from '../../hooks/useShowError';
 import { SmartPointerSensor } from '../../utils/SmartSenson';
 import AlertPopup from '../ui/AlertPopup';
 import FullPageLoader from '../ui/FullPageLoader';
@@ -170,7 +170,7 @@ export default function CommentDndContext({
       >
         {(moveCommentLoading || convertCommentLoading) && <FullPageLoader />}
         {children}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        <div className="fixed right-6 bottom-6 z-50 flex flex-col items-end gap-2">
           <AlertPopup
             visible={showCopyAlert}
             onClose={() => setShowCopyAlert(false)}

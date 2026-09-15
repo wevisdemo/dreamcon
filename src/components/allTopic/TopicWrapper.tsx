@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import Masonry from '@mui/lab/Masonry';
-import { Topic } from '../../types/topic';
-import TopicSummary from './TopicSummary';
 import { StoreContext } from '../../store';
+import { Topic } from '../../types/topic';
 import { Droppable } from '../topic/Droppable';
 import EmptyTopic from './EmptyTopic';
+import TopicSummary from './TopicSummary';
 
 interface PropTypes {
   topics: Topic[];
@@ -52,7 +52,7 @@ export default function TopicWrapper(props: PropTypes) {
   return props.topics.length === 0 ? (
     <EmptyTopic />
   ) : (
-    <div className="w-full h-full flex justify-center">
+    <div className="flex h-full w-full justify-center">
       <Masonry columns={3} spacing={3}>
         {props.topics.map(topic => (
           <Droppable

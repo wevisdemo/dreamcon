@@ -1,14 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import '@wevisdemo/ui/styles/index.css';
 import './App.css';
+import AboutPage from './pages/About';
+import AdminPage from './pages/Admin';
 import AllTopic from './pages/AllTopic';
+import LandingPage from './pages/Landing';
+import LoginPage from './pages/Login';
+import TokenExpiredPage from './pages/TokenExpired';
 import Topic from './pages/Topic';
 import { StoreProvider } from './store';
-import AdminPage from './pages/Admin';
-import LoginPage from './pages/Login';
-import LandingPage from './pages/Landing';
-import AboutPage from './pages/About';
-import TokenExpiredPage from './pages/TokenExpired';
 
 function App() {
   return (
