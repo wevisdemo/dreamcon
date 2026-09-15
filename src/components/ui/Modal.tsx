@@ -27,18 +27,18 @@ export default function Modal(props: PropTypes) {
         role="dialog"
         aria-modal
         aria-labelledby={titleId}
-        className="flex flex-col w-full md:max-w-120 bg-white shadow-lg m-5 rounded-lg"
+        className="flex flex-col w-full md:max-w-120 shadow-lg m-5"
       >
         <h2
           id={titleId}
-          className="wv-ibmplex text-blue-7 text-b2 font-bold text-center pb-4 pt-5 border-solid border-b border-gray-2"
+          className="wv-ibmplex text-blue-7 bg-white rounded-t-lg text-b2 font-bold text-center pb-4 pt-5 border-solid border-b border-gray-2"
         >
           {props.title}
         </h2>
-        <div className="flex flex-col gap-3 p-4">
+        <div className="flex flex-col gap-3 p-4 bg-gray-1 rounded-b-lg">
           {props.children}
           <button
-            className="text-gray-5 wv-ibmplex underline hover:cursor-pointer"
+            className="text-gray-5 wv-ibmplex underline hover:cursor-pointer mt-1"
             onClick={props.onClose}
           >
             ยกเลิก

@@ -127,7 +127,6 @@ export default function ModalComment(props: PropTypes) {
             </div>
             <EventListLabel
               label="จากวงสนทนา:"
-              className="pt-3"
               color={color}
               eventIds={eventIds}
               activeEventId={activeEvent?.id}

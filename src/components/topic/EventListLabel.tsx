@@ -21,7 +21,7 @@ export default function EventListLabel(props: PropTypes) {
 
   return (
     <div
-      className={`flex flex-wrap items-center gap-2 text-label-sm ${props.color === 'gray' ? 'text-gray-5' : 'text-blue-7'} ${props.className ?? 'py-3'}`}
+      className={`flex flex-wrap items-center gap-2 text-label-sm ${props.color === 'gray' ? 'text-gray-5' : 'text-blue-7'} ${props.className}`}
     >
       <span>{props.label}</span>
       {props.eventIds.map((eventId, index) => {

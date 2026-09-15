@@ -75,7 +75,7 @@ export default function TopicListSection(props: PropTypes) {
               </button>
             )}
           </Droppable>
-          <div className="flex flex-col items-center gap-1 max-w-150 text-center text-blue-7 text-b3 wv-ibmplex">
+          <div className="flex flex-col items-center gap-1 text-center text-blue-7 text-b3 wv-ibmplex">
             <WarningIcon className="w-4 h-4" aria-hidden />
             <p>
               ก่อนเพิ่มข้อถกเถียงใหม่ ควรตรวจสอบข้อถกเถียงที่มีอยู่ก่อน

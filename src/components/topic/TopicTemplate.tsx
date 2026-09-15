@@ -90,6 +90,7 @@ export default function TopicTemplate(props: PropTypes) {
           activeEventId={activeEvent?.id}
           canLeave={!isReadOnly() && canLeave(props.topic)}
           onLeave={() => leave(props.topic)}
+          className="py-3"
         />
         {!isReadOnly() && (
           <JoinAndComment

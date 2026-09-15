@@ -139,11 +139,16 @@ export default function TopicCard(props: PropTypes) {
           {props.topic.categories.map(category => (
             <div
               key={category}
-              className="badge px-2 py-1 rounded-full bg-blue-6 text-white w-fit"
+              className="badge px-2 py-1 rounded-full bg-blue-6 text-white"
             >
               {category}
             </div>
           ))}
+          {!props.topic.categories.length ? (
+            <div className="badge px-2 py-1 rounded-full border border-blue-6 text-blue-6">
+              ไม่ระบุ
+            </div>
+          ) : null}
         </div>
 
         {!isReadOnly() && (

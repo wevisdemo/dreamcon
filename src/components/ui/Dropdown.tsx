@@ -45,7 +45,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     <ClickAwayListener onClickAway={() => setIsOpen(false)}>
       <div className="dropdown relative z-30 w-full">
         <button
-          className="dropdown-toggle flex justify-between gap-1 bg-blue-6 px-4 py-2 rounded-full text-white w-full"
+          className="dropdown-toggle flex justify-between gap-1 bg-blue-6 px-4 py-2.5 rounded-full text-white w-full"
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className="truncate">{label}</span>
@@ -73,7 +73,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                   <span className="relative flex shrink-0">
                     <input
                       type="checkbox"
-                      className="peer appearance-none w-3 h-3 rounded-sm bg-transparent border border-blue-7 checked:bg-blue-7 disabled:border-gray-4"
+                      className="peer appearance-none w-3 h-3 rounded-sm bg-transparent border-[1.5px] border-blue-7 checked:bg-blue-7 disabled:border-gray-4"
                       checked={selected.includes(option)}
                       disabled={isDisabled(option)}
                       onChange={() => toggle(option)}

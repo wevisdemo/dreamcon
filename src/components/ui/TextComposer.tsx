@@ -28,7 +28,7 @@ export default function TextComposer(props: PropTypes) {
       <div>
         <label
           htmlFor={props.id}
-          className="px-2.5 py-2 bg-gray-2 flex gap-1 text-label-sm border border-gray-3 border-b-0 rounded-t"
+          className="px-2.5 py-2 bg-gray-2 flex gap-1 text-label-sm border border-gray-3 border-b-0 rounded-t items-center"
         >
           <span>{props.label}</span>
           <CommunityIcon className="text-gray-8" aria-hidden />
