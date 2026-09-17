@@ -8,7 +8,29 @@ const { db } = initDB();
 
 const OUTPUT_DIR = 'out';
 
-const COLLECTIONS = ['events', 'topics', 'comments', 'writers'];
+const PUBLIC_COLUMNS: Record<string, string[]> = {
+  events: [
+    'id',
+    'target_group',
+    'date',
+    'description',
+    'display_name',
+    'news_link',
+    'location',
+    'title_en',
+    'participants',
+    'title_th',
+  ],
+  topics: ['id', 'event_ids', 'title', 'categories'],
+  comments: [
+    'id',
+    'event_ids',
+    'comment_view',
+    'reason',
+    'parent_topic_id',
+    'parent_comment_id',
+  ],
+};
 
 function serializeValue(value: unknown): unknown {
   if (value === null || value === undefined) {
@@ -39,6 +61,9 @@ function toCsvValue(value: unknown): string | number | boolean | null {
   }
   if (typeof value === 'string') {
     return value;
+  }
+  if (Array.isArray(value)) {
+    return value.join(',');
   }
   return JSON.stringify(value);
 }
@@ -82,13 +107,13 @@ async function dumpCollection(name: string) {
   const rows = docs.map(toCsvRow);
   const filePath = path.join(OUTPUT_DIR, `${name}.csv`);
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  fs.writeFileSync(filePath, csvFormat(rows));
+  fs.writeFileSync(filePath, csvFormat(rows, PUBLIC_COLUMNS[name]));
 
   console.log(`Dumped ${docs.length} docs from "${name}" -> ${filePath}`);
 }
 
 async function main() {
-  for (const name of COLLECTIONS) {
+  for (const name of Object.keys(PUBLIC_COLUMNS)) {
     await dumpCollection(name);
   }
   console.log('Done.');
