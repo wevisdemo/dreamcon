@@ -5,6 +5,7 @@ import UnpinIcon from '../icon/UnpinIcon';
 
 interface PropTypes {
   canEdit: boolean;
+  canDelete?: boolean;
   hasPin?: boolean;
   isPinned?: boolean;
   onClickEdit: () => void;
@@ -54,7 +55,7 @@ export default function MenuPopover(props: PropTypes) {
         </div>
       )}
 
-      {props.canEdit && (
+      {(props.canDelete ?? props.canEdit) && (
         <div
           data-dndkit-disable-drag
           className="flex w-full items-center gap-2 px-4 py-3 hover:cursor-pointer hover:bg-gray-1"

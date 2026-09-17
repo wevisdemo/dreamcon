@@ -116,7 +116,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(page.getByText('ลบ', { exact: true })).toBeVisible();
   });
 
-  test('cannot edit or delete its own topic once another event commented', async ({
+  test('can only edit categories of its own topic once another event commented', async ({
     page,
   }) => {
     await page.goto('/topics/tp-parliament');
@@ -126,8 +126,11 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await topicMenu(page).click();
     await expect(page.getByText('ปักหมุด', { exact: true })).toBeVisible();
-    await expect(page.getByText('แก้ไข', { exact: true })).toHaveCount(0);
     await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
+    await page.getByText('แก้ไข', { exact: true }).locator('..').click();
+
+    await expect(page.locator('#topic-title-text-area')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'บันทึก' })).toBeVisible();
   });
 
   test('cannot edit or delete its own comment once another event replied or joined', async ({
@@ -277,9 +280,9 @@ test.describe('signed in as the Online writer', () => {
     await expect(page.getByText('ความคิดเห็นของ')).toBeVisible();
     await expect(page.getByText('เวทีออนไลน์').first()).toBeVisible();
 
-    // Two events are linked now, so neither can edit or delete the topic.
+    // Two events are linked now, so neither can delete the topic or edit more than its categories.
     await page.getByLabel(MENU).click();
-    await expect(page.getByText('แก้ไข', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('แก้ไข', { exact: true })).toBeVisible();
     await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
     await page.locator('.MuiBackdrop-root').click();
 

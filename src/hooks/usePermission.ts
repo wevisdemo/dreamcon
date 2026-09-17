@@ -47,6 +47,11 @@ export const usePermission = () => {
     );
   };
 
+  const canEditCategories = (topic: Topic): boolean => {
+    const writerEvent = getWriterEvent();
+    return !!writerEvent && linkedEventIds(topic).includes(writerEvent.id);
+  };
+
   /**
    * A topic's sole explicit event deletes instead of leaving. A comment's author
    * (`event_ids[0]`) never leaves: the next event would inherit its authorship.
@@ -69,6 +74,7 @@ export const usePermission = () => {
     userCanEdit,
     getWriterEvent,
     canManage,
+    canEditCategories,
     canLeave,
   };
 };

@@ -32,7 +32,8 @@ export default function TopicCard(props: PropTypes) {
   const [showCategoryError, setShowCategoryError] = useState(false);
   const [anchorMenu, setAnchorMenu] = useState<null | Element>(null);
   const { mode: modeContext } = useContext(StoreContext);
-  const { isReadOnly, canManage, getWriterEvent } = usePermission();
+  const { isReadOnly, canManage, canEditCategories, getWriterEvent } =
+    usePermission();
 
   const openMenu = Boolean(anchorMenu);
   const popoverID = openMenu ? 'topic-menu' : undefined;
@@ -51,7 +52,7 @@ export default function TopicCard(props: PropTypes) {
   };
 
   const handleClickEditInMenu = () => {
-    if (!hasPermissionToEdit()) {
+    if (!hasPermissionToEditCategories()) {
       handleCloseMenu();
       return;
     }
@@ -94,6 +95,9 @@ export default function TopicCard(props: PropTypes) {
   const hasPermissionToEdit = () =>
     modeContext.value !== 'view' && canManage(props.topic);
 
+  const hasPermissionToEditCategories = () =>
+    modeContext.value !== 'view' && canEditCategories(props.topic);
+
   if (isEditingMode) {
     return (
       <div className="flex w-full flex-col gap-3 rounded-2xl bg-white p-4 shadow-card">
@@ -107,16 +111,30 @@ export default function TopicCard(props: PropTypes) {
           disabledOptions={disabledCategories(categories)}
           placeholder="เลือกหัวข้อ"
         />
-        <TextComposer
-          id="topic-title-text-area"
-          label="ข้อถกเถียงของ"
-          eventName={getWriterEvent()?.display_name ?? ''}
-          value={topicTitle}
-          onChange={setTopicTitle}
-          onSubmit={handlerSubmitTopic}
-          placeholder="ข้อถกเถียงควรประกอบด้วยเหตุผลและข้อสรุป (140 ตัวอักษร)"
-          autoFocus
-        />
+        {hasPermissionToEdit() ? (
+          <TextComposer
+            id="topic-title-text-area"
+            label="ข้อถกเถียงของ"
+            eventName={getWriterEvent()?.display_name ?? ''}
+            value={topicTitle}
+            onChange={setTopicTitle}
+            onSubmit={handlerSubmitTopic}
+            placeholder="ข้อถกเถียงควรประกอบด้วยเหตุผลและข้อสรุป (140 ตัวอักษร)"
+            autoFocus
+          />
+        ) : (
+          <>
+            <h2 className="wv-ibmplex wv-bold p-2.5 heading-4">
+              {props.topic.title}
+            </h2>
+            <button
+              className="wv-ibmplex flex w-full items-center justify-center rounded-full border-2 py-2.5 text-button font-bold hover:bg-blue-2"
+              onClick={handlerSubmitTopic}
+            >
+              บันทึก
+            </button>
+          </>
+        )}
         {showCategoryError && (
           <span className="text-center text-label text-red-6">
             *ยังไม่ได้เลือกหัวข้อ
@@ -182,7 +200,8 @@ export default function TopicCard(props: PropTypes) {
               <MenuPopover
                 hasPin
                 isPinned={props.isPinned}
-                canEdit={hasPermissionToEdit()}
+                canEdit={hasPermissionToEditCategories()}
+                canDelete={hasPermissionToEdit()}
                 onClickDelete={() => {
                   handleDeleteTopic();
                 }}
