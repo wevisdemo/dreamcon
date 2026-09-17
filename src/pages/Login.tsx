@@ -35,14 +35,13 @@ export default function LoginPage() {
     const [validUsername, validPassword] = validateInputs(username, password);
     setValidInputs({ username: validUsername, password: validPassword });
 
+    if (!validUsername || !validPassword) return;
+
     try {
-      if (!validUsername || !validPassword) {
-        throw new Error('Invalid inputs');
-      }
-      loginAsAdmin(username, password);
-      navigate('/admin', { replace: true });
+      await loginAsAdmin(username, password);
     } catch (error) {
       console.error('Error signing in:', error);
+      alert('เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบ Username และ Password');
     }
   };
   const validateInputs = (

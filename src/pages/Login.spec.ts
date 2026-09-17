@@ -7,11 +7,10 @@ test('the console redirects anonymous visitors here', async ({ page }) => {
 });
 
 test('a wrong password does not reach the console', async ({ page }) => {
+  const dialog = page.waitForEvent('dialog');
   await loginAsAdmin(page, 'wrong-password');
-
-  // Login.tsx navigates without awaiting the sign-in, so the admin page bounces
-  // back here; assert on where the URL settles rather than on the first value.
-  await expect.poll(() => new URL(page.url()).pathname).toBe('/admin/login');
+  await (await dialog).dismiss();
+  await expect(page).toHaveURL('/admin/login');
 
   // Landing on the login route proves nothing on its own, since that is also
   // where the click started. Re-entering the console proves no session exists.
