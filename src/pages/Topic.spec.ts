@@ -22,7 +22,10 @@ const topicMenu = (page: Page) => page.locator('.shadow-card').getByLabel(MENU);
 
 const modal = (page: Page) => page.locator('section.z-30');
 
-const closeModal = (page: Page) => modal(page).getByText('ยกเลิก').click();
+const closeButton = (page: Page) =>
+  modal(page).getByRole('button', { name: 'ปิด', exact: true });
+
+const closeModal = (page: Page) => closeButton(page).click();
 
 /**
  * Not this event's comment, so dnd-kit marks the wrapper aria-disabled and
@@ -32,7 +35,7 @@ const openAddCommentModal = async (page: Page, reason: string) => {
   const card = commentCard(page, reason);
   await card.hover();
   await card.getByLabel(ADD_COMMENT).click({ force: true });
-  await expect(modal(page).getByText('ยกเลิก')).toBeVisible();
+  await expect(closeButton(page)).toBeVisible();
 };
 
 const submitComment = async (page: Page, reason: string) => {
@@ -346,8 +349,8 @@ test.describe('signed in as the Online writer', () => {
     await expect(modalEvents).toHaveText(/เวทีกรุงเทพฯ\s*\|\s*เวทีออนไลน์/);
     await expect(modal(page)).toContainText('เพิ่มความคิดเห็น');
 
-    await modal(page).getByText('ยกเลิก').click();
-    await expect(modal(page).getByText('ยกเลิก')).toHaveCount(0);
+    await closeModal(page);
+    await expect(closeButton(page)).toHaveCount(0);
     await expect(events).toHaveText(/เวทีกรุงเทพฯ\s*\|\s*เวทีออนไลน์/);
   });
 });

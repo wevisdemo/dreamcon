@@ -41,7 +41,7 @@ export default function Modal(props: PropTypes) {
             className="wv-ibmplex mt-1 text-gray-5 underline hover:cursor-pointer"
             onClick={props.onClose}
           >
-            ยกเลิก
+            ปิด
           </button>
         </div>
       </div>
