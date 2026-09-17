@@ -15,14 +15,14 @@
  *
  * This runs through the client SDK, so production security rules apply.
  * Prod rollout order:
- *   1. In the Firebase console, replace `isEventUnchanged()` with the version in
- *      firestore.rules. It compares `event_ids` and exempts docs that don't have
- *      the field yet, so unmigrated docs stay updatable and the old app keeps
- *      working (it never writes `event_ids`, so the comparison holds).
+ *   1. In the Firebase console, publish the rules in firestore.rules.
+ *      `isEventIdsValid()` reads a missing `event_ids` as `[]`, so this script
+ *      may set it to `[event_id]` (one id added), and the old app keeps working
+ *      (its `updateDoc` never touches `event_ids`).
  *   2. `--apply` (no `--drop-legacy`).
  *   3. Deploy the new build.
- *   4. `--apply --drop-legacy`. Denied by the pre-step-1 rule, which errors on
- *      the now-missing `event_id`.
+ *   4. `--apply --drop-legacy`. Leaves `event_ids` unchanged, so the rule allows
+ *      it; the pre-step-1 rule denies it because it reads the removed `event_id`.
  */
 import {
   collection,
