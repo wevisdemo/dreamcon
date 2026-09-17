@@ -1,0 +1,49 @@
+name: Update published data
+
+on:
+  workflow_dispatch:
+
+concurrency: published-data
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: 0
+      VITE_FIREBASE_CONFIG: ${{ secrets.VITE_FIREBASE_CONFIG }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Dump Firestore
+        run: |
+          : "${VITE_FIREBASE_CONFIG:?}"
+          nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm firestore:dump"
+
+      - name: Commit to published-data branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+
+          if git fetch origin published-data; then
+            git worktree add publish FETCH_HEAD
+            git -C publish checkout -B published-data
+          else
+            git worktree add --orphan -b published-data publish
+          fi
+
+          find publish -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -r out/. publish/
+
+          cd publish
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No data changes"
+            exit 0
+          fi
+          git commit -m "chore: update published data"
+          git push origin published-data

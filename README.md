@@ -5,11 +5,14 @@
 Dream Constitution is a project that gathers the opinions of Thai people to serve as a hub of ideas for drafting a people's constitution.  
 Because the constitution may sometimes feel distant, we invite everyone to share their diverse dreams and ideas, weaving them into a single story. These ideas will then be passed on to those responsible for drafting the new constitution, so it can truly reflect the will of the people.
 
-## Environment
+## Deployment
 
-| Name       | URL                          |
-| ---------- | ---------------------------- |
-| Production | https://dreamcon.wevis.info/ |
+| Name           | URL                             |
+| -------------- | ------------------------------- |
+| Web production | https://dreamcon.wevis.info/    |
+| Published data | published-data branch on GitHub |
+
+Both run manually though Github Actions
 
 ## Stack
 

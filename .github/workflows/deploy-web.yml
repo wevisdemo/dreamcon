@@ -1,0 +1,56 @@
+name: Deploy web to production
+
+on:
+  workflow_dispatch:
+
+concurrency: web-production
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      HUSKY: 0
+      VITE_USE_FIREBASE_EMULATOR: true
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Run e2e tests
+        run: nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm test"
+
+      - name: Upload traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: test-results
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: 0
+      VITE_FIREBASE_CONFIG: ${{ secrets.VITE_FIREBASE_CONFIG }}
+      VITE_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
+      ANALYTICS_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Build
+        run: |
+          : "${VITE_FIREBASE_CONFIG:?}" "${VITE_BASE_URL:?}"
+          nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm build"
+
+      - name: Upload
+        uses: burnett01/rsync-deployments@v9
+        with:
+          switches: -avzr --delete
+          path: dist/
+          remote_path: ${{ secrets.SSH_PATH }}
+          remote_host: ${{ secrets.SSH_HOST }}
+          remote_user: ${{ secrets.SSH_USER }}
+          remote_key: ${{ secrets.SSH_KEY }}
