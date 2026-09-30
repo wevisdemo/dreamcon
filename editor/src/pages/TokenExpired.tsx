@@ -1,0 +1,26 @@
+import { withBase } from '../const/app';
+
+export default function TokenExpiredPage() {
+  return (
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-6 bg-blue-2 text-center text-blue-7">
+      <img
+        className="h-11.25"
+        src={withBase('/logo/dream-con-logo-white.svg')}
+        alt="dreamcon-logo"
+      />
+      <h2 className="wv-ibmplex heading-2 font-bold">Invite Link Expired</h2>
+      <p className="text-b1">
+        This invite link may have expired <br /> You can{' '}
+        <span className="font-bold">
+          request a new link to continue editing
+        </span>
+      </p>
+      <p>
+        or head back to the{' '}
+        <a className="!text-blue-7 !underline" href={withBase('/')}>
+          homepage
+        </a>
+      </p>
+    </div>
+  );
+}

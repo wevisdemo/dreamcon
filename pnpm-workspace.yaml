@@ -1,3 +1,6 @@
+packages:
+  - editor
+
 allowBuilds:
   '@firebase/util': true
   esbuild: true

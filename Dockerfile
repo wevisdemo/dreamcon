@@ -10,10 +10,13 @@ WORKDIR /app
 ENV HUSKY=0 VITE_USE_FIREBASE_EMULATOR=true
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY editor/package.json editor/
 RUN pnpm install --frozen-lockfile
+
+WORKDIR /app/editor
 RUN pnpm firebase setup:emulators:firestore
 
-COPY . .
+COPY . /app
 ARG VITE_BASE_URL=http://localhost:5173
 ENV VITE_BASE_URL=$VITE_BASE_URL
 RUN pnpm build

@@ -1,9 +1,9 @@
-node_modules
-dist
+**/node_modules
+**/dist
 .git
-out
-test-results
-playwright-report
+**/out
+**/test-results
+**/playwright-report
 .direnv
 *.log
 .env*

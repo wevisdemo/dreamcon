@@ -22,7 +22,7 @@ jobs:
       - name: Dump Firestore
         run: |
           : "${VITE_FIREBASE_CONFIG:?}"
-          nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm firestore:dump"
+          nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm --filter @dreamcon/editor firestore:dump"
 
       - name: Commit to published-data branch
         run: |
@@ -37,7 +37,7 @@ jobs:
           fi
 
           find publish -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -r out/. publish/
+          cp -r editor/out/. publish/
 
           cd publish
           git add -A
