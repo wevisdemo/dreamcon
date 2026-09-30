@@ -85,16 +85,12 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.goto('topics/tp-court');
     await waitForLoaded(page);
 
-    await page
-      .getByRole('button', { name: 'ไม่เห็นด้วย', exact: true })
-      .click();
+    await page.getByRole('button', { name: 'ไม่เห็นด้วย', exact: true }).click();
     await page.locator('#add-comment-in-topic-card').fill(reason);
     await page.getByRole('button', { name: 'ส่ง' }).click();
 
     await expect(page.getByText(reason, { exact: true })).toBeVisible();
-    await expect(
-      page.getByText('1 ไม่เห็นด้วย', { exact: true })
-    ).toBeVisible();
+    await expect(page.getByText('1 ไม่เห็นด้วย', { exact: true })).toBeVisible();
     await expect(page.getByText('1 ความคิดเห็น')).toBeVisible();
     await expect(commentEvents(page, reason)).toHaveText(
       /^จากวง\s*เวทีกรุงเทพฯ$/
@@ -139,10 +135,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.goto('topics/tp-parliament');
     await waitForLoaded(page);
 
-    const own = commentCard(
-      page,
-      'สมาชิกวุฒิสภาควรมาจากการเลือกตั้งโดยตรงทั้งหมด'
-    );
+    const own = commentCard(page, 'สมาชิกวุฒิสภาควรมาจากการเลือกตั้งโดยตรงทั้งหมด');
     await own.hover();
     await expect(own.getByLabel(MENU)).toBeVisible();
 
@@ -166,8 +159,7 @@ test.describe('signed in as the Bangkok writer', () => {
   });
 
   test('replying to another event comment joins it first', async ({ page }) => {
-    const parent =
-      'ท้องถิ่นควรจัดเก็บและใช้ภาษีของตัวเองได้ตามสัดส่วนที่ชัดเจน';
+    const parent = 'ท้องถิ่นควรจัดเก็บและใช้ภาษีของตัวเองได้ตามสัดส่วนที่ชัดเจน';
     const reply = `E2E cross-event reply ${Date.now()}`;
 
     await page.goto('topics/tp-local');
@@ -186,9 +178,7 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await expect(page.getByText(reply, { exact: true })).toBeVisible();
     await expect(page.getByText('ข้อถกเถียงจาก 2 วงสนทนา')).toBeVisible();
-    await expect(commentEvents(page, reply)).toHaveText(
-      /^จากวง\s*เวทีกรุงเทพฯ$/
-    );
+    await expect(commentEvents(page, reply)).toHaveText(/^จากวง\s*เวทีกรุงเทพฯ$/);
     await expect(commentEvents(page, parent)).toHaveText(
       /เวทีเชียงใหม่\s*\|\s*เวทีกรุงเทพฯ/
     );
@@ -205,10 +195,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.goto('topics/tp-rights');
     await waitForLoaded(page);
 
-    await openAddCommentModal(
-      page,
-      'ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ'
-    );
+    await openAddCommentModal(page, 'ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ');
     await expect(modal(page)).toContainText('เพิ่มความคิดเห็น');
     // The view buttons also exist in the topic card, so scope them to the modal.
     await modal(page)
@@ -239,10 +226,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.keyboard.press('Control+x');
     await expect(page.getByText('คัดลอกไปยังคลิปบอร์ดแล้ว')).toBeVisible();
 
-    await commentCard(
-      page,
-      'ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ'
-    ).hover();
+    await commentCard(page, 'ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ').hover();
     await page.keyboard.press('Control+v');
     await expect(page.getByText('ย้ายแล้ว!')).toBeVisible();
     await expect(disagreeView.getByText(moved)).toBeVisible();
@@ -303,9 +287,7 @@ test.describe('signed in as the Online writer', () => {
 
     await topicEvents(page).getByLabel(LEAVE_EVENT).click();
 
-    const alert = page.getByText(
-      'เพราะวงสนทนาของคุณมี 2 ความคิดเห็นในข้อถกเถียงนี้'
-    );
+    const alert = page.getByText('เพราะวงสนทนาของคุณมี 2 ความคิดเห็นในข้อถกเถียงนี้');
     await expect(alert).toBeVisible();
     await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 2 วงสนทนา/);
     await expect(alert).toBeHidden({ timeout: 5000 });

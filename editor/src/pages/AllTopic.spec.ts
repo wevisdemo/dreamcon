@@ -67,9 +67,7 @@ test.describe('anonymous', () => {
   });
 
   test('filters by category', async ({ page }) => {
-    await page
-      .getByRole('button', { name: 'ฝ่ายตุลาการ', exact: true })
-      .click();
+    await page.getByRole('button', { name: 'ฝ่ายตุลาการ', exact: true }).click();
 
     await expect(page.locator(TOPIC_CARDS)).toHaveCount(1);
     await expect(
@@ -149,18 +147,14 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.goto('topics');
     await waitForLoaded(page);
 
-    await page
-      .getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร')
-      .click();
+    await page.getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร').click();
     await page.getByLabel('เมนู').first().click();
     await expect(page.getByText('แก้ไข', { exact: true })).toBeVisible();
     // The popover keeps focus outside itself, so Escape does not close it.
     await page.locator('.MuiBackdrop-root').click();
     await expect(page.locator('.MuiBackdrop-root')).toHaveCount(0);
 
-    await page
-      .getByText('ท้องถิ่นควรมีอำนาจจัดเก็บภาษีของตัวเองหรือไม่')
-      .click();
+    await page.getByText('ท้องถิ่นควรมีอำนาจจัดเก็บภาษีของตัวเองหรือไม่').click();
     await page.getByLabel('เมนู').first().click();
     await expect(page.getByText('ปักหมุด', { exact: true })).toBeVisible();
     await expect(page.getByText('แก้ไข', { exact: true })).toHaveCount(0);
@@ -199,10 +193,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(card).toBeVisible();
 
     await card.click();
-    await expect(page.locator('.badge')).toHaveText([
-      'สิทธิเสรีภาพ',
-      'การศึกษา',
-    ]);
+    await expect(page.locator('.badge')).toHaveText(['สิทธิเสรีภาพ', 'การศึกษา']);
     await expect(page.getByText('ข้อถกเถียงจาก')).toHaveText(
       /ข้อถกเถียงจาก 1 วงสนทนา/
     );
@@ -290,9 +281,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.goto('topics');
     await waitForLoaded(page);
 
-    await page
-      .getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร')
-      .click();
+    await page.getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร').click();
     await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'แก้ไข');
 
@@ -373,9 +362,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await waitForLoaded(page);
     const cardCount = await page.locator(TOPIC_CARDS).count();
 
-    await page
-      .getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร')
-      .click();
+    await page.getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร').click();
     await page
       .locator('.comment-section')
       .getByText('ควรเขียนไว้ในกฎหมายลูกมากกว่าเขียนในรัฐธรรมนูญ', {

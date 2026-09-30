@@ -1,9 +1,9 @@
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { useState } from 'react';
 import '@wevisdemo/ui/styles/index.css';
 import './App.css';
-import { useState } from 'react';
 import CloseIcon from '@material-symbols/svg-700/rounded/close.svg?react';
 import WarningIcon from '@material-symbols/svg-700/rounded/warning-fill.svg?react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AboutPage from './pages/About';
 import AdminPage from './pages/Admin';
 import AllTopic from './pages/AllTopic';

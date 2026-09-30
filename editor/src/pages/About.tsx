@@ -36,10 +36,9 @@ export default function AboutPage() {
                   แล้วส่งต่อให้ผู้มีหน้าที่ในการร่างรัฐธรรมนูญใหม่นำไปพิจารณาประกอบขึ้นเป็นร่างของประชาชนอย่างแท้จริง
                 </span>
                 <span>
-                  โครงการ Dream Con เกิดจากความร่วมมือขององค์กรต่างๆ ได้แก่
-                  มูลนิธิฟรีดริช เนามัน (FNF) วีวิซ เดโม (WeVis)
-                  สถาบันเพื่อการยุติธรรมแห่งประเทศไทย (TIJ) และ Hand Social
-                  Enterprises
+                  โครงการ Dream Con เกิดจากความร่วมมือขององค์กรต่างๆ ได้แก่ มูลนิธิฟรีดริช
+                  เนามัน (FNF) วีวิซ เดโม (WeVis) สถาบันเพื่อการยุติธรรมแห่งประเทศไทย
+                  (TIJ) และ Hand Social Enterprises
                 </span>
               </div>
               <div className="flex w-full flex-col gap-4 md:w-1/2">
@@ -70,8 +69,7 @@ export default function AboutPage() {
                       <p>
                         <span className="font-bold">ระยะที่ 3</span> -
                         ส่งต่อโครงสร้างข้อถกเถียงเท่าที่รวบรวมได้ภายใน 3 เดือน
-                        ให้นักวิชาการนำไปศึกษาและจัดทำรายงานข้อเสนอแนะต่อ สสร.
-                        ต่อไป
+                        ให้นักวิชาการนำไปศึกษาและจัดทำรายงานข้อเสนอแนะต่อ สสร. ต่อไป
                       </p>
                     </li>
                   </ul>
@@ -79,9 +77,7 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="mt-7.5 flex flex-col items-center justify-between gap-2 md:flex-row">
-              <h4 className="wv-ibmplex heading-4 font-bold">
-                จัดทำโครงการโดย
-              </h4>
+              <h4 className="wv-ibmplex heading-4 font-bold">จัดทำโครงการโดย</h4>
               <div className="flex w-full justify-between md:w-auto md:space-x-4">
                 <div className="flex flex-col space-y-4 md:flex-row md:items-center md:space-y-0 md:space-x-4">
                   <a target="_blank" href="https://wevis.info/">
@@ -142,8 +138,7 @@ export default function AboutPage() {
               หากคุณสนใจเรื่องนี้
             </h2>
             <p className="m-auto w-full max-w-240 px-6 text-b2">
-              ระหว่างนี้สามารถไปเยี่ยมชมโปรเจกต์อื่น
-              ที่เกี่ยวกับเรื่องรัฐธรรมนูญได้
+              ระหว่างนี้สามารถไปเยี่ยมชมโปรเจกต์อื่น ที่เกี่ยวกับเรื่องรัฐธรรมนูญได้
             </p>
 
             <div className="flex flex-col gap-6 overflow-x-auto md:flex-row">
@@ -165,8 +160,7 @@ export default function AboutPage() {
                 จะเกิดอะไรขึ้นต่อไป
               </span>
               <span className="text-b2">
-                หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน
-                เราจะคอยส่งข่าวให้คุณรู้!
+                หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน เราจะคอยส่งข่าวให้คุณรู้!
               </span>
             </div>
             <div className="flex w-1/2 items-start">

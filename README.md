@@ -51,7 +51,9 @@ The Nix shell sets `PLAYWRIGHT_BROWSERS_PATH` to a browser from nixpkgs, so `pla
 | `pnpm dev`     | Run the editor dev server            |
 | `pnpm build`   | Build all packages into `dist/`      |
 | `pnpm test`    | Run the e2e suites of all packages   |
-| `pnpm lint`    | ESLint with autofix                  |
-| `pnpm format`  | Prettier                             |
+| `pnpm lint`    | Oxlint with autofix                  |
+| `pnpm format`  | Oxfmt                                |
+
+Lint and format on save are preconfigured for [Zed](https://zed.dev/) in `.zed/settings.json`; install the Oxc extension (`zed: extensions` → "Oxc") to enable them.
 
 `.env` files live at the repository root; the variables are listed in each package's README.

@@ -7,7 +7,9 @@ export interface DraggableCommentProps {
 }
 
 export type DroppableData =
-  DroppableDataTopic | DroppableDataComment | DroppableConvertToTopic;
+  | DroppableDataTopic
+  | DroppableDataComment
+  | DroppableConvertToTopic;
 
 interface DroppableDataTopic {
   type: 'topic';

@@ -125,15 +125,11 @@ export default function LandingPage() {
                   <p>จากการทำแบบสอบถามทางออนไลน์</p>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="wv-ibmplex wv-bold text-b2">
-                    ริเริ่มข้อถกเถียง
-                  </p>
+                  <p className="wv-ibmplex wv-bold text-b2">ริเริ่มข้อถกเถียง</p>
                   <p>จัดวงสนทนากับกลุ่มต่างๆ</p>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="wv-ibmplex wv-bold text-b2">
-                    เรียบเรียงข้อถกเถียง
-                  </p>
+                  <p className="wv-ibmplex wv-bold text-b2">เรียบเรียงข้อถกเถียง</p>
                   <p>จัดระบบเป็นโครงสร้างข้อมูล</p>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -158,9 +154,7 @@ export default function LandingPage() {
             <h2 className="wv-ibmplex heading-2 font-semibold">
               ความคืบหน้าตอนนี้
             </h2>
-            <p className="text-blue-7">
-              อัปเดตล่าสุดวันที่ วันที่ 16 ก.ย. 2568
-            </p>
+            <p className="text-blue-7">อัปเดตล่าสุดวันที่ วันที่ 16 ก.ย. 2568</p>
             <div className="mt-6 flex flex-col gap-6 md:flex-row md:gap-10">
               <img
                 className="w-full max-w-115"
@@ -170,23 +164,19 @@ export default function LandingPage() {
               <p className="text-b2">
                 เราได้พัฒนาแพลตฟอร์มที่พร้อมให้ผู้จัดกระบวนการนำไปใช้ในวงสนทนาต่างๆ
                 ที่หลากหลายเสร็จสมบูรณ์แล้ว
-                เพื่อให้สามารถรวบรวมข้อคิดเห็นและข้อเสนอแนะจากคนกลุ่มต่างๆ
-                มาไว้ที่เดียวกัน
+                เพื่อให้สามารถรวบรวมข้อคิดเห็นและข้อเสนอแนะจากคนกลุ่มต่างๆ มาไว้ที่เดียวกัน
               </p>
             </div>
           </div>
         </section>
         <section className="bg-blue-2 px-6 py-12" id="influence">
           <div className="m-auto flex w-full max-w-240 flex-col gap-6">
-            <h2 className="wv-ibmplex heading-2 font-semibold">
-              มามีส่วนร่วมกัน!
-            </h2>
+            <h2 className="wv-ibmplex heading-2 font-semibold">มามีส่วนร่วมกัน!</h2>
             <p className="text-b2">
               พอได้ผลลัพธ์ข้อคิดเห็นจากประชาชนในขั้นตอนแรกแล้ว
-              เราได้นำหัวข้อเหล่านี้มาตั้งเป็นหัวข้อหลักของข้อถกเถียง
-              ทั้งแบบออนไลน์ในเว็บไซต์นี้
-              หรือวงพูดคุยที่จัดโดยผู้จัดกระบวนการภายนอก ทั้งสื่อมวลชน
-              นักวิชาการ และองค์กรภาคประชาสังคม
+              เราได้นำหัวข้อเหล่านี้มาตั้งเป็นหัวข้อหลักของข้อถกเถียง ทั้งแบบออนไลน์ในเว็บไซต์นี้
+              หรือวงพูดคุยที่จัดโดยผู้จัดกระบวนการภายนอก ทั้งสื่อมวลชน นักวิชาการ
+              และองค์กรภาคประชาสังคม
             </p>
             <p className="text-b2">
               ลองดูประเด็นตัวอย่างด้านล่างนี้ หากคุณสนใจ สามารถร่วมแสดงความเห็น
@@ -231,8 +221,7 @@ export default function LandingPage() {
                 จะเกิดอะไรขึ้นต่อไป
               </span>
               <span className="text-b2">
-                หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน
-                เราจะคอยส่งข่าวให้คุณรู้!
+                หากคุณอยากรู้ความคืบหน้าของโครงการว่าไปถึงไหน เราจะคอยส่งข่าวให้คุณรู้!
               </span>
             </div>
             <div className="flex w-1/2 items-start">

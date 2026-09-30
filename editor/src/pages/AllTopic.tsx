@@ -205,10 +205,7 @@ export default function AllTopic() {
                       aria-hidden
                     />
                   </button>
-                  <button
-                    onClick={openTopicPage}
-                    aria-label="เปิดหน้าข้อถกเถียง"
-                  >
+                  <button onClick={openTopicPage} aria-label="เปิดหน้าข้อถกเถียง">
                     <ExpandWideIcon
                       className="h-6 w-6 text-gray-5"
                       aria-hidden

@@ -6,22 +6,14 @@
     "dev": "pnpm --filter @dreamcon/editor dev",
     "build": "pnpm -r build && rm -rf dist && mkdir dist && cp -r editor/dist dist/editor",
     "test": "pnpm -r test",
-    "lint": "eslint --fix .",
-    "format": "prettier --write \"editor/src/**/*.{js,jsx,ts,tsx,json,css,md}\" editor/playwright.config.ts",
+    "lint": "oxlint --fix",
+    "format": "oxfmt",
     "prepare": "husky"
   },
   "devDependencies": {
-    "@eslint/js": "^9.19.0",
-    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
-    "eslint": "^9.19.0",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.18",
-    "globals": "^15.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
-    "prettier": "^3.9.6",
-    "prettier-plugin-tailwindcss": "^0.8.1",
-    "typescript": "~5.7.2",
-    "typescript-eslint": "^8.22.0"
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0"
   }
 }

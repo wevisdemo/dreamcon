@@ -148,9 +148,7 @@ export default function ModalEvent(props: PropTypes) {
             </div>
           </div>
           <div>
-            <label className="mb-3 block text-blue-7">
-              ชื่อเต็ม ภาษาอังกฤษ
-            </label>
+            <label className="mb-3 block text-blue-7">ชื่อเต็ม ภาษาอังกฤษ</label>
             <input
               type="text"
               className="h-8.75 w-full rounded-lg border border-gray-3 bg-gray-1 p-2.5 focus:outline-none"

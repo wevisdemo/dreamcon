@@ -147,11 +147,7 @@ export default function ModalComment(props: PropTypes) {
             }
           />
         ) : (
-          <p>
-            {targetCommentId
-              ? 'ความคิดเห็นนี้ถูกลบแล้ว'
-              : 'ข้อถกเถียงนี้ถูกลบแล้ว'}
-          </p>
+          <p>{targetCommentId ? 'ความคิดเห็นนี้ถูกลบแล้ว' : 'ข้อถกเถียงนี้ถูกลบแล้ว'}</p>
         )}
       </Modal>
     </>

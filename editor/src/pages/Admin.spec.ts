@@ -2,8 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { loginAsAdmin, TOPIC_CARDS, waitForLoaded } from '../utils/e2e/helpers';
 import { EMULATOR_FIREBASE_CONFIG } from '../utils/firebaseEmulator';
 
-const eventCards = (page: Page) =>
-  page.getByRole('button', { name: 'แชร์ลิงก์' });
+const eventCards = (page: Page) => page.getByRole('button', { name: 'แชร์ลิงก์' });
 
 const bangkokCard = (page: Page) =>
   page

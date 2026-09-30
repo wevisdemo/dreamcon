@@ -79,9 +79,8 @@ export default function TopicListSection(props: PropTypes) {
           <div className="wv-ibmplex flex flex-col items-center gap-1 text-center text-b3 text-blue-7">
             <WarningIcon className="h-4 w-4" aria-hidden />
             <p>
-              ก่อนเพิ่มข้อถกเถียงใหม่ ควรตรวจสอบข้อถกเถียงที่มีอยู่ก่อน
-              หากพบประเด็นเดียวกัน ให้เพิ่มวงสนทนาของคุณในข้อถกเถียงนั้น หรือ
-              เพิ่มความคิดเห็นต่อยอด
+              ก่อนเพิ่มข้อถกเถียงใหม่ ควรตรวจสอบข้อถกเถียงที่มีอยู่ก่อน หากพบประเด็นเดียวกัน
+              ให้เพิ่มวงสนทนาของคุณในข้อถกเถียงนั้น หรือ เพิ่มความคิดเห็นต่อยอด
             </p>
           </div>
         </>

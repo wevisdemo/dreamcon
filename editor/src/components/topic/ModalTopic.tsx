@@ -67,9 +67,7 @@ export default function ModalTopic(props: PropTypes) {
 
   return (
     <Modal
-      title={
-        props.mode === 'create' ? 'เพิ่มข้อถกเถียงใหม่' : 'แก้ไขข้อถกเถียง'
-      }
+      title={props.mode === 'create' ? 'เพิ่มข้อถกเถียงใหม่' : 'แก้ไขข้อถกเถียง'}
       onClose={handleClose}
     >
       <Dropdown

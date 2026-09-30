@@ -39,8 +39,7 @@ export default function TooltipEventInfo(props: PropTypes) {
               <ClockIcon aria-hidden /> จัดขึ้นวันที่ {props.event.date}
             </li>
             <li className="flex items-center gap-2">
-              <TargetIcon aria-hidden /> กลุ่มเป้าหมาย:{' '}
-              {props.event.target_group}
+              <TargetIcon aria-hidden /> กลุ่มเป้าหมาย: {props.event.target_group}
             </li>
             <li className="flex items-center gap-2">
               <ParticipantIcon aria-hidden /> จำนวนผู้เข้าร่วม:{' '}
