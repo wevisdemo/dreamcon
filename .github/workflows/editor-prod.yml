@@ -1,4 +1,4 @@
-name: Deploy web to production
+name: Deploy editor to production
 
 on:
   workflow_dispatch:
@@ -17,8 +17,11 @@ jobs:
 
       - uses: cachix/install-nix-action@v31
 
+      - name: Install dependencies
+        run: nix develop --command pnpm install --frozen-lockfile
+
       - name: Run e2e tests
-        run: nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm test"
+        run: nix develop --command pnpm test
 
       - name: Upload traces
         if: failure()
@@ -40,15 +43,19 @@ jobs:
 
       - uses: cachix/install-nix-action@v31
 
+      - name: Install dependencies
+        run: nix develop --command pnpm install --frozen-lockfile
+
       - name: Build
         run: |
           : "${VITE_FIREBASE_CONFIG:?}" "${VITE_BASE_URL:?}"
-          nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm build"
+          nix develop --command pnpm --filter @dreamcon/editor build --base /
+
       - name: Upload
         uses: burnett01/rsync-deployments@v9
         with:
           switches: -avzr --delete
-          path: dist/
+          path: editor/dist/
           remote_path: ${{ secrets.SSH_PATH }}
           remote_host: ${{ secrets.SSH_HOST }}
           remote_user: ${{ secrets.SSH_USER }}

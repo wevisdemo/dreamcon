@@ -19,10 +19,13 @@ jobs:
 
       - uses: cachix/install-nix-action@v31
 
+      - name: Install dependencies
+        run: nix develop --command pnpm install --frozen-lockfile
+
       - name: Dump Firestore
         run: |
           : "${VITE_FIREBASE_CONFIG:?}"
-          nix develop --command bash -c "pnpm install --frozen-lockfile && pnpm --filter @dreamcon/editor firestore:dump"
+          nix develop --command pnpm --filter @dreamcon/editor firestore:dump
 
       - name: Commit to published-data branch
         run: |

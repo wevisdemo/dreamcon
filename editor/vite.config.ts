@@ -58,6 +58,6 @@ export default defineConfig({
     analytics,
   ],
   server: { proxy: emulatorProxy },
-  // Only the demo image runs `vite preview`, behind a reverse proxy or tunnel
+  // Only `pnpm demo` runs `vite preview`, possibly behind a reverse proxy or tunnel
   preview: { host: true, allowedHosts: true },
 });

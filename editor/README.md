@@ -61,18 +61,10 @@ A self-contained demo: the production build running against the seeded emulators
 pnpm demo
 ```
 
-Or as a Docker image, built from the repository root:
-
-```
-docker build --build-arg VITE_BASE_URL=http://localhost:5173 -t dreamcon-demo .
-docker run --rm -p 5173:5173 dreamcon-demo
-```
-
 - The app is built with `VITE_USE_FIREBASE_EMULATOR=true`, then served by `vite preview`, which also proxies Firestore and Auth on the same origin. Publishing port 5173 alone is enough, including behind an HTTPS reverse proxy or tunnel. The emulators themselves and the Emulator UI are not exposed.
 - The emulators are re-seeded on every start and keep data in memory, so a restart resets everything to the seed.
 - The Plausible analytics tag is left out of any build with `VITE_USE_FIREBASE_EMULATOR=true`.
 - It takes 30–60 s after start before the app answers.
-- The Firestore emulator runs on Java with no memory cap, so on a shared server give the container a limit (`docker run --memory …`).
 
 > Anyone who can reach the demo can sign in with the seeded admin. Keep that in mind before exposing it.
 
