@@ -10,6 +10,9 @@ export interface DreamConEvent {
   target_group: string;
   participants: number;
   news_link: string;
+  document_link: string;
+  organizers: string[];
+  target_group_types: string[];
   topic_counts: number;
   created_at: Date;
   updated_at: Date;
@@ -27,6 +30,9 @@ export const defaultAddOrEditEventPayload: AddOrEditEventPayload = {
   target_group: '',
   participants: null,
   news_link: '',
+  document_link: '',
+  organizers: [],
+  target_group_types: [],
 };
 
 export interface AddOrEditEventPayload {
@@ -41,6 +47,9 @@ export interface AddOrEditEventPayload {
   target_group: string;
   participants: number | null;
   news_link: string;
+  document_link: string;
+  organizers: string[];
+  target_group_types: string[];
 }
 
 export type CreateEventDBPayload = Omit<DreamConEvent, 'id' | 'topic_counts'>;

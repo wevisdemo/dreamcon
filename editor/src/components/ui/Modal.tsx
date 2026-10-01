@@ -5,6 +5,7 @@ interface PropTypes {
   title: string;
   onClose: () => void;
   children: ReactNode;
+  wide?: boolean;
 }
 
 export default function Modal(props: PropTypes) {
@@ -27,7 +28,9 @@ export default function Modal(props: PropTypes) {
         role="dialog"
         aria-modal
         aria-labelledby={titleId}
-        className="m-5 flex w-full flex-col shadow-lg md:max-w-120"
+        className={`m-5 flex w-full flex-col shadow-lg ${
+          props.wide ? 'md:max-w-207.5' : 'md:max-w-120'
+        }`}
       >
         <h2
           id={titleId}
@@ -35,7 +38,11 @@ export default function Modal(props: PropTypes) {
         >
           {props.title}
         </h2>
-        <div className="flex flex-col gap-3 rounded-b-lg bg-gray-1 p-4">
+        <div
+          className={`flex flex-col gap-3 rounded-b-lg p-4 ${
+            props.wide ? 'bg-white' : 'bg-gray-1'
+          }`}
+        >
           {props.children}
           <button
             className="wv-ibmplex mt-1 text-gray-5 underline hover:cursor-pointer"

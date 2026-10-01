@@ -84,22 +84,30 @@ test('the app origin refuses the emulator owner token', async ({ request }) => {
   ).toBe(404);
 });
 
-test('creates a new event', async ({ page }) => {
+test('creates a new event and shares a created target group type', async ({
+  page,
+}) => {
   const displayName = `E2E event ${Date.now()}`;
+  const submit = page.getByRole('button', { name: 'เพิ่ม', exact: true });
 
   await page.getByText('เพิ่มวงสนทนา').click();
 
-  await page.getByPlaceholder('กรอกชื่อที่แสดง').fill(displayName);
+  await page.getByPlaceholder('ชื่อสั้นๆ ที่จะปรากฏพร้อมข้อถกเถียง').fill(displayName);
   await page.locator('img[alt="Avatar 0"]').click();
-  await page.getByPlaceholder('กรอกชื่อเต็ม ภาษาอังกฤษ').fill('E2E Event');
-  await page.getByPlaceholder('กรอกชื่อเต็ม ภาษาไทย').fill('อีทูอี');
-  await page.getByPlaceholder('กรอกคำอธิบาย').fill('สร้างโดยชุดทดสอบ');
-  await page.getByPlaceholder('กรอกลิงก์ข่าว').fill('https://example.org/e2e');
-  await page.getByPlaceholder('กรอกสถานที่').fill('ที่ไหนสักแห่ง');
+  await page.getByPlaceholder('คำอธิบาย').fill('สร้างโดยชุดทดสอบ');
+  await page.getByPlaceholder('ชื่อสถานที่และจังหวัด').fill('ที่ไหนสักแห่ง');
   await page.locator('input[type=date]').fill('2026-01-15');
-  await page.getByPlaceholder('กรอกจำนวนผู้เข้าร่วม').fill('42');
-  await page.getByPlaceholder('กรอกกลุ่มเป้าหมาย').fill('ผู้ทดสอบ');
-  await page.getByRole('button', { name: 'เพิ่ม', exact: true }).click();
+  await page.getByPlaceholder('ตัวเลข').fill('42');
+  await page.getByPlaceholder('บรรยายลักษณะของผู้ที่เข้าร่วม').fill('ผู้ทดสอบ');
+  await expect(submit).toBeDisabled();
+
+  await page.getByLabel('ชื่อองค์กรที่จัด').click();
+  await page.getByRole('button', { name: 'KPI', exact: true }).click();
+  await expect(submit).toBeDisabled();
+
+  await page.getByLabel('ประเภทกลุ่มเป้าหมาย').fill('ผู้สูงอายุ');
+  await page.getByRole('button', { name: /^สร้าง\s*ผู้สูงอายุ$/ }).click();
+  await submit.click();
 
   await waitForLoaded(page);
   await expect(page.locator('.heading-2')).toHaveText('4');
@@ -107,4 +115,42 @@ test('creates a new event', async ({ page }) => {
   await page.getByPlaceholder('ค้นหา').fill(displayName);
   await expect(eventCards(page)).toHaveCount(1);
   await expect(page.getByText(displayName)).toBeVisible();
+
+  await page.getByText('เพิ่มวงสนทนา').click();
+  await page.getByLabel('ประเภทกลุ่มเป้าหมาย').click();
+  await expect(
+    page.getByRole('button', { name: 'ผู้สูงอายุ', exact: true })
+  ).toBeVisible();
+});
+
+test('an event saved before organizers existed can be edited without them', async ({
+  page,
+}) => {
+  const chiangmaiCard = page
+    .locator('div.bg-white')
+    .filter({ hasText: 'Dream Constitution Chiang Mai' })
+    .first();
+  const documentLink = page.getByPlaceholder(
+    'เช่น เอกสารกำหนดการ / รายงานสรุปกิจกรรม'
+  );
+
+  await chiangmaiCard.getByText('แก้ไขข้อมูล').click();
+  await documentLink.fill('https://example.org/docs/chiangmai');
+  await page.getByRole('button', { name: 'แก้ไข', exact: true }).click();
+  await waitForLoaded(page);
+
+  await chiangmaiCard.getByText('แก้ไขข้อมูล').click();
+  await expect(documentLink).toHaveValue('https://example.org/docs/chiangmai');
+});
+
+test('organizers cannot be cleared once an event has them', async ({
+  page,
+}) => {
+  await bangkokCard(page).getByText('แก้ไขข้อมูล').click();
+  await page.getByRole('button', { name: 'ลบ KPI' }).click();
+  await page.getByRole('button', { name: 'ลบ The Active' }).click();
+
+  await expect(
+    page.getByRole('button', { name: 'แก้ไข', exact: true })
+  ).toBeDisabled();
 });

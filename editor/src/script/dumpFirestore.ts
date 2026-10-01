@@ -20,6 +20,9 @@ const PUBLIC_COLUMNS: Record<string, string[]> = {
     'title_en',
     'participants',
     'title_th',
+    'document_link',
+    'organizers',
+    'target_group_types',
   ],
   topics: ['id', 'event_ids', 'title', 'categories'],
   comments: [

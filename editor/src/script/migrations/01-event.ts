@@ -4,7 +4,10 @@ import { initDB } from '../firestore';
 
 const { db } = initDB();
 
-const events: AddOrEditEventPayload[] = [
+type LaterEventFields = 'document_link' | 'organizers' | 'target_group_types';
+type EventPayload = Omit<AddOrEditEventPayload, LaterEventFields>;
+
+const events: EventPayload[] = [
   {
     display_name: 'Dream Con x The Active',
     avatar_url: '/avatar/1.png',
@@ -32,12 +35,12 @@ const events: AddOrEditEventPayload[] = [
   },
 ];
 
-const createEvent = async (payload: AddOrEditEventPayload) => {
+const createEvent = async (payload: EventPayload) => {
   // This will not validate anything, so please be caution when using this function.
   try {
     const eventsCollection = collection(db, 'events');
     const timeNow = new Date();
-    const eventDBPayload: CreateEventDBPayload = {
+    const eventDBPayload: Omit<CreateEventDBPayload, LaterEventFields> = {
       display_name: payload.display_name,
       avatar_url: payload.avatar_url,
       title_en: payload.title_en,

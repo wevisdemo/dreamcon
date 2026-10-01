@@ -32,7 +32,13 @@ const NOW = new Date('2025-06-01T09:00:00.000Z');
 const daysFromSeed = (days: number) =>
   new Date(NOW.getTime() + days * 24 * 60 * 60 * 1000);
 
-const events: DreamConEventDB[] = [
+type SeedEvent = Omit<
+  DreamConEventDB,
+  'document_link' | 'organizers' | 'target_group_types'
+> &
+  Partial<DreamConEventDB>;
+
+const events: SeedEvent[] = [
   {
     id: 'ev-bangkok',
     display_name: 'เวทีกรุงเทพฯ',
@@ -45,10 +51,15 @@ const events: DreamConEventDB[] = [
     target_group: 'ประชาชนทั่วไป',
     participants: 120,
     news_link: 'https://example.org/news/bangkok',
+    document_link: 'https://example.org/docs/bangkok',
+    organizers: ['KPI', 'The Active'],
+    target_group_types: ['นักวิชาการ', 'เยาวชน'],
     created_at: daysFromSeed(-30),
     updated_at: daysFromSeed(-2),
   },
   {
+    // Predates document_link, organizers and target_group_types: covers
+    // editing an event saved before those fields existed.
     id: 'ev-chiangmai',
     display_name: 'เวทีเชียงใหม่',
     avatar_url: eventAvatars[1],
@@ -77,6 +88,9 @@ const events: DreamConEventDB[] = [
     target_group: 'ประชาชนทั่วไป',
     participants: 0,
     news_link: '',
+    document_link: '',
+    organizers: ['FNF Thailand'],
+    target_group_types: ['ประชาชนภาคใต้'],
     created_at: daysFromSeed(-5),
     updated_at: daysFromSeed(-5),
   },

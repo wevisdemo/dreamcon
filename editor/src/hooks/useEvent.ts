@@ -41,6 +41,9 @@ export const useEvent = () => {
         target_group: payload.target_group,
         participants: payload.participants || 0,
         news_link: payload.news_link,
+        document_link: payload.document_link,
+        organizers: payload.organizers,
+        target_group_types: payload.target_group_types,
         created_at: timeNow,
         updated_at: timeNow,
       };
@@ -68,6 +71,9 @@ export const useEvent = () => {
         doc =>
           ({
             id: doc.id,
+            document_link: '',
+            organizers: [] as string[],
+            target_group_types: [] as string[],
             ...doc.data(),
             created_at: doc.data()?.created_at.toDate(),
             updated_at: doc.data()?.updated_at.toDate(),

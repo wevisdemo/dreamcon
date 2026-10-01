@@ -6,6 +6,7 @@ import EventCard from '../components/admin/EventCard';
 import ModalEvent from '../components/admin/ModalEvent';
 import FullPageLoader from '../components/ui/FullPageLoader';
 import { withBase } from '../const/app';
+import { eventOrganizers, eventTargetGroupTypes } from '../data/event';
 import { useEvent } from '../hooks/useEvent';
 import { useWriter } from '../hooks/useWriter';
 import DefaultLayout from '../layouts/default';
@@ -261,6 +262,18 @@ const AdminPage = () => {
             setModalEvent({ ...modalEvent, isOpen: false });
           }}
           defaultState={modalEvent.defaultState}
+          organizerOptions={[
+            ...new Set([
+              ...eventOrganizers,
+              ...events.flatMap(event => event.organizers),
+            ]),
+          ]}
+          targetGroupTypeOptions={[
+            ...new Set([
+              ...eventTargetGroupTypes,
+              ...events.flatMap(event => event.target_group_types),
+            ]),
+          ]}
           onSubmit={handleSubmitEvent}
         />
       </div>
