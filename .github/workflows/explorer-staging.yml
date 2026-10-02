@@ -1,0 +1,48 @@
+name: Deploy explorer to staging
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - explorer/**
+      - patches/**
+      - pnpm-lock.yaml
+      - .github/workflows/explorer-staging.yml
+  workflow_dispatch:
+
+concurrency: explorer-staging
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUSKY: 0
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
+
+      - name: Install dependencies
+        run: nix develop --command pnpm install --frozen-lockfile --filter @dreamcon/explorer
+
+      - name: Build
+        run: nix develop --command pnpm --filter @dreamcon/explorer build --base "/${{ github.event.repository.name }}/"
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: explorer/dist/client
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

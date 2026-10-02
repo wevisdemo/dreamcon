@@ -7,3 +7,7 @@ allowBuilds:
   esbuild: true
   protobufjs: true
   re2: false
+
+patchedDependencies:
+  # Prefix the static server function cache fetch with Vite's base, drop once https://github.com/TanStack/router/pull/5970 is released
+  '@tanstack/start-static-server-functions@1.167.39': patches/@tanstack__start-static-server-functions@1.167.39.patch
