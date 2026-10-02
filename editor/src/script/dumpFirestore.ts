@@ -63,7 +63,7 @@ function toCsvValue(value: unknown): string | number | boolean | null {
     return value;
   }
   if (typeof value === 'string') {
-    return value;
+    return value.trim() === '-' ? null : value;
   }
   if (Array.isArray(value)) {
     return value.join(',');
@@ -76,7 +76,7 @@ function normalizeComment(
 ): Record<string, unknown> {
   const parentCommentIds = doc['parent_comment_ids'];
   if (Array.isArray(parentCommentIds) && parentCommentIds.length > 0) {
-    doc['parent_comment_id'] = parentCommentIds[0];
+    doc['parent_comment_id'] = parentCommentIds[parentCommentIds.length - 1];
   }
   delete doc['parent_comment_ids'];
   return doc;
