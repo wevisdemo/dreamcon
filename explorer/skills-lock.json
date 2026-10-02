@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "sheethuahua-schema": {
+      "source": "punchupworld/sheethuahua",
+      "sourceType": "github",
+      "skillPath": "skills/sheethuahua-schema/SKILL.md",
+      "computedHash": "fe96ceb5bda6187267eb5d7bc84e35a28c8a1ed65e9a1b7802060dc456dc2937"
+    }
+  }
+}

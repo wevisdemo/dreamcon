@@ -39,5 +39,10 @@
       }
     }
   ],
-  "ignorePatterns": ["pnpm-lock.yaml", "explorer/src/routeTree.gen.ts"]
+  "ignorePatterns": [
+    "pnpm-lock.yaml",
+    "explorer/src/routeTree.gen.ts",
+    "explorer/.claude/skills",
+    "explorer/skills-lock.json"
+  ]
 }
