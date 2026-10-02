@@ -1,1 +1,182 @@
 @import 'tailwindcss';
+
+@theme static {
+  --font-sans: 'IBM Plex Sans Thai Looped', sans-serif;
+  --font-heading: 'IBM Plex Sans Thai', sans-serif;
+
+  --text-*: initial;
+
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-gray-1: #f8f8f8;
+  --color-gray-2: #e8e8e8;
+  --color-gray-3: #d4d4d4;
+  --color-gray-4: #ababab;
+  --color-gray-5: #979797;
+  --color-gray-6: #828282;
+  --color-gray-7: #6e6e6e;
+  --color-gray-8: #454343;
+
+  --color-blue-1: #e7f7ff;
+  --color-blue-2: #d2f0ff;
+  --color-blue-3: #bde6ff;
+  --color-blue-4: #95d0ff;
+  --color-blue-5: #6eb7fe;
+  --color-blue-6: #4999fa;
+  --color-blue-7: #2579f5;
+  --color-blue-8: #1c4cd3;
+  --color-blue-9: #1526b1;
+  --color-blue-10: #130e8c;
+
+  --color-green-1: #f4fff3;
+  --color-green-2: #e2fee2;
+  --color-green-3: #c1fdce;
+  --color-green-4: #96f9ab;
+  --color-green-5: #79e798;
+  --color-green-6: #66bd7f;
+  --color-green-7: #4b9668;
+  --color-green-8: #5a7666;
+  --color-green-9: #40544a;
+  --color-green-10: #27332d;
+
+  --color-red-1: #ffeeed;
+  --color-red-2: #ffd6d3;
+  --color-red-3: #ffa59e;
+  --color-red-4: #fd7268;
+  --color-red-5: #ff4638;
+  --color-red-6: #e71000;
+  --color-red-7: #b30000;
+  --color-red-8: #940000;
+  --color-red-9: #760202;
+  --color-red-10: #480000;
+
+  --color-yellow-1: #feffdc;
+  --color-yellow-2: #fcffa2;
+  --color-yellow-3: #f9ff4a;
+  --color-yellow-4: #ffdb3d;
+  --color-yellow-5: #ffc115;
+  --color-yellow-6: #cc9600;
+  --color-yellow-7: #b77700;
+  --color-yellow-8: #7f5300;
+  --color-yellow-9: #5c3c00;
+  --color-yellow-10: #412a00;
+}
+
+@utility text-h2 {
+  font-size: 48px;
+  font-family: var(--font-heading);
+  line-height: 1.25;
+  @variant md {
+    font-size: 72px;
+  }
+}
+
+@utility text-h3 {
+  font-size: 36px;
+  font-family: var(--font-heading);
+  line-height: 1.25;
+  @variant md {
+    font-size: 60px;
+  }
+}
+
+@utility text-h4 {
+  font-size: 32px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 48px;
+  }
+}
+
+@utility text-h5 {
+  font-size: 28px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 36px;
+  }
+}
+
+@utility text-h6 {
+  font-size: 24px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 32px;
+  }
+}
+
+@utility text-h7 {
+  font-size: 21px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 28px;
+  }
+}
+
+@utility text-h8 {
+  font-size: 18px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 24px;
+  }
+}
+
+@utility text-h9 {
+  font-size: 16px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 21px;
+  }
+}
+
+@utility text-h10 {
+  font-size: 14px;
+  font-family: var(--font-heading);
+  line-height: 1.4;
+  @variant md {
+    font-size: 18px;
+  }
+}
+
+@utility text-b4 {
+  font-size: 16px;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  @variant md {
+    font-size: 18px;
+  }
+}
+
+@utility text-b5 {
+  font-size: 14px;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  @variant md {
+    font-size: 16px;
+  }
+}
+
+@utility text-b6 {
+  font-size: 12px;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  @variant md {
+    font-size: 14px;
+  }
+}
+
+@utility text-b7 {
+  font-size: 10px;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  @variant md {
+    font-size: 12px;
+  }
+}
