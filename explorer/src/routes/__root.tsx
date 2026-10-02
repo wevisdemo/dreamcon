@@ -11,7 +11,7 @@ export const Route = createRootRoute({
     links: [{ rel: 'stylesheet', href: styles }],
   }),
   shellComponent: ({ children }) => (
-    <html lang="th">
+    <html lang="th" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
