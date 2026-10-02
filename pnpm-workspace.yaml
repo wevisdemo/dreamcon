@@ -1,5 +1,6 @@
 packages:
   - editor
+  - explorer
 
 allowBuilds:
   '@firebase/util': true

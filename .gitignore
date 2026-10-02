@@ -32,6 +32,9 @@ out
 # Nix / direnv
 .direnv
 
+# TanStack Start
+.tanstack
+
 # Playwright
 test-results
 playwright-report

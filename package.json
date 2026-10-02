@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @dreamcon/editor dev",
-    "build": "pnpm -r build && rm -rf dist && mkdir dist && cp -r editor/dist dist/editor",
+    "dev": "pnpm --filter @dreamcon/explorer dev",
+    "build": "pnpm -r build && rm -rf dist && cp -r explorer/dist/client dist && cp -r editor/dist dist/editor",
     "test": "pnpm -r test",
     "lint": "oxlint --fix",
     "format": "oxfmt",

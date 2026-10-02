@@ -2,7 +2,7 @@
 
 Content management for topics, comments, events and writers, served under `/editor/`. Prerequisites and installation are in the [root README](../README.md).
 
-`pnpm dev`, `pnpm build` and `pnpm test` also work from the repository root. Every other command below runs from this directory, and the paths in this document are relative to it.
+`pnpm build` and `pnpm test` also work from the repository root (the root `pnpm dev` runs the explorer). Every other command below runs from this directory, and the paths in this document are relative to it.
 
 ## Stack
 

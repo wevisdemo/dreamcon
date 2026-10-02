@@ -18,11 +18,12 @@ Both run manually though Github Actions
 
 A pnpm monorepo. Lint, format and git hooks are configured once at the root; everything else is documented in each package's README.
 
-| Package                                | Served under | Description                                              |
-| -------------------------------------- | ------------ | -------------------------------------------------------- |
-| [`@dreamcon/editor`](editor/README.md) | `/editor/`   | Content management: topics, comments, events and writers |
+| Package                                    | Served under | Description                                                                                                     |
+| ------------------------------------------ | ------------ | --------------------------------------------------------------------------------------------------------------- |
+| [`@dreamcon/explorer`](explorer/README.md) | `/`          | Public-facing site                                                                                              |
+| [`@dreamcon/editor`](editor/README.md)     | `/editor/`   | Deprecated, kept during the transition until migrated. Content management: topics, comments, events and writers |
 
-The public-facing site will be a separate package that owns `/`.
+The packages share nothing beyond the root lint, format and git hook setup.
 
 ## Prerequisites
 
@@ -48,7 +49,7 @@ The Nix shell sets `PLAYWRIGHT_BROWSERS_PATH` to a browser from nixpkgs, so `pla
 | Command        | Description                          |
 | -------------- | ------------------------------------ |
 | `pnpm install` | Install dependencies of all packages |
-| `pnpm dev`     | Run the editor dev server            |
+| `pnpm dev`     | Run the explorer dev server          |
 | `pnpm build`   | Build all packages into `dist/`      |
 | `pnpm test`    | Run the e2e suites of all packages   |
 | `pnpm lint`    | Oxlint with autofix                  |
@@ -56,4 +57,4 @@ The Nix shell sets `PLAYWRIGHT_BROWSERS_PATH` to a browser from nixpkgs, so `pla
 
 Lint and format on save are preconfigured for [Zed](https://zed.dev/) in `.zed/settings.json`; install the Oxc extension (`zed: extensions` → "Oxc") to enable them.
 
-`.env` files live at the repository root; the variables are listed in each package's README.
+Each package documents its own `.env` variables in its README: the explorer reads them from `explorer/`, the editor from the repository root.

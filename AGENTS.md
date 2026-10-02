@@ -4,10 +4,12 @@
 
 pnpm monorepo. Lint, format and git hooks are configured once at the root; `pnpm dev`, `build`, `test`, `lint` and `format` run from the root, every other script from its package directory.
 
-- `editor` (`@dreamcon/editor`): content management for topics, comments, events and writers, served under `/editor/`
-- The public-facing site will be a separate package that owns `/`
+- `explorer` (`@dreamcon/explorer`): the public-facing TanStack Start site that owns `/`
+- `editor` (`@dreamcon/editor`): deprecated, kept only during the transition until it is migrated. Content management for topics, comments, events and writers, served under `/editor/`
 
 Each package has its own `AGENTS.md` with its structure, design system and testing rules. Read it before working in that package; nothing there applies to the other packages.
+
+Packages share only the root lint, format and git hook setup. The explorer must never import from, reuse config of, or align dependency versions with the editor; each package keeps its own `.env`, dependencies and tsconfig.
 
 ## Guideline
 

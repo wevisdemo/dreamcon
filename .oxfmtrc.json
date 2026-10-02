@@ -25,8 +25,19 @@
     ],
     "newlinesBetween": false
   },
-  "sortTailwindcss": {
-    "stylesheet": "./editor/src/App.css"
-  },
-  "ignorePatterns": ["pnpm-lock.yaml"]
+  "overrides": [
+    {
+      "files": ["editor/**"],
+      "options": {
+        "sortTailwindcss": { "stylesheet": "./editor/src/App.css" }
+      }
+    },
+    {
+      "files": ["explorer/**"],
+      "options": {
+        "sortTailwindcss": { "stylesheet": "./explorer/src/styles.css" }
+      }
+    }
+  ],
+  "ignorePatterns": ["pnpm-lock.yaml", "explorer/src/routeTree.gen.ts"]
 }
