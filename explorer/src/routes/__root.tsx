@@ -1,4 +1,6 @@
 import { createRootRoute, HeadContent, Scripts } from '@tanstack/react-router';
+import { Footer } from '../components/footer';
+import { Navbar } from '../components/navbar';
 import styles from '../styles.css?url';
 
 export const Route = createRootRoute({
@@ -27,8 +29,10 @@ export const Route = createRootRoute({
       <head>
         <HeadContent />
       </head>
-      <body className="text-b5">
-        {children}
+      <body className="flex min-h-dvh flex-col text-b5">
+        <Navbar />
+        <main className="flex-1">{children}</main>
+        <Footer />
         <Scripts />
       </body>
     </html>

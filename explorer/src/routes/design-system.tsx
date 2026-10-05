@@ -71,7 +71,7 @@ export const Route = createFileRoute('/design-system')({
   }),
   component: function DesignSystem() {
     return (
-      <main className="mx-auto flex max-w-6xl flex-col gap-12 p-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-12 p-8">
         <h1 className="text-h3 font-bold">Design system</h1>
 
         <section className="flex flex-col gap-6">
@@ -109,7 +109,7 @@ export const Route = createFileRoute('/design-system')({
           </h3>
           <TypeScale styles={bodies} />
         </section>
-      </main>
+      </div>
     );
   },
 });

@@ -21,7 +21,7 @@ export const Route = createFileRoute('/')({
   component: function Home() {
     const { events, conversations, groupQuestions } = Route.useLoaderData();
     return (
-      <main className="p-8">
+      <div className="p-8">
         <h1 className="text-h5 font-bold">Dream Constitution</h1>
         <p>
           {events.length} events, {conversations.length} conversations,{' '}
@@ -41,7 +41,7 @@ export const Route = createFileRoute('/')({
             </details>
           )
         )}
-      </main>
+      </div>
     );
   },
 });
