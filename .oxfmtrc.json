@@ -41,7 +41,7 @@
   ],
   "ignorePatterns": [
     "pnpm-lock.yaml",
-    "explorer/src/routeTree.gen.ts",
+    "explorer/src/route-tree.gen.ts",
     "explorer/.claude/skills",
     "explorer/skills-lock.json"
   ]

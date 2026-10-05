@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { getConversations, type Comment } from '../data/conversations';
 import { getEvents } from '../data/events';
-import { getGroupQuestions } from '../data/groupQuestions';
+import { getGroupQuestions } from '../data/group-questions';
 
 const countComments = (comments: Comment[]): number =>
   comments.reduce(

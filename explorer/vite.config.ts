@@ -7,7 +7,10 @@ export default defineConfig({
   server: { port: 3000 },
   // React's plugin must come after Start's
   plugins: [
-    tanstackStart({ prerender: { enabled: true } }),
+    tanstackStart({
+      prerender: { enabled: true },
+      router: { generatedRouteTree: 'route-tree.gen.ts' },
+    }),
     react(),
     tailwindcss(),
   ],

@@ -2,7 +2,7 @@
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "react"],
   "ignorePatterns": [
-    "explorer/src/routeTree.gen.ts",
+    "explorer/src/route-tree.gen.ts",
     "explorer/.claude/skills"
   ],
   "categories": {
