@@ -12,7 +12,7 @@ export function Footer() {
         <img src={logo} alt="Dream Con" className="h-7.5 md:h-10" />
       </Link>
       <div className="flex flex-col gap-5 md:contents">
-        <ul className="flex flex-col gap-1.25 text-h8 md:flex-row md:gap-15 md:text-h10">
+        <ul className="flex flex-col gap-1.25 text-h10 md:flex-row md:gap-15">
           {menus.map(({ label, to }) => (
             <li key={label}>
               <Link
@@ -26,7 +26,7 @@ export function Footer() {
         </ul>
         <a
           href={`mailto:${email}`}
-          className="flex gap-1.25 text-b5 hover:text-blue-5 md:text-b6"
+          className="flex gap-1.25 text-b6 hover:text-blue-5"
         >
           <MailIcon className="size-5" />
           {email}
