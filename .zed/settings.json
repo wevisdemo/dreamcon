@@ -1,5 +1,6 @@
 // Needs the Oxc extension (`zed: extensions` → "Oxc"); project settings cannot install it.
 // Both language servers run the workspace's own oxlint/oxfmt, so `pnpm install` first.
+// `language_servers` re-enables them in case user settings disable them globally.
 {
   "lsp": {
     "oxlint": {
@@ -13,6 +14,7 @@
   },
   "languages": {
     "TypeScript": {
+      "language_servers": ["oxlint", "oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [
@@ -21,6 +23,7 @@
       ]
     },
     "TSX": {
+      "language_servers": ["oxlint", "oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [
@@ -29,6 +32,7 @@
       ]
     },
     "JavaScript": {
+      "language_servers": ["oxlint", "oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [
@@ -37,31 +41,37 @@
       ]
     },
     "JSON": {
+      "language_servers": ["oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [{ "language_server": { "name": "oxfmt" } }]
     },
     "JSONC": {
+      "language_servers": ["oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [{ "language_server": { "name": "oxfmt" } }]
     },
     "CSS": {
+      "language_servers": ["oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [{ "language_server": { "name": "oxfmt" } }]
     },
     "HTML": {
+      "language_servers": ["oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [{ "language_server": { "name": "oxfmt" } }]
     },
     "Markdown": {
+      "language_servers": ["oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [{ "language_server": { "name": "oxfmt" } }]
     },
     "YAML": {
+      "language_servers": ["oxfmt", "..."],
       "format_on_save": "on",
       "prettier": { "allowed": false },
       "formatter": [{ "language_server": { "name": "oxfmt" } }]

@@ -24,5 +24,5 @@ Packages share only the root lint, format and git hook setup. The explorer must 
 ## Git Commit Message Style
 
 - Do not commit unless explicitly asked
-- Use conventional commit format with the package name as scope (`explorer`, `editor`), or `global` for changes spanning the repo, e.g. `feat(explorer): add navbar`. Validated by commitlint in the `commit-msg` hook (`commitlint.config.js`)
+- Use conventional commit format with the package name as scope (`explorer`, `editor`), or no scope for changes spanning the repo, e.g. `feat(explorer): add navbar`, `build: add commitlint`. Validated by commitlint in the `commit-msg` hook (`commitlint.config.js`)
 - Don't add body to the commit message. Concisely explain changes to the message title
