@@ -9,6 +9,7 @@ import {
   Object,
   type StaticDecode,
 } from 'sheethuahua';
+import { commentViews } from '../constants/comment-views';
 import { asStrings, csvUrl, once } from './shared';
 
 const topicSchema = Object({
@@ -19,7 +20,7 @@ const topicSchema = Object({
 
 const commentSchema = Object({
   id: Column('id', asString()),
-  view: Column('comment_view', asOneOf(['เห็นด้วย', 'ไม่เห็นด้วย', 'เห็นด้วยบางส่วน'])),
+  view: Column('comment_view', asOneOf(commentViews)),
   reason: Column('reason', asString()),
   eventIds: Column('event_ids', asStrings()),
   parentTopicId: Column('parent_topic_id', asString()),

@@ -1,4 +1,14 @@
+import { useState, type ReactNode } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
+import { Button } from '../components/button';
+import { CommentDot } from '../components/comment-dot';
+import { CommentTag } from '../components/comment-tag';
+import { Dropdown } from '../components/dropdown';
+import { FilterTag } from '../components/filter-tag';
+import { SearchBar } from '../components/search-bar';
+import { Tabs } from '../components/tabs';
+import { commentViews } from '../constants/comment-views';
+import { CloseIcon } from '../icons/close';
 
 const palettes = [
   {
@@ -36,6 +46,24 @@ const bodies = [
 
 const sample = 'รัฐธรรมนูญในฝัน Dream Constitution';
 
+const buttonRows = [
+  {
+    background: 'bg-white',
+    variants: [
+      'primary-blue',
+      'primary-gray',
+      'secondary',
+      'tertiary-blue',
+      'tertiary-gray',
+      'icon-blue',
+    ],
+  },
+  {
+    background: 'bg-blue-7 text-white',
+    variants: ['primary-white', 'tertiary-white', 'icon-white'],
+  },
+] as const;
+
 function TypeScale({
   styles,
 }: {
@@ -62,6 +90,80 @@ function TypeScale({
   );
 }
 
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="group">
+      <summary className="flex cursor-pointer list-none items-center justify-between py-6 [&::-webkit-details-marker]:hidden">
+        <h2 className="text-h5 font-bold">{title}</h2>
+        <CloseIcon className="size-8 rotate-45 transition-transform group-open:rotate-0" />
+      </summary>
+      <div className="flex flex-col gap-8 pb-8">{children}</div>
+    </details>
+  );
+}
+
+function Subsection({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <h3 className="text-h8 font-bold first-letter:uppercase">{title}</h3>
+      {children}
+    </div>
+  );
+}
+
+function Showcase({
+  caption,
+  className = '',
+  children,
+}: {
+  caption?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      {caption && <code className="text-b6 text-gray-7">{caption}</code>}
+      <div
+        className={`flex flex-wrap items-end gap-8 rounded-lg border border-gray-3 p-6 ${className}`}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Specimen({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      {children}
+      <code className="text-b7">{label}</code>
+    </div>
+  );
+}
+
+function TabsDemo() {
+  const [tab, setTab] = useState('category');
+
+  return (
+    <div className="max-w-sm">
+      <Tabs
+        tabs={[
+          { value: 'category', label: 'หมวดหมู่' },
+          { value: 'event', label: 'วงสนทนา' },
+        ]}
+        value={tab}
+        onChange={setTab}
+      />
+    </div>
+  );
+}
+
 export const Route = createFileRoute('/design-system')({
   head: () => ({
     meta: [
@@ -71,44 +173,143 @@ export const Route = createFileRoute('/design-system')({
   }),
   component: function DesignSystem() {
     return (
-      <div className="mx-auto flex max-w-6xl flex-col gap-12 p-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 p-8">
         <h1 className="text-h3 font-bold">Design system</h1>
 
-        <section className="flex flex-col gap-6">
-          <h2 className="text-h5 font-bold">Colors</h2>
-          {palettes.map(({ name, shades }) => (
-            <div key={name} className="flex flex-col gap-2">
-              <h3 className="text-h8 font-bold capitalize">{name}</h3>
-              <ul className="grid grid-cols-5 gap-2 md:grid-cols-10">
-                {shades.map(shade => (
-                  <li key={shade} className="flex flex-col gap-1">
-                    <div
-                      className="aspect-square rounded-lg border border-gray-3"
-                      style={{ background: `var(--color-${shade})` }}
-                    />
-                    <code className="text-b7">{shade}</code>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </section>
+        <div className="divide-y divide-gray-3 border-y border-gray-3">
+          <Section title="Colors">
+            {palettes.map(({ name, shades }) => (
+              <Subsection key={name} title={name}>
+                <ul className="grid grid-cols-5 gap-2 md:grid-cols-10">
+                  {shades.map(shade => (
+                    <li key={shade} className="flex flex-col gap-1">
+                      <div
+                        className="aspect-square rounded-lg border border-gray-3"
+                        style={{ background: `var(--color-${shade})` }}
+                      />
+                      <code className="text-b7">{shade}</code>
+                    </li>
+                  ))}
+                </ul>
+              </Subsection>
+            ))}
+          </Section>
 
-        <section className="flex flex-col gap-2">
-          <h2 className="text-h5 font-bold">Typography</h2>
-          <p className="text-b5 text-gray-7">
-            Sizes are mobile/desktop, switching at <code>md</code>. Weight is
-            set separately with <code>font-bold</code>.
-          </p>
-          <h3 className="mt-4 text-h8 font-bold">
-            Heading · IBM Plex Sans Thai
-          </h3>
-          <TypeScale styles={headings} />
-          <h3 className="mt-4 text-h8 font-bold">
-            Body · IBM Plex Sans Thai Looped (default)
-          </h3>
-          <TypeScale styles={bodies} />
-        </section>
+          <Section title="Typography">
+            <p className="text-b5 text-gray-7">
+              Sizes are mobile/desktop, switching at <code>md</code>. Weight is
+              set separately with <code>font-bold</code>.
+            </p>
+            <Subsection title="Heading · IBM Plex Sans Thai">
+              <TypeScale styles={headings} />
+            </Subsection>
+            <Subsection title="Body · IBM Plex Sans Thai Looped (default)">
+              <TypeScale styles={bodies} />
+            </Subsection>
+          </Section>
+
+          <Section title="Components">
+            <Subsection title="Button">
+              {buttonRows.map(({ background, variants }) =>
+                (['large', 'small'] as const).map(size => (
+                  <Showcase
+                    key={`${background}-${size}`}
+                    caption={`size="${size}"`}
+                    className={background}
+                  >
+                    {variants.map(variant => {
+                      const isIcon = variant.startsWith('icon');
+                      return (
+                        <Specimen key={variant} label={variant}>
+                          <Button
+                            variant={variant}
+                            size={size}
+                            icon={<CloseIcon />}
+                            aria-label={isIcon ? 'ปิด' : undefined}
+                          >
+                            {!isIcon && 'ปุ่ม'}
+                          </Button>
+                        </Specimen>
+                      );
+                    })}
+                  </Showcase>
+                ))
+              )}
+            </Subsection>
+            <Subsection title="Tabs">
+              <TabsDemo />
+            </Subsection>
+            <Subsection title="Filter tag">
+              <Showcase>
+                {(['primary', 'secondary'] as const).map(variant =>
+                  (['large', 'medium', 'small'] as const).map(size => (
+                    <Specimen
+                      key={`${variant}-${size}`}
+                      label={`${variant} · ${size}`}
+                    >
+                      <FilterTag variant={variant} size={size}>
+                        ตัวกรอง
+                      </FilterTag>
+                    </Specimen>
+                  ))
+                )}
+              </Showcase>
+            </Subsection>
+            <Subsection title="Comment tag">
+              {(['medium', 'small'] as const).map(size => (
+                <Showcase key={size} caption={`size="${size}"`}>
+                  {[false, true].map(selected =>
+                    commentViews.map(view => (
+                      <Specimen
+                        key={`${view}-${selected}`}
+                        label={selected ? 'selected' : 'default'}
+                      >
+                        <CommentTag
+                          view={view}
+                          count={20}
+                          size={size}
+                          selected={selected}
+                        />
+                      </Specimen>
+                    ))
+                  )}
+                </Showcase>
+              ))}
+            </Subsection>
+            <Subsection title="Comment dot">
+              <Showcase>
+                {[false, true].map(extended =>
+                  [...commentViews, undefined].map(view => (
+                    <Specimen
+                      key={`${view}-${extended}`}
+                      label={`${view ?? 'no view'}${extended ? ' · extended' : ''}`}
+                    >
+                      <CommentDot view={view} extended={extended} />
+                    </Specimen>
+                  ))
+                )}
+              </Showcase>
+            </Subsection>
+            <Subsection title="Search bar">
+              <Showcase className="bg-blue-1">
+                <SearchBar onSearch={() => {}} className="w-64" />
+              </Showcase>
+            </Subsection>
+            <Subsection title="Dropdown">
+              <Showcase className="bg-gray-1">
+                <Dropdown
+                  aria-label="เรียงตาม"
+                  options={[
+                    { value: 'latest', label: 'ล่าสุด' },
+                    { value: 'most-comments', label: 'ความคิดเห็นมากที่สุด' },
+                    { value: 'most-agree', label: 'เห็นด้วยมากที่สุด' },
+                  ]}
+                  className="w-45"
+                />
+              </Showcase>
+            </Subsection>
+          </Section>
+        </div>
       </div>
     );
   },
