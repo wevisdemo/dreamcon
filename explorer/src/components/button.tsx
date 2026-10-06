@@ -5,7 +5,7 @@ const variants = {
   'primary-gray': 'rounded-full bg-gray-3 text-gray-8 hover:bg-gray-4',
   'primary-white': 'rounded-full bg-white text-gray-8 hover:bg-blue-2',
   secondary:
-    'rounded-full border-2 border-current text-blue-7 hover:text-blue-8',
+    'rounded-full bg-blue-2 border-2 border-current text-blue-7 hover:text-blue-8',
   'tertiary-blue': 'text-blue-7 hover:text-blue-8',
   'tertiary-gray': 'text-gray-6 hover:text-gray-8',
   'tertiary-white': 'text-white hover:text-blue-3',
@@ -13,11 +13,9 @@ const variants = {
   'icon-white': 'text-white hover:text-blue-3',
 };
 
-const trimBothCap = '[&>span]:[text-box:trim-both_cap_alphabetic]';
-
 const filledSizes = {
-  large: `h-11 gap-1.25 px-5 text-b5 font-bold [&_svg]:size-4.5 ${trimBothCap}`,
-  small: `h-7.5 gap-1.25 px-2.5 text-b6 font-bold [&_svg]:size-3.5 ${trimBothCap}`,
+  large: `h-11 gap-1.25 px-5 text-b5 font-bold [&_svg]:size-4.5`,
+  small: `h-7.5 gap-1.25 px-2.5 text-b6 font-bold [&_svg]:size-3.5`,
 };
 
 const sizes = {

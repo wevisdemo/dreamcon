@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Button } from '../components/button';
+import { CategoryFilter } from '../components/dashboard/category-filter';
+import { FilterSidebar } from '../components/dashboard/filter-sidebar';
 import { Legend } from '../components/dashboard/legend';
 import { Masonry } from '../components/dashboard/masonry';
 import { TopicCard } from '../components/dashboard/topic-card';
@@ -9,7 +11,13 @@ import { SearchBar } from '../components/search-bar';
 import { commentViews, type CommentView } from '../constants/comment-views';
 import { getConversations, type Comment } from '../data/conversations';
 import { getEvents } from '../data/events';
+import { getGroupQuestions } from '../data/group-questions';
 import { CloseIcon } from '../icons/close';
+import {
+  formatCategorySelection,
+  matchesCategorySelection,
+  type CategorySelection,
+} from '../utils/category-selection';
 
 const sortOptions: {
   value: string;
@@ -30,14 +38,16 @@ const flattenComments = (comments: Comment[]): Comment[] =>
 
 export const Route = createFileRoute('/dashboard')({
   loader: async () => {
-    const [events, conversations] = await Promise.all([
+    const [events, conversations, categories] = await Promise.all([
       getEvents(),
       getConversations(),
+      getGroupQuestions(),
     ]);
     const targetGroupTypesByEvent = new Map(
       events.map(({ id, targetGroup }) => [id, targetGroup.types])
     );
     return {
+      categories,
       conversations: conversations.map(({ eventIds, ...conversation }) => ({
         ...conversation,
         targetGroupTypes: [
@@ -49,10 +59,13 @@ export const Route = createFileRoute('/dashboard')({
     };
   },
   component: function Dashboard() {
-    const { conversations } = Route.useLoaderData();
+    const { categories, conversations } = Route.useLoaderData();
     const [sortBy, setSortBy] = useState(sortOptions[0].value);
     const [keyword, setKeyword] = useState('');
     const [searchBarKey, setSearchBarKey] = useState(0);
+    const [categorySelection, setCategorySelection] =
+      useState<CategorySelection>();
+    const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
 
     const { views } =
       sortOptions.find(({ value }) => value === sortBy) ?? sortOptions[0];
@@ -67,7 +80,7 @@ export const Route = createFileRoute('/dashboard')({
     const indexOfKeyword = (text: string) =>
       text.toLowerCase().indexOf(keyword.toLowerCase());
 
-    const filteredConversations = sortedConversations.flatMap(conversation => {
+    const searchedConversations = sortedConversations.flatMap(conversation => {
       const matchedComment = keyword
         ? flattenComments(conversation.comments).find(
             ({ reason }) => indexOfKeyword(reason) >= 0
@@ -83,57 +96,95 @@ export const Route = createFileRoute('/dashboard')({
       return isMatched ? [{ ...conversation, matchedComment }] : [];
     });
 
+    const filteredConversations = categorySelection
+      ? searchedConversations.filter(({ groups }) =>
+          matchesCategorySelection(groups, categorySelection)
+        )
+      : searchedConversations;
+
     return (
       <div className="flex flex-1 bg-blue-3">
-        <div className="mx-auto flex w-[95vw] max-w-[calc(3*500px+2*(--spacing(5)))] flex-col gap-3 md:py-5">
-          <div className="flex flex-row flex-wrap justify-start gap-2 rounded-xl bg-blue-1 p-2 md:gap-2 md:p-4">
-            <SearchBar
-              key={searchBarKey}
-              onSearch={query => setKeyword(query.trim())}
+        <div className="mx-auto flex w-[95vw] max-w-[calc(3*500px+2*(--spacing(5)))] md:py-5">
+          <FilterSidebar
+            isOpen={isFilterSidebarOpen}
+            onClose={() => setIsFilterSidebarOpen(false)}
+          >
+            <CategoryFilter
+              categories={categories}
+              conversations={searchedConversations}
+              selection={categorySelection}
+              onSelect={setCategorySelection}
             />
-            <Button
-              variant="tertiary-gray"
-              icon={<CloseIcon />}
-              onClick={() => {
-                setKeyword('');
-                setSearchBarKey(key => key + 1);
-              }}
-            >
-              ล้างตัวกรอง
-            </Button>
-          </div>
-
-          {filteredConversations.length === 0 ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-1 text-center">
-              <p className="font-bold">ไม่พบข้อถกเถียงตามตัวกรองที่เลือก</p>
-              <p>ลองเปลี่ยนตัวกรอง</p>
+          </FilterSidebar>
+          <div className="flex min-w-0 flex-1 flex-col gap-3">
+            <div className="flex flex-row flex-wrap justify-start gap-2 rounded-xl bg-blue-1 p-2 md:gap-2 md:p-4 lg:flex-nowrap">
+              <SearchBar
+                key={searchBarKey}
+                onSearch={query => setKeyword(query.trim())}
+                className="shrink-0"
+              />
+              <Button
+                variant={categorySelection ? 'primary-blue' : 'secondary'}
+                aria-expanded={isFilterSidebarOpen}
+                onClick={() => setIsFilterSidebarOpen(isOpen => !isOpen)}
+                className="max-w-full min-w-0 lg:shrink [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
+              >
+                {categorySelection
+                  ? formatCategorySelection(categories, categorySelection)
+                  : 'ทุกหมวดหมู่'}
+              </Button>
+              {(keyword || categorySelection) && (
+                <Button
+                  variant="tertiary-gray"
+                  icon={<CloseIcon />}
+                  onClick={() => {
+                    setKeyword('');
+                    setSearchBarKey(key => key + 1);
+                    setCategorySelection(undefined);
+                  }}
+                >
+                  ล้างตัวกรอง
+                </Button>
+              )}
             </div>
-          ) : (
-            <>
-              <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3 whitespace-nowrap">
-                <div className="flex flex-wrap items-center gap-3 text-b7 text-gray-8">
-                  <p className="text-gray-8">
-                    แสดง <b>{filteredConversations.length}</b> จากทั้งหมด{' '}
-                    {conversations.length} ข้อถกเถียง
-                  </p>
-                  <label className="flex items-center gap-2 text-gray-6">
-                    เรียงตาม
-                    <Dropdown
-                      options={sortOptions}
-                      value={sortBy}
-                      onChange={event => setSortBy(event.target.value)}
-                    />
-                  </label>
-                </div>
-                <Legend />
+
+            {filteredConversations.length === 0 ? (
+              <div className="flex flex-1 flex-col items-center justify-center gap-1 text-center">
+                <p className="font-bold">ไม่พบข้อถกเถียงตามตัวกรองที่เลือก</p>
+                <p>ลองเปลี่ยนตัวกรอง</p>
               </div>
-              <Masonry maxColumnWidth={500} className="gap-3 md:gap-5">
-                {filteredConversations.map(({ id, ...conversation }) => (
-                  <TopicCard key={id} keyword={keyword} {...conversation} />
-                ))}
-              </Masonry>
-            </>
-          )}
+            ) : (
+              <>
+                <div className="flex flex-wrap items-center justify-between gap-x-5 gap-y-3 whitespace-nowrap">
+                  <div className="flex flex-wrap items-center gap-3 text-b7 text-gray-8">
+                    <p className="text-gray-8">
+                      แสดง <b>{filteredConversations.length}</b> จากทั้งหมด{' '}
+                      {conversations.length} ข้อถกเถียง
+                    </p>
+                    <label className="flex items-center gap-2 text-gray-6">
+                      เรียงตาม
+                      <Dropdown
+                        options={sortOptions}
+                        value={sortBy}
+                        onChange={event => setSortBy(event.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <Legend />
+                </div>
+                <Masonry maxColumnWidth={500} className="gap-3 md:gap-5">
+                  {filteredConversations.map(({ id, ...conversation }) => (
+                    <TopicCard
+                      key={id}
+                      keyword={keyword}
+                      selectedCategory={categorySelection?.category}
+                      {...conversation}
+                    />
+                  ))}
+                </Masonry>
+              </>
+            )}
+          </div>
         </div>
       </div>
     );

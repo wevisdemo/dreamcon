@@ -12,10 +12,12 @@ export function TopicCard({
   targetGroupTypes,
   keyword,
   matchedComment,
+  selectedCategory,
 }: Pick<Conversation, 'title' | 'groups' | 'comments'> & {
   targetGroupTypes: string[];
   keyword: string;
   matchedComment?: Comment;
+  selectedCategory?: string;
 }) {
   const categories = [...new Set(groups.map(({ category }) => category))];
   const commentExcerpt =
@@ -30,7 +32,12 @@ export function TopicCard({
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-0.5">
             {categories.map(category => (
-              <FilterTag key={category}>
+              <FilterTag
+                key={category}
+                variant={
+                  category === selectedCategory ? 'primary' : 'secondary'
+                }
+              >
                 <HighlightedText text={category} keyword={keyword} />
               </FilterTag>
             ))}
