@@ -9,9 +9,18 @@ export function Dropdown({
   options: { value: string; label: string }[];
 }) {
   return (
-    <div className={`group relative ${className}`}>
+    <div className={`group relative inline-grid min-w-45 ${className}`}>
+      {options.map(({ value, label }) => (
+        <span
+          key={value}
+          aria-hidden
+          className="invisible col-start-1 row-start-1 h-0 pr-7 pl-3 text-b7 whitespace-nowrap"
+        >
+          {label}
+        </span>
+      ))}
       <select
-        className="flex h-7 w-full cursor-pointer appearance-none items-center truncate rounded-[10px] bg-blue-1 pr-7 pl-3 text-b7 text-gray-8 outline-offset-2 hover:bg-white supports-[appearance:base-select]:[appearance:base-select] [&::picker(select)]:my-1.25 [&::picker(select)]:[appearance:base-select] [&::picker(select)]:rounded-[10px] [&::picker(select)]:border-0 [&::picker(select)]:bg-white [&::picker(select)]:shadow-[3px_7px_17.2px_#0000001a] [&::picker(select)]:[position-try-order:normal] [&::picker-icon]:hidden [&:open]:bg-white"
+        className="col-start-1 row-start-1 flex h-7 w-full cursor-pointer appearance-none items-center truncate rounded-[10px] bg-blue-1 pr-7 pl-3 text-b7 text-gray-8 outline-offset-2 hover:bg-white supports-[appearance:base-select]:[appearance:base-select] [&::picker(select)]:my-1.25 [&::picker(select)]:w-max [&::picker(select)]:min-w-[anchor-size(width)] [&::picker(select)]:[appearance:base-select] [&::picker(select)]:rounded-[10px] [&::picker(select)]:border-0 [&::picker(select)]:bg-white [&::picker(select)]:shadow-[3px_7px_17.2px_#0000001a] [&::picker(select)]:[position-try-order:normal] [&::picker-icon]:hidden [&:open]:bg-white"
         {...props}
       >
         {options.map(({ value, label }) => (

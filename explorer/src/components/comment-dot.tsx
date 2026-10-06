@@ -15,7 +15,7 @@ export function CommentDot({
 }) {
   return (
     <span
-      className={`inline-flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-3 text-gray-8 ${view ? views[view] : ''}`}
+      className={`inline-flex size-4 shrink-0 items-center justify-center rounded-full border border-gray-5 text-gray-8 ${view ? views[view] : ''}`}
     >
       {extended && (
         <svg

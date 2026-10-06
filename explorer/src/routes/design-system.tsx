@@ -304,7 +304,6 @@ export const Route = createFileRoute('/design-system')({
                     { value: 'most-comments', label: 'ความคิดเห็นมากที่สุด' },
                     { value: 'most-agree', label: 'เห็นด้วยมากที่สุด' },
                   ]}
-                  className="w-45"
                 />
               </Showcase>
             </Subsection>
