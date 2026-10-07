@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { BackToTopButton } from '../components/back-to-top-button';
-import { Button } from '../components/button';
-import { CategoryFilter } from '../components/dashboard/category-filter';
-import { FilterSidebar } from '../components/dashboard/filter-sidebar';
+import { FilterCategory } from '../components/dashboard/filter-category';
+import { FilterEvent } from '../components/dashboard/filter-event';
+import {
+  FilterSidebar,
+  type FilterTab,
+} from '../components/dashboard/filter-sidebar';
+import { FilterToolbar } from '../components/dashboard/filter-toolbar';
 import { Legend } from '../components/dashboard/legend';
 import { Masonry } from '../components/dashboard/masonry';
 import { TopicCard } from '../components/dashboard/topic-card';
 import { Dropdown } from '../components/dropdown';
-import { SearchBar } from '../components/search-bar';
 import { commentViews, type CommentView } from '../constants/comment-views';
-import { getConversations, type Comment } from '../data/conversations';
+import { getConversations } from '../data/conversations';
 import { getEvents } from '../data/events';
 import { getGroupQuestions } from '../data/group-questions';
-import { CloseIcon } from '../icons/close';
 import {
-  formatCategorySelection,
   matchesCategorySelection,
   type CategorySelection,
-} from '../utils/category-selection';
+  getSelectedTargetGroupTypes,
+  matchesEventSelection,
+  type EventSelection,
+  searchConversations,
+} from '../utils/filter';
 
 const sortOptions: {
   value: string;
@@ -34,9 +39,6 @@ const sortOptions: {
   },
 ];
 
-const flattenComments = (comments: Comment[]): Comment[] =>
-  comments.flatMap(comment => [comment, ...flattenComments(comment.comments)]);
-
 export const Route = createFileRoute('/dashboard')({
   loader: async () => {
     const [events, conversations, categories] = await Promise.all([
@@ -49,8 +51,10 @@ export const Route = createFileRoute('/dashboard')({
     );
     return {
       categories,
+      events: events.toSorted((a, b) => b.date.getTime() - a.date.getTime()),
       conversations: conversations.map(({ eventIds, ...conversation }) => ({
         ...conversation,
+        eventIds,
         targetGroupTypes: [
           ...new Set(
             eventIds.flatMap(id => targetGroupTypesByEvent.get(id) ?? [])
@@ -60,13 +64,19 @@ export const Route = createFileRoute('/dashboard')({
     };
   },
   component: function Dashboard() {
-    const { categories, conversations } = Route.useLoaderData();
+    const { categories, events, conversations } = Route.useLoaderData();
     const [sortBy, setSortBy] = useState(sortOptions[0].value);
     const [keyword, setKeyword] = useState('');
-    const [searchBarKey, setSearchBarKey] = useState(0);
     const [categorySelection, setCategorySelection] =
       useState<CategorySelection>();
+    const [eventSelection, setEventSelection] = useState<EventSelection>();
     const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
+    const [filterTab, setFilterTab] = useState<FilterTab>('category');
+
+    const toggleFilterSidebar = (tab: FilterTab) => {
+      setIsFilterSidebarOpen(isOpen => !(isOpen && filterTab === tab));
+      setFilterTab(tab);
+    };
 
     const { views } =
       sortOptions.find(({ value }) => value === sortBy) ?? sortOptions[0];
@@ -78,78 +88,66 @@ export const Route = createFileRoute('/dashboard')({
       (a, b) => countViews(b) - countViews(a)
     );
 
-    const indexOfKeyword = (text: string) =>
-      text.toLowerCase().indexOf(keyword.toLowerCase());
+    const searchedConversations = searchConversations(
+      sortedConversations,
+      keyword
+    );
 
-    const searchedConversations = sortedConversations.flatMap(conversation => {
-      const matchedComment = keyword
-        ? flattenComments(conversation.comments).find(
-            ({ reason }) => indexOfKeyword(reason) >= 0
-          )
-        : undefined;
-      const isMatched =
-        indexOfKeyword(conversation.title) >= 0 ||
-        conversation.groups.some(
-          ({ category }) => indexOfKeyword(category) >= 0
-        ) ||
-        matchedComment;
+    const matchesCategory = ({ groups }: (typeof conversations)[number]) =>
+      !categorySelection || matchesCategorySelection(groups, categorySelection);
 
-      return isMatched ? [{ ...conversation, matchedComment }] : [];
-    });
+    const matchesEvent = (conversation: (typeof conversations)[number]) =>
+      !eventSelection || matchesEventSelection(conversation, eventSelection);
 
-    const filteredConversations = categorySelection
-      ? searchedConversations.filter(({ groups }) =>
-          matchesCategorySelection(groups, categorySelection)
-        )
-      : searchedConversations;
+    const filteredConversations = searchedConversations.filter(
+      conversation =>
+        matchesCategory(conversation) && matchesEvent(conversation)
+    );
+
+    const selectedTargetGroupTypes =
+      getSelectedTargetGroupTypes(eventSelection);
 
     return (
       <div className="flex flex-1 bg-blue-3">
         <div className="mx-auto flex w-[95vw] max-w-[calc(3*500px+2*(--spacing(5)))] py-3 md:py-5">
           <FilterSidebar
             isOpen={isFilterSidebarOpen}
+            tab={filterTab}
+            onTabChange={setFilterTab}
             onClose={() => setIsFilterSidebarOpen(false)}
           >
-            <CategoryFilter
-              categories={categories}
-              conversations={searchedConversations}
-              selection={categorySelection}
-              onSelect={setCategorySelection}
-            />
+            {filterTab === 'category' ? (
+              <FilterCategory
+                categories={categories}
+                conversations={searchedConversations.filter(matchesEvent)}
+                selection={categorySelection}
+                onSelect={setCategorySelection}
+              />
+            ) : (
+              <FilterEvent
+                events={events}
+                conversations={searchedConversations.filter(matchesCategory)}
+                selection={eventSelection}
+                onSelect={setEventSelection}
+              />
+            )}
           </FilterSidebar>
           <div className="flex min-w-0 flex-1 flex-col">
-            <div className="pb-3 md:sticky md:top-14 md:z-10 md:-mt-5 md:bg-blue-3 md:pt-5">
-              <div className="flex flex-row flex-wrap justify-start gap-3 rounded-xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
-                <SearchBar
-                  key={searchBarKey}
-                  onSearch={query => setKeyword(query.trim())}
-                  className="w-full shrink-0 md:w-auto"
-                />
-                <Button
-                  variant={categorySelection ? 'primary-blue' : 'secondary'}
-                  aria-expanded={isFilterSidebarOpen}
-                  onClick={() => setIsFilterSidebarOpen(isOpen => !isOpen)}
-                  className="w-full max-w-full min-w-0 md:w-auto lg:shrink [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
-                >
-                  {categorySelection
-                    ? formatCategorySelection(categories, categorySelection)
-                    : 'ทุกหมวดหมู่'}
-                </Button>
-                {(keyword || categorySelection) && (
-                  <Button
-                    variant="tertiary-gray"
-                    icon={<CloseIcon />}
-                    onClick={() => {
-                      setKeyword('');
-                      setSearchBarKey(key => key + 1);
-                      setCategorySelection(undefined);
-                    }}
-                  >
-                    ล้างตัวกรอง
-                  </Button>
-                )}
-              </div>
-            </div>
+            <FilterToolbar
+              categories={categories}
+              events={events}
+              keyword={keyword}
+              categorySelection={categorySelection}
+              eventSelection={eventSelection}
+              expandedTab={isFilterSidebarOpen ? filterTab : undefined}
+              onSearch={setKeyword}
+              onToggle={toggleFilterSidebar}
+              onClear={() => {
+                setKeyword('');
+                setCategorySelection(undefined);
+                setEventSelection(undefined);
+              }}
+            />
 
             {filteredConversations.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-1 text-center">
@@ -181,6 +179,7 @@ export const Route = createFileRoute('/dashboard')({
                       key={id}
                       keyword={keyword}
                       selectedCategory={categorySelection?.category}
+                      selectedTargetGroupTypes={selectedTargetGroupTypes}
                       {...conversation}
                     />
                   ))}

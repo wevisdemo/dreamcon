@@ -13,11 +13,13 @@ export function TopicCard({
   keyword,
   matchedComment,
   selectedCategory,
+  selectedTargetGroupTypes = [],
 }: Pick<Conversation, 'title' | 'groups' | 'comments'> & {
   targetGroupTypes: string[];
   keyword: string;
   matchedComment?: Comment;
   selectedCategory?: string;
+  selectedTargetGroupTypes?: string[];
 }) {
   const categories = [...new Set(groups.map(({ category }) => category))];
   const commentExcerpt =
@@ -66,7 +68,16 @@ export function TopicCard({
         <div className="flex flex-wrap items-center gap-0.5 border-t border-gray-3 pt-2 md:pt-4">
           <span className="text-b7 text-blue-7">จากวงสนทนาที่มี</span>
           {targetGroupTypes.map(type => (
-            <FilterTag key={type}>{type}</FilterTag>
+            <FilterTag
+              key={type}
+              variant={
+                selectedTargetGroupTypes.includes(type)
+                  ? 'primary'
+                  : 'secondary'
+              }
+            >
+              {type}
+            </FilterTag>
           ))}
         </div>
       )}

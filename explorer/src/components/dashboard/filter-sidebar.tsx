@@ -3,12 +3,23 @@ import { ChevronsLeftIcon } from '../../icons/chevrons-left';
 import { Button } from '../button';
 import { Tabs } from '../tabs';
 
+export type FilterTab = 'category' | 'event';
+
+const tabs: { value: FilterTab; label: string }[] = [
+  { value: 'category', label: 'หมวดหมู่' },
+  { value: 'event', label: 'วงสนทนา' },
+];
+
 export function FilterSidebar({
   isOpen,
+  tab,
+  onTabChange,
   onClose,
   children,
 }: {
   isOpen: boolean;
+  tab: FilterTab;
+  onTabChange: (tab: FilterTab) => void;
   onClose: () => void;
   children: ReactNode;
 }) {
@@ -22,11 +33,7 @@ export function FilterSidebar({
       >
         <div className="flex items-center">
           <div className="flex-1">
-            <Tabs
-              tabs={[{ value: 'category', label: 'หมวดหมู่' }]}
-              value="category"
-              onChange={() => {}}
-            />
+            <Tabs tabs={tabs} value={tab} onChange={onTabChange} />
           </div>
           <Button
             variant="icon-blue"

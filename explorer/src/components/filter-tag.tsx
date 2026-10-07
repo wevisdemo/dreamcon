@@ -12,22 +12,31 @@ const sizes = {
 };
 
 export function FilterTag({
+  as = 'button',
   variant = 'secondary',
   size = 'small',
   className = '',
   children,
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
+  as?: 'button' | 'span';
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
 }) {
-  return (
+  const tagClassName = `inline-flex shrink-0 items-center justify-center rounded-full ${variants[variant]} ${sizes[size]} ${className}`;
+  const content = (
+    <span className="[text-box:trim-both_cap_alphabetic]">{children}</span>
+  );
+
+  return as === 'span' ? (
+    <span className={`pointer-events-none ${tagClassName}`}>{content}</span>
+  ) : (
     <button
       type="button"
-      className={`inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`cursor-pointer ${tagClassName}`}
       {...props}
     >
-      <span className="[text-box:trim-both_cap_alphabetic]">{children}</span>
+      {content}
     </button>
   );
 }

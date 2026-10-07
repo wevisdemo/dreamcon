@@ -6,12 +6,12 @@ import {
   formatCategorySelection,
   matchesCategorySelection,
   type CategorySelection,
-} from '../../utils/category-selection';
+} from '../../utils/filter';
 import { Button } from '../button';
 
 const otherCategory = 'อื่น ๆ';
 
-export function CategoryFilter({
+export function FilterCategory({
   categories,
   conversations,
   selection,
@@ -60,7 +60,7 @@ export function CategoryFilter({
               variant="tertiary-gray"
               icon={<CloseIcon />}
               onClick={() => onSelect(undefined)}
-              className="self-end"
+              className="my-1 self-end"
             >
               ล้างหมวดหมู่
             </Button>
