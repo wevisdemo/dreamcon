@@ -7,12 +7,13 @@ Because the constitution may sometimes feel distant, we invite everyone to share
 
 ## Deployment
 
-| Name           | URL                             |
-| -------------- | ------------------------------- |
-| Web production | https://dreamcon.wevis.info/    |
-| Published data | published-data branch on GitHub |
+| Name              | URL                                                                                  | Trigger                                        | Workflow                                                             |
+| ----------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------- |
+| Editor production | https://dreamcon.wevis.info/                                                         | Manual, after the e2e tests pass               | [Deploy editor to production](.github/workflows/editor-prod.yml)     |
+| Explorer staging  | https://wevisdemo.github.io/dreamcon/                                                | Push to `main` touching `explorer/`, or manual | [Deploy explorer to staging](.github/workflows/explorer-staging.yml) |
+| Published data    | [`published-data`](https://github.com/wevisdemo/dreamcon/tree/published-data) branch | Manual                                         | [Update published data](.github/workflows/publish-data.yml)          |
 
-Both run manually though Github Actions
+The editor is still deployed at the production root until the explorer replaces it. The explorer reads the published data at build time, so to ship content changes, run Update published data and then Deploy explorer to staging.
 
 ## Workspace
 
