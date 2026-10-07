@@ -58,7 +58,7 @@ export function FilterToolbar({
 
   return (
     <div className="pb-3 md:sticky md:top-14 md:z-10 md:-mt-5 md:bg-blue-3 md:pt-5">
-      <div className="flex flex-row flex-wrap justify-start gap-3 rounded-xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
+      <div className="flex flex-row flex-wrap justify-start gap-3 rounded-2xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
         <SearchBar
           key={searchBarKey}
           onSearch={query => onSearch(query.trim())}

@@ -1,9 +1,13 @@
+import { useEffect, useRef } from 'react';
 import { commentViews } from '../../constants/comment-views';
 import type { Comment, Conversation } from '../../data/conversations';
+import { SidePanelIcon } from '../../icons/side-panel';
 import { excerptAroundKeyword } from '../../utils/excerpt';
 import { CommentDot } from '../comment-dot';
 import { FilterTag } from '../filter-tag';
 import { HighlightedText } from './highlighted-text';
+
+const LAYOUT_SETTLE_DELAY = 100;
 
 export function TopicCard({
   title,
@@ -14,13 +18,39 @@ export function TopicCard({
   matchedComment,
   selectedCategory,
   selectedTargetGroupTypes = [],
+  selected = false,
+  dimmed = false,
+  onSelect,
 }: Pick<Conversation, 'title' | 'groups' | 'comments'> & {
   targetGroupTypes: string[];
   keyword: string;
   matchedComment?: Comment;
   selectedCategory?: string;
   selectedTargetGroupTypes?: string[];
+  selected?: boolean;
+  dimmed?: boolean;
+  onSelect: () => void;
 }) {
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!selected || !element) return;
+    let timeout: ReturnType<typeof setTimeout>;
+    const observer = new ResizeObserver(() => {
+      clearTimeout(timeout);
+      timeout = setTimeout(
+        () => element.scrollIntoView({ block: 'nearest', behavior: 'smooth' }),
+        LAYOUT_SETTLE_DELAY
+      );
+    });
+    observer.observe(element);
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeout);
+    };
+  }, [selected]);
+
   const categories = [...new Set(groups.map(({ category }) => category))];
   const commentExcerpt =
     matchedComment && excerptAroundKeyword(matchedComment.reason, keyword);
@@ -29,7 +59,13 @@ export function TopicCard({
   );
 
   return (
-    <article className="flex flex-col gap-2 rounded-xl bg-white px-3 py-4 transition-shadow hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:gap-4 md:px-7 md:py-6">
+    <article
+      ref={ref}
+      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:scroll-mt-44 md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent'} ${dimmed ? 'opacity-50' : ''}`}
+    >
+      {selected && (
+        <SidePanelIcon className="absolute top-2.5 right-2.5 size-6 text-blue-7" />
+      )}
       <div className="flex flex-col gap-2 md:gap-4">
         {categories.length > 0 && (
           <div className="flex flex-wrap gap-0.5">
@@ -46,7 +82,14 @@ export function TopicCard({
           </div>
         )}
         <h3 className="text-h10 font-bold">
-          <HighlightedText text={title} keyword={keyword} />
+          <button
+            type="button"
+            aria-expanded={selected}
+            onClick={onSelect}
+            className="cursor-pointer text-left after:absolute after:inset-0"
+          >
+            <HighlightedText text={title} keyword={keyword} />
+          </button>
         </h3>
       </div>
       <div className="flex flex-col gap-2 border-t border-gray-3 pt-2 md:gap-2.5 md:pt-4">

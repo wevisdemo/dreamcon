@@ -1,0 +1,51 @@
+import type { Conversation } from '../../data/conversations';
+import type { Event } from '../../data/events';
+import { FilterTag } from '../filter-tag';
+import { CommentList } from './comment-list';
+import { EventSet } from './event-set';
+
+export function ConversationTree({
+  conversation,
+  events,
+}: {
+  conversation: Conversation;
+  events: Event[];
+}) {
+  const eventNames = new Map(
+    events.map(({ id, displayName }) => [id, displayName])
+  );
+  const categories = [
+    ...new Set(conversation.groups.map(({ category }) => category)),
+  ];
+
+  return (
+    <div className="flex h-full min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-4)_transparent] flex-col gap-2.5 overflow-y-auto">
+      <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-2.5 rounded-2xl bg-white p-5">
+          {categories.length > 0 && (
+            <div className="flex flex-wrap gap-0.5">
+              {categories.map(category => (
+                <FilterTag key={category} as="span">
+                  {category}
+                </FilterTag>
+              ))}
+            </div>
+          )}
+          <h2 className="text-h9 font-bold">{conversation.title}</h2>
+        </div>
+        <EventSet
+          label="ข้อถกเถียง"
+          eventIds={conversation.eventIds}
+          eventNames={eventNames}
+        />
+      </div>
+      {conversation.comments.length > 0 ? (
+        <CommentList comments={conversation.comments} eventNames={eventNames} />
+      ) : (
+        <p className="py-7.5 text-center text-b5">
+          ยังไม่มีความคิดเห็นเกี่ยวกับข้อถกเถียงนี้
+        </p>
+      )}
+    </div>
+  );
+}

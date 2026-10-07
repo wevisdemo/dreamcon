@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { BackToTopButton } from '../components/back-to-top-button';
+import { ConversationSidebar } from '../components/dashboard/conversation-sidebar';
 import { FilterCategory } from '../components/dashboard/filter-category';
 import { FilterEvent } from '../components/dashboard/filter-event';
 import {
@@ -77,10 +78,23 @@ export const Route = createFileRoute('/dashboard')({
     const [eventSelection, setEventSelection] = useState<EventSelection>();
     const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
     const [filterTab, setFilterTab] = useState<FilterTab>('category');
+    const [isConversationSidebarOpen, setIsConversationSidebarOpen] =
+      useState(false);
+    const [selectedConversationId, setSelectedConversationId] =
+      useState<string>();
 
     const toggleFilterSidebar = (tab: FilterTab) => {
       setIsFilterSidebarOpen(isOpen => !(isOpen && filterTab === tab));
       setFilterTab(tab);
+      setIsConversationSidebarOpen(false);
+    };
+
+    const toggleConversationSidebar = (id: string) => {
+      setIsConversationSidebarOpen(
+        isOpen => !(isOpen && selectedConversationId === id)
+      );
+      setSelectedConversationId(id);
+      setIsFilterSidebarOpen(false);
     };
 
     const activeSortBy =
@@ -125,7 +139,7 @@ export const Route = createFileRoute('/dashboard')({
 
     return (
       <div className="flex flex-1 bg-blue-3">
-        <div className="mx-auto flex w-[95vw] max-w-[calc(3*500px+2*(--spacing(5)))] py-3 md:py-5">
+        <div className="mx-auto flex w-[95vw] justify-center py-3 md:py-5">
           <FilterSidebar
             isOpen={isFilterSidebarOpen}
             tab={filterTab}
@@ -148,7 +162,7 @@ export const Route = createFileRoute('/dashboard')({
               />
             )}
           </FilterSidebar>
-          <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex max-w-[calc(3*500px+2*(--spacing(5)))] min-w-0 flex-1 flex-col">
             <FilterToolbar
               categories={categories}
               events={events}
@@ -203,6 +217,15 @@ export const Route = createFileRoute('/dashboard')({
                       keyword={keyword}
                       selectedCategory={categorySelection?.category}
                       selectedTargetGroupTypes={selectedTargetGroupTypes}
+                      selected={
+                        isConversationSidebarOpen &&
+                        id === selectedConversationId
+                      }
+                      dimmed={
+                        isConversationSidebarOpen &&
+                        id !== selectedConversationId
+                      }
+                      onSelect={() => toggleConversationSidebar(id)}
                       {...conversation}
                     />
                   ))}
@@ -210,6 +233,14 @@ export const Route = createFileRoute('/dashboard')({
               </>
             )}
           </div>
+          <ConversationSidebar
+            isOpen={isConversationSidebarOpen}
+            conversation={conversations.find(
+              ({ id }) => id === selectedConversationId
+            )}
+            events={events}
+            onClose={() => setIsConversationSidebarOpen(false)}
+          />
         </div>
         <BackToTopButton />
       </div>
