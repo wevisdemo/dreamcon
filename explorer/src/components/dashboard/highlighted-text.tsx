@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { findKeywordMatches } from '../../utils/filter';
 
 export function HighlightedText({
   text,
@@ -16,14 +17,10 @@ export function HighlightedText({
     const highlight = CSS.highlights.get('search') ?? new Highlight();
     CSS.highlights.set('search', highlight);
 
-    const pattern = new RegExp(
-      keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
-      'gi'
-    );
-    const ranges = [...text.matchAll(pattern)].map(match => {
+    const ranges = findKeywordMatches(text, keyword).map(({ start, end }) => {
       const range = new Range();
-      range.setStart(node, match.index);
-      range.setEnd(node, match.index + match[0].length);
+      range.setStart(node, start);
+      range.setEnd(node, end);
       return range;
     });
     ranges.forEach(range => highlight.add(range));

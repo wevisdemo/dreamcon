@@ -39,6 +39,11 @@ const sortOptions: {
   },
 ];
 
+const relevanceSortOption = {
+  value: 'relevance',
+  label: 'ความใกล้เคียงคำค้น',
+};
+
 export const Route = createFileRoute('/dashboard')({
   loader: async () => {
     const [events, conversations, categories] = await Promise.all([
@@ -78,8 +83,13 @@ export const Route = createFileRoute('/dashboard')({
       setFilterTab(tab);
     };
 
+    const activeSortBy =
+      !keyword && sortBy === relevanceSortOption.value
+        ? sortOptions[0].value
+        : sortBy;
+
     const { views } =
-      sortOptions.find(({ value }) => value === sortBy) ?? sortOptions[0];
+      sortOptions.find(({ value }) => value === activeSortBy) ?? sortOptions[0];
 
     const countViews = ({ comments }: (typeof conversations)[number]) =>
       comments.filter(({ view }) => views.includes(view)).length;
@@ -99,10 +109,16 @@ export const Route = createFileRoute('/dashboard')({
     const matchesEvent = (conversation: (typeof conversations)[number]) =>
       !eventSelection || matchesEventSelection(conversation, eventSelection);
 
-    const filteredConversations = searchedConversations.filter(
-      conversation =>
-        matchesCategory(conversation) && matchesEvent(conversation)
-    );
+    const filteredConversations = searchedConversations
+      .filter(
+        conversation =>
+          matchesCategory(conversation) && matchesEvent(conversation)
+      )
+      .toSorted((a, b) =>
+        activeSortBy === relevanceSortOption.value
+          ? (a.searchScore ?? 0) - (b.searchScore ?? 0)
+          : 0
+      );
 
     const selectedTargetGroupTypes =
       getSelectedTargetGroupTypes(eventSelection);
@@ -140,7 +156,10 @@ export const Route = createFileRoute('/dashboard')({
               categorySelection={categorySelection}
               eventSelection={eventSelection}
               expandedTab={isFilterSidebarOpen ? filterTab : undefined}
-              onSearch={setKeyword}
+              onSearch={query => {
+                setKeyword(query);
+                if (query) setSortBy(relevanceSortOption.value);
+              }}
               onToggle={toggleFilterSidebar}
               onClear={() => {
                 setKeyword('');
@@ -165,8 +184,12 @@ export const Route = createFileRoute('/dashboard')({
                     <label className="flex items-center gap-2 text-gray-6">
                       เรียงตาม
                       <Dropdown
-                        options={sortOptions}
-                        value={sortBy}
+                        options={
+                          keyword
+                            ? [relevanceSortOption, ...sortOptions]
+                            : sortOptions
+                        }
+                        value={activeSortBy}
                         onChange={event => setSortBy(event.target.value)}
                       />
                     </label>

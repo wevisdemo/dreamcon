@@ -1,29 +1,32 @@
+import { findKeywordMatches } from './filter';
+
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
 
 const toGraphemes = (text: string) =>
   Array.from(segmenter.segment(text), ({ segment }) => segment);
 
 /**
- * Cuts `text` around the first case-insensitive match of `keyword`, keeping the
- * match centered. Length is counted in grapheme clusters, so Thai vowels and
- * tone marks stay with their consonant. Room one side can't use goes to the
- * other side, and `...` marks each side that was cut.
+ * Cuts `text` around the first match of `keyword`, found as
+ * {@link findKeywordMatches} does, keeping the match centered. Length is
+ * counted in grapheme clusters, so Thai vowels and tone marks stay with their
+ * consonant. Room one side can't use goes to the other side, and `...` marks
+ * each side that was cut.
  *
  * @param text - Text to search in
  * @param keyword - Keyword to find
  * @param maxLength - Maximum characters of the excerpt, excluding the `...`
  * marks. A match longer than this is returned whole
- * @returns The excerpt, or `undefined` when `text` doesn't contain `keyword`
+ * @returns The excerpt, or `undefined` when `text` doesn't match `keyword`
  */
 export function excerptAroundKeyword(
   text: string,
   keyword: string,
   maxLength = 30
 ) {
-  const start = text.toLowerCase().indexOf(keyword.toLowerCase());
-  if (start < 0) return undefined;
+  const [match] = findKeywordMatches(text, keyword);
+  if (!match) return undefined;
 
-  const end = start + keyword.length;
+  const { start, end } = match;
   const before = toGraphemes(text.slice(0, start));
   const after = toGraphemes(text.slice(end));
   const room = Math.max(
