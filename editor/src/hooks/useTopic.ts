@@ -5,8 +5,10 @@ import {
   getCountFromServer,
   getDocs,
   limit,
+  onSnapshot,
   orderBy,
   query,
+  QuerySnapshot,
   where,
 } from 'firebase/firestore';
 import { CommentDB } from '../types/comment';
@@ -30,29 +32,49 @@ export const useTopic = () => {
     return count;
   };
 
-  const getLightWeightTopics = async (): Promise<LightWeightTopic[]> => {
-    try {
-      const topicsCollection = collection(db, 'topics');
-      const snapshot = await getDocs(topicsCollection);
-      const topics = Promise.all(
+  /**
+   * Root comment counts are cached and recounted only for topics that changed:
+   * every comment write bumps its parent topic in the same transaction.
+   */
+  const subscribeLightWeightTopics = (
+    onChange: (topics: LightWeightTopic[]) => void
+  ) => {
+    const counts = new Map<string, Promise<number>>();
+    let latestSnapshot: QuerySnapshot | null = null;
+
+    const countOf = (topicId: string) => {
+      if (!counts.has(topicId)) {
+        counts.set(
+          topicId,
+          getCommentLevel1Count(topicId).catch(err => {
+            console.error('Error counting comments: ', err);
+            counts.delete(topicId);
+            return 0;
+          })
+        );
+      }
+      return counts.get(topicId)!;
+    };
+
+    return onSnapshot(collection(db, 'topics'), async snapshot => {
+      latestSnapshot = snapshot;
+      snapshot.docChanges().forEach(change => counts.delete(change.doc.id));
+      const topics = await Promise.all(
         snapshot.docs.map(async doc => {
           const data = doc.data();
-          const commentLv1Count = await getCommentLevel1Count(doc.id);
           return {
             id: doc.id,
             title: data.title,
             categories: readCategories(data),
             created_at: data.created_at.toDate(),
+            notified_at: data.notified_at.toDate(),
             event_ids: data.event_ids ?? [],
-            comment_level1_count: commentLv1Count,
-          } as LightWeightTopic;
+            comment_level1_count: await countOf(doc.id),
+          };
         })
       );
-      return topics;
-    } catch (err) {
-      console.error('Error fetching light weight topics: ', err);
-      return [];
-    }
+      if (latestSnapshot === snapshot) onChange(topics);
+    });
   };
 
   const getTopicByIds = async (topicIds: string[]): Promise<Topic[]> => {
@@ -203,7 +225,7 @@ export const useTopic = () => {
 
   return {
     getTopicsByFilter,
-    getLightWeightTopics,
+    subscribeLightWeightTopics,
     getTopicByIds,
     loading,
     error,

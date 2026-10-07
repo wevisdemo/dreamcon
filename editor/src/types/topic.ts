@@ -96,6 +96,7 @@ export interface LightWeightTopic {
   title: string;
   categories: string[];
   created_at: Date;
+  notified_at: Date;
   event_ids: string[];
   comment_level1_count: number;
 }

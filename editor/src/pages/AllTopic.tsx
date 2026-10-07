@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import KeyboardDoubleArrowRightIcon from '@material-symbols/svg-700/rounded/keyboard_double_arrow_right.svg?react';
-import { collection, onSnapshot } from 'firebase/firestore';
 import { useLocation } from 'react-router-dom';
 import TopicListSection from '../components/allTopic/TopicListSection';
 import ExpandWideIcon from '../components/icon/ExpandWideIcon';
@@ -20,7 +19,6 @@ import { StoreContext } from '../store';
 import { DreamConEvent } from '../types/event';
 import { TopicFilter } from '../types/home';
 import { ModalTopicPayload, Topic } from '../types/topic';
-import { db } from '../utils/firestore';
 import { selectTopicIds } from '../utils/topicFilter';
 
 const PAGE_SIZE = 12;
@@ -36,7 +34,7 @@ export default function AllTopic() {
   const { eventsReady } = usePageSession('all-topic');
   const { getWriterEvent } = usePermission();
   const { addNewTopic, loading: addNewTopicLoading } = useAddTopic();
-  const { getLightWeightTopics, getTopicByIds } = useTopic();
+  const { subscribeLightWeightTopics, getTopicByIds } = useTopic();
   const [lightWeightTopicsLoaded, setLightWeightTopicsLoaded] = useState(false);
   const [displayTopics, setDisplayTopics] = useState<Topic[] | null>(null);
   const [itemLimit, setItemLimit] = useState(PAGE_SIZE);
@@ -58,8 +56,8 @@ export default function AllTopic() {
   }, [eventsReady]);
 
   useEffect(() => {
-    return onSnapshot(collection(db, 'topics'), async () => {
-      homePageContext.lightWeightTopics.setState(await getLightWeightTopics());
+    return subscribeLightWeightTopics(topics => {
+      homePageContext.lightWeightTopics.setState(topics);
       setLightWeightTopicsLoaded(true);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- subscribe once on mount; the cleanup unsubscribes
@@ -68,20 +66,31 @@ export default function AllTopic() {
   useEffect(() => {
     if (!lightWeightTopicsLoaded) return;
     let cancelled = false;
-    getTopicByIds(
-      selectTopicIds(
-        lightWeightTopics,
-        topicFilter,
-        itemLimit,
-        pinContext.pinnedTopics
-      )
-    ).then(topics => {
-      if (!cancelled) setDisplayTopics(topics);
+    const ids = selectTopicIds(
+      lightWeightTopics,
+      topicFilter,
+      itemLimit,
+      pinContext.pinnedTopics
+    );
+    const notifiedAt = new Map(
+      lightWeightTopics.map(topic => [topic.id, topic.notified_at.getTime()])
+    );
+    const shown = new Map(displayTopics?.map(topic => [topic.id, topic]));
+    const staleIds = ids.filter(
+      id => shown.get(id)?.notified_at.getTime() !== notifiedAt.get(id)
+    );
+    getTopicByIds(staleIds).then(fetched => {
+      if (cancelled) return;
+      const byId = new Map([
+        ...shown,
+        ...fetched.map(topic => [topic.id, topic] as const),
+      ]);
+      setDisplayTopics(ids.flatMap(id => byId.get(id) ?? []));
     });
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- getTopicByIds is redefined every render
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- getTopicByIds is redefined every render; displayTopics is only read to reuse unchanged topics
   }, [
     lightWeightTopicsLoaded,
     lightWeightTopics,
