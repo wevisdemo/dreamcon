@@ -25,7 +25,11 @@ export const Route = createRootRoute({
     ],
   }),
   shellComponent: ({ children }) => (
-    <html lang="th" suppressHydrationWarning>
+    <html
+      lang="th"
+      suppressHydrationWarning
+      className="motion-safe:scroll-smooth"
+    >
       <head>
         <HeadContent />
       </head>

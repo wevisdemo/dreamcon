@@ -18,7 +18,7 @@ export function FilterSidebar({
     >
       <aside
         inert={!isOpen}
-        className={`fixed inset-0 z-20 flex flex-col gap-1.25 bg-blue-1 p-2.5 motion-safe:transition-[translate,visibility] motion-safe:duration-300 md:sticky md:top-5 md:z-auto md:h-[calc(100dvh-(--spacing(10)))] md:w-101 md:rounded-xl ${isOpen ? '' : 'invisible -translate-x-full'}`}
+        className={`fixed inset-0 z-20 flex flex-col gap-1.25 bg-blue-1 p-2.5 motion-safe:transition-[translate,visibility] motion-safe:duration-300 md:sticky md:top-19 md:z-auto md:h-[calc(100dvh-(--spacing(24)))] md:w-101 md:rounded-xl ${isOpen ? '' : 'invisible -translate-x-full'}`}
       >
         <div className="flex items-center">
           <div className="flex-1">

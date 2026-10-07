@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
+import { BackToTopButton } from '../components/back-to-top-button';
 import { Button } from '../components/button';
 import { CategoryFilter } from '../components/dashboard/category-filter';
 import { FilterSidebar } from '../components/dashboard/filter-sidebar';
@@ -104,7 +105,7 @@ export const Route = createFileRoute('/dashboard')({
 
     return (
       <div className="flex flex-1 bg-blue-3">
-        <div className="mx-auto flex w-[95vw] max-w-[calc(3*500px+2*(--spacing(5)))] md:py-5">
+        <div className="mx-auto flex w-[95vw] max-w-[calc(3*500px+2*(--spacing(5)))] py-3 md:py-5">
           <FilterSidebar
             isOpen={isFilterSidebarOpen}
             onClose={() => setIsFilterSidebarOpen(false)}
@@ -116,36 +117,38 @@ export const Route = createFileRoute('/dashboard')({
               onSelect={setCategorySelection}
             />
           </FilterSidebar>
-          <div className="flex min-w-0 flex-1 flex-col gap-3">
-            <div className="flex flex-row flex-wrap justify-start gap-2 rounded-xl bg-blue-1 p-2 md:gap-2 md:p-4 lg:flex-nowrap">
-              <SearchBar
-                key={searchBarKey}
-                onSearch={query => setKeyword(query.trim())}
-                className="shrink-0"
-              />
-              <Button
-                variant={categorySelection ? 'primary-blue' : 'secondary'}
-                aria-expanded={isFilterSidebarOpen}
-                onClick={() => setIsFilterSidebarOpen(isOpen => !isOpen)}
-                className="max-w-full min-w-0 lg:shrink [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
-              >
-                {categorySelection
-                  ? formatCategorySelection(categories, categorySelection)
-                  : 'ทุกหมวดหมู่'}
-              </Button>
-              {(keyword || categorySelection) && (
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="pb-3 md:sticky md:top-14 md:z-10 md:-mt-5 md:bg-blue-3 md:pt-5">
+              <div className="flex flex-row flex-wrap justify-start gap-3 rounded-xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
+                <SearchBar
+                  key={searchBarKey}
+                  onSearch={query => setKeyword(query.trim())}
+                  className="w-full shrink-0 md:w-auto"
+                />
                 <Button
-                  variant="tertiary-gray"
-                  icon={<CloseIcon />}
-                  onClick={() => {
-                    setKeyword('');
-                    setSearchBarKey(key => key + 1);
-                    setCategorySelection(undefined);
-                  }}
+                  variant={categorySelection ? 'primary-blue' : 'secondary'}
+                  aria-expanded={isFilterSidebarOpen}
+                  onClick={() => setIsFilterSidebarOpen(isOpen => !isOpen)}
+                  className="w-full max-w-full min-w-0 md:w-auto lg:shrink [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
                 >
-                  ล้างตัวกรอง
+                  {categorySelection
+                    ? formatCategorySelection(categories, categorySelection)
+                    : 'ทุกหมวดหมู่'}
                 </Button>
-              )}
+                {(keyword || categorySelection) && (
+                  <Button
+                    variant="tertiary-gray"
+                    icon={<CloseIcon />}
+                    onClick={() => {
+                      setKeyword('');
+                      setSearchBarKey(key => key + 1);
+                      setCategorySelection(undefined);
+                    }}
+                  >
+                    ล้างตัวกรอง
+                  </Button>
+                )}
+              </div>
             </div>
 
             {filteredConversations.length === 0 ? (
@@ -172,7 +175,7 @@ export const Route = createFileRoute('/dashboard')({
                   </div>
                   <Legend />
                 </div>
-                <Masonry maxColumnWidth={500} className="gap-3 md:gap-5">
+                <Masonry maxColumnWidth={500} className="mt-3 gap-3 md:gap-5">
                   {filteredConversations.map(({ id, ...conversation }) => (
                     <TopicCard
                       key={id}
@@ -186,6 +189,7 @@ export const Route = createFileRoute('/dashboard')({
             )}
           </div>
         </div>
+        <BackToTopButton />
       </div>
     );
   },

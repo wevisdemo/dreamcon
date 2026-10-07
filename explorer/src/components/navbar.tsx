@@ -22,7 +22,7 @@ export function Navbar() {
   ));
 
   return (
-    <header className="relative bg-blue-7 text-white">
+    <header className="relative bg-blue-7 text-white md:sticky md:top-0 md:z-30">
       <nav className="flex h-10 items-center justify-between md:h-14">
         <Link to="/" className="px-2.5 md:px-5">
           <img src={logo} alt="Dream Con" className="h-3.75 md:h-5" />

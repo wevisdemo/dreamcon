@@ -173,7 +173,7 @@ export const Route = createFileRoute('/design-system')({
   }),
   component: function DesignSystem() {
     return (
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 p-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 p-8">
         <h1 className="text-h3 font-bold">Design system</h1>
 
         <div className="divide-y divide-gray-3 border-y border-gray-3">

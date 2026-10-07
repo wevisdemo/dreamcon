@@ -9,6 +9,8 @@ import {
 } from '../../utils/category-selection';
 import { Button } from '../button';
 
+const otherCategory = 'อื่น ๆ';
+
 export function CategoryFilter({
   categories,
   conversations,
@@ -24,6 +26,24 @@ export function CategoryFilter({
     conversations.filter(({ groups }) =>
       matchesCategorySelection(groups, selection)
     ).length;
+
+  const sortedCategories = categories
+    .map(({ category, groups }) => ({
+      category,
+      count: countTopics({ category }),
+      groups: groups
+        .map(({ phrase }, group) => ({
+          phrase,
+          group,
+          count: countTopics({ category, group }),
+        }))
+        .toSorted((a, b) => b.count - a.count),
+    }))
+    .toSorted(
+      (a, b) =>
+        Number(a.category === otherCategory) -
+          Number(b.category === otherCategory) || b.count - a.count
+    );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-1.25">
@@ -42,20 +62,20 @@ export function CategoryFilter({
               onClick={() => onSelect(undefined)}
               className="self-end"
             >
-              ล้างตัวกรอง
+              ล้างหมวดหมู่
             </Button>
           </>
         )}
       </div>
       <ul className="flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-3)_transparent] flex-col overflow-y-auto">
-        {categories.map(({ category, groups }) => {
+        {sortedCategories.map(({ category, count, groups }) => {
           const isExpanded = selection?.category === category;
           const isHighlighted = isExpanded && selection.group === undefined;
 
           return (
             <li
               key={category}
-              className={`flex flex-col rounded-md px-2.5 py-3.75 motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'border-b border-blue-3'}`}
+              className={`flex flex-col rounded-xl px-2.5 py-3 motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'border-b border-blue-3'}`}
             >
               <button
                 type="button"
@@ -76,20 +96,20 @@ export function CategoryFilter({
                 <span
                   className={`text-b7 ${isHighlighted ? 'text-gray-3' : 'text-gray-6'}`}
                 >
-                  {countTopics({ category })} ข้อถกเถียง
+                  {count} ข้อถกเถียง
                 </span>
               </button>
               <div
                 inert={!isExpanded}
                 className={`grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300 ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
               >
-                <div className="flex flex-col gap-1.25 overflow-hidden">
+                <div className="flex flex-col gap-1.5 overflow-hidden">
                   <p
-                    className={`pt-3.75 text-b7 ${isHighlighted ? 'text-blue-3' : 'text-gray-6'}`}
+                    className={`pt-3 text-b7 ${isHighlighted ? 'text-blue-3' : 'text-gray-6'}`}
                   >
                     {groups.length} กลุ่มประเด็น สรุปโดย AI
                   </p>
-                  {groups.map(({ phrase }, group) => {
+                  {groups.map(({ phrase, group, count }) => {
                     const isSelected = isExpanded && selection.group === group;
 
                     return (
@@ -102,7 +122,7 @@ export function CategoryFilter({
                             isSelected ? { category } : { category, group }
                           )
                         }
-                        className={`flex cursor-pointer items-end gap-1.25 rounded-md p-2.5 text-left ${isSelected ? 'bg-blue-7' : 'bg-blue-1 hover:bg-blue-2'}`}
+                        className={`flex cursor-pointer items-start gap-1 rounded-md p-2.5 text-left ${isSelected ? 'bg-blue-7' : 'bg-blue-1 hover:bg-blue-2'}`}
                       >
                         <span
                           className={`flex-1 text-b6 ${isSelected ? 'text-white' : 'text-blue-7'}`}
@@ -110,9 +130,9 @@ export function CategoryFilter({
                           {phrase}
                         </span>
                         <span
-                          className={`text-b7 ${isSelected ? 'text-gray-3' : 'text-gray-6'}`}
+                          className={`mt-px text-b7 ${isSelected ? 'text-gray-3' : 'text-gray-6'}`}
                         >
-                          {countTopics({ category, group })}
+                          {count}
                         </span>
                       </button>
                     );
