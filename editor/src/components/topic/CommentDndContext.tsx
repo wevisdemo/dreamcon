@@ -13,7 +13,6 @@ import {
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useConvertCommentToTopic } from '../../hooks/useConvertCommentToTopic';
 import { useMoveComment } from '../../hooks/useMoveComment';
-import { usePermission } from '../../hooks/usePermission';
 import { ErrorAlert, ShowErrorContext } from '../../hooks/useShowError';
 import { StoreContext } from '../../store';
 import { Comment } from '../../types/comment';
@@ -42,7 +41,6 @@ export default function CommentDndContext({
 }) {
   const { subscribeMoveComment, subscribeCopyComment } =
     useContext(StoreContext).clipboard;
-  const { getWriterEvent } = usePermission();
   const sensors = useSensors(useSensor(SmartPointerSensor));
   const [draggedCommentProps, setDraggedCommentProps] =
     useState<DraggableCommentProps | null>(null);
@@ -89,9 +87,7 @@ export default function CommentDndContext({
         return moved ? { comment, droppableData } : null;
       }
       case 'convert-to-topic': {
-        const eventId = getWriterEvent()?.id;
-        if (!eventId) return null;
-        const initialTopic = await convertCommentToTopic(comment, eventId);
+        const initialTopic = await convertCommentToTopic(comment);
         return initialTopic && { comment, droppableData, initialTopic };
       }
     }

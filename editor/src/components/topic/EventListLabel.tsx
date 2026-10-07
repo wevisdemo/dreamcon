@@ -36,6 +36,7 @@ export default function EventListLabel(props: PropTypes) {
               {props.canLeave && isActiveEvent && (
                 <button
                   onClick={props.onLeave}
+                  data-dndkit-disable-drag
                   className="px-1"
                   aria-label="ถอนวงของฉันออก"
                 >

@@ -112,7 +112,7 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(page.getByText('ลบ', { exact: true })).toBeVisible();
   });
 
-  test('can only edit categories of its own topic once another event commented', async ({
+  test('still edits and deletes its own topic once another event commented', async ({
     page,
   }) => {
     await page.goto('topics/tp-parliament');
@@ -122,31 +122,26 @@ test.describe('signed in as the Bangkok writer', () => {
 
     await topicMenu(page).click();
     await expect(page.getByText('ปักหมุด', { exact: true })).toBeVisible();
-    await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('ลบ', { exact: true })).toBeVisible();
     await page.getByText('แก้ไข', { exact: true }).locator('..').click();
 
-    await expect(page.locator('#topic-title-text-area')).toHaveCount(0);
-    await expect(page.getByRole('button', { name: 'บันทึก' })).toBeVisible();
+    await expect(page.locator('#topic-title-text-area')).toBeVisible();
   });
 
-  test('cannot edit or delete its own comment once another event replied or joined', async ({
+  test('still edits and deletes its own comment once another event replied or joined', async ({
     page,
   }) => {
     await page.goto('topics/tp-parliament');
     await waitForLoaded(page);
 
-    const own = commentCard(page, 'สมาชิกวุฒิสภาควรมาจากการเลือกตั้งโดยตรงทั้งหมด');
-    await own.hover();
-    await expect(own.getByLabel(MENU)).toBeVisible();
-
     for (const reason of [
+      'สมาชิกวุฒิสภาควรมาจากการเลือกตั้งโดยตรงทั้งหมด',
       'ควรยกเลิกวุฒิสภาและใช้สภาเดี่ยว',
       'ควรให้ประชาชนลงประชามติรับรองรายชื่อสมาชิกวุฒิสภา',
     ]) {
-      const shared = commentCard(page, reason);
-      await shared.hover();
-      await expect(shared.getByLabel(ADD_COMMENT)).toBeVisible();
-      await expect(shared.getByLabel(MENU)).toHaveCount(0);
+      const own = commentCard(page, reason);
+      await own.hover();
+      await expect(own.getByLabel(MENU)).toBeVisible();
     }
 
     // The author event cannot leave either, or the joined event would inherit the comment.
@@ -264,10 +259,10 @@ test.describe('signed in as the Online writer', () => {
     await expect(page.getByText('ความคิดเห็นของ')).toBeVisible();
     await expect(page.getByText('เวทีออนไลน์').first()).toBeVisible();
 
-    // Two events are linked now, so neither can delete the topic or edit more than its categories.
+    // A joined event edits and deletes the topic like its creator.
     await page.getByLabel(MENU).click();
     await expect(page.getByText('แก้ไข', { exact: true })).toBeVisible();
-    await expect(page.getByText('ลบ', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('ลบ', { exact: true })).toBeVisible();
     await page.locator('.MuiBackdrop-root').click();
 
     await topicEvents(page).getByLabel(LEAVE_EVENT).click();
@@ -291,6 +286,23 @@ test.describe('signed in as the Online writer', () => {
     await expect(alert).toBeVisible();
     await expect(eventList(page)).toHaveText(/ข้อถกเถียงจาก 2 วงสนทนา/);
     await expect(alert).toBeHidden({ timeout: 5000 });
+  });
+
+  test('cuts only comments its event is part of', async ({ page }) => {
+    await page.goto('topics/tp-parliament');
+    await waitForLoaded(page);
+    const copied = page.getByText('คัดลอกไปยังคลิปบอร์ดแล้ว');
+
+    await commentCard(page, 'สมาชิกวุฒิสภาควรมาจากการเลือกตั้งโดยตรงทั้งหมด').hover();
+    await page.keyboard.press('Control+x');
+    await expect(copied).toHaveCount(0);
+
+    await commentCard(
+      page,
+      'ควรให้ประชาชนลงประชามติรับรองรายชื่อสมาชิกวุฒิสภา'
+    ).hover();
+    await page.keyboard.press('Control+x');
+    await expect(copied).toBeVisible();
   });
 
   test('cannot leave a comment its own event replied to', async ({ page }) => {

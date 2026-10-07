@@ -324,7 +324,7 @@ const seedComments: SeedComment[] = [
     ageInDays: -18,
   },
   {
-    // Joined by a second event: ev-online can leave it, nobody can edit or delete it.
+    // Joined by a second event: ev-online can leave, edit or delete it.
     id: 'cm-parliament-7',
     topic: 'tp-parliament',
     parents: [],

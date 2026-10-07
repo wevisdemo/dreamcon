@@ -32,19 +32,12 @@ export const usePermission = () => {
   };
 
   /**
-   * A topic or comment can be edited or deleted only by its sole linked event:
-   * once another event joins or replies, it is shared and nobody can change it.
-   * The event must also be linked explicitly, not only through a reply.
+   * Any event explicitly linked to a topic or comment (its creator or one that
+   * joined) edits or deletes it; being linked only through a reply is not enough.
    */
   const canManage = (parent: CommentParent): boolean => {
     const writerEvent = getWriterEvent();
-    const eventIds = linkedEventIds(parent);
-    return (
-      !!writerEvent &&
-      eventIds.length === 1 &&
-      eventIds[0] === writerEvent.id &&
-      parent.event_ids.includes(writerEvent.id)
-    );
+    return !!writerEvent && parent.event_ids.includes(writerEvent.id);
   };
 
   const canEditCategories = (topic: Topic): boolean => {

@@ -382,4 +382,35 @@ test.describe('signed in as the Bangkok writer', () => {
     await page.keyboard.press('Control+z');
     await expect(page.locator(TOPIC_CARDS)).toHaveCount(cardCount);
   });
+
+  test('a comment pasted as a new topic keeps every owner event', async ({
+    page,
+  }) => {
+    const reason = 'ควรให้ประชาชนลงประชามติรับรองรายชื่อสมาชิกวุฒิสภา';
+
+    await page.goto('topics');
+    await waitForLoaded(page);
+
+    await page.getByText('ที่มาของสมาชิกวุฒิสภาควรเป็นแบบใด').click();
+    await page
+      .locator('.comment-section')
+      .getByText(reason, { exact: true })
+      .locator('../..')
+      .hover();
+    await page.keyboard.press('Control+x');
+    await expect(page.getByText('คัดลอกไปยังคลิปบอร์ดแล้ว')).toBeVisible();
+
+    await page.getByRole('button', { name: ADD_TOPIC }).hover();
+    await page.keyboard.press('Control+v');
+    await expect(page.getByText('ย้ายแล้ว!')).toBeVisible();
+
+    // The Online event owns no topic of its own, so the new one is all it lists.
+    await eventFilter(page, 'เวทีออนไลน์').click();
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(1);
+    await expect(page.locator(TOPIC_CARDS).getByText(reason)).toBeVisible();
+
+    await waitForLoaded(page);
+    await page.keyboard.press('Control+z');
+    await expect(page.locator(TOPIC_CARDS)).toHaveCount(0);
+  });
 });
