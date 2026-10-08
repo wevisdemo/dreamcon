@@ -2,6 +2,15 @@ import { useEffect, type HTMLAttributes } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from '../icons/close';
 
+const mounts = {
+  body: { backdrop: 'fixed z-40', dialog: 'max-w-210', content: 'p-6 md:p-10' },
+  parent: {
+    backdrop: 'absolute z-10 rounded-[inherit]',
+    dialog: 'max-w-xl',
+    content: 'p-6',
+  },
+};
+
 export function Modal({
   isOpen,
   onClose,
@@ -12,7 +21,7 @@ export function Modal({
 }: HTMLAttributes<HTMLDivElement> & {
   isOpen: boolean;
   onClose: () => void;
-  mount?: 'body' | 'parent';
+  mount?: keyof typeof mounts;
 }) {
   useEffect(() => {
     if (!isOpen) return;
@@ -27,12 +36,12 @@ export function Modal({
   const backdrop = (
     <div
       onClick={event => event.target === event.currentTarget && onClose()}
-      className={`${mount === 'body' ? 'fixed z-40' : 'absolute z-10 rounded-[inherit]'} inset-0 flex items-center justify-center bg-black/50 p-4`}
+      className={`${mounts[mount].backdrop} inset-0 flex items-center justify-center bg-black/50 p-4`}
     >
       <div
         role="dialog"
         aria-modal
-        className={`relative flex max-h-full w-full max-w-xl flex-col overflow-y-auto rounded-2xl bg-white p-6 shadow-[3px_7px_17.2px_#0000001a] ${className}`}
+        className={`relative flex max-h-full w-full flex-col overflow-hidden rounded-2xl bg-white shadow-[3px_7px_17.2px_#0000001a] ${mounts[mount].dialog}`}
         {...props}
       >
         <button
@@ -43,7 +52,11 @@ export function Modal({
         >
           <CloseIcon className="size-6" />
         </button>
-        {children}
+        <div
+          className={`flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-gray-3)_transparent] flex-col overflow-y-auto ${mounts[mount].content} ${className}`}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
