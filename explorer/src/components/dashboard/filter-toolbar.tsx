@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { Event } from '../../data/events';
 import type { CategoryQuestions } from '../../data/group-questions';
 import { CloseIcon } from '../../icons/close';
+import { DownloadIcon } from '../../icons/download';
 import {
   formatCategorySelection,
   formatEventSelection,
@@ -11,6 +12,7 @@ import {
 import { Button } from '../button';
 import { FilterTag } from '../filter-tag';
 import { SearchBar } from '../search-bar';
+import { DownloadModal } from './download-modal';
 import type { FilterTab } from './filter-sidebar';
 
 export function FilterToolbar({
@@ -35,6 +37,7 @@ export function FilterToolbar({
   onClear: () => void;
 }) {
   const [searchBarKey, setSearchBarKey] = useState(0);
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   const filterButtons: {
     tab: FilterTab;
@@ -91,7 +94,19 @@ export function FilterToolbar({
             ล้างตัวกรอง
           </Button>
         )}
+        <Button
+          variant="tertiary-blue"
+          icon={<DownloadIcon />}
+          onClick={() => setIsDownloadModalOpen(true)}
+          className="ml-auto"
+        >
+          ดาวน์โหลดข้อมูล
+        </Button>
       </div>
+      <DownloadModal
+        isOpen={isDownloadModalOpen}
+        onClose={() => setIsDownloadModalOpen(false)}
+      />
     </div>
   );
 }

@@ -4,8 +4,7 @@ import { ConversationTree } from '../components/conversation/conversation-tree';
 import { CopyLink } from '../components/copy-link';
 import { EventDetails } from '../components/event/event-details';
 import { Modal } from '../components/modal';
-import { getConversation } from '../data/conversations';
-import { getEvents } from '../data/events';
+import { getConversation, getEvents } from '../data/server-functions';
 import { ChevronDownIcon } from '../icons/chevron-down';
 
 export const Route = createFileRoute('/dashboard_/$topicId')({

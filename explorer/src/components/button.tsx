@@ -1,4 +1,8 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  ReactNode,
+} from 'react';
 
 const variants = {
   'primary-blue': 'rounded-full bg-blue-7 text-white hover:bg-blue-8',
@@ -32,6 +36,10 @@ const sizes = {
 };
 
 type Variant = keyof typeof variants;
+type Size = 'large' | 'small';
+
+const buttonClassName = (variant: Variant, size: Size) =>
+  `inline-flex shrink-0 cursor-pointer items-center justify-center ${variants[variant]} ${sizes[variant.split('-')[0] as keyof typeof sizes][size]}`;
 
 export function Button({
   variant,
@@ -42,19 +50,37 @@ export function Button({
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & {
   variant: Variant;
-  size?: 'large' | 'small';
+  size?: Size;
   icon?: ReactNode;
 }) {
-  const kind = variant.split('-')[0] as keyof typeof sizes;
-
   return (
     <button
       type="button"
-      className={`inline-flex shrink-0 cursor-pointer items-center justify-center ${variants[variant]} ${sizes[kind][size]} ${className}`}
+      className={`${buttonClassName(variant, size)} ${className}`}
       {...props}
     >
       {icon}
       {children && <span>{children}</span>}
     </button>
+  );
+}
+
+export function ButtonLink({
+  variant,
+  size = 'large',
+  icon,
+  className = '',
+  children,
+  ...props
+}: AnchorHTMLAttributes<HTMLAnchorElement> & {
+  variant: Variant;
+  size?: Size;
+  icon?: ReactNode;
+}) {
+  return (
+    <a className={`${buttonClassName(variant, size)} ${className}`} {...props}>
+      {icon}
+      {children && <span>{children}</span>}
+    </a>
   );
 }

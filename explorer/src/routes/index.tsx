@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { getConversations, type Comment } from '../data/conversations';
-import { getEvents } from '../data/events';
-import { getGroupQuestions } from '../data/group-questions';
+import type { Comment } from '../data/conversations';
+import {
+  getConversations,
+  getEvents,
+  getGroupQuestions,
+} from '../data/server-functions';
 
 const countComments = (comments: Comment[]): number =>
   comments.reduce(
@@ -26,7 +29,7 @@ export const Route = createFileRoute('/')({
         <p>
           {events.length} events, {conversations.length} conversations,{' '}
           {countComments(conversations.flatMap(({ comments }) => comments))}{' '}
-          comments, {groupQuestions.length} question categories
+          comments, {groupQuestions.length} categories
         </p>
         <Link to="/design-system" className="text-blue-7 underline">
           Design system

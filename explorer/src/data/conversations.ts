@@ -1,6 +1,3 @@
-import { notFound } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
-import { staticFunctionMiddleware } from '@tanstack/start-static-server-functions';
 import {
   asNumber,
   asOneOf,
@@ -13,19 +10,31 @@ import {
 import { commentViews } from '../constants/comment-views';
 import { asStrings, csvUrl, once } from './shared';
 
-const topicSchema = Object({
+/** Topic columns without `event_ids`, which the dataset ZIP moves to a join table */
+export const topicSchema = Object({
   id: Column('id', asString()),
   title: Column('title', asString()),
-  eventIds: Column('event_ids', asStrings()),
 });
 
-const commentSchema = Object({
+/** Comment columns without `event_ids`, which the dataset ZIP moves to a join table */
+export const commentSchema = Object({
   id: Column('id', asString()),
   view: Column('comment_view', asOneOf(commentViews)),
   reason: Column('reason', asString()),
-  eventIds: Column('event_ids', asStrings()),
   parentTopicId: Column('parent_topic_id', asString()),
   parentCommentId: Column('parent_comment_id', asString().optional()),
+});
+
+const eventIdsColumn = Column('event_ids', asStrings());
+
+const topicWithEventsSchema = Object({
+  ...topicSchema.properties,
+  eventIds: eventIdsColumn,
+});
+
+const commentWithEventsSchema = Object({
+  ...commentSchema.properties,
+  eventIds: eventIdsColumn,
 });
 
 const topicGroupSchema = Object({
@@ -36,19 +45,19 @@ const topicGroupSchema = Object({
 });
 
 export type TopicGroup = Omit<StaticDecode<typeof topicGroupSchema>, 'id'>;
-export type Comment = StaticDecode<typeof commentSchema> & {
+export type Comment = StaticDecode<typeof commentWithEventsSchema> & {
   comments: Comment[];
 };
-export type Conversation = StaticDecode<typeof topicSchema> & {
+export type Conversation = StaticDecode<typeof topicWithEventsSchema> & {
   groups: TopicGroup[];
   comments: Comment[];
 };
 
-const loadConversations = once(async (): Promise<Conversation[]> => {
+export const loadConversations = once(async (): Promise<Conversation[]> => {
   const [topics, topicGroups, comments] = await Promise.all([
-    fetchCsv(csvUrl('dreamcon', 'topics'), topicSchema),
+    fetchCsv(csvUrl('dreamcon', 'topics'), topicWithEventsSchema),
     fetchCsv(csvUrl('dreamcon-data', 'topic_groups'), topicGroupSchema),
-    fetchCsv(csvUrl('dreamcon', 'comments'), commentSchema),
+    fetchCsv(csvUrl('dreamcon', 'comments'), commentWithEventsSchema),
   ]);
   const groupsByTopic = Map.groupBy(topicGroups, ({ id }) => id);
   const commentsByParent = Map.groupBy(comments, comment =>
@@ -79,18 +88,3 @@ const loadConversations = once(async (): Promise<Conversation[]> => {
       : [];
   });
 });
-
-export const getConversations = createServerFn({ method: 'GET' })
-  .middleware([staticFunctionMiddleware])
-  .handler(loadConversations);
-
-export const getConversation = createServerFn({ method: 'GET' })
-  .middleware([staticFunctionMiddleware])
-  .validator((id: string) => id)
-  .handler(async ({ data: id }) => {
-    const conversation = (await loadConversations()).find(
-      conversation => conversation.id === id
-    );
-    if (!conversation) throw notFound();
-    return conversation;
-  });

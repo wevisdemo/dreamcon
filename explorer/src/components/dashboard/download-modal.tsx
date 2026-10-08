@@ -1,0 +1,69 @@
+import { DATASET_ZIP_PATH } from '../../constants/dataset';
+import { Button, ButtonLink } from '../button';
+import { Modal } from '../modal';
+
+const DATA_FILES = [
+  ['category.csv', ': รายชื่อหมวดหมู่และประเด็นย่อย'],
+  ['events.csv', ': รายชื่อวงสนทนา'],
+  ['topics.csv', ': ข้อถกเถียง'],
+  ['comments.csv', ': ความคิดเห็น และความเชื่อมโยงกับข้อถกเถียง'],
+  [
+    'topic_category.csv',
+    ': ความเชื่อมโยงระหว่างข้อถกเถียงกับหมวดหมู่และประเด็นย่อย โดย 1 ข้อถกเถียงสามารถเกี่ยวข้องได้มากกว่า 1 หมวดหมู่และประเด็นย่อย',
+  ],
+  [
+    'topic_event.csv',
+    ': ความเชื่อมโยงระหว่างข้อถกเถียงกับวงสนทนา โดย 1 ข้อถกเถียงสามารถเกี่ยวข้องได้มากกว่า 1 วงสนทนา',
+  ],
+  [
+    'comment_event.csv',
+    ': ความเชื่อมโยงระหว่างความคิดเห็นกับวงสนทนา โดย 1 ความคิดเห็นสามารถเกี่ยวข้องได้มากกว่า 1 วงสนทนา',
+  ],
+];
+
+export function DownloadModal({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      aria-labelledby="download-modal-title"
+      className="gap-5"
+    >
+      <h2 id="download-modal-title" className="text-h5 font-bold">
+        ดาวน์โหลดข้อมูล
+      </h2>
+      <div className="flex flex-col gap-2.5">
+        <p>
+          คุณกำลังจะดาวน์โหลดข้อมูลทั้งหมดในเว็บไซต์นี้ในรูปแบบตาราง (ไฟล์ CSV) บรรจุในไฟล์
+          .zip ประกอบด้วย:
+        </p>
+        <ul className="list-disc pl-6">
+          {DATA_FILES.map(([name, description]) => (
+            <li key={name}>
+              <b>{name}</b> {description}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="flex justify-end gap-2.5">
+        <Button variant="secondary" onClick={onClose}>
+          ยกเลิก
+        </Button>
+        <ButtonLink
+          variant="primary-blue"
+          href={DATASET_ZIP_PATH}
+          download
+          onClick={onClose}
+        >
+          ดาวน์โหลด
+        </ButtonLink>
+      </div>
+    </Modal>
+  );
+}

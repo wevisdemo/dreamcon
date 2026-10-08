@@ -1,5 +1,3 @@
-import { createServerFn } from '@tanstack/react-start';
-import { staticFunctionMiddleware } from '@tanstack/start-static-server-functions';
 import {
   asDate,
   asNumber,
@@ -11,7 +9,7 @@ import {
 } from 'sheethuahua';
 import { asStrings, csvUrl, once } from './shared';
 
-const eventSchema = Object({
+export const eventSchema = Object({
   id: Column('id', asString()),
   displayName: Column('display_name', asString()),
   title: Object({
@@ -19,7 +17,7 @@ const eventSchema = Object({
     th: Column('title_th', asString().optional()),
   }),
   description: Column('description', asString()),
-  date: Column('date', asDate()),
+  date: Column('date', asDate({ format: 'YYYY-MM-DD' })),
   location: Column('location', asString()),
   participantCount: Column('participants', asNumber()),
   targetGroup: Object({
@@ -33,6 +31,6 @@ const eventSchema = Object({
 
 export type Event = StaticDecode<typeof eventSchema>;
 
-export const getEvents = createServerFn({ method: 'GET' })
-  .middleware([staticFunctionMiddleware])
-  .handler(once(() => fetchCsv(csvUrl('dreamcon', 'events'), eventSchema)));
+export const loadEvents = once(() =>
+  fetchCsv(csvUrl('dreamcon', 'events'), eventSchema)
+);

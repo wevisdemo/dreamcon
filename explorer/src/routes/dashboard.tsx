@@ -19,9 +19,11 @@ import {
   relevanceSortOption,
   sortOptions,
 } from '../constants/sort-options';
-import { getConversations } from '../data/conversations';
-import { getEvents } from '../data/events';
-import { getGroupQuestions } from '../data/group-questions';
+import {
+  getConversations,
+  getEvents,
+  getGroupQuestions,
+} from '../data/server-functions';
 import {
   matchesCategorySelection,
   type CategorySelection,
