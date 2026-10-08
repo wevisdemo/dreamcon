@@ -1,3 +1,4 @@
+import { notFound } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { staticFunctionMiddleware } from '@tanstack/start-static-server-functions';
 import {
@@ -42,33 +43,45 @@ export type Conversation = StaticDecode<typeof topicSchema> & {
   comments: Comment[];
 };
 
+const loadConversations = once(async (): Promise<Conversation[]> => {
+  const [topics, topicGroups, comments] = await Promise.all([
+    fetchCsv(csvUrl('dreamcon', 'topics'), topicSchema),
+    fetchCsv(csvUrl('dreamcon-data', 'topic_groups'), topicGroupSchema),
+    fetchCsv(csvUrl('dreamcon', 'comments'), commentSchema),
+  ]);
+  const groupsByTopic = Map.groupBy(topicGroups, ({ id }) => id);
+  const commentsByParent = Map.groupBy(comments, comment =>
+    comment.parentCommentId
+      ? `comment:${comment.parentCommentId}`
+      : `topic:${comment.parentTopicId}`
+  );
+  const nest = (parentKey: string): Comment[] =>
+    (commentsByParent.get(parentKey) ?? []).map(comment => ({
+      ...comment,
+      comments: nest(`comment:${comment.id}`),
+    }));
+
+  return topics.map(topic => ({
+    ...topic,
+    groups: (groupsByTopic.get(topic.id) ?? []).map(({ category, group }) => ({
+      category,
+      group,
+    })),
+    comments: nest(`topic:${topic.id}`),
+  }));
+});
+
 export const getConversations = createServerFn({ method: 'GET' })
   .middleware([staticFunctionMiddleware])
-  .handler(
-    once(async (): Promise<Conversation[]> => {
-      const [topics, topicGroups, comments] = await Promise.all([
-        fetchCsv(csvUrl('dreamcon', 'topics'), topicSchema),
-        fetchCsv(csvUrl('dreamcon-data', 'topic_groups'), topicGroupSchema),
-        fetchCsv(csvUrl('dreamcon', 'comments'), commentSchema),
-      ]);
-      const groupsByTopic = Map.groupBy(topicGroups, ({ id }) => id);
-      const commentsByParent = Map.groupBy(comments, comment =>
-        comment.parentCommentId
-          ? `comment:${comment.parentCommentId}`
-          : `topic:${comment.parentTopicId}`
-      );
-      const nest = (parentKey: string): Comment[] =>
-        (commentsByParent.get(parentKey) ?? []).map(comment => ({
-          ...comment,
-          comments: nest(`comment:${comment.id}`),
-        }));
+  .handler(loadConversations);
 
-      return topics.map(topic => ({
-        ...topic,
-        groups: (groupsByTopic.get(topic.id) ?? []).map(
-          ({ category, group }) => ({ category, group })
-        ),
-        comments: nest(`topic:${topic.id}`),
-      }));
-    })
-  );
+export const getConversation = createServerFn({ method: 'GET' })
+  .middleware([staticFunctionMiddleware])
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const conversation = (await loadConversations()).find(
+      conversation => conversation.id === id
+    );
+    if (!conversation) throw notFound();
+    return conversation;
+  });

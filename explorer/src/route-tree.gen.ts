@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DesignSystemRouteImport } from './routes/design-system'
+import { Route as DashboardTopicIdRouteImport } from './routes/dashboard_.$topicId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,45 @@ const DesignSystemRoute = DesignSystemRouteImport.update({
   path: '/design-system',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardTopicIdRoute = DashboardTopicIdRouteImport.update({
+  id: '/dashboard_/$topicId',
+  path: '/dashboard/$topicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/design-system': typeof DesignSystemRoute
+  '/dashboard/$topicId': typeof DashboardTopicIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/design-system': typeof DesignSystemRoute
+  '/dashboard/$topicId': typeof DashboardTopicIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/design-system': typeof DesignSystemRoute
+  '/dashboard_/$topicId': typeof DashboardTopicIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/design-system'
+  fullPaths: '/' | '/dashboard' | '/design-system' | '/dashboard/$topicId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/design-system'
-  id: '__root__' | '/' | '/dashboard' | '/design-system'
+  to: '/' | '/dashboard' | '/design-system' | '/dashboard/$topicId'
+  id:
+    '__root__' | '/' | '/dashboard' | '/design-system' | '/dashboard_/$topicId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
   DesignSystemRoute: typeof DesignSystemRoute
+  DashboardTopicIdRoute: typeof DashboardTopicIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +93,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DesignSystemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard_/$topicId': {
+      id: '/dashboard_/$topicId'
+      path: '/dashboard/$topicId'
+      fullPath: '/dashboard/$topicId'
+      preLoaderRoute: typeof DashboardTopicIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +107,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   DesignSystemRoute: DesignSystemRoute,
+  DashboardTopicIdRoute: DashboardTopicIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

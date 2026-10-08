@@ -73,7 +73,7 @@ export function FilterToolbar({
               variant={label ? 'primary' : 'secondary'}
               aria-expanded={expandedTab === tab}
               onClick={() => onToggle(tab)}
-              className="w-full max-w-full min-w-0 md:w-auto [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
+              className="w-full max-w-full min-w-0 md:w-auto [&>span]:truncate"
             >
               {label ?? placeholder}
             </FilterTag>

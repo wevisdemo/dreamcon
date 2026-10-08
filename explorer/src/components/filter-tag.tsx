@@ -24,9 +24,7 @@ export function FilterTag({
   size?: keyof typeof sizes;
 }) {
   const tagClassName = `inline-flex shrink-0 items-center justify-center rounded-full ${variants[variant]} ${sizes[size]} ${className}`;
-  const content = (
-    <span className="[text-box:trim-both_cap_alphabetic]">{children}</span>
-  );
+  const content = <span>{children}</span>;
 
   return as === 'span' ? (
     <span className={`pointer-events-none ${tagClassName}`}>{content}</span>

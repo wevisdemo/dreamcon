@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
 import { ArrowUpIcon } from '../../icons/arrow-up';
 import { ChevronsLeftIcon } from '../../icons/chevrons-left';
+import { ExpandIcon } from '../../icons/expand';
 import { Button } from '../button';
 import { ConversationTree } from '../conversation/conversation-tree';
+import { CopyLink } from '../copy-link';
 import { EventDetails } from '../event/event-details';
 import { Modal } from '../modal';
 import { Sidebar } from './sidebar';
@@ -45,12 +48,32 @@ export function ConversationSidebar({
       aria-label="รายละเอียดข้อถกเถียง"
       className="gap-2.5 bg-blue-5 px-5 pt-2.5 pb-5"
     >
-      <Button
-        variant="icon-white"
-        icon={<ChevronsLeftIcon className="rotate-180" />}
-        aria-label="ปิดรายละเอียด"
-        onClick={onClose}
-      />
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <Button
+            variant="icon-white"
+            icon={<ChevronsLeftIcon className="rotate-180" />}
+            aria-label="ปิดรายละเอียด"
+            onClick={onClose}
+          />
+          {conversation && (
+            <Link
+              to="/dashboard/$topicId"
+              params={{ topicId: conversation.id }}
+              aria-label="เปิดแบบเต็มหน้าจอ"
+              className="flex size-7 items-center justify-center text-white hover:text-blue-3"
+            >
+              <ExpandIcon className="size-6" />
+            </Link>
+          )}
+        </div>
+        {conversation && (
+          <CopyLink
+            key={conversation.id}
+            path={`/dashboard/${conversation.id}`}
+          />
+        )}
+      </div>
       {conversation && (
         <ConversationTree
           key={conversation.id}

@@ -44,7 +44,9 @@ export function CommentList({
             onClick={() => setSelectedView(view)}
           />
         ))}
-        {nested ? 'กับความคิดเห็นนี้' : 'กับข้อถกเถียงนี้'}
+        <span className="[text-box:trim-both_cap_alphabetic]">
+          {nested ? 'กับความคิดเห็นนี้' : 'กับข้อถกเถียงนี้'}
+        </span>
       </div>
       <ul className={nested ? 'flex flex-col' : 'flex flex-col gap-2.5'}>
         {visibleComments.map(comment => (

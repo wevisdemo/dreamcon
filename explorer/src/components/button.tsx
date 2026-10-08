@@ -22,8 +22,8 @@ const sizes = {
   primary: filledSizes,
   secondary: filledSizes,
   tertiary: {
-    large: 'gap-0.5 text-b6 underline [&_svg]:size-4.5',
-    small: 'gap-0.5 text-b7 underline [&_svg]:size-3.5',
+    large: 'gap-1 text-b6 underline [&_svg]:size-4',
+    small: 'gap-1 text-b7 underline [&_svg]:size-3',
   },
   icon: {
     large: 'size-7 [&_svg]:size-6',
