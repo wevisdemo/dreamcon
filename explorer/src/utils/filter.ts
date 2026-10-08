@@ -134,6 +134,22 @@ export const matchesCategorySelection = (
   );
 
 /**
+ * Measures how close a topic is to the phrase of the selected group.
+ *
+ * @param groups - Groups the topic belongs to
+ * @param selection - Selected category and group
+ * @returns Embedding distance between the topic and the group's phrase, where
+ * lower is closer, or `Infinity` when the topic is not in the group
+ */
+export const getDistanceToPhrase = (
+  groups: TopicGroup[],
+  { category, group }: CategorySelection
+) =>
+  groups.find(
+    topicGroup => topicGroup.category === category && topicGroup.group === group
+  )?.distanceToPhrase ?? Infinity;
+
+/**
  * Describes the category selection for display.
  *
  * @param categories - Categories with their groups, where a group's index is

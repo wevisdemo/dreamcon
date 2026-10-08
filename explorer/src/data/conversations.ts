@@ -32,6 +32,7 @@ const topicGroupSchema = Object({
   id: Column('id', asString()),
   category: Column('category', asString()),
   group: Column('group', asNumber()),
+  distanceToPhrase: Column('embedded_distance_to_phrase', asNumber()),
 });
 
 export type TopicGroup = Omit<StaticDecode<typeof topicGroupSchema>, 'id'>;
@@ -63,10 +64,13 @@ const loadConversations = once(async (): Promise<Conversation[]> => {
 
   return topics.map(topic => ({
     ...topic,
-    groups: (groupsByTopic.get(topic.id) ?? []).map(({ category, group }) => ({
-      category,
-      group,
-    })),
+    groups: (groupsByTopic.get(topic.id) ?? []).map(
+      ({ category, group, distanceToPhrase }) => ({
+        category,
+        group,
+        distanceToPhrase,
+      })
+    ),
     comments: nest(`topic:${topic.id}`),
   }));
 });

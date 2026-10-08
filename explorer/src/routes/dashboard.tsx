@@ -11,39 +11,26 @@ import {
 import { FilterToolbar } from '../components/dashboard/filter-toolbar';
 import { Legend } from '../components/dashboard/legend';
 import { Masonry } from '../components/dashboard/masonry';
+import { PhraseSortingHint } from '../components/dashboard/phrase-sorting-hint';
 import { TopicCard } from '../components/dashboard/topic-card';
 import { Dropdown } from '../components/dropdown';
-import { commentViews, type CommentView } from '../constants/comment-views';
+import {
+  phraseSortOption,
+  relevanceSortOption,
+  sortOptions,
+} from '../constants/sort-options';
 import { getConversations } from '../data/conversations';
 import { getEvents } from '../data/events';
 import { getGroupQuestions } from '../data/group-questions';
 import {
   matchesCategorySelection,
   type CategorySelection,
+  getDistanceToPhrase,
   getSelectedTargetGroupTypes,
   matchesEventSelection,
   type EventSelection,
   searchConversations,
 } from '../utils/filter';
-
-const sortOptions: {
-  value: string;
-  label: string;
-  views: readonly CommentView[];
-}[] = [
-  { value: 'comments', label: 'จำนวนความคิดเห็น', views: commentViews },
-  { value: 'agree', label: 'จำนวนเห็นด้วย', views: ['เห็นด้วย'] },
-  {
-    value: 'disagree',
-    label: 'จำนวนเห็นด้วยบางส่วน และไม่เห็นด้วย',
-    views: ['เห็นด้วยบางส่วน', 'ไม่เห็นด้วย'],
-  },
-];
-
-const relevanceSortOption = {
-  value: 'relevance',
-  label: 'ความใกล้เคียงคำค้น',
-};
 
 export const Route = createFileRoute('/dashboard')({
   loader: async () => {
@@ -97,10 +84,26 @@ export const Route = createFileRoute('/dashboard')({
       setIsFilterSidebarOpen(false);
     };
 
-    const activeSortBy =
-      !keyword && sortBy === relevanceSortOption.value
-        ? sortOptions[0].value
-        : sortBy;
+    const selectCategory = (selection?: CategorySelection) => {
+      setCategorySelection(selection);
+      if (selection?.group !== undefined && !keyword) {
+        setSortBy(phraseSortOption.value);
+      }
+    };
+
+    const isGroupSelected = categorySelection?.group !== undefined;
+
+    const availableSortOptions = [
+      ...(keyword ? [relevanceSortOption] : []),
+      ...(isGroupSelected ? [phraseSortOption] : []),
+      ...sortOptions,
+    ];
+
+    const activeSortBy = availableSortOptions.some(
+      ({ value }) => value === sortBy
+    )
+      ? sortBy
+      : availableSortOptions[0].value;
 
     const { views } =
       sortOptions.find(({ value }) => value === activeSortBy) ?? sortOptions[0];
@@ -128,11 +131,18 @@ export const Route = createFileRoute('/dashboard')({
         conversation =>
           matchesCategory(conversation) && matchesEvent(conversation)
       )
-      .toSorted((a, b) =>
-        activeSortBy === relevanceSortOption.value
-          ? (a.searchScore ?? 0) - (b.searchScore ?? 0)
-          : 0
-      );
+      .toSorted((a, b) => {
+        if (activeSortBy === relevanceSortOption.value) {
+          return (a.searchScore ?? 0) - (b.searchScore ?? 0);
+        }
+        if (activeSortBy === phraseSortOption.value && categorySelection) {
+          return (
+            getDistanceToPhrase(a.groups, categorySelection) -
+            getDistanceToPhrase(b.groups, categorySelection)
+          );
+        }
+        return 0;
+      });
 
     const selectedTargetGroupTypes =
       getSelectedTargetGroupTypes(eventSelection);
@@ -151,7 +161,7 @@ export const Route = createFileRoute('/dashboard')({
                 categories={categories}
                 conversations={searchedConversations.filter(matchesEvent)}
                 selection={categorySelection}
-                onSelect={setCategorySelection}
+                onSelect={selectCategory}
               />
             ) : (
               <FilterEvent
@@ -195,18 +205,19 @@ export const Route = createFileRoute('/dashboard')({
                       แสดง <b>{filteredConversations.length}</b> จากทั้งหมด{' '}
                       {conversations.length} ข้อถกเถียง
                     </p>
-                    <label className="flex items-center gap-2 text-gray-6">
-                      เรียงตาม
-                      <Dropdown
-                        options={
-                          keyword
-                            ? [relevanceSortOption, ...sortOptions]
-                            : sortOptions
-                        }
-                        value={activeSortBy}
-                        onChange={event => setSortBy(event.target.value)}
-                      />
-                    </label>
+                    <div className="flex items-center gap-1.25">
+                      <label className="flex items-center gap-2 text-gray-6">
+                        เรียงตาม
+                        <Dropdown
+                          options={availableSortOptions}
+                          value={activeSortBy}
+                          onChange={event => setSortBy(event.target.value)}
+                        />
+                      </label>
+                      {activeSortBy === phraseSortOption.value && (
+                        <PhraseSortingHint />
+                      )}
+                    </div>
                   </div>
                   <Legend />
                 </div>
