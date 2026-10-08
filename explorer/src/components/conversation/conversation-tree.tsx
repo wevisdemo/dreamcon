@@ -1,15 +1,17 @@
 import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
+import { EventSet } from '../event/event-set';
 import { FilterTag } from '../filter-tag';
 import { CommentList } from './comment-list';
-import { EventSet } from './event-set';
 
 export function ConversationTree({
   conversation,
   events,
+  onEventSelect,
 }: {
   conversation: Conversation;
   events: Event[];
+  onEventSelect?: (eventId: string) => void;
 }) {
   const eventNames = new Map(
     events.map(({ id, displayName }) => [id, displayName])
@@ -37,10 +39,15 @@ export function ConversationTree({
           label="ข้อถกเถียง"
           eventIds={conversation.eventIds}
           eventNames={eventNames}
+          onSelect={onEventSelect}
         />
       </div>
       {conversation.comments.length > 0 ? (
-        <CommentList comments={conversation.comments} eventNames={eventNames} />
+        <CommentList
+          comments={conversation.comments}
+          eventNames={eventNames}
+          onEventSelect={onEventSelect}
+        />
       ) : (
         <p className="py-7.5 text-center text-b5">
           ยังไม่มีความคิดเห็นเกี่ยวกับข้อถกเถียงนี้

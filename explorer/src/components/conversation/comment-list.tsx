@@ -3,15 +3,17 @@ import { commentViews, type CommentView } from '../../constants/comment-views';
 import type { Comment } from '../../data/conversations';
 import { CommentDot } from '../comment-dot';
 import { CommentTag } from '../comment-tag';
-import { EventSet } from './event-set';
+import { EventSet } from '../event/event-set';
 
 export function CommentList({
   comments,
   eventNames,
+  onEventSelect,
   nested = false,
 }: {
   comments: Comment[];
   eventNames: Map<string, string>;
+  onEventSelect?: (eventId: string) => void;
   nested?: boolean;
 }) {
   const viewCounts = commentViews
@@ -76,12 +78,14 @@ export function CommentList({
                   className="ml-4"
                   eventIds={comment.eventIds}
                   eventNames={eventNames}
+                  onSelect={onEventSelect}
                 />
               </div>
               {comment.comments.length > 0 && (
                 <CommentList
                   comments={comment.comments}
                   eventNames={eventNames}
+                  onEventSelect={onEventSelect}
                   nested
                 />
               )}

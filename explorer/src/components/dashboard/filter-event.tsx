@@ -1,15 +1,13 @@
-import type { ReactNode } from 'react';
 import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
 import { CloseIcon } from '../../icons/close';
-import { DocumentIcon } from '../../icons/document';
-import { ShareIcon } from '../../icons/share';
 import {
   formatEventSelection,
   getSelectedTargetGroupTypes,
   type EventSelection,
 } from '../../utils/filter';
 import { Button } from '../button';
+import { EventDetails } from '../event/event-details';
 import { FilterTag } from '../filter-tag';
 
 const dateFormat = new Intl.DateTimeFormat('th-TH', {
@@ -113,31 +111,6 @@ export function FilterEvent({
                 selection !== undefined &&
                 'eventId' in selection &&
                 selection.eventId === event.id;
-              const details: [string, ReactNode][] = [
-                ['ชื่อวงสนทนาฉบับเต็ม', event.title.en],
-                ['สถานที่', event.location],
-                ['ผู้เข้าร่วม', event.targetGroup.description],
-                ['จำนวน', `${event.participantCount} คน`],
-                ['รายละเอียด', event.description],
-                [
-                  'ผู้ร่วมจัดงาน',
-                  event.organizers.length > 0 && (
-                    <ul className="list-disc pl-5">
-                      {event.organizers.map(organizer => (
-                        <li key={organizer}>{organizer}</li>
-                      ))}
-                    </ul>
-                  ),
-                ],
-              ];
-              const links = [
-                { label: 'ลิงก์ข่าว', href: event.newsLink, Icon: ShareIcon },
-                {
-                  label: 'เอกสารกิจกรรม',
-                  href: event.documentLink,
-                  Icon: DocumentIcon,
-                },
-              ].filter(({ href }) => href);
 
               return (
                 <li
@@ -190,32 +163,11 @@ export function FilterEvent({
                     className={`grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300 ${isSelected ? 'mt-2 grid-rows-[1fr] border-t border-blue-5' : 'grid-rows-[0fr]'}`}
                   >
                     <div className="overflow-hidden">
-                      <dl className="flex flex-col gap-2.5 pt-2.5 text-white">
-                        {details
-                          .filter(([, value]) => value)
-                          .map(([label, value]) => (
-                            <div key={label}>
-                              <dt className="text-b7 font-bold">{label}</dt>
-                              <dd className="whitespace-pre-line">{value}</dd>
-                            </div>
-                          ))}
-                      </dl>
-                      {links.length > 0 && (
-                        <div className="flex flex-wrap justify-end gap-x-3.75 pt-5">
-                          {links.map(({ label, href, Icon }) => (
-                            <a
-                              key={label}
-                              href={href}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="flex items-center gap-1 text-b6 text-white underline hover:text-blue-3"
-                            >
-                              <Icon className="size-3.5 text-blue-1" />
-                              {label}
-                            </a>
-                          ))}
-                        </div>
-                      )}
+                      <EventDetails
+                        event={event}
+                        variant="dark"
+                        className="pt-2.5"
+                      />
                     </div>
                   </div>
                 </li>

@@ -239,7 +239,9 @@ export const Route = createFileRoute('/dashboard')({
               ({ id }) => id === selectedConversationId
             )}
             events={events}
+            conversations={conversations}
             onClose={() => setIsConversationSidebarOpen(false)}
+            onEventFilter={eventId => setEventSelection({ eventId })}
           />
         </div>
         <BackToTopButton />

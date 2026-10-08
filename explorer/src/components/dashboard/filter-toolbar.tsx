@@ -9,6 +9,7 @@ import {
   type EventSelection,
 } from '../../utils/filter';
 import { Button } from '../button';
+import { FilterTag } from '../filter-tag';
 import { SearchBar } from '../search-bar';
 import type { FilterTab } from './filter-sidebar';
 
@@ -64,17 +65,20 @@ export function FilterToolbar({
           onSearch={query => onSearch(query.trim())}
           className="w-full shrink-0 md:w-auto"
         />
-        {filterButtons.map(({ tab, label, placeholder }) => (
-          <Button
-            key={tab}
-            variant={label ? 'primary-blue' : 'secondary'}
-            aria-expanded={expandedTab === tab}
-            onClick={() => onToggle(tab)}
-            className="w-full max-w-full min-w-0 md:w-auto lg:shrink [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
-          >
-            {label ?? placeholder}
-          </Button>
-        ))}
+        <div className="contents lg:grid lg:min-w-0 lg:grid-cols-[repeat(2,minmax(0,max-content))] lg:gap-3">
+          {filterButtons.map(({ tab, label, placeholder }) => (
+            <FilterTag
+              key={tab}
+              size="large"
+              variant={label ? 'primary' : 'secondary'}
+              aria-expanded={expandedTab === tab}
+              onClick={() => onToggle(tab)}
+              className="w-full max-w-full min-w-0 md:w-auto [&>span]:-my-1 [&>span]:truncate [&>span]:py-1"
+            >
+              {label ?? placeholder}
+            </FilterTag>
+          ))}
+        </div>
         {(keyword || categorySelection || eventSelection) && (
           <Button
             variant="tertiary-gray"

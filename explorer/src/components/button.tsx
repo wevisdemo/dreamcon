@@ -5,7 +5,7 @@ const variants = {
   'primary-gray': 'rounded-full bg-gray-3 text-gray-8 hover:bg-gray-4',
   'primary-white': 'rounded-full bg-white text-gray-8 hover:bg-blue-2',
   secondary:
-    'rounded-full bg-blue-2 border-2 border-blue-4 text-blue-7 hover:text-blue-8',
+    'rounded-full border-2 border-blue-4 text-blue-7 hover:text-blue-8',
   'tertiary-blue': 'text-blue-7 hover:text-blue-8',
   'tertiary-gray': 'text-gray-6 hover:text-gray-8',
   'tertiary-white': 'text-white hover:text-blue-3',

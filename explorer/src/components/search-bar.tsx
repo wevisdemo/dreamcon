@@ -18,7 +18,7 @@ export function SearchBar({
         event.preventDefault();
         onSearch(new FormData(event.currentTarget).get('query') as string);
       }}
-      className={`flex h-11 items-center rounded-full border-2 border-white bg-white not-has-placeholder-shown:border-blue-7 hover:border-blue-7 has-focus:border-blue-7 ${className}`}
+      className={`flex h-9.5 items-center rounded-full border-2 border-white bg-white not-has-placeholder-shown:border-blue-7 hover:border-blue-7 has-focus:border-blue-7 ${className}`}
     >
       <input
         type="search"
