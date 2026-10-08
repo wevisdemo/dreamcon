@@ -62,17 +62,22 @@ const loadConversations = once(async (): Promise<Conversation[]> => {
       comments: nest(`comment:${comment.id}`),
     }));
 
-  return topics.map(topic => ({
-    ...topic,
-    groups: (groupsByTopic.get(topic.id) ?? []).map(
-      ({ category, group, distanceToPhrase }) => ({
-        category,
-        group,
-        distanceToPhrase,
-      })
-    ),
-    comments: nest(`topic:${topic.id}`),
-  }));
+  return topics.flatMap(topic => {
+    const groups = groupsByTopic.get(topic.id);
+    return groups
+      ? [
+          {
+            ...topic,
+            groups: groups.map(({ category, group, distanceToPhrase }) => ({
+              category,
+              group,
+              distanceToPhrase,
+            })),
+            comments: nest(`topic:${topic.id}`),
+          },
+        ]
+      : [];
+  });
 });
 
 export const getConversations = createServerFn({ method: 'GET' })

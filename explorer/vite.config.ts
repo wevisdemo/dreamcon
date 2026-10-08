@@ -5,21 +5,26 @@ import { asString, Column, fetchCsv, Object } from 'sheethuahua';
 import { defineConfig } from 'vite';
 import { csvUrl } from './src/data/shared';
 
+const idSchema = Object({ id: Column('id', asString()) });
+
 export default defineConfig(async ({ command }) => {
-  const topics =
+  const [topics, topicGroups] =
     command === 'build'
-      ? await fetchCsv(
-          csvUrl('dreamcon', 'topics'),
-          Object({ id: Column('id', asString()) })
-        )
-      : [];
+      ? await Promise.all([
+          fetchCsv(csvUrl('dreamcon', 'topics'), idSchema),
+          fetchCsv(csvUrl('dreamcon-data', 'topic_groups'), idSchema),
+        ])
+      : [[], []];
+  const labeledTopicIds = new Set(topicGroups.map(({ id }) => id));
 
   return {
     server: { port: 3000 },
     plugins: [
       tanstackStart({
         prerender: { enabled: true },
-        pages: topics.map(({ id }) => ({ path: `/dashboard/${id}` })),
+        pages: topics
+          .filter(({ id }) => labeledTopicIds.has(id))
+          .map(({ id }) => ({ path: `/dashboard/${id}` })),
         router: { generatedRouteTree: 'route-tree.gen.ts' },
       }),
       // React's plugin must come after Start's
