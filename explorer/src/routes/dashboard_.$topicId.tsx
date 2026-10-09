@@ -30,6 +30,7 @@ export const Route = createFileRoute('/dashboard_/$topicId')({
           <div className="flex items-center justify-between">
             <Link
               to="/dashboard"
+              viewTransition
               className="flex items-center gap-1 text-b6 text-white hover:text-blue-3"
             >
               <ChevronDownIcon className="size-6 rotate-90" />

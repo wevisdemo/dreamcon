@@ -60,6 +60,7 @@ export function ConversationSidebar({
             <Link
               to="/dashboard/$topicId"
               params={{ topicId: conversation.id }}
+              viewTransition
               aria-label="เปิดแบบเต็มหน้าจอ"
               className="flex size-7 items-center justify-center text-white hover:text-blue-3"
             >
