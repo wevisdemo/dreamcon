@@ -38,7 +38,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@playwright/test": "1.61.1",
+    "@playwright/test": "1.63.0",
     "@types/d3-dsv": "^3.0.7",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^24.13.4",
