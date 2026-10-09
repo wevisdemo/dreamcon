@@ -75,7 +75,7 @@ export function FilterCategory({
           return (
             <li
               key={category}
-              className={`flex flex-col rounded-xl px-2.5 py-3 motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'border-b border-blue-3'}`}
+              className={`relative flex flex-col rounded-lg px-2.5 py-3 motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
             >
               <button
                 type="button"

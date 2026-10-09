@@ -115,7 +115,7 @@ export function FilterEvent({
               return (
                 <li
                   key={event.id}
-                  className={`flex flex-col rounded-2xl p-3.5 motion-safe:transition-colors motion-safe:duration-300 ${isSelected ? 'bg-blue-7' : 'border-b border-blue-3'}`}
+                  className={`relative flex flex-col rounded-lg p-3.5 motion-safe:transition-colors motion-safe:duration-300 ${isSelected ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
                 >
                   <button
                     type="button"

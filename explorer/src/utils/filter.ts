@@ -214,4 +214,4 @@ export const formatEventSelection = (
 ) =>
   'eventId' in selection
     ? (events.find(({ id }) => id === selection.eventId)?.displayName ?? '')
-    : selection.targetGroupTypes.join(', ');
+    : selection.targetGroupTypes.join(' | ');

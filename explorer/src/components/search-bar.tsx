@@ -31,7 +31,7 @@ export function SearchBar({
       <button
         type="submit"
         aria-label="ค้นหา"
-        className="-m-0.5 flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full text-blue-5 peer-not-placeholder-shown:bg-blue-7 peer-not-placeholder-shown:text-white"
+        className="-m-0.5 flex size-9.5 shrink-0 cursor-pointer items-center justify-center rounded-full text-blue-5 peer-not-placeholder-shown:bg-blue-7 peer-not-placeholder-shown:text-white"
       >
         <SearchIcon className="size-5" />
       </button>

@@ -61,7 +61,7 @@ export function TopicCard({
   return (
     <article
       ref={ref}
-      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:scroll-mt-44 md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent'} ${dimmed ? 'opacity-50' : ''}`}
+      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:scroll-mt-44 md:scroll-mb-7.5 md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent'} ${dimmed ? 'opacity-50' : ''}`}
     >
       {selected && (
         <SidePanelIcon className="absolute top-2.5 right-2.5 size-6 text-blue-7" />
