@@ -102,6 +102,7 @@ export function ConversationSidebar({
               onClick={() => {
                 onEventFilter(selectedEvent.id);
                 setSelected(undefined);
+                onClose();
               }}
               className="mt-2.5 w-full"
             >
