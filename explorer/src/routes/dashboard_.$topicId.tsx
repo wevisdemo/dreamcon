@@ -1,5 +1,10 @@
 import { useState } from 'react';
-import { createFileRoute, Link } from '@tanstack/react-router';
+import {
+  createFileRoute,
+  Link,
+  useLocation,
+  useRouter,
+} from '@tanstack/react-router';
 import { ConversationTree } from '../components/conversation/conversation-tree';
 import { CopyLink } from '../components/copy-link';
 import { EventDetails } from '../components/event/event-details';
@@ -20,6 +25,10 @@ export const Route = createFileRoute('/dashboard_/$topicId')({
   }),
   component: function TopicDetail() {
     const { conversation, events } = Route.useLoaderData();
+    const router = useRouter();
+    const isFromDashboard = useLocation({
+      select: ({ state }) => state.isFromDashboard,
+    });
     const [selectedEventId, setSelectedEventId] = useState<string>();
 
     const selectedEvent = events.find(({ id }) => id === selectedEventId);
@@ -31,6 +40,13 @@ export const Route = createFileRoute('/dashboard_/$topicId')({
             <Link
               to="/dashboard"
               viewTransition
+              onClick={event => {
+                if (!isFromDashboard) return;
+                event.preventDefault();
+                // history.back() skips the router's per-navigation viewTransition option
+                router.shouldViewTransition = true;
+                router.history.back();
+              }}
               className="flex items-center gap-1 text-b6 text-white hover:text-blue-3"
             >
               <ChevronDownIcon className="size-6 rotate-90" />

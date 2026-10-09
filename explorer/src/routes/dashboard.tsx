@@ -29,12 +29,30 @@ import {
   type CategorySelection,
   getDistanceToPhrase,
   getSelectedTargetGroupTypes,
+  isCategorySelection,
+  isEventSelection,
   matchesEventSelection,
   type EventSelection,
   searchConversations,
 } from '../utils/filter';
 
+type DashboardSearch = {
+  keyword?: string;
+  category?: CategorySelection;
+  event?: EventSelection;
+};
+
 export const Route = createFileRoute('/dashboard')({
+  validateSearch: ({
+    keyword,
+    category,
+    event,
+  }: Record<string, unknown>): DashboardSearch => ({
+    keyword: typeof keyword === 'string' && keyword ? keyword : undefined,
+    category: isCategorySelection(category) ? category : undefined,
+    event: isEventSelection(event) ? event : undefined,
+  }),
+  staleTime: Infinity,
   loader: async () => {
     const [events, conversations, categories] = await Promise.all([
       getEvents(),
@@ -60,11 +78,13 @@ export const Route = createFileRoute('/dashboard')({
   },
   component: function Dashboard() {
     const { categories, events, conversations } = Route.useLoaderData();
+    const {
+      keyword = '',
+      category: categorySelection,
+      event: eventSelection,
+    } = Route.useSearch();
+    const navigate = Route.useNavigate();
     const [sortBy, setSortBy] = useState(sortOptions[0].value);
-    const [keyword, setKeyword] = useState('');
-    const [categorySelection, setCategorySelection] =
-      useState<CategorySelection>();
-    const [eventSelection, setEventSelection] = useState<EventSelection>();
     const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
     const [filterTab, setFilterTab] = useState<FilterTab>('category');
     const [conversationSidebar, setConversationSidebar] = useState<{
@@ -73,6 +93,16 @@ export const Route = createFileRoute('/dashboard')({
     }>({ isOpen: false });
     const { isOpen: isConversationSidebarOpen, id: selectedConversationId } =
       conversationSidebar;
+
+    const updateFilters = (filters: DashboardSearch) =>
+      navigate({
+        search: prev => ({ ...prev, ...filters }),
+        replace: true,
+        resetScroll: false,
+      });
+
+    const setEventSelection = (event?: EventSelection) =>
+      updateFilters({ event });
 
     const closeConversationSidebar = () =>
       setConversationSidebar(sidebar => ({ ...sidebar, isOpen: false }));
@@ -92,7 +122,7 @@ export const Route = createFileRoute('/dashboard')({
     }, []);
 
     const selectCategory = (selection?: CategorySelection) => {
-      setCategorySelection(selection);
+      updateFilters({ category: selection });
       if (selection?.group !== undefined && !keyword) {
         setSortBy(phraseSortOption.value);
       }
@@ -190,15 +220,17 @@ export const Route = createFileRoute('/dashboard')({
               eventSelection={eventSelection}
               expandedTab={isFilterSidebarOpen ? filterTab : undefined}
               onSearch={query => {
-                setKeyword(query);
+                updateFilters({ keyword: query || undefined });
                 if (query) setSortBy(relevanceSortOption.value);
               }}
               onToggle={toggleFilterSidebar}
-              onClear={() => {
-                setKeyword('');
-                setCategorySelection(undefined);
-                setEventSelection(undefined);
-              }}
+              onClear={() =>
+                updateFilters({
+                  keyword: undefined,
+                  category: undefined,
+                  event: undefined,
+                })
+              }
             />
 
             {filteredConversations.length === 0 ? (

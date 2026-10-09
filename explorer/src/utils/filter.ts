@@ -11,6 +11,41 @@ export type EventSelection =
   | { targetGroupTypes: string[] }
   | { eventId: string };
 
+/**
+ * Checks whether an untrusted value, like a search param, is a category
+ * selection.
+ *
+ * @param value - Value to check
+ * @returns `true` when `value` has a string `category` and, if any, a number
+ * `group`
+ */
+export const isCategorySelection = (
+  value: unknown
+): value is CategorySelection =>
+  typeof value === 'object' &&
+  value !== null &&
+  'category' in value &&
+  typeof value.category === 'string' &&
+  (!('group' in value) ||
+    value.group === undefined ||
+    typeof value.group === 'number');
+
+/**
+ * Checks whether an untrusted value, like a search param, is an event
+ * selection.
+ *
+ * @param value - Value to check
+ * @returns `true` when `value` has a string `eventId` or a list of string
+ * `targetGroupTypes`
+ */
+export const isEventSelection = (value: unknown): value is EventSelection =>
+  typeof value === 'object' &&
+  value !== null &&
+  (('eventId' in value && typeof value.eventId === 'string') ||
+    ('targetGroupTypes' in value &&
+      Array.isArray(value.targetGroupTypes) &&
+      value.targetGroupTypes.every(type => typeof type === 'string')));
+
 /** Where a keyword was found in a text, and how many typos it took */
 export type KeywordMatch = { start: number; end: number; errors: number };
 
