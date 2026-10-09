@@ -4,6 +4,7 @@ import { staticFunctionMiddleware } from '@tanstack/start-static-server-function
 import { loadConversations } from './conversations';
 import { loadEvents } from './events';
 import { loadGroupQuestions } from './group-questions';
+import { loadPartners } from './partners';
 
 export const getConversations = createServerFn({ method: 'GET' })
   .middleware([staticFunctionMiddleware])
@@ -27,3 +28,7 @@ export const getEvents = createServerFn({ method: 'GET' })
 export const getGroupQuestions = createServerFn({ method: 'GET' })
   .middleware([staticFunctionMiddleware])
   .handler(loadGroupQuestions);
+
+export const getPartners = createServerFn({ method: 'GET' })
+  .middleware([staticFunctionMiddleware])
+  .handler(loadPartners);

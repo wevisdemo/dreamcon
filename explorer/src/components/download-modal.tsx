@@ -1,6 +1,6 @@
-import { DATASET_ZIP_PATH } from '../../constants/dataset';
-import { Button, ButtonLink } from '../button';
-import { Modal } from '../modal';
+import { DATASET_ZIP_PATH } from '../constants/dataset';
+import { Button, ButtonLink } from './button';
+import { Modal } from './modal';
 
 const DATA_FILES = [
   ['category.csv', ': รายชื่อหมวดหมู่และประเด็นย่อย'],

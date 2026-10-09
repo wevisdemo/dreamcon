@@ -1,7 +1,6 @@
 import dataStructureSample from '../../assets/data-structure-sample.png';
 import dataStructure from '../../assets/data-structure.png';
-
-const LINK_CLASS_NAME = 'underline hover:text-blue-7';
+import { ExternalLink } from '../external-link';
 
 export function AboutData() {
   return (
@@ -146,14 +145,9 @@ export function AboutData() {
         <h3 className="text-h7 font-bold">นโยบายการนำข้อมูลไปใช้ต่อ</h3>
         <p>
           ทีมงานตั้งใจเปิดข้อมูลเป็น Open Data ภายใต้เงื่อนไข{' '}
-          <a
-            href="https://creativecommons.org/licenses/by-nc/4.0/"
-            target="_blank"
-            rel="noreferrer"
-            className={LINK_CLASS_NAME}
-          >
+          <ExternalLink href="https://creativecommons.org/licenses/by-nc/4.0/">
             Attribution-NonCommercial 4.0 International
-          </a>{' '}
+          </ExternalLink>{' '}
           ซึ่งหมายถึง สามารถนำข้อมูลไปใช้ ดัดแปลง ต่อยอดได้
           แต่ห้ามนำไปใช้ทางการค้าหรือแสวงหาผลกำไรจากผลงาน และต้องให้เครดิตกับ WeVis
         </p>
@@ -163,21 +157,16 @@ export function AboutData() {
           หากมีข้อสงสัยต้องการสอบถามเพิ่มเติม
           ประสงค์แจ้งเปลี่ยนแปลงหรือเพิ่มเติมข้อมูลเพื่อความถูกต้อง หรือมีข้อเสนอแนะใด ๆ
           สามารถติดต่อได้ที่{' '}
-          <a href="mailto:team@wevis.info" className={LINK_CLASS_NAME}>
+          <ExternalLink href="mailto:team@wevis.info">
             team@wevis.info
-          </a>
+          </ExternalLink>
         </p>
         <p>
           ด้าน Source Code ทางทีมมีความตั้งใจที่พัฒนาทุกโปรเจกต์ให้เป็น Open Source
           ภายใต้เงื่อนไข{' '}
-          <a
-            href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
-            target="_blank"
-            rel="noreferrer"
-            className={LINK_CLASS_NAME}
-          >
+          <ExternalLink href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
             Attribution-NonCommercial-ShareAlike 4.0 International
-          </a>{' '}
+          </ExternalLink>{' '}
           ซึ่งหมายถึง สามารถนำผลงานไปใช้ ดัดแปลง ต่อยอดได้
           แต่ห้ามนำไปใช้ทางการค้าหรือแสวงหาผลกำไรจากผลงาน
           และต้องแจ้งทราบและให้เครดิตกับเจ้าของผลงาน

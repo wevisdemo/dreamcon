@@ -10,9 +10,9 @@ import {
   type EventSelection,
 } from '../../utils/filter';
 import { Button } from '../button';
+import { DownloadModal } from '../download-modal';
 import { FilterTag } from '../filter-tag';
 import { SearchBar } from '../search-bar';
-import { DownloadModal } from './download-modal';
 import type { FilterTab } from './filter-sidebar';
 
 export function FilterToolbar({
