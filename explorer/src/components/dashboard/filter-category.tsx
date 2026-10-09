@@ -32,10 +32,10 @@ export function FilterCategory({
       category,
       count: countTopics({ category }),
       groups: groups
-        .map(({ phrase }, group) => ({
+        .map(({ id, phrase }) => ({
+          id,
           phrase,
-          group,
-          count: countTopics({ category, group }),
+          count: countTopics({ category, groupId: id }),
         }))
         .toSorted((a, b) => b.count - a.count),
     }))
@@ -70,7 +70,7 @@ export function FilterCategory({
       <ul className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col overflow-y-auto pb-2.5">
         {sortedCategories.map(({ category, count, groups }) => {
           const isExpanded = selection?.category === category;
-          const isHighlighted = isExpanded && selection.group === undefined;
+          const isHighlighted = isExpanded && selection.groupId === undefined;
 
           return (
             <li
@@ -109,17 +109,19 @@ export function FilterCategory({
                   >
                     {groups.length} กลุ่มประเด็น สรุปโดย AI
                   </p>
-                  {groups.map(({ phrase, group, count }) => {
-                    const isSelected = isExpanded && selection.group === group;
+                  {groups.map(({ id, phrase, count }) => {
+                    const isSelected = isExpanded && selection.groupId === id;
 
                     return (
                       <button
-                        key={phrase}
+                        key={id}
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() =>
                           onSelect(
-                            isSelected ? { category } : { category, group }
+                            isSelected
+                              ? { category }
+                              : { category, groupId: id }
                           )
                         }
                         className={`flex cursor-pointer items-start gap-1 rounded-md p-2.5 text-left ${isSelected ? 'bg-blue-7' : 'bg-blue-1 hover:bg-blue-2'}`}

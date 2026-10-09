@@ -8,58 +8,50 @@ import {
   type StaticDecode,
 } from 'sheethuahua';
 import { commentViews } from '../constants/comment-views';
-import { asStrings, csvUrl, once } from './shared';
+import { asStrings, csvUrl, once, toGroupId } from './shared';
 
-/** Topic columns without `event_ids`, which the dataset ZIP moves to a join table */
 export const topicSchema = Object({
   id: Column('id', asString()),
   title: Column('title', asString()),
+  eventIds: Column('event_ids', asStrings()),
 });
 
-/** Comment columns without `event_ids`, which the dataset ZIP moves to a join table */
 export const commentSchema = Object({
   id: Column('id', asString()),
   view: Column('comment_view', asOneOf(commentViews)),
   reason: Column('reason', asString()),
   parentTopicId: Column('parent_topic_id', asString()),
   parentCommentId: Column('parent_comment_id', asString().optional()),
-});
-
-const eventIdsColumn = Column('event_ids', asStrings());
-
-const topicWithEventsSchema = Object({
-  ...topicSchema.properties,
-  eventIds: eventIdsColumn,
-});
-
-const commentWithEventsSchema = Object({
-  ...commentSchema.properties,
-  eventIds: eventIdsColumn,
+  eventIds: Column('event_ids', asStrings()),
 });
 
 const topicGroupSchema = Object({
-  id: Column('id', asString()),
+  topicId: Column('id', asString()),
   category: Column('category', asString()),
   group: Column('group', asNumber()),
   distanceToPhrase: Column('embedded_distance_to_phrase', asNumber()),
 });
 
-export type TopicGroup = Omit<StaticDecode<typeof topicGroupSchema>, 'id'>;
-export type Comment = StaticDecode<typeof commentWithEventsSchema> & {
+export type TopicGroup = {
+  id: string;
+  category: string;
+  distanceToPhrase: number;
+};
+export type Comment = StaticDecode<typeof commentSchema> & {
   comments: Comment[];
 };
-export type Conversation = StaticDecode<typeof topicWithEventsSchema> & {
+export type Conversation = StaticDecode<typeof topicSchema> & {
   groups: TopicGroup[];
   comments: Comment[];
 };
 
 export const loadConversations = once(async (): Promise<Conversation[]> => {
   const [topics, topicGroups, comments] = await Promise.all([
-    fetchCsv(csvUrl('dreamcon', 'topics'), topicWithEventsSchema),
+    fetchCsv(csvUrl('dreamcon', 'topics'), topicSchema),
     fetchCsv(csvUrl('dreamcon-data', 'topic_groups'), topicGroupSchema),
-    fetchCsv(csvUrl('dreamcon', 'comments'), commentWithEventsSchema),
+    fetchCsv(csvUrl('dreamcon', 'comments'), commentSchema),
   ]);
-  const groupsByTopic = Map.groupBy(topicGroups, ({ id }) => id);
+  const groupsByTopic = Map.groupBy(topicGroups, ({ topicId }) => topicId);
   const commentsByParent = Map.groupBy(comments, comment =>
     comment.parentCommentId
       ? `comment:${comment.parentCommentId}`
@@ -78,8 +70,8 @@ export const loadConversations = once(async (): Promise<Conversation[]> => {
           {
             ...topic,
             groups: groups.map(({ category, group, distanceToPhrase }) => ({
+              id: toGroupId(category, group),
               category,
-              group,
               distanceToPhrase,
             })),
             comments: nest(`topic:${topic.id}`),

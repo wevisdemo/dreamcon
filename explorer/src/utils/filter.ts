@@ -3,8 +3,8 @@ import type { Comment, Conversation, TopicGroup } from '../data/conversations';
 import type { Event } from '../data/events';
 import type { CategoryQuestions } from '../data/group-questions';
 
-/** A selected category, optionally narrowed down to one of its groups */
-export type CategorySelection = { category: string; group?: number };
+/** A selected category, optionally narrowed down to one of its groups by id */
+export type CategorySelection = { category: string; groupId?: string };
 
 /** Selected participant types, or a single event */
 export type EventSelection =
@@ -16,8 +16,8 @@ export type EventSelection =
  * selection.
  *
  * @param value - Value to check
- * @returns `true` when `value` has a string `category` and, if any, a number
- * `group`
+ * @returns `true` when `value` has a string `category` and, if any, a string
+ * `groupId`
  */
 export const isCategorySelection = (
   value: unknown
@@ -26,9 +26,9 @@ export const isCategorySelection = (
   value !== null &&
   'category' in value &&
   typeof value.category === 'string' &&
-  (!('group' in value) ||
-    value.group === undefined ||
-    typeof value.group === 'number');
+  (!('groupId' in value) ||
+    value.groupId === undefined ||
+    typeof value.groupId === 'string');
 
 /**
  * Checks whether an untrusted value, like a search param, is an event
@@ -160,12 +160,12 @@ export const searchConversations = <
  */
 export const matchesCategorySelection = (
   groups: TopicGroup[],
-  { category, group }: CategorySelection
+  { category, groupId }: CategorySelection
 ) =>
-  groups.some(
-    topicGroup =>
-      topicGroup.category === category &&
-      (group === undefined || topicGroup.group === group)
+  groups.some(topicGroup =>
+    groupId === undefined
+      ? topicGroup.category === category
+      : topicGroup.id === groupId
   );
 
 /**
@@ -178,29 +178,23 @@ export const matchesCategorySelection = (
  */
 export const getDistanceToPhrase = (
   groups: TopicGroup[],
-  { category, group }: CategorySelection
-) =>
-  groups.find(
-    topicGroup => topicGroup.category === category && topicGroup.group === group
-  )?.distanceToPhrase ?? Infinity;
+  { groupId }: CategorySelection
+) => groups.find(({ id }) => id === groupId)?.distanceToPhrase ?? Infinity;
 
 /**
  * Describes the category selection for display.
  *
- * @param categories - Categories with their groups, where a group's index is
- * its number
+ * @param categories - Categories with their groups
  * @param selection - Selected category, and group when one is selected
  * @returns `category > phrase` when a group is selected, otherwise `category`
  */
 export const formatCategorySelection = (
   categories: CategoryQuestions[],
-  { category, group }: CategorySelection
+  { category, groupId }: CategorySelection
 ) => {
-  const phrase =
-    group === undefined
-      ? undefined
-      : categories.find(item => item.category === category)?.groups[group]
-          ?.phrase;
+  const phrase = categories
+    .find(item => item.category === category)
+    ?.groups.find(({ id }) => id === groupId)?.phrase;
   return phrase ? `${category} > ${phrase}` : category;
 };
 

@@ -6,7 +6,7 @@ import {
   Object,
   type StaticDecode,
 } from 'sheethuahua';
-import { csvUrl, once } from './shared';
+import { csvUrl, once, toGroupId } from './shared';
 
 export const groupQuestionSchema = Object({
   category: Column('category', asString()),
@@ -14,10 +14,10 @@ export const groupQuestionSchema = Object({
   phrase: Column('phrase', asString()),
 });
 
-export type GroupQuestion = Pick<
+export type GroupQuestion = Omit<
   StaticDecode<typeof groupQuestionSchema>,
-  'phrase'
->;
+  'category'
+> & { id: string };
 export type CategoryQuestions = {
   category: string;
   groups: GroupQuestion[];
@@ -31,16 +31,16 @@ export const loadGroupQuestions = once(
     );
 
     return [...Map.groupBy(questions, ({ category }) => category)].map(
-      ([category, rows]) => {
-        const groups = rows.toSorted((a, b) => a.group - b.group);
-        if (groups.some(({ group }, index) => group !== index)) {
-          throw new Error(`Groups of "${category}" must be numbered 0..n`);
-        }
-        return {
-          category,
-          groups: groups.map(({ phrase }) => ({ phrase })),
-        };
-      }
+      ([category, rows]) => ({
+        category,
+        groups: rows
+          .toSorted((a, b) => a.group - b.group)
+          .map(({ group, phrase }) => ({
+            id: toGroupId(category, group),
+            group,
+            phrase,
+          })),
+      })
     );
   }
 );

@@ -123,12 +123,12 @@ export const Route = createFileRoute('/dashboard')({
 
     const selectCategory = (selection?: CategorySelection) => {
       updateFilters({ category: selection });
-      if (selection?.group !== undefined && !keyword) {
+      if (selection?.groupId !== undefined && !keyword) {
         setSortBy(phraseSortOption.value);
       }
     };
 
-    const isGroupSelected = categorySelection?.group !== undefined;
+    const isGroupSelected = categorySelection?.groupId !== undefined;
 
     const availableSortOptions = [
       ...(keyword ? [relevanceSortOption] : []),

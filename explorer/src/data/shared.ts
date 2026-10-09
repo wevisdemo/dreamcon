@@ -13,3 +13,6 @@ export const once = <T>(load: () => Promise<T>) => {
 };
 
 export const asStrings = () => asArray(asString());
+
+export const toGroupId = (category: string, group: number) =>
+  `${category}:${group}`;
