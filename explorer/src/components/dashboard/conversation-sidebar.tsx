@@ -46,7 +46,7 @@ export function ConversationSidebar({
       isOpen={isOpen}
       side="right"
       aria-label="รายละเอียดข้อถกเถียง"
-      className="gap-2.5 bg-blue-5 px-5 pt-2.5 pb-5"
+      className="gap-2.5 bg-blue-5 px-5 pt-2.5"
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center">
@@ -82,6 +82,7 @@ export function ConversationSidebar({
           onEventSelect={eventId =>
             setSelected({ conversationId: conversation.id, eventId })
           }
+          className="pb-5"
         />
       )}
       <Modal

@@ -25,7 +25,11 @@ export function FilterSidebar({
   children: ReactNode;
 }) {
   return (
-    <Sidebar isOpen={isOpen} side="left" className="gap-1.5 bg-blue-1 p-2.5">
+    <Sidebar
+      isOpen={isOpen}
+      side="left"
+      className="gap-1.5 bg-blue-1 px-2.5 pt-2.5"
+    >
       <div className="flex items-center">
         <div className="flex-1">
           <Tabs tabs={tabs} value={tab} onChange={onTabChange} />

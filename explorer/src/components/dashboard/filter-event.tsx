@@ -73,7 +73,7 @@ export function FilterEvent({
           </>
         )}
       </div>
-      <div className="flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-3)_transparent] flex-col gap-5 overflow-y-auto">
+      <div className="flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-3)_transparent] flex-col gap-5 overflow-y-auto pb-2.5">
         {targetGroupTypes.length > 0 && (
           <section className="flex flex-col gap-2.5 px-2.5">
             <h3 className="text-b6 font-bold text-gray-6">

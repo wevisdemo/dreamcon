@@ -8,10 +8,12 @@ export function ConversationTree({
   conversation,
   events,
   onEventSelect,
+  className = '',
 }: {
   conversation: Conversation;
   events: Event[];
   onEventSelect?: (eventId: string) => void;
+  className?: string;
 }) {
   const eventNames = new Map(
     events.map(({ id, displayName }) => [id, displayName])
@@ -21,7 +23,9 @@ export function ConversationTree({
   ];
 
   return (
-    <div className="flex h-full min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-4)_transparent] flex-col gap-2.5 overflow-y-auto">
+    <div
+      className={`flex h-full min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-4)_transparent] flex-col gap-2.5 overflow-y-auto ${className}`}
+    >
       <div className="flex flex-col gap-2.5">
         <div className="flex flex-col gap-2.5 rounded-2xl bg-white p-5">
           {categories.length > 0 && (
