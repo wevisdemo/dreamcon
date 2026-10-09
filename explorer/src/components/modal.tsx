@@ -60,7 +60,7 @@ export function Modal({
           <CloseIcon className="size-6" />
         </button>
         <div
-          className={`flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-gray-3)_transparent] flex-col overflow-y-auto ${mounts[mount].content} ${className}`}
+          className={`flex min-h-0 scrollbar-thin scrollbar-thumb-gray-3 flex-col overflow-y-auto ${mounts[mount].content} ${className}`}
         >
           {isOpen ? children : content}
         </div>

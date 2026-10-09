@@ -24,7 +24,7 @@ export function ConversationTree({
 
   return (
     <div
-      className={`flex h-full min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-4)_transparent] flex-col gap-2.5 overflow-y-auto ${className}`}
+      className={`flex h-full min-h-0 scrollbar-thin scrollbar-thumb-blue-4 flex-col gap-2.5 overflow-y-auto ${className}`}
     >
       <div className="flex flex-col gap-2.5">
         <div className="flex flex-col gap-2.5 rounded-2xl bg-white p-5">

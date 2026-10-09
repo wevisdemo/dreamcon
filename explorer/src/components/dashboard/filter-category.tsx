@@ -67,7 +67,7 @@ export function FilterCategory({
           </>
         )}
       </div>
-      <ul className="flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-blue-3)_transparent] flex-col overflow-y-auto pb-2.5">
+      <ul className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col overflow-y-auto pb-2.5">
         {sortedCategories.map(({ category, count, groups }) => {
           const isExpanded = selection?.category === category;
           const isHighlighted = isExpanded && selection.group === undefined;
