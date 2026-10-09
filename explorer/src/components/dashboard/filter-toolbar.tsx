@@ -65,6 +65,7 @@ export function FilterToolbar({
       <div className="flex flex-row flex-wrap justify-start gap-3 rounded-2xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
         <SearchBar
           key={searchBarKey}
+          defaultValue={keyword}
           onSearch={query => onSearch(query.trim())}
           className="w-full shrink-0 md:w-auto"
         />
