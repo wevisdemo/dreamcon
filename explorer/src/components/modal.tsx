@@ -1,4 +1,4 @@
-import { useEffect, type HTMLAttributes } from 'react';
+import { useEffect, useState, type HTMLAttributes } from 'react';
 import { createPortal } from 'react-dom';
 import { CloseIcon } from '../icons/close';
 
@@ -31,17 +31,24 @@ export function Modal({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  const [hasOpened, setHasOpened] = useState(isOpen);
+  const [content, setContent] = useState(children);
+
+  if (isOpen && !hasOpened) setHasOpened(true);
+  if (isOpen && content !== children) setContent(children);
+
+  if (!hasOpened) return null;
 
   const backdrop = (
     <div
+      inert={!isOpen}
       onClick={event => event.target === event.currentTarget && onClose()}
-      className={`${mounts[mount].backdrop} inset-0 flex items-center justify-center bg-black/50 p-4`}
+      className={`${mounts[mount].backdrop} inset-0 flex items-center justify-center bg-black/50 p-4 motion-safe:transition-[opacity,visibility] motion-safe:duration-200 ${isOpen ? 'starting:opacity-0' : 'invisible opacity-0'}`}
     >
       <div
         role="dialog"
         aria-modal
-        className={`relative flex max-h-full w-full flex-col overflow-hidden rounded-2xl bg-white shadow-[3px_7px_17.2px_#0000001a] ${mounts[mount].dialog}`}
+        className={`relative flex max-h-full w-full flex-col overflow-hidden rounded-2xl bg-white shadow-[3px_7px_17.2px_#0000001a] motion-safe:transition-[translate,scale] motion-safe:duration-200 ${isOpen ? 'starting:translate-y-4 starting:scale-95' : 'translate-y-4 scale-95'} ${mounts[mount].dialog}`}
         {...props}
       >
         <button
@@ -55,7 +62,7 @@ export function Modal({
         <div
           className={`flex min-h-0 scrollbar-thin [scrollbar-color:var(--color-gray-3)_transparent] flex-col overflow-y-auto ${mounts[mount].content} ${className}`}
         >
-          {children}
+          {isOpen ? children : content}
         </div>
       </div>
     </div>
