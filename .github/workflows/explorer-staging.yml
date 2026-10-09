@@ -10,7 +10,9 @@ on:
       - .github/workflows/explorer-staging.yml
   workflow_dispatch:
 
-concurrency: explorer-staging
+concurrency:
+  group: explorer-staging
+  cancel-in-progress: true
 
 permissions:
   contents: read
