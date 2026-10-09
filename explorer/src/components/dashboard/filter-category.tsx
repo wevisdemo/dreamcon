@@ -1,5 +1,6 @@
 import type { Conversation } from '../../data/conversations';
 import type { CategoryQuestions } from '../../data/group-questions';
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
 import { ChevronDownIcon } from '../../icons/chevron-down';
 import { CloseIcon } from '../../icons/close';
 import {
@@ -22,6 +23,10 @@ export function FilterCategory({
   selection?: CategorySelection;
   onSelect: (selection?: CategorySelection) => void;
 }) {
+  const selectedRef = useScrollIntoView(
+    selection?.groupId ?? selection?.category
+  );
+
   const countTopics = (selection: CategorySelection) =>
     conversations.filter(({ groups }) =>
       matchesCategorySelection(groups, selection)
@@ -67,7 +72,7 @@ export function FilterCategory({
           </>
         )}
       </div>
-      <ul className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col overflow-y-auto pb-2.5">
+      <ul className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col overflow-y-auto pb-2.5 motion-safe:scroll-smooth">
         {sortedCategories.map(({ category, count, groups }) => {
           const isExpanded = selection?.category === category;
           const isHighlighted = isExpanded && selection.groupId === undefined;
@@ -75,6 +80,7 @@ export function FilterCategory({
           return (
             <li
               key={category}
+              ref={isHighlighted ? selectedRef : undefined}
               className={`relative flex flex-col rounded-lg px-2.5 py-3 motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
             >
               <button
@@ -115,6 +121,7 @@ export function FilterCategory({
                     return (
                       <button
                         key={id}
+                        ref={isSelected ? selectedRef : undefined}
                         type="button"
                         aria-pressed={isSelected}
                         onClick={() =>

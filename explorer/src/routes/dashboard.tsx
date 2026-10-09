@@ -24,6 +24,7 @@ import {
   getEvents,
   getGroupQuestions,
 } from '../data/server-functions';
+import { useScrollIntoView } from '../hooks/use-scroll-into-view';
 import {
   matchesCategorySelection,
   type CategorySelection,
@@ -85,6 +86,7 @@ export const Route = createFileRoute('/dashboard')({
     } = Route.useSearch();
     const navigate = Route.useNavigate();
     const [sortBy, setSortBy] = useState(sortOptions[0].value);
+    const [searchResetKey, setSearchResetKey] = useState(0);
     const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
     const [filterTab, setFilterTab] = useState<FilterTab>('category');
     const [conversationSidebar, setConversationSidebar] = useState<{
@@ -93,6 +95,10 @@ export const Route = createFileRoute('/dashboard')({
     }>({ isOpen: false });
     const { isOpen: isConversationSidebarOpen, id: selectedConversationId } =
       conversationSidebar;
+    const selectedCardId = isConversationSidebarOpen
+      ? selectedConversationId
+      : undefined;
+    const selectedCardRef = useScrollIntoView(selectedCardId);
 
     const updateFilters = (filters: DashboardSearch) =>
       navigate({
@@ -103,6 +109,14 @@ export const Route = createFileRoute('/dashboard')({
 
     const setEventSelection = (event?: EventSelection) =>
       updateFilters({ event });
+
+    const resetFilters = (filters: DashboardSearch = {}) =>
+      updateFilters({
+        keyword: undefined,
+        category: undefined,
+        event: undefined,
+        ...filters,
+      }).then(() => setSearchResetKey(key => key + 1));
 
     const closeConversationSidebar = () =>
       setConversationSidebar(sidebar => ({ ...sidebar, isOpen: false }));
@@ -216,6 +230,7 @@ export const Route = createFileRoute('/dashboard')({
               categories={categories}
               events={events}
               keyword={keyword}
+              searchResetKey={searchResetKey}
               categorySelection={categorySelection}
               eventSelection={eventSelection}
               expandedTab={isFilterSidebarOpen ? filterTab : undefined}
@@ -224,13 +239,7 @@ export const Route = createFileRoute('/dashboard')({
                 if (query) setSortBy(relevanceSortOption.value);
               }}
               onToggle={toggleFilterSidebar}
-              onClear={() =>
-                updateFilters({
-                  keyword: undefined,
-                  category: undefined,
-                  event: undefined,
-                })
-              }
+              onClear={() => resetFilters()}
             />
 
             {filteredConversations.length === 0 ? (
@@ -272,10 +281,13 @@ export const Route = createFileRoute('/dashboard')({
                       keyword={keyword}
                       selectedCategory={categorySelection?.category}
                       selectedTargetGroupTypes={selectedTargetGroupTypes}
-                      selected={
-                        isConversationSidebarOpen &&
-                        conversation.id === selectedConversationId
+                      selected={conversation.id === selectedCardId}
+                      ref={
+                        conversation.id === selectedCardId
+                          ? selectedCardRef
+                          : undefined
                       }
+                      className="scroll-my-3 md:scroll-mt-44 md:scroll-mb-7.5"
                       onSelect={toggleConversationSidebar}
                       {...conversation}
                     />
@@ -292,7 +304,7 @@ export const Route = createFileRoute('/dashboard')({
             events={events}
             conversations={conversations}
             onClose={closeConversationSidebar}
-            onEventFilter={eventId => setEventSelection({ eventId })}
+            onEventFilter={eventId => resetFilters({ event: { eventId } })}
           />
         </div>
         <BackToTopButton />

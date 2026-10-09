@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, type Ref } from 'react';
 import { commentViews } from '../../constants/comment-views';
 import type { Comment, Conversation } from '../../data/conversations';
 import { SidePanelIcon } from '../../icons/side-panel';
@@ -6,8 +6,6 @@ import { excerptAroundKeyword } from '../../utils/excerpt';
 import { CommentDot } from '../comment-dot';
 import { FilterTag } from '../filter-tag';
 import { HighlightedText } from './highlighted-text';
-
-const LAYOUT_SETTLE_DELAY = 100;
 
 export const TopicCard = memo(function TopicCard({
   id,
@@ -21,6 +19,8 @@ export const TopicCard = memo(function TopicCard({
   selectedTargetGroupTypes = [],
   selected = false,
   onSelect,
+  ref,
+  className = '',
 }: Pick<Conversation, 'id' | 'title' | 'groups' | 'comments'> & {
   targetGroupTypes: string[];
   keyword: string;
@@ -29,27 +29,9 @@ export const TopicCard = memo(function TopicCard({
   selectedTargetGroupTypes?: string[];
   selected?: boolean;
   onSelect: (id: string) => void;
+  ref?: Ref<HTMLElement>;
+  className?: string;
 }) {
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const element = ref.current;
-    if (!selected || !element) return;
-    let timeout: ReturnType<typeof setTimeout>;
-    const observer = new ResizeObserver(() => {
-      clearTimeout(timeout);
-      timeout = setTimeout(
-        () => element.scrollIntoView({ block: 'nearest', behavior: 'smooth' }),
-        LAYOUT_SETTLE_DELAY
-      );
-    });
-    observer.observe(element);
-    return () => {
-      observer.disconnect();
-      clearTimeout(timeout);
-    };
-  }, [selected]);
-
   const categories = [...new Set(groups.map(({ category }) => category))];
   const commentExcerpt =
     matchedComment && excerptAroundKeyword(matchedComment.reason, keyword);
@@ -60,7 +42,7 @@ export const TopicCard = memo(function TopicCard({
   return (
     <article
       ref={ref}
-      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] [contain-intrinsic-size:auto_300px] [content-visibility:auto] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:scroll-mt-44 md:scroll-mb-7.5 md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent group-[.dimmed]/cards:opacity-50'}`}
+      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] [contain-intrinsic-size:auto_300px] [content-visibility:auto] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent group-[.dimmed]/cards:opacity-50'} ${className}`}
     >
       {selected && (
         <SidePanelIcon className="absolute top-2.5 right-2.5 size-6 text-blue-7" />

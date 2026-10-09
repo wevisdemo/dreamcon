@@ -1,5 +1,6 @@
 import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
+import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
 import { CloseIcon } from '../../icons/close';
 import {
   formatEventSelection,
@@ -33,6 +34,9 @@ export function FilterEvent({
   ];
 
   const selectedTypes = getSelectedTargetGroupTypes(selection);
+  const selectedEventId =
+    selection && 'eventId' in selection ? selection.eventId : undefined;
+  const selectedRef = useScrollIntoView(selectedEventId);
 
   const visibleEvents =
     selectedTypes.length > 0
@@ -73,7 +77,7 @@ export function FilterEvent({
           </>
         )}
       </div>
-      <div className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col gap-5 overflow-y-auto pb-2.5">
+      <div className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col gap-5 overflow-y-auto pb-2.5 motion-safe:scroll-smooth">
         {targetGroupTypes.length > 0 && (
           <section className="flex flex-col gap-2.5 px-2.5">
             <h3 className="text-b6 font-bold text-gray-6">
@@ -107,14 +111,12 @@ export function FilterEvent({
           </div>
           <ul className="flex flex-col">
             {visibleEvents.map(event => {
-              const isSelected =
-                selection !== undefined &&
-                'eventId' in selection &&
-                selection.eventId === event.id;
+              const isSelected = selectedEventId === event.id;
 
               return (
                 <li
                   key={event.id}
+                  ref={isSelected ? selectedRef : undefined}
                   className={`relative flex flex-col rounded-lg p-3.5 motion-safe:transition-colors motion-safe:duration-300 ${isSelected ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
                 >
                   <button

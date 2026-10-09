@@ -19,6 +19,7 @@ export function FilterToolbar({
   categories,
   events,
   keyword,
+  searchResetKey,
   categorySelection,
   eventSelection,
   expandedTab,
@@ -29,6 +30,7 @@ export function FilterToolbar({
   categories: CategoryQuestions[];
   events: Pick<Event, 'id' | 'displayName'>[];
   keyword: string;
+  searchResetKey: number;
   categorySelection?: CategorySelection;
   eventSelection?: EventSelection;
   expandedTab?: FilterTab;
@@ -36,7 +38,6 @@ export function FilterToolbar({
   onToggle: (tab: FilterTab) => void;
   onClear: () => void;
 }) {
-  const [searchBarKey, setSearchBarKey] = useState(0);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   const filterButtons: {
@@ -64,7 +65,7 @@ export function FilterToolbar({
     <div className="pb-3 md:sticky md:top-14 md:z-10 md:-mt-5 md:bg-blue-3 md:pt-5">
       <div className="flex flex-row flex-wrap justify-start gap-3 rounded-2xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
         <SearchBar
-          key={searchBarKey}
+          key={searchResetKey}
           defaultValue={keyword}
           onSearch={query => onSearch(query.trim())}
           className="w-full shrink-0 md:w-auto"
@@ -87,10 +88,7 @@ export function FilterToolbar({
           <Button
             variant="tertiary-gray"
             icon={<CloseIcon />}
-            onClick={() => {
-              setSearchBarKey(key => key + 1);
-              onClear();
-            }}
+            onClick={onClear}
           >
             ล้างตัวกรอง
           </Button>
