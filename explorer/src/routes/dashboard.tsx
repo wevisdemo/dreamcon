@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { BackToTopButton } from '../components/back-to-top-button';
 import { ConversationSidebar } from '../components/dashboard/conversation-sidebar';
@@ -67,24 +67,29 @@ export const Route = createFileRoute('/dashboard')({
     const [eventSelection, setEventSelection] = useState<EventSelection>();
     const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
     const [filterTab, setFilterTab] = useState<FilterTab>('category');
-    const [isConversationSidebarOpen, setIsConversationSidebarOpen] =
-      useState(false);
-    const [selectedConversationId, setSelectedConversationId] =
-      useState<string>();
+    const [conversationSidebar, setConversationSidebar] = useState<{
+      isOpen: boolean;
+      id?: string;
+    }>({ isOpen: false });
+    const { isOpen: isConversationSidebarOpen, id: selectedConversationId } =
+      conversationSidebar;
+
+    const closeConversationSidebar = () =>
+      setConversationSidebar(sidebar => ({ ...sidebar, isOpen: false }));
 
     const toggleFilterSidebar = (tab: FilterTab) => {
       setIsFilterSidebarOpen(isOpen => !(isOpen && filterTab === tab));
       setFilterTab(tab);
-      setIsConversationSidebarOpen(false);
+      closeConversationSidebar();
     };
 
-    const toggleConversationSidebar = (id: string) => {
-      setIsConversationSidebarOpen(
-        isOpen => !(isOpen && selectedConversationId === id)
-      );
-      setSelectedConversationId(id);
+    const toggleConversationSidebar = useCallback((id: string) => {
+      setConversationSidebar(sidebar => ({
+        isOpen: !(sidebar.isOpen && sidebar.id === id),
+        id,
+      }));
       setIsFilterSidebarOpen(false);
-    };
+    }, []);
 
     const selectCategory = (selection?: CategorySelection) => {
       setCategorySelection(selection);
@@ -146,8 +151,10 @@ export const Route = createFileRoute('/dashboard')({
         return 0;
       });
 
-    const selectedTargetGroupTypes =
-      getSelectedTargetGroupTypes(eventSelection);
+    const selectedTargetGroupTypes = useMemo(
+      () => getSelectedTargetGroupTypes(eventSelection),
+      [eventSelection]
+    );
 
     return (
       <div className="flex flex-1 bg-blue-3">
@@ -223,22 +230,21 @@ export const Route = createFileRoute('/dashboard')({
                   </div>
                   <Legend />
                 </div>
-                <Masonry maxColumnWidth={500} className="mt-3 gap-3 md:gap-5">
-                  {filteredConversations.map(({ id, ...conversation }) => (
+                <Masonry
+                  maxColumnWidth={500}
+                  className={`group/cards mt-3 gap-3 md:gap-5 ${isConversationSidebarOpen ? 'dimmed' : ''}`}
+                >
+                  {filteredConversations.map(conversation => (
                     <TopicCard
-                      key={id}
+                      key={conversation.id}
                       keyword={keyword}
                       selectedCategory={categorySelection?.category}
                       selectedTargetGroupTypes={selectedTargetGroupTypes}
                       selected={
                         isConversationSidebarOpen &&
-                        id === selectedConversationId
+                        conversation.id === selectedConversationId
                       }
-                      dimmed={
-                        isConversationSidebarOpen &&
-                        id !== selectedConversationId
-                      }
-                      onSelect={() => toggleConversationSidebar(id)}
+                      onSelect={toggleConversationSidebar}
                       {...conversation}
                     />
                   ))}
@@ -253,7 +259,7 @@ export const Route = createFileRoute('/dashboard')({
             )}
             events={events}
             conversations={conversations}
-            onClose={() => setIsConversationSidebarOpen(false)}
+            onClose={closeConversationSidebar}
             onEventFilter={eventId => setEventSelection({ eventId })}
           />
         </div>

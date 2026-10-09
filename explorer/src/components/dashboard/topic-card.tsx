@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import { commentViews } from '../../constants/comment-views';
 import type { Comment, Conversation } from '../../data/conversations';
 import { SidePanelIcon } from '../../icons/side-panel';
@@ -9,7 +9,8 @@ import { HighlightedText } from './highlighted-text';
 
 const LAYOUT_SETTLE_DELAY = 100;
 
-export function TopicCard({
+export const TopicCard = memo(function TopicCard({
+  id,
   title,
   groups,
   comments,
@@ -19,17 +20,15 @@ export function TopicCard({
   selectedCategory,
   selectedTargetGroupTypes = [],
   selected = false,
-  dimmed = false,
   onSelect,
-}: Pick<Conversation, 'title' | 'groups' | 'comments'> & {
+}: Pick<Conversation, 'id' | 'title' | 'groups' | 'comments'> & {
   targetGroupTypes: string[];
   keyword: string;
   matchedComment?: Comment;
   selectedCategory?: string;
   selectedTargetGroupTypes?: string[];
   selected?: boolean;
-  dimmed?: boolean;
-  onSelect: () => void;
+  onSelect: (id: string) => void;
 }) {
   const ref = useRef<HTMLElement>(null);
 
@@ -61,7 +60,7 @@ export function TopicCard({
   return (
     <article
       ref={ref}
-      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:scroll-mt-44 md:scroll-mb-7.5 md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent'} ${dimmed ? 'opacity-50' : ''}`}
+      className={`relative flex flex-col gap-2 rounded-2xl border-2 bg-white px-3 py-4 transition-[box-shadow,opacity] [contain-intrinsic-size:auto_300px] [content-visibility:auto] hover:shadow-[3px_7px_17.2px_rgb(0_0_0/0.1)] md:scroll-mt-44 md:scroll-mb-7.5 md:gap-4 md:px-7 md:py-6 ${selected ? 'border-blue-7' : 'border-transparent group-[.dimmed]/cards:opacity-50'}`}
     >
       {selected && (
         <SidePanelIcon className="absolute top-2.5 right-2.5 size-6 text-blue-7" />
@@ -85,7 +84,7 @@ export function TopicCard({
           <button
             type="button"
             aria-expanded={selected}
-            onClick={onSelect}
+            onClick={() => onSelect(id)}
             className="cursor-pointer text-left after:absolute after:inset-0"
           >
             <HighlightedText text={title} keyword={keyword} />
@@ -126,4 +125,4 @@ export function TopicCard({
       )}
     </article>
   );
-}
+});
