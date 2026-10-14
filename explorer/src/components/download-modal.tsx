@@ -45,7 +45,7 @@ export function DownloadModal({
         </Button>
         <ButtonLink
           variant="primary-blue"
-          href={DATASET_ZIP_PATH}
+          href={`${import.meta.env.BASE_URL}${DATASET_ZIP_PATH.slice(1)}`}
           download
           onClick={onClose}
         >
