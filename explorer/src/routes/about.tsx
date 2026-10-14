@@ -113,7 +113,7 @@ export const Route = createFileRoute('/about')({
               </h3>
               <p>
                 DreamCon พัฒนาบนฐานคิดประชาธิปไตยแบบปรึกษาหารือ (
-                <ExternalLink href="https://en.wikipedia.org/wiki/Deliberative_democracy">
+                <ExternalLink href="https://carnegieuk.org/publication/parliamentarians-perspectives-on-deliberative-democracy/">
                   Deliberative Democracy
                 </ExternalLink>
                 ) ซึ่งให้ความสำคัญกับการสนทนาที่เปิดกว้าง เคารพกัน มีข้อมูลประกอบ
@@ -137,7 +137,7 @@ export const Route = createFileRoute('/about')({
               <p>
                 โครงการ Dream Con เกิดขึ้นจากความร่วมมือขององค์กรต่าง ๆ ได้แก่ มูลนิธิฟรีดริช
                 เนามัน ประเทศไทย (FNF Thailand) วีวิซ เดโม (WeVis)
-                สถาบันเพื่อการยุติธรรมแห่งประเทศไทย (TIJ) และ Hand Social Enterprises
+                สถาบันเพื่อการยุติธรรมแห่งประเทศไทย (TIJ) และ Hand Social Enterprise
               </p>
               <ul className="grid grid-cols-2 md:flex">
                 {ORGANIZERS.map(({ name, logo, width, height }) => (
