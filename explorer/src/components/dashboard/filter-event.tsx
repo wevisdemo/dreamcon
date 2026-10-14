@@ -117,7 +117,7 @@ export function FilterEvent({
                 <li
                   key={event.id}
                   ref={isSelected ? selectedRef : undefined}
-                  className={`relative flex flex-col rounded-lg p-3.5 motion-safe:transition-colors motion-safe:duration-300 ${isSelected ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
+                  className={`relative flex flex-col rounded-lg motion-safe:transition-colors motion-safe:duration-300 ${isSelected ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
                 >
                   <button
                     type="button"
@@ -125,7 +125,7 @@ export function FilterEvent({
                     onClick={() =>
                       onSelect(isSelected ? undefined : { eventId: event.id })
                     }
-                    className="flex cursor-pointer flex-col gap-1.25 text-left"
+                    className={`flex cursor-pointer flex-col gap-1.25 rounded-lg px-3.5 pt-3.5 text-left ${isSelected ? 'pb-2' : 'pb-3.5 hover:bg-blue-3'}`}
                   >
                     <span
                       className={`text-b7 ${isSelected ? 'text-gray-3' : 'text-gray-6'}`}
@@ -162,7 +162,7 @@ export function FilterEvent({
                   </button>
                   <div
                     inert={!isSelected}
-                    className={`grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300 ${isSelected ? 'mt-2 grid-rows-[1fr] border-t border-blue-5' : 'grid-rows-[0fr]'}`}
+                    className={`mx-3.5 grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300 ${isSelected ? 'mb-3.5 grid-rows-[1fr] border-t border-blue-5' : 'grid-rows-[0fr]'}`}
                   >
                     <div className="overflow-hidden">
                       <EventDetails

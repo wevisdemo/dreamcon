@@ -81,7 +81,7 @@ export function FilterCategory({
             <li
               key={category}
               ref={isHighlighted ? selectedRef : undefined}
-              className={`relative flex flex-col rounded-lg px-2.5 py-3 motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
+              className={`relative flex flex-col rounded-lg motion-safe:transition-colors motion-safe:duration-300 ${isHighlighted ? 'bg-blue-7' : 'after:absolute after:inset-x-2 after:bottom-0 after:h-px after:bg-blue-3'}`}
             >
               <button
                 type="button"
@@ -89,7 +89,7 @@ export function FilterCategory({
                 onClick={() =>
                   onSelect(isHighlighted ? undefined : { category })
                 }
-                className="flex cursor-pointer items-end justify-between gap-1.25 text-left"
+                className={`flex cursor-pointer items-end justify-between gap-1.25 rounded-lg px-2.5 py-3 text-left ${isHighlighted ? '' : 'hover:bg-blue-3'}`}
               >
                 <span
                   className={`flex flex-1 items-center text-b5 font-bold ${isHighlighted ? 'text-white' : 'text-blue-7'}`}
@@ -107,7 +107,7 @@ export function FilterCategory({
               </button>
               <div
                 inert={!isExpanded}
-                className={`grid motion-safe:transition-[grid-template-rows] motion-safe:duration-300 ${isExpanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
+                className={`grid px-2.5 motion-safe:transition-[grid-template-rows] motion-safe:duration-300 ${isExpanded ? 'grid-rows-[1fr] pb-3' : 'grid-rows-[0fr]'}`}
               >
                 <div className="flex flex-col gap-1.5 overflow-hidden">
                   <p
