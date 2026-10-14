@@ -255,13 +255,14 @@ export const Route = createFileRoute('/dashboard')({
                       แสดง <b>{filteredConversations.length}</b> จากทั้งหมด{' '}
                       {conversations.length} ข้อถกเถียง
                     </p>
-                    <div className="flex items-center gap-1.25">
-                      <label className="flex items-center gap-2 text-gray-6">
+                    <div className="flex flex-1 items-center gap-1.25 md:flex-auto">
+                      <label className="flex flex-1 items-center gap-2 text-gray-6">
                         เรียงตาม
                         <Dropdown
                           options={availableSortOptions}
                           value={activeSortBy}
                           onChange={event => setSortBy(event.target.value)}
+                          className="flex-1"
                         />
                       </label>
                       {activeSortBy === phraseSortOption.value && (

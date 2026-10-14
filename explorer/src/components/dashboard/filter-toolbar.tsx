@@ -62,15 +62,15 @@ export function FilterToolbar({
   ];
 
   return (
-    <div className="pb-3 md:sticky md:top-14 md:z-10 md:-mt-5 md:bg-blue-3 md:pt-5">
-      <div className="flex flex-row flex-wrap justify-start gap-3 rounded-2xl bg-blue-1 p-3 md:p-4 lg:flex-nowrap">
+    <div className="@container pb-3 md:sticky md:top-14 md:z-10 md:-mt-5 md:bg-blue-3 md:pt-5">
+      <div className="flex flex-row flex-wrap justify-start gap-3 rounded-2xl bg-blue-1 p-3 md:p-4 @3xl:flex-nowrap">
         <SearchBar
           key={searchResetKey}
           defaultValue={keyword}
           onSearch={query => onSearch(query.trim())}
-          className="w-full shrink-0 md:w-auto"
+          className="w-full shrink-0 @3xl:w-auto"
         />
-        <div className="contents lg:grid lg:min-w-0 lg:grid-cols-[repeat(2,minmax(0,max-content))] lg:gap-3">
+        <div className="grid w-full min-w-0 grid-cols-[repeat(2,auto)] gap-3 @3xl:w-auto">
           {filterButtons.map(({ tab, label, placeholder }) => (
             <FilterTag
               key={tab}
@@ -78,7 +78,7 @@ export function FilterToolbar({
               variant={label ? 'primary' : 'secondary'}
               aria-expanded={expandedTab === tab}
               onClick={() => onToggle(tab)}
-              className="w-full max-w-full min-w-0 md:w-auto [&>span]:truncate"
+              className="min-w-0 [&>span]:truncate"
             >
               {label ?? placeholder}
             </FilterTag>
