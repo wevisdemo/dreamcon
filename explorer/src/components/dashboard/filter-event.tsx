@@ -1,3 +1,4 @@
+import { EVENT_DATE_FORMAT } from '../../constants/event';
 import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
@@ -9,13 +10,6 @@ import {
 import { EventDetails } from '../event/event-details';
 import { FilterTag } from '../filter-tag';
 import { FilterHeader } from './filter-header';
-
-const dateFormat = new Intl.DateTimeFormat('th-TH', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  timeZone: 'Asia/Bangkok',
-});
 
 export function FilterEvent({
   events,
@@ -115,7 +109,7 @@ export function FilterEvent({
                     <span
                       className={`text-b7 ${isSelected ? 'text-gray-3' : 'text-gray-6'}`}
                     >
-                      {dateFormat.format(event.date)}
+                      {EVENT_DATE_FORMAT.format(event.date)}
                     </span>
                     <span
                       className={`text-b5 font-bold ${isSelected ? 'text-white' : 'text-blue-7'}`}

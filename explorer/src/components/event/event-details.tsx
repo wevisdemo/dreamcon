@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { EVENT_DATE_FORMAT } from '../../constants/event';
 import type { Event } from '../../data/events';
 import { DocumentIcon } from '../../icons/document';
 import { ShareIcon } from '../../icons/share';
@@ -27,6 +28,7 @@ export function EventDetails({
 }) {
   const details: [string, ReactNode][] = [
     ['ชื่อวงสนทนาฉบับเต็ม', event.title.en],
+    ['วันที่จัด', EVENT_DATE_FORMAT.format(event.date)],
     ['สถานที่', event.location],
     ['ผู้เข้าร่วม', event.targetGroup.description],
     ['จำนวน', `${event.participantCount} คน`],

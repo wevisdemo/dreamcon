@@ -27,15 +27,17 @@ export function ConversationSidebar({
   onClose: () => void;
   onEventFilter: (eventId: string) => void;
 }) {
-  const [selected, setSelected] = useState<{
-    conversationId: string;
-    eventId: string;
-  }>();
+  const [selectedEventId, setSelectedEventId] = useState<string>();
+  const openConversationId = isOpen ? conversation?.id : undefined;
+  const [prevOpenConversationId, setPrevOpenConversationId] =
+    useState(openConversationId);
 
-  const selectedEvent =
-    isOpen && selected?.conversationId === conversation?.id
-      ? events.find(({ id }) => id === selected?.eventId)
-      : undefined;
+  if (openConversationId !== prevOpenConversationId) {
+    setPrevOpenConversationId(openConversationId);
+    setSelectedEventId(undefined);
+  }
+
+  const selectedEvent = events.find(({ id }) => id === selectedEventId);
 
   const selectedEventTopicCount = conversations.filter(
     ({ eventIds }) => selectedEvent && eventIds.includes(selectedEvent.id)
@@ -81,16 +83,14 @@ export function ConversationSidebar({
           key={conversation.id}
           conversation={conversation}
           events={events}
-          onEventSelect={eventId =>
-            setSelected({ conversationId: conversation.id, eventId })
-          }
+          onEventSelect={setSelectedEventId}
           className="pb-5"
         />
       )}
       <Modal
         mount="parent"
         isOpen={selectedEvent !== undefined}
-        onClose={() => setSelected(undefined)}
+        onClose={() => setSelectedEventId(undefined)}
       >
         {selectedEvent && (
           <>
@@ -103,7 +103,6 @@ export function ConversationSidebar({
               icon={<ArrowUpIcon className="rotate-90" />}
               onClick={() => {
                 onEventFilter(selectedEvent.id);
-                setSelected(undefined);
                 onClose();
               }}
               className="mt-2.5 w-full"
