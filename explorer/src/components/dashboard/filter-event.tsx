@@ -1,15 +1,14 @@
 import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
-import { CloseIcon } from '../../icons/close';
 import {
   formatEventSelection,
   getSelectedTargetGroupTypes,
   type EventSelection,
 } from '../../utils/filter';
-import { Button } from '../button';
 import { EventDetails } from '../event/event-details';
 import { FilterTag } from '../filter-tag';
+import { FilterHeader } from './filter-header';
 
 const dateFormat = new Intl.DateTimeFormat('th-TH', {
   day: 'numeric',
@@ -57,26 +56,12 @@ export function FilterEvent({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-1.25">
-      <div className="flex flex-col px-2.5 pt-2.5">
-        <p className="text-b6 font-bold text-gray-8">
-          ทั้งหมด {events.length} วงสนทนา
-        </p>
-        {selection && (
-          <>
-            <p className="truncate text-b7 text-blue-7">
-              กรองเฉพาะ: {formatEventSelection(events, selection)}
-            </p>
-            <Button
-              variant="tertiary-gray"
-              icon={<CloseIcon />}
-              onClick={() => onSelect(undefined)}
-              className="my-1 self-end"
-            >
-              ล้างวงสนทนา
-            </Button>
-          </>
-        )}
-      </div>
+      <FilterHeader
+        title={`ทั้งหมด ${events.length} วงสนทนา`}
+        selectionLabel={selection && formatEventSelection(events, selection)}
+        clearLabel="ล้างวงสนทนา"
+        onClear={() => onSelect(undefined)}
+      />
       <div className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col gap-5 overflow-y-auto pb-2.5 motion-safe:scroll-smooth">
         {targetGroupTypes.length > 0 && (
           <section className="flex flex-col gap-2.5 px-2.5">

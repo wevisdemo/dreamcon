@@ -2,13 +2,12 @@ import type { Conversation } from '../../data/conversations';
 import type { CategoryQuestions } from '../../data/group-questions';
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
 import { ChevronDownIcon } from '../../icons/chevron-down';
-import { CloseIcon } from '../../icons/close';
 import {
   formatCategorySelection,
   matchesCategorySelection,
   type CategorySelection,
 } from '../../utils/filter';
-import { Button } from '../button';
+import { FilterHeader } from './filter-header';
 
 const otherCategory = 'อื่น ๆ';
 
@@ -52,26 +51,14 @@ export function FilterCategory({
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-1.25">
-      <div className="flex flex-col px-2.5 pt-2.5">
-        <p className="text-b6 font-bold text-gray-8">
-          ทั้งหมด {categories.length} หมวด
-        </p>
-        {selection && (
-          <>
-            <p className="truncate text-b7 text-blue-7">
-              กรองเฉพาะ: {formatCategorySelection(categories, selection)}
-            </p>
-            <Button
-              variant="tertiary-gray"
-              icon={<CloseIcon />}
-              onClick={() => onSelect(undefined)}
-              className="my-1 self-end"
-            >
-              ล้างหมวดหมู่
-            </Button>
-          </>
-        )}
-      </div>
+      <FilterHeader
+        title={`ทั้งหมด ${categories.length} หมวด`}
+        selectionLabel={
+          selection && formatCategorySelection(categories, selection)
+        }
+        clearLabel="ล้างหมวดหมู่"
+        onClear={() => onSelect(undefined)}
+      />
       <ul className="flex min-h-0 scrollbar-thin scrollbar-thumb-blue-3 flex-col overflow-y-auto pb-2.5 motion-safe:scroll-smooth">
         {sortedCategories.map(({ category, count, groups }) => {
           const isExpanded = selection?.category === category;
