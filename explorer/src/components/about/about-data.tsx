@@ -9,7 +9,7 @@ export function AboutData() {
 
       <section className="flex flex-col gap-5">
         <h3 className="text-h7 font-bold">โครงสร้างข้อมูล</h3>
-        <div className="flex justify-center rounded-lg bg-blue-5">
+        <div className="flex justify-center rounded-xl bg-blue-5">
           <img
             src={dataStructure}
             alt="แผนภาพโครงสร้างข้อมูล ข้อถกเถียงแตกออกเป็นความคิดเห็นที่เห็นด้วย เห็นด้วยบางส่วน และไม่เห็นด้วย ซึ่งแต่ละความคิดเห็นมีความคิดเห็นต่อยอดได้"
@@ -46,7 +46,7 @@ export function AboutData() {
         </div>
         <figure className="flex flex-col items-center gap-2.5">
           <figcaption className="text-b5 text-gray-6">ตัวอย่าง</figcaption>
-          <div className="flex w-full justify-center rounded-lg bg-blue-5">
+          <div className="flex w-full justify-center rounded-xl bg-blue-5">
             <img
               src={dataStructureSample}
               alt="ตัวอย่าง ข้อถกเถียง 'สสร. ควรมาจากการเลือกตั้ง 100%' มีความคิดเห็นที่เห็นด้วยบางส่วน 'ควรมีบางส่วนมาจากการแต่งตั้งตามความเชี่ยวชาญ เพื่อรับประกันความสามารถของผู้ร่างฯ' และมีความคิดเห็นต่อยอดที่ไม่เห็นด้วยกับความคิดเห็นนั้น 'สามารถให้ผู้เชี่ยวชาญมาอยู่ในกระบวนการร่างได้โดยไม่จำเป็นต้องเป็น สสร.'"
@@ -130,7 +130,7 @@ export function AboutData() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-2.5 rounded-lg bg-red-1 px-8 py-7">
+      <section className="flex flex-col gap-2.5 rounded-xl bg-red-1 px-8 py-7">
         <h3 className="text-h9 font-bold text-red-7">
           ข้อควรระวังในการตีความข้อมูล
         </h3>
