@@ -1,5 +1,5 @@
 import { DATASET_ZIP_PATH } from '../constants/dataset';
-import { Button, ButtonLink } from './button';
+import { Button, ButtonAnchor } from './button';
 import { Modal } from './modal';
 
 const DATA_FILES = [
@@ -43,14 +43,14 @@ export function DownloadModal({
         <Button variant="secondary" onClick={onClose}>
           ยกเลิก
         </Button>
-        <ButtonLink
+        <ButtonAnchor
           variant="primary-blue"
           href={`${import.meta.env.BASE_URL}${DATASET_ZIP_PATH.slice(1)}`}
           download
           onClick={onClose}
         >
           ดาวน์โหลด
-        </ButtonLink>
+        </ButtonAnchor>
       </div>
     </Modal>
   );

@@ -5,7 +5,7 @@ import handLogo from '../assets/partner-hand.png';
 import tijLogo from '../assets/partner-tij.svg';
 import wevisLogo from '../assets/partner-wevis.svg';
 import { AboutData } from '../components/about/about-data';
-import { Button, ButtonLink } from '../components/button';
+import { Button, ButtonAnchor } from '../components/button';
 import { DownloadModal } from '../components/download-modal';
 import { ExternalLink } from '../components/external-link';
 import { getPartners } from '../data/server-functions';
@@ -212,7 +212,7 @@ export const Route = createFileRoute('/about')({
           >
             ดาวน์โหลดข้อมูล
           </Button>
-          <ButtonLink
+          <ButtonAnchor
             variant="secondary"
             icon={<MailIcon />}
             href="https://airtable.com/appsowPzCsRLmUvNx/shryu4errnlj1LWsM"
@@ -220,7 +220,7 @@ export const Route = createFileRoute('/about')({
             rel="noreferrer"
           >
             Feedback
-          </ButtonLink>
+          </ButtonAnchor>
         </div>
         <DownloadModal
           isOpen={isDownloadModalOpen}

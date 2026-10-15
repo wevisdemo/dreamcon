@@ -3,6 +3,7 @@ import type {
   ButtonHTMLAttributes,
   ReactNode,
 } from 'react';
+import { createLink } from '@tanstack/react-router';
 
 const variants = {
   'primary-blue': 'rounded-full bg-blue-7 text-white hover:bg-blue-8',
@@ -65,7 +66,7 @@ export function Button({
   );
 }
 
-export function ButtonLink({
+export function ButtonAnchor({
   variant,
   size = 'large',
   icon,
@@ -84,3 +85,5 @@ export function ButtonLink({
     </a>
   );
 }
+
+export const ButtonLink = createLink(ButtonAnchor);
