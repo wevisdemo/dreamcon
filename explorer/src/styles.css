@@ -62,6 +62,17 @@
   --color-yellow-8: #7f5300;
   --color-yellow-9: #5c3c00;
   --color-yellow-10: #412a00;
+
+  --animate-drift: drift 60s linear infinite;
+
+  @keyframes drift {
+    from {
+      translate: -100%;
+    }
+    to {
+      translate: 100cqw;
+    }
+  }
 }
 
 @utility text-h2 {
