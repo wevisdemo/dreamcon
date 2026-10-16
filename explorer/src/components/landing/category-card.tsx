@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router';
 import { ChevronDownIcon } from '../../icons/chevron-down';
-import type { CategorySummary } from '../../utils/filter';
+import type { CategorySummary } from '../../utils/category';
 
 export function CategoryCard({ category, count, groups }: CategorySummary) {
   return (

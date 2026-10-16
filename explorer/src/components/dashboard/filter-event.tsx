@@ -8,7 +8,7 @@ import {
   getSelectedTargetGroupTypes,
   getTargetGroupTypes,
   type EventSelection,
-} from '../../utils/filter';
+} from '../../utils/event';
 import { EventDetails } from '../event/event-details';
 import { FilterTag } from '../filter-tag';
 import { FilterHeader } from './filter-header';

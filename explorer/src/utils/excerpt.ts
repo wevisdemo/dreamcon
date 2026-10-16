@@ -1,4 +1,4 @@
-import { findKeywordMatches } from './filter';
+import { findKeywordMatches } from './search';
 
 const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
 

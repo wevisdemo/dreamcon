@@ -5,10 +5,9 @@ import { CloseIcon } from '../../icons/close';
 import { DownloadIcon } from '../../icons/download';
 import {
   formatCategorySelection,
-  formatEventSelection,
   type CategorySelection,
-  type EventSelection,
-} from '../../utils/filter';
+} from '../../utils/category';
+import { formatEventSelection, type EventSelection } from '../../utils/event';
 import { Button } from '../button';
 import { DownloadModal } from '../download-modal';
 import { FilterTag } from '../filter-tag';

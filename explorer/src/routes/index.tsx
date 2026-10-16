@@ -21,12 +21,12 @@ import {
   getGroupQuestions,
 } from '../data/server-functions';
 import { ArrowUpIcon } from '../icons/arrow-up';
+import { summarizeCategories } from '../utils/category';
 import {
   countEventTopics,
   getTargetGroupTypes,
   sortEventsByDate,
-  summarizeCategories,
-} from '../utils/filter';
+} from '../utils/event';
 
 const CATEGORY_GROUP_PREVIEW_COUNT = 3;
 

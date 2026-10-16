@@ -6,7 +6,7 @@ import {
   formatCategorySelection,
   summarizeCategories,
   type CategorySelection,
-} from '../../utils/filter';
+} from '../../utils/category';
 import { FilterHeader } from './filter-header';
 
 export function FilterCategory({

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { findKeywordMatches } from '../../utils/filter';
+import { findKeywordMatches } from '../../utils/search';
 
 export function HighlightedText({
   text,

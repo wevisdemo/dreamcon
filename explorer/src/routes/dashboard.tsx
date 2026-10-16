@@ -26,17 +26,19 @@ import {
 } from '../data/server-functions';
 import { useScrollIntoView } from '../hooks/use-scroll-into-view';
 import {
+  getDistanceToPhrase,
+  isCategorySelection,
   matchesCategorySelection,
   type CategorySelection,
-  getDistanceToPhrase,
+} from '../utils/category';
+import {
   getSelectedTargetGroupTypes,
-  isCategorySelection,
   isEventSelection,
   matchesEventSelection,
-  type EventSelection,
-  searchConversations,
   sortEventsByDate,
-} from '../utils/filter';
+  type EventSelection,
+} from '../utils/event';
+import { searchConversations } from '../utils/search';
 
 type DashboardSearch = {
   keyword?: string;
