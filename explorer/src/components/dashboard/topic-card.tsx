@@ -62,7 +62,7 @@ export const TopicCard = memo(function TopicCard({
             ))}
           </div>
         )}
-        <h3 className="text-h10 font-bold">
+        <h3 className="text-h9 font-bold">
           <button
             type="button"
             aria-expanded={selected}

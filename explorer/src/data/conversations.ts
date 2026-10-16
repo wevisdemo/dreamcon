@@ -45,6 +45,11 @@ export type Conversation = StaticDecode<typeof topicSchema> & {
   comments: Comment[];
 };
 
+/** Own event ids plus those of every reply below, without repeats */
+const withReplyEvents = (eventIds: string[], replies: Comment[]) => [
+  ...new Set([...eventIds, ...replies.flatMap(reply => reply.eventIds)]),
+];
+
 export const loadConversations = once(async (): Promise<Conversation[]> => {
   const [topics, topicGroups, comments] = await Promise.all([
     fetchCsv(csvUrl('dreamcon', 'topics'), topicSchema),
@@ -58,23 +63,29 @@ export const loadConversations = once(async (): Promise<Conversation[]> => {
       : `topic:${comment.parentTopicId}`
   );
   const nest = (parentKey: string): Comment[] =>
-    (commentsByParent.get(parentKey) ?? []).map(comment => ({
-      ...comment,
-      comments: nest(`comment:${comment.id}`),
-    }));
+    (commentsByParent.get(parentKey) ?? []).map(comment => {
+      const replies = nest(`comment:${comment.id}`);
+      return {
+        ...comment,
+        eventIds: withReplyEvents(comment.eventIds, replies),
+        comments: replies,
+      };
+    });
 
   return topics.flatMap(topic => {
     const groups = groupsByTopic.get(topic.id);
+    const topicComments = nest(`topic:${topic.id}`);
     return groups
       ? [
           {
             ...topic,
+            eventIds: withReplyEvents(topic.eventIds, topicComments),
             groups: groups.map(({ category, group, distanceToPhrase }) => ({
               id: toGroupId(category, group),
               category,
               distanceToPhrase,
             })),
-            comments: nest(`topic:${topic.id}`),
+            comments: topicComments,
           },
         ]
       : [];

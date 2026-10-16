@@ -201,10 +201,11 @@ export const formatCategorySelection = (
 /**
  * Checks whether a topic falls in the event selection.
  *
- * @param topic - Events the topic was discussed in and their participant types
+ * @param topic - Events the topic or any of its nested comments came from, and
+ * their participant types
  * @param selection - Selected participant types or event
- * @returns `true` when the topic was discussed in the selected event, or in an
- * event with any of the selected participant types
+ * @returns `true` when the topic or any nested comment came from the selected
+ * event, or from an event with any of the selected participant types
  */
 export const matchesEventSelection = (
   {
