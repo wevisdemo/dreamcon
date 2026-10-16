@@ -11,7 +11,7 @@ import {
 // `.env` is shared by the whole workspace; pnpm runs scripts from the package directory
 config({ path: '../.env' });
 
-export const initDB = () => {
+export const initDB = (databaseId = '(default)') => {
   const useEmulator = isEmulatorEnabled(process.env.VITE_USE_FIREBASE_EMULATOR);
 
   const firebaseConfig = useEmulator
@@ -21,7 +21,7 @@ export const initDB = () => {
   const app = initializeApp(firebaseConfig);
 
   // Initialize Firestore
-  const db = getFirestore(app);
+  const db = getFirestore(app, databaseId);
   const auth = getAuth(app);
 
   if (useEmulator) {

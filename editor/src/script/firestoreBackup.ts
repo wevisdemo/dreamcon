@@ -1,8 +1,10 @@
 /**
  * Lossless JSON backup/restore of every Firestore collection.
  *
- *   tsx src/script/firestoreBackup.ts backup [outFile]
- *   tsx src/script/firestoreBackup.ts restore <file> [--force]
+ *   tsx src/script/firestoreBackup.ts backup [outFile] [--database=<id>]
+ *   tsx src/script/firestoreBackup.ts restore <file> [--database=<id>] [--force]
+ *
+ * `--database` targets a named Firestore database instead of `(default)`.
  *
  * Unlike `dumpFirestore.ts` (a lossy CSV export for analysis), this keeps
  * types, arrays and missing fields intact so a restore reproduces the source.
@@ -83,8 +85,8 @@ type Backup = {
   collections: Record<string, BackupDoc[]>;
 };
 
-const backup = async (outFile?: string) => {
-  const { db } = initDB();
+const backup = async (outFile?: string, databaseId?: string) => {
+  const { db } = initDB(databaseId);
 
   const collections = Object.fromEntries(
     await Promise.all(
@@ -121,7 +123,7 @@ const backup = async (outFile?: string) => {
   console.log(`[backup] -> ${filePath}`);
 };
 
-const restore = async (file: string, force: boolean) => {
+const restore = async (file: string, force: boolean, databaseId?: string) => {
   const useEmulator = isEmulatorEnabled(process.env.VITE_USE_FIREBASE_EMULATOR);
   if (!useEmulator && !force) {
     throw new Error(
@@ -142,8 +144,10 @@ const restore = async (file: string, force: boolean) => {
     );
   }
 
-  const { db, auth } = initDB();
-  console.log(`[restore] target project: ${db.app.options.projectId}`);
+  const { db, auth } = initDB(databaseId);
+  console.log(
+    `[restore] target project: ${db.app.options.projectId}, database: ${databaseId ?? '(default)'}`
+  );
 
   const email = process.env.BACKUP_ADMIN_EMAIL;
   const password = process.env.BACKUP_ADMIN_PASSWORD;
@@ -169,18 +173,23 @@ const restore = async (file: string, force: boolean) => {
 const [command, ...args] = process.argv.slice(2);
 const positional = args.filter(a => !a.startsWith('--'));
 const force = args.includes('--force');
+const databaseId = args
+  .find(a => a.startsWith('--database='))
+  ?.slice('--database='.length);
 
 const run = async () => {
   if (command === 'backup') {
-    return backup(positional[0]);
+    return backup(positional[0], databaseId);
   }
   if (command === 'restore') {
     if (!positional[0]) {
       throw new Error('restore needs a backup file path');
     }
-    return restore(positional[0], force);
+    return restore(positional[0], force, databaseId);
   }
-  throw new Error('Usage: backup [outFile] | restore <file> [--force]');
+  throw new Error(
+    'Usage: backup [outFile] [--database=<id>] | restore <file> [--database=<id>] [--force]'
+  );
 };
 
 run()

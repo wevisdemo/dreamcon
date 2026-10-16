@@ -44,14 +44,16 @@ How the safety net works:
 
 Other commands:
 
-| Command                                   | Description                                                                                                  |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `pnpm emulators`                          | Emulators + seed only, without Vite. Useful when running the dev server separately.                          |
-| `pnpm seed:emulator`                      | Wipe and re-seed running emulators, back to the exact initial state.                                         |
-| `pnpm dev:prod`                           | Dev server against the **real** project. Use deliberately.                                                   |
-| `pnpm firestore:backup [file]`            | Lossless JSON backup of `events`, `topics`, `comments`, `writers` into `out/`. Read-only.                    |
-| `pnpm firestore:restore <file> [--force]` | Restore a backup (upsert by id, never deletes). Refuses to touch the real project without `--force`.         |
-| `pnpm firestore:dump`                     | CSV export for analysis. Lossy on purpose (flattens `parent_comment_ids`, stringifies types) — not a backup. |
+| Command                                   | Description                                                                                          |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `pnpm emulators`                          | Emulators + seed only, without Vite. Useful when running the dev server separately.                  |
+| `pnpm seed:emulator`                      | Wipe and re-seed running emulators, back to the exact initial state.                                 |
+| `pnpm dev:prod`                           | Dev server against the **real** project. Use deliberately.                                           |
+| `pnpm firestore:backup [file]`            | Lossless JSON backup of `events`, `topics`, `comments`, `writers` into `out/`. Read-only.            |
+| `pnpm firestore:restore <file> [--force]` | Restore a backup (upsert by id, never deletes). Refuses to touch the real project without `--force`. |
+
+Both take `--database=<id>` to target a named Firestore database instead of `(default)`, e.g. to restore a production backup into a staging database: `pnpm firestore:restore <file> --database=staging --force`.
+| `pnpm firestore:dump` | CSV export for analysis. Lossy on purpose (flattens `parent_comment_ids`, stringifies types) — not a backup. |
 
 ## Demo
 
