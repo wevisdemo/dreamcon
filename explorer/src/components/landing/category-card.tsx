@@ -4,7 +4,7 @@ import type { CategorySummary } from '../../utils/category';
 
 export function CategoryCard({ category, count, groups }: CategorySummary) {
   return (
-    <div className="flex h-full w-55 flex-col gap-1 rounded-[20px] bg-white p-2.5 md:w-80">
+    <div className="flex h-full w-55 flex-col gap-1 rounded-3xl bg-white p-2.5 md:w-80">
       <Link
         to="/dashboard"
         search={{ category: { category } }}

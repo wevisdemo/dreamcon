@@ -14,8 +14,10 @@ import {
   EventCard,
   type EventCardData,
 } from '../components/landing/event-card';
+import { ProjectCard } from '../components/landing/project-card';
 import { StatCounter } from '../components/landing/stat-counter';
 import { EVENT_DATE_FORMAT } from '../constants/event';
+import { PROJECTS } from '../constants/projects';
 import {
   getConversations,
   getEvents,
@@ -102,7 +104,7 @@ export const Route = createFileRoute('/')({
     return (
       <div className="flex flex-1 flex-col bg-blue-7">
         <section className="flex min-h-[calc(100dvh-3rem)] flex-col px-1.25 md:min-h-[calc(100dvh-4rem)] md:px-2.5">
-          <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden rounded-[30px] bg-blue-3 px-7.5 py-10 md:px-15 md:py-20">
+          <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden rounded-3xl bg-blue-3 px-7.5 py-10 md:px-15 md:py-20">
             <CloudGraphic />
             <div className="relative flex w-full max-w-212 flex-col items-center gap-5 text-center">
               <h1>
@@ -148,7 +150,7 @@ export const Route = createFileRoute('/')({
           id="project"
           className="flex flex-col gap-1 px-1 pt-1 md:scroll-mt-14 md:flex-row md:gap-2.5 md:px-2.5 md:pt-2.5"
         >
-          <div className="flex items-center justify-center overflow-hidden rounded-[30px] bg-white md:min-w-85 md:flex-1">
+          <div className="flex items-center justify-center overflow-hidden rounded-3xl bg-white md:min-w-85 md:flex-1">
             <img
               src={dataStructure}
               alt="แผนภาพโครงสร้างข้อมูล ข้อถกเถียงแตกออกเป็นความคิดเห็นที่เห็นด้วย เห็นด้วยบางส่วน และไม่เห็นด้วย ซึ่งแต่ละความคิดเห็นมีความคิดเห็นต่อยอดได้"
@@ -157,7 +159,7 @@ export const Route = createFileRoute('/')({
               className="h-auto w-full max-w-85"
             />
           </div>
-          <div className="flex flex-col items-center gap-3.75 rounded-[30px] bg-green-3 p-7.5 text-center md:flex-2 md:p-15">
+          <div className="flex flex-col items-center gap-3.75 rounded-3xl bg-green-3 p-7.5 text-center md:flex-2 md:p-15">
             <h2 className="text-h7 font-bold">
               ความหลากหลายของมุมมอง คือหัวใจสำคัญของโครงการนี้
             </h2>
@@ -197,7 +199,7 @@ export const Route = createFileRoute('/')({
           </ButtonLink>
         </section>
         <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
-          <div className="flex flex-col items-center gap-3 rounded-[30px] bg-blue-4 py-5 md:gap-5 md:py-10">
+          <div className="flex flex-col items-center gap-3 rounded-3xl bg-blue-4 py-5 md:gap-5 md:py-10">
             <h2 className="text-h8 font-bold text-blue-8">
               เลือกจากหมวดหมู่ ({categories.length})
             </h2>
@@ -211,7 +213,7 @@ export const Route = createFileRoute('/')({
           </div>
         </section>
         <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
-          <div className="flex flex-col items-center gap-3 rounded-[30px] bg-blue-4 py-5 md:gap-5 md:py-10">
+          <div className="flex flex-col items-center gap-3 rounded-3xl bg-blue-4 py-5 md:gap-5 md:py-10">
             <h2 className="text-h8 font-bold text-blue-8">
               เลือกจากวงสนทนา ({eventCards.length})
             </h2>
@@ -240,11 +242,11 @@ export const Route = createFileRoute('/')({
           </div>
         </section>
         <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
-          <div className="flex flex-col overflow-hidden rounded-[20px] lg:flex-row">
-            <h2 className="flex items-center justify-center bg-green-4 p-7.5 text-center text-h7 font-bold md:p-15 lg:flex-1">
+          <div className="flex flex-col overflow-hidden rounded-2xl lg:grid lg:grid-cols-[calc((100%-1.25rem)/3)_1fr]">
+            <h2 className="flex items-center justify-center bg-green-4 p-7.5 text-center text-h7 font-bold md:p-15">
               ช่องทางการมีส่วนร่วม
             </h2>
-            <div className="flex flex-col gap-7.5 bg-green-3 p-7.5 md:p-15 lg:flex-2 lg:flex-row">
+            <div className="flex flex-col gap-7.5 bg-green-3 p-7.5 md:p-15 lg:flex-row">
               <div className="flex flex-1 gap-5">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-4 text-green-6 md:size-20">
                   <PartnershipIcon className="h-5.75 md:h-11.5" />
@@ -291,6 +293,14 @@ export const Route = createFileRoute('/')({
               </div>
             </div>
           </div>
+        </section>
+        <section className="grid grid-cols-1 gap-1 px-1 pb-1 md:grid-cols-2 md:gap-2.5 md:px-2.5 md:pb-2.5 lg:grid-cols-3">
+          <h2 className="flex items-center justify-center rounded-2xl bg-blue-8 p-7.5 text-center text-h7 font-bold text-white md:p-15">
+            โครงการอื่น ๆ เกี่ยวกับรัฐธรรมนูญ
+          </h2>
+          {PROJECTS.map(project => (
+            <ProjectCard key={project.href} {...project} />
+          ))}
         </section>
       </div>
     );

@@ -28,7 +28,7 @@ export function EventCard({
     <Link
       to="/dashboard"
       search={{ event: { eventId: id } }}
-      className="flex h-full w-55 flex-col items-center gap-2.5 rounded-[20px] bg-white px-7.5 py-5 hover:bg-blue-2 md:w-80"
+      className="flex h-full w-55 flex-col items-center gap-2.5 rounded-3xl bg-white px-7.5 py-5 hover:bg-blue-2 md:w-80"
     >
       <span className="w-full text-b7 text-gray-6">
         {EVENT_DATE_FORMAT.format(date)}
