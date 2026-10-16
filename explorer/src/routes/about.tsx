@@ -1,33 +1,13 @@
 import { useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import fnfLogo from '../assets/partner-fnf.svg';
-import handLogo from '../assets/partner-hand.png';
-import tijLogo from '../assets/partner-tij.svg';
-import wevisLogo from '../assets/partner-wevis.svg';
 import { AboutData } from '../components/about/about-data';
 import { Button, ButtonAnchor } from '../components/button';
 import { DownloadModal } from '../components/download-modal';
 import { ExternalLink } from '../components/external-link';
+import { ORGANIZERS, ORGANIZERS_SUMMARY } from '../constants/organizers';
 import { getPartners } from '../data/server-functions';
 import { DownloadIcon } from '../icons/download';
 import { MailIcon } from '../icons/mail';
-
-const ORGANIZERS = [
-  {
-    name: 'มูลนิธิฟรีดริช เนามัน ประเทศไทย (FNF Thailand)',
-    logo: fnfLogo,
-    width: 130,
-    height: 36,
-  },
-  { name: 'วีวิซ เดโม (WeVis)', logo: wevisLogo, width: 100, height: 30 },
-  {
-    name: 'สถาบันเพื่อการยุติธรรมแห่งประเทศไทย (TIJ)',
-    logo: tijLogo,
-    width: 82,
-    height: 41,
-  },
-  { name: 'Hand Social Enterprises', logo: handLogo, width: 98, height: 43 },
-];
 
 const TEAM = [
   ['เขียนโปรแกรม', ['ทรงพล นิลวงษ์', 'วิถี ภูษิตาศัย']],
@@ -131,14 +111,13 @@ export const Route = createFileRoute('/about')({
 
           <AboutData />
 
-          <article className="flex flex-col gap-7.5">
+          <article
+            id="organizers"
+            className="flex scroll-mt-14 flex-col gap-7.5"
+          >
             <section className="flex flex-col gap-5">
               <h2 className="text-h5 font-bold">ผู้จัดทำโครงการ</h2>
-              <p>
-                โครงการ Dream Con เกิดขึ้นจากความร่วมมือขององค์กรต่าง ๆ ได้แก่ มูลนิธิฟรีดริช
-                เนามัน ประเทศไทย (FNF Thailand) วีวิซ เดโม (WeVis)
-                สถาบันเพื่อการยุติธรรมแห่งประเทศไทย (TIJ) และ Hand Social Enterprise
-              </p>
+              <p>{ORGANIZERS_SUMMARY}</p>
               <ul className="grid grid-cols-2 md:flex">
                 {ORGANIZERS.map(({ name, logo, width, height }) => (
                   <li

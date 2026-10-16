@@ -75,7 +75,7 @@ export function Carousel({
         onClick={() => scrollByItem(1)}
         className={arrowClassName}
       >
-        <ChevronDownIcon className="size-5 -rotate-90 md:size-8" />
+        <ChevronDownIcon className="size-5 -rotate-90 md:size-9" />
       </button>
     </div>
   );

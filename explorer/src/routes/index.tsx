@@ -16,7 +16,9 @@ import {
 } from '../components/landing/event-card';
 import { ProjectCard } from '../components/landing/project-card';
 import { StatCounter } from '../components/landing/stat-counter';
+import { Sharer } from '../components/sharer';
 import { EVENT_DATE_FORMAT } from '../constants/event';
+import { ORGANIZERS, ORGANIZERS_SUMMARY } from '../constants/organizers';
 import { PROJECTS } from '../constants/projects';
 import {
   getConversations,
@@ -143,6 +145,7 @@ export const Route = createFileRoute('/')({
                   เข้าใจโครงการ
                 </ButtonLink>
               </div>
+              <Sharer />
             </div>
           </div>
         </section>
@@ -301,6 +304,38 @@ export const Route = createFileRoute('/')({
           {PROJECTS.map(project => (
             <ProjectCard key={project.href} {...project} />
           ))}
+        </section>
+        <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
+          <div className="rounded-3xl bg-blue-3 p-7.5 md:p-15">
+            <div className="mx-auto flex max-w-7xl flex-col gap-5 md:flex-row">
+              <div className="flex flex-1 flex-col items-start gap-3.75">
+                <h2 className="text-h7 font-bold">ผู้จัดทำโครงการ</h2>
+                <p className="text-b4">{ORGANIZERS_SUMMARY}</p>
+                <ButtonLink
+                  to="/about"
+                  hash="organizers"
+                  variant="primary-blue"
+                  icon={<ArrowUpIcon className="rotate-90" />}
+                >
+                  อ่านรายละเอียด
+                </ButtonLink>
+              </div>
+              <ul className="grid grid-cols-4 gap-1 md:w-52.5 md:shrink-0 md:grid-cols-2 md:gap-2.5">
+                {ORGANIZERS.map(({ name, logo }) => (
+                  <li
+                    key={name}
+                    className="flex aspect-square items-center justify-center rounded-2xl bg-white"
+                  >
+                    <img
+                      src={logo}
+                      alt={name}
+                      className="max-h-1/2 max-w-4/5 object-contain"
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </section>
       </div>
     );
