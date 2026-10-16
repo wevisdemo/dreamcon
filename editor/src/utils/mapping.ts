@@ -40,14 +40,12 @@ export const flattenComments = (parent: CommentParent): Comment[] => {
   return parent.comments.flatMap(walk);
 };
 
-/** Events the parent is explicitly linked to, plus every event that replied under it. */
+/** Unique events the parent is explicitly linked to, plus every event linked to any reply under it. */
 export const linkedEventIds = (parent: CommentParent): string[] => [
-  ...new Set(
-    [
-      ...parent.event_ids,
-      ...flattenComments(parent).map(comment => comment.event_ids[0]),
-    ].filter(Boolean)
-  ),
+  ...new Set([
+    ...parent.event_ids,
+    ...flattenComments(parent).flatMap(comment => comment.event_ids),
+  ]),
 ];
 
 const mapCommentsHierarchy = (commentDBList: CommentDB[]): Comment[] => {
