@@ -2,28 +2,90 @@ import { createFileRoute } from '@tanstack/react-router';
 import dataStructure from '../assets/data-structure-white.png';
 import logo from '../assets/logo-stacked.svg';
 import { ButtonLink } from '../components/button';
+import { Carousel } from '../components/landing/carousel';
+import { CategoryCard } from '../components/landing/category-card';
 import { CloudGraphic } from '../components/landing/cloud-graphic';
+import {
+  DemographicCard,
+  type DemographicCardData,
+} from '../components/landing/demographic-card';
+import {
+  EventCard,
+  type EventCardData,
+} from '../components/landing/event-card';
 import { StatCounter } from '../components/landing/stat-counter';
 import { EVENT_DATE_FORMAT } from '../constants/event';
-import { getConversations, getEvents } from '../data/server-functions';
+import {
+  getConversations,
+  getEvents,
+  getGroupQuestions,
+} from '../data/server-functions';
 import { ArrowUpIcon } from '../icons/arrow-up';
+import {
+  countEventTopics,
+  getTargetGroupTypes,
+  sortEventsByDate,
+  summarizeCategories,
+} from '../utils/filter';
+
+const CATEGORY_GROUP_PREVIEW_COUNT = 3;
 
 export const Route = createFileRoute('/')({
   loader: async () => {
-    const [events, conversations] = await Promise.all([
+    const [events, conversations, groupQuestions] = await Promise.all([
       getEvents(),
       getConversations(),
+      getGroupQuestions(),
     ]);
+
+    const categories = summarizeCategories(groupQuestions, conversations).map(
+      summary => ({
+        ...summary,
+        groups: summary.groups.slice(0, CATEGORY_GROUP_PREVIEW_COUNT),
+      })
+    );
+
+    const eventCards: EventCardData[] = sortEventsByDate(events).map(
+      ({ id, displayName, date, location, participantCount, targetGroup }) => ({
+        id,
+        displayName,
+        date,
+        location,
+        participantCount,
+        targetGroupTypes: targetGroup.types,
+        topicCount: countEventTopics(conversations, id),
+      })
+    );
+
+    const demographics: DemographicCardData[] = getTargetGroupTypes(events).map(
+      type => ({
+        type,
+        eventCount: events.filter(({ targetGroup }) =>
+          targetGroup.types.includes(type)
+        ).length,
+      })
+    );
+
     return {
       topicCount: conversations.length,
       eventCount: events.length,
       latestEventDate: new Date(
         Math.max(...events.map(({ date }) => date.getTime()))
       ),
+      categories,
+      eventCards,
+      demographics,
     };
   },
   component: function Home() {
-    const { topicCount, eventCount, latestEventDate } = Route.useLoaderData();
+    const {
+      topicCount,
+      eventCount,
+      latestEventDate,
+      categories,
+      eventCards,
+      demographics,
+    } = Route.useLoaderData();
 
     return (
       <div className="flex flex-1 flex-col bg-blue-7">
@@ -121,6 +183,49 @@ export const Route = createFileRoute('/')({
           >
             สำรวจทั้งหมด
           </ButtonLink>
+        </section>
+        <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
+          <div className="flex flex-col items-center gap-3 rounded-[30px] bg-blue-4 py-5 md:gap-5 md:py-10">
+            <h2 className="text-h8 font-bold text-blue-8">
+              เลือกจากหมวดหมู่ ({categories.length})
+            </h2>
+            <Carousel label="หมวดหมู่">
+              {categories.map(category => (
+                <li key={category.category} className="shrink-0 snap-start">
+                  <CategoryCard {...category} />
+                </li>
+              ))}
+            </Carousel>
+          </div>
+        </section>
+        <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
+          <div className="flex flex-col items-center gap-3 rounded-[30px] bg-blue-4 py-5 md:gap-5 md:py-10">
+            <h2 className="text-h8 font-bold text-blue-8">
+              เลือกจากวงสนทนา ({eventCards.length})
+            </h2>
+            <Carousel label="วงสนทนา">
+              {eventCards.map(event => (
+                <li key={event.id} className="shrink-0 snap-start">
+                  <EventCard {...event} />
+                </li>
+              ))}
+            </Carousel>
+            <div className="text-center text-blue-8">
+              <h3 className="mt-2 text-h10 font-bold">
+                หรือเลือกวงสนทนาตามลักษณะผู้เข้าร่วม
+              </h3>
+              <p className="text-b6">
+                หมายเหตุ: 1 วงสนทนามีผู้เข้าร่วมได้มากกว่า 1 ลักษณะ
+              </p>
+            </div>
+            <Carousel label="ลักษณะผู้เข้าร่วม">
+              {demographics.map(demographic => (
+                <li key={demographic.type} className="shrink-0 snap-start">
+                  <DemographicCard {...demographic} />
+                </li>
+              ))}
+            </Carousel>
+          </div>
         </section>
       </div>
     );

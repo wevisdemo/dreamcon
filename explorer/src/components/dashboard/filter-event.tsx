@@ -3,8 +3,10 @@ import type { Conversation } from '../../data/conversations';
 import type { Event } from '../../data/events';
 import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
 import {
+  countEventTopics,
   formatEventSelection,
   getSelectedTargetGroupTypes,
+  getTargetGroupTypes,
   type EventSelection,
 } from '../../utils/filter';
 import { EventDetails } from '../event/event-details';
@@ -22,9 +24,7 @@ export function FilterEvent({
   selection?: EventSelection;
   onSelect: (selection?: EventSelection) => void;
 }) {
-  const targetGroupTypes = [
-    ...new Set(events.flatMap(({ targetGroup }) => targetGroup.types)),
-  ];
+  const targetGroupTypes = getTargetGroupTypes(events);
 
   const selectedTypes = getSelectedTargetGroupTypes(selection);
   const selectedEventId =
@@ -44,9 +44,6 @@ export function FilterEvent({
       : [...selectedTypes, type];
     onSelect(types.length > 0 ? { targetGroupTypes: types } : undefined);
   };
-
-  const countTopics = (eventId: string) =>
-    conversations.filter(({ eventIds }) => eventIds.includes(eventId)).length;
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-1.25">
@@ -136,7 +133,7 @@ export function FilterEvent({
                     <span
                       className={`self-end text-b7 ${isSelected ? 'text-gray-3' : 'text-gray-6'}`}
                     >
-                      {countTopics(event.id)} ข้อถกเถียง
+                      {countEventTopics(conversations, event.id)} ข้อถกเถียง
                     </span>
                   </button>
                   <div

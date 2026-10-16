@@ -168,6 +168,82 @@ export const matchesCategorySelection = (
       : topicGroup.id === groupId
   );
 
+const OTHER_CATEGORY = 'อื่น ๆ';
+
+/** A category with its topic count and each of its groups' topic counts */
+export type CategorySummary = {
+  category: string;
+  count: number;
+  groups: { id: string; phrase: string; count: number }[];
+};
+
+/**
+ * Counts the topics in each category and in each of its groups.
+ *
+ * @param categories - Categories with their groups
+ * @param conversations - Topics to count
+ * @returns Every category, most topics first with "อื่น ๆ" last, each with its
+ * groups, most topics first
+ */
+export const summarizeCategories = (
+  categories: CategoryQuestions[],
+  conversations: Pick<Conversation, 'groups'>[]
+): CategorySummary[] => {
+  const countTopics = (selection: CategorySelection) =>
+    conversations.filter(({ groups }) =>
+      matchesCategorySelection(groups, selection)
+    ).length;
+
+  return categories
+    .map(({ category, groups }) => ({
+      category,
+      count: countTopics({ category }),
+      groups: groups
+        .map(({ id, phrase }) => ({
+          id,
+          phrase,
+          count: countTopics({ category, groupId: id }),
+        }))
+        .toSorted((a, b) => b.count - a.count),
+    }))
+    .toSorted(
+      (a, b) =>
+        Number(a.category === OTHER_CATEGORY) -
+          Number(b.category === OTHER_CATEGORY) || b.count - a.count
+    );
+};
+
+/**
+ * Counts the topics that came from an event.
+ *
+ * @param conversations - Topics to count
+ * @param eventId - Id of the event
+ * @returns How many of `conversations` have the event among their `eventIds`
+ */
+export const countEventTopics = (
+  conversations: Pick<Conversation, 'eventIds'>[],
+  eventId: string
+) => conversations.filter(({ eventIds }) => eventIds.includes(eventId)).length;
+
+/**
+ * Lists the participant types across events.
+ *
+ * @param events - Events to collect from
+ * @returns Each participant type once, in order of first appearance
+ */
+export const getTargetGroupTypes = (events: Pick<Event, 'targetGroup'>[]) => [
+  ...new Set(events.flatMap(({ targetGroup }) => targetGroup.types)),
+];
+
+/**
+ * Orders events by date.
+ *
+ * @param events - Events to order
+ * @returns A copy of `events`, newest first
+ */
+export const sortEventsByDate = <T extends Pick<Event, 'date'>>(events: T[]) =>
+  events.toSorted((a, b) => b.date.getTime() - a.date.getTime());
+
 /**
  * Measures how close a topic is to the phrase of the selected group.
  *

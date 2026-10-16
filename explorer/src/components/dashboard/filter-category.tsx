@@ -4,12 +4,10 @@ import { useScrollIntoView } from '../../hooks/use-scroll-into-view';
 import { ChevronDownIcon } from '../../icons/chevron-down';
 import {
   formatCategorySelection,
-  matchesCategorySelection,
+  summarizeCategories,
   type CategorySelection,
 } from '../../utils/filter';
 import { FilterHeader } from './filter-header';
-
-const otherCategory = 'อื่น ๆ';
 
 export function FilterCategory({
   categories,
@@ -26,28 +24,7 @@ export function FilterCategory({
     selection?.groupId ?? selection?.category
   );
 
-  const countTopics = (selection: CategorySelection) =>
-    conversations.filter(({ groups }) =>
-      matchesCategorySelection(groups, selection)
-    ).length;
-
-  const sortedCategories = categories
-    .map(({ category, groups }) => ({
-      category,
-      count: countTopics({ category }),
-      groups: groups
-        .map(({ id, phrase }) => ({
-          id,
-          phrase,
-          count: countTopics({ category, groupId: id }),
-        }))
-        .toSorted((a, b) => b.count - a.count),
-    }))
-    .toSorted(
-      (a, b) =>
-        Number(a.category === otherCategory) -
-          Number(b.category === otherCategory) || b.count - a.count
-    );
+  const sortedCategories = summarizeCategories(categories, conversations);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-1.25">

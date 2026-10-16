@@ -35,6 +35,7 @@ import {
   matchesEventSelection,
   type EventSelection,
   searchConversations,
+  sortEventsByDate,
 } from '../utils/filter';
 
 type DashboardSearch = {
@@ -65,7 +66,7 @@ export const Route = createFileRoute('/dashboard')({
     );
     return {
       categories,
-      events: events.toSorted((a, b) => b.date.getTime() - a.date.getTime()),
+      events: sortEventsByDate(events),
       conversations: conversations.map(({ eventIds, ...conversation }) => ({
         ...conversation,
         eventIds,
