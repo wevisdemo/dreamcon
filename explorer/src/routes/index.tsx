@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import dataStructure from '../assets/data-structure-white.png';
 import logo from '../assets/logo-stacked.svg';
 import { ButtonLink } from '../components/button';
+import { ExternalLink } from '../components/external-link';
 import { Carousel } from '../components/landing/carousel';
 import { CategoryCard } from '../components/landing/category-card';
 import { CloudGraphic } from '../components/landing/cloud-graphic';
@@ -21,6 +22,11 @@ import {
   getGroupQuestions,
 } from '../data/server-functions';
 import { ArrowUpIcon } from '../icons/arrow-up';
+import { ChatAddIcon } from '../icons/chat-add';
+import { FacebookIcon } from '../icons/facebook';
+import { InstagramIcon } from '../icons/instagram';
+import { PartnershipIcon } from '../icons/partnership';
+import { XIcon } from '../icons/x';
 import { summarizeCategories } from '../utils/category';
 import {
   countEventTopics,
@@ -29,6 +35,12 @@ import {
 } from '../utils/event';
 
 const CATEGORY_GROUP_PREVIEW_COUNT = 3;
+const CONTACT_EMAIL = 'team@wevis.info';
+const SOCIAL_LINKS = [
+  { href: 'https://www.facebook.com/wevisdemo', Icon: FacebookIcon },
+  { href: 'https://x.com/wevisdemo', Icon: XIcon },
+  { href: 'https://www.instagram.com/wevisdemo', Icon: InstagramIcon },
+];
 
 export const Route = createFileRoute('/')({
   loader: async () => {
@@ -225,6 +237,59 @@ export const Route = createFileRoute('/')({
                 </li>
               ))}
             </Carousel>
+          </div>
+        </section>
+        <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
+          <div className="flex flex-col overflow-hidden rounded-[20px] lg:flex-row">
+            <h2 className="flex items-center justify-center bg-green-4 p-7.5 text-center text-h7 font-bold md:p-15 lg:flex-1">
+              ช่องทางการมีส่วนร่วม
+            </h2>
+            <div className="flex flex-col gap-7.5 bg-green-3 p-7.5 md:p-15 lg:flex-2 lg:flex-row">
+              <div className="flex flex-1 gap-5">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-4 text-green-6 md:size-20">
+                  <PartnershipIcon className="h-5.75 md:h-11.5" />
+                </span>
+                <div className="flex flex-1 flex-col">
+                  <h3 className="text-h9 font-bold">
+                    เป็นพาร์ตเนอร์กับ WeVis เพื่อจัดวงสนทนา
+                  </h3>
+                  <ul className="list-disc pl-6 text-b4">
+                    <li>รับคู่มือเพื่อออกแบบและจัดวงสนทนาด้วยตนเอง</li>
+                    <li>
+                      ใช้เครื่องมือบันทึก เชื่อมโยง
+                      และจัดเก็บข้อถกเถียงจากวงสนทนาอย่างเป็นระบบ
+                    </li>
+                  </ul>
+                  <p className="text-b4">
+                    สามารถติดต่อได้ที่{' '}
+                    <ExternalLink href={`mailto:${CONTACT_EMAIL}`}>
+                      {CONTACT_EMAIL}
+                    </ExternalLink>
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-1 gap-5">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-4 text-green-6 md:size-20">
+                  <ChatAddIcon className="size-4.25 md:size-8.5" />
+                </span>
+                <div className="flex flex-1 flex-col">
+                  <h3 className="text-h9 font-bold">เข้าร่วมวงสนทนาในอนาคต</h3>
+                  <p className="text-b4">
+                    สามารถติดตามการประชาสัมพันธ์ได้ทาง social media ของ WeVis
+                  </p>
+                  <ul className="flex flex-wrap gap-2.5 py-1.25 text-b5">
+                    {SOCIAL_LINKS.map(({ href, Icon }) => (
+                      <li key={href}>
+                        <ExternalLink href={href} className="flex gap-1.25">
+                          <Icon className="size-5 rounded-full bg-black text-white" />
+                          wevisdemo
+                        </ExternalLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>
