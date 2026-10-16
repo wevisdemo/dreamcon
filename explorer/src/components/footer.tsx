@@ -4,16 +4,15 @@ import { menus } from '../constants/menus';
 import { MailIcon } from '../icons/mail';
 
 const email = 'team@wevis.info';
+const footerMenus = [{ label: 'หน้าแรก', to: '/' as const }, ...menus];
 
 export function Footer() {
   return (
     <footer className="flex justify-between gap-5 bg-blue-7 p-5 text-white md:items-center md:p-7.5">
-      <Link to="/" className="shrink-0">
-        <img src={logo} alt="Dream Con" className="h-7.5 md:h-10" />
-      </Link>
+      <img src={logo} alt="Dream Con" className="h-7.5 shrink-0 md:h-10" />
       <div className="flex flex-col gap-5 md:contents">
         <ul className="flex flex-col gap-1.25 text-h10 md:flex-row md:gap-15">
-          {menus.map(({ label, to }) => (
+          {footerMenus.map(({ label, to }) => (
             <li key={label}>
               <Link
                 to={to}
