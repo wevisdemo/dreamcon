@@ -14,6 +14,7 @@ import { Masonry } from '../components/dashboard/masonry';
 import { PhraseSortingHint } from '../components/dashboard/phrase-sorting-hint';
 import { TopicCard } from '../components/dashboard/topic-card';
 import { Dropdown } from '../components/dropdown';
+import { Metadata } from '../components/metadata';
 import {
   phraseSortOption,
   relevanceSortOption,
@@ -205,6 +206,7 @@ export const Route = createFileRoute('/dashboard')({
 
     return (
       <div className="flex flex-1 bg-blue-3">
+        <Metadata title="ข้อถกเถียง" />
         <div className="mx-auto flex w-[95vw] justify-center py-3 md:py-5">
           <FilterSidebar
             isOpen={isFilterSidebarOpen}

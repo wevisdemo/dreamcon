@@ -33,6 +33,9 @@ jobs:
         run: nix develop --command pnpm install --frozen-lockfile --filter @dreamcon/explorer
 
       - name: Build
+        env:
+          VITE_SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
+          VITE_NO_INDEX: 'true'
         run: nix develop --command pnpm --filter @dreamcon/explorer build --base "/${{ github.event.repository.name }}/"
 
       - uses: actions/upload-pages-artifact@v5

@@ -8,6 +8,7 @@ import {
 import { ConversationTree } from '../components/conversation/conversation-tree';
 import { CopyLink } from '../components/copy-link';
 import { EventDetails } from '../components/event/event-details';
+import { Metadata } from '../components/metadata';
 import { Modal } from '../components/modal';
 import { getConversation, getEvents } from '../data/server-functions';
 import { ChevronDownIcon } from '../icons/chevron-down';
@@ -20,9 +21,6 @@ export const Route = createFileRoute('/dashboard_/$topicId')({
     ]);
     return { conversation, events };
   },
-  head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.conversation.title} | Dream Constitution` }],
-  }),
   component: function TopicDetail() {
     const { conversation, events } = Route.useLoaderData();
     const router = useRouter();
@@ -35,6 +33,7 @@ export const Route = createFileRoute('/dashboard_/$topicId')({
 
     return (
       <div className="flex flex-1 justify-center bg-blue-5 px-5 pt-2.5 pb-5 md:pt-5">
+        <Metadata title={conversation.title} />
         <div className="flex w-full max-w-4xl flex-col gap-2.5">
           <div className="flex items-center justify-between">
             <Link

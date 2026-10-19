@@ -16,6 +16,7 @@ import {
 } from '../components/landing/event-card';
 import { ProjectCard } from '../components/landing/project-card';
 import { StatCounter } from '../components/landing/stat-counter';
+import { Metadata } from '../components/metadata';
 import { Sharer } from '../components/sharer';
 import { EVENT_DATE_FORMAT } from '../constants/event';
 import { ORGANIZERS, ORGANIZERS_SUMMARY } from '../constants/organizers';
@@ -105,6 +106,7 @@ export const Route = createFileRoute('/')({
 
     return (
       <div className="flex flex-1 flex-col bg-blue-7">
+        <Metadata />
         <section className="flex min-h-[calc(100dvh-3rem)] flex-col px-1.25 md:min-h-[calc(100dvh-4rem)] md:px-2.5">
           <div className="relative flex flex-1 flex-col items-center justify-center overflow-hidden rounded-3xl bg-blue-3 px-7.5 py-10 md:px-15 md:py-20">
             <CloudGraphic />

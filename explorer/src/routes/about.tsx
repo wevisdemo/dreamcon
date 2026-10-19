@@ -4,6 +4,7 @@ import { AboutData } from '../components/about/about-data';
 import { Button, ButtonAnchor } from '../components/button';
 import { DownloadModal } from '../components/download-modal';
 import { ExternalLink } from '../components/external-link';
+import { Metadata } from '../components/metadata';
 import { ORGANIZERS, ORGANIZERS_SUMMARY } from '../constants/organizers';
 import { getPartners } from '../data/server-functions';
 import { DownloadIcon } from '../icons/download';
@@ -23,15 +24,13 @@ const TEAM = [
 
 export const Route = createFileRoute('/about')({
   loader: () => getPartners(),
-  head: () => ({
-    meta: [{ title: 'เกี่ยวกับเรา | Dream Constitution' }],
-  }),
   component: function About() {
     const partners = Route.useLoaderData();
     const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
     return (
       <div className="flex flex-col items-center px-5 md:px-0">
+        <Metadata title="เกี่ยวกับเรา" />
         <h1 className="py-7.5 text-center text-h4 font-bold md:py-15">
           เกี่ยวกับเรา
         </h1>

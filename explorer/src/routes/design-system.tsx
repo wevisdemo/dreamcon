@@ -5,6 +5,7 @@ import { CommentDot } from '../components/comment-dot';
 import { CommentTag } from '../components/comment-tag';
 import { Dropdown } from '../components/dropdown';
 import { FilterTag } from '../components/filter-tag';
+import { Metadata } from '../components/metadata';
 import { SearchBar } from '../components/search-bar';
 import { Tabs } from '../components/tabs';
 import { commentViews } from '../constants/comment-views';
@@ -165,15 +166,10 @@ function TabsDemo() {
 }
 
 export const Route = createFileRoute('/design-system')({
-  head: () => ({
-    meta: [
-      { title: 'Design system | Dream Constitution' },
-      { name: 'robots', content: 'noindex, nofollow' },
-    ],
-  }),
   component: function DesignSystem() {
     return (
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 p-8">
+        <Metadata title="Design system" noIndex />
         <h1 className="text-h3 font-bold">Design system</h1>
 
         <div className="divide-y divide-gray-3 border-y border-gray-3">
