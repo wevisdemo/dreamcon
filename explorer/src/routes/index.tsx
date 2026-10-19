@@ -74,14 +74,14 @@ export const Route = createFileRoute('/')({
       })
     );
 
-    const demographics: DemographicCardData[] = getTargetGroupTypes(events).map(
-      type => ({
+    const demographics: DemographicCardData[] = getTargetGroupTypes(events)
+      .map(type => ({
         type,
         eventCount: events.filter(({ targetGroup }) =>
           targetGroup.types.includes(type)
         ).length,
-      })
-    );
+      }))
+      .toSorted((a, b) => b.eventCount - a.eventCount);
 
     return {
       topicCount: conversations.length,
@@ -161,7 +161,7 @@ export const Route = createFileRoute('/')({
               alt="แผนภาพโครงสร้างข้อมูล ข้อถกเถียงแตกออกเป็นความคิดเห็นที่เห็นด้วย เห็นด้วยบางส่วน และไม่เห็นด้วย ซึ่งแต่ละความคิดเห็นมีความคิดเห็นต่อยอดได้"
               width={805}
               height={579}
-              className="h-auto w-full max-w-85"
+              className="h-auto w-full max-w-lg"
             />
           </div>
           <div className="flex flex-col items-center gap-3.75 rounded-3xl bg-green-3 p-7.5 text-center md:flex-2 md:p-15">
@@ -219,9 +219,12 @@ export const Route = createFileRoute('/')({
         </section>
         <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
           <div className="flex flex-col items-center gap-3 rounded-3xl bg-blue-4 py-5 md:gap-5 md:py-10">
-            <h2 className="text-h8 font-bold text-blue-8">
-              เลือกจากวงสนทนา ({eventCards.length})
-            </h2>
+            <div className="text-center text-blue-8">
+              <h2 className="text-h8 font-bold">
+                เลือกจากวงสนทนา ({eventCards.length})
+              </h2>
+              <p className="text-b6">เรียงตามวันที่จัด: ใหม่ไปเก่า</p>
+            </div>
             <Carousel label="วงสนทนา">
               {eventCards.map(event => (
                 <li key={event.id} className="shrink-0 snap-start">
@@ -300,7 +303,7 @@ export const Route = createFileRoute('/')({
           </div>
         </section>
         <section className="grid grid-cols-1 gap-1 px-1 pb-1 md:grid-cols-2 md:gap-2.5 md:px-2.5 md:pb-2.5 lg:grid-cols-3">
-          <h2 className="flex items-center justify-center rounded-2xl bg-blue-8 p-7.5 text-center text-h7 font-bold text-white md:p-15">
+          <h2 className="flex items-center justify-center rounded-2xl bg-blue-8 p-7.5 py-28 text-center text-h7 font-bold text-white md:p-15">
             โครงการอื่น ๆ เกี่ยวกับรัฐธรรมนูญ
           </h2>
           {PROJECTS.map(project => (
@@ -309,7 +312,7 @@ export const Route = createFileRoute('/')({
         </section>
         <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
           <div className="rounded-3xl bg-blue-3 p-7.5 md:p-15">
-            <div className="mx-auto flex max-w-7xl flex-col gap-5 md:flex-row">
+            <div className="mx-auto flex max-w-7xl flex-col items-start gap-5 md:flex-row">
               <div className="flex flex-1 flex-col items-start gap-3.75">
                 <h2 className="text-h7 font-bold">ผู้จัดทำโครงการ</h2>
                 <p className="text-b4">{ORGANIZERS_SUMMARY}</p>
@@ -322,11 +325,11 @@ export const Route = createFileRoute('/')({
                   อ่านรายละเอียด
                 </ButtonLink>
               </div>
-              <ul className="grid grid-cols-4 gap-1 md:w-52.5 md:shrink-0 md:grid-cols-2 md:gap-2.5">
+              <ul className="grid grid-cols-4 gap-1 md:shrink-0 md:grid-cols-2 md:gap-2.5">
                 {ORGANIZERS.map(({ name, logo }) => (
                   <li
                     key={name}
-                    className="flex aspect-square items-center justify-center rounded-2xl bg-white"
+                    className="flex aspect-square max-w-28 items-center justify-center rounded-2xl bg-white"
                   >
                     <img
                       src={logo}
