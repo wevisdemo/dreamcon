@@ -47,6 +47,9 @@ type DashboardSearch = {
   event?: EventSelection;
 };
 
+const shouldSortByPhrase = (selection?: CategorySelection, keyword?: string) =>
+  selection?.groupId !== undefined && !keyword;
+
 export const Route = createFileRoute('/dashboard')({
   validateSearch: ({
     keyword,
@@ -89,7 +92,11 @@ export const Route = createFileRoute('/dashboard')({
       event: eventSelection,
     } = Route.useSearch();
     const navigate = Route.useNavigate();
-    const [sortBy, setSortBy] = useState(sortOptions[0].value);
+    const [sortBy, setSortBy] = useState(
+      shouldSortByPhrase(categorySelection, keyword)
+        ? phraseSortOption.value
+        : sortOptions[0].value
+    );
     const [searchResetKey, setSearchResetKey] = useState(0);
     const [isFilterSidebarOpen, setIsFilterSidebarOpen] = useState(false);
     const [filterTab, setFilterTab] = useState<FilterTab>('category');
@@ -141,7 +148,7 @@ export const Route = createFileRoute('/dashboard')({
 
     const selectCategory = (selection?: CategorySelection) => {
       updateFilters({ category: selection });
-      if (selection?.groupId !== undefined && !keyword) {
+      if (shouldSortByPhrase(selection, keyword)) {
         setSortBy(phraseSortOption.value);
       }
     };
