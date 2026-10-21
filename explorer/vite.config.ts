@@ -29,7 +29,7 @@ export default defineConfig(async ({ command }) => {
   const conversations = command === 'build' ? await loadConversations() : [];
 
   return {
-    server: { port: 3000 },
+    server: { port: 3000, allowedHosts: true },
     plugins: [
       tanstackStart({
         prerender: { enabled: true },
