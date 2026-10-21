@@ -1,15 +1,24 @@
-import { useRef, type PointerEvent as ReactPointerEvent } from 'react';
+import { useRef } from 'react';
 import { CloseIcon } from '../../icons/close';
 import { HelpIcon } from '../../icons/help';
 import { Button } from '../button';
 
 const POPOVER_ID = 'phrase-sorting-hint';
+const POPOVER_WIDTH = 340;
+const VIEWPORT_MARGIN = 16;
+const ANCHOR_GAP = 4;
+
+const canHover = () => window.matchMedia('(hover: hover)').matches;
 
 export function PhraseSortingHint() {
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  const togglePopoverOnHover = (event: ReactPointerEvent, force: boolean) => {
-    if (event.pointerType === 'mouse') popoverRef.current?.togglePopover(force);
+  const placeBelow = (anchor: HTMLElement) => {
+    const popover = popoverRef.current;
+    if (!popover) return;
+    const { left, bottom } = anchor.getBoundingClientRect();
+    popover.style.top = `${bottom + ANCHOR_GAP}px`;
+    popover.style.left = `${Math.max(VIEWPORT_MARGIN, Math.min(left, window.innerWidth - POPOVER_WIDTH - VIEWPORT_MARGIN))}px`;
   };
 
   return (
@@ -19,20 +28,24 @@ export function PhraseSortingHint() {
         icon={<HelpIcon />}
         aria-label="เกี่ยวกับการเรียงตามความเกี่ยวข้องกับประเด็นที่เลือก"
         popoverTarget={POPOVER_ID}
-        onPointerEnter={event => togglePopoverOnHover(event, true)}
-        onPointerLeave={event => togglePopoverOnHover(event, false)}
-        onClick={event => {
-          if ((event.nativeEvent as PointerEvent).pointerType === 'mouse') {
-            event.preventDefault();
-          }
+        onMouseEnter={event => {
+          if (!canHover()) return;
+          placeBelow(event.currentTarget);
+          popoverRef.current?.togglePopover(true);
         }}
-        className="[anchor-name:--phrase-sorting-hint]"
+        onMouseLeave={() => {
+          if (canHover()) popoverRef.current?.togglePopover(false);
+        }}
+        onClick={event => {
+          placeBelow(event.currentTarget);
+          if (canHover() && event.detail > 0) event.preventDefault();
+        }}
       />
       <div
         ref={popoverRef}
         id={POPOVER_ID}
         popover="auto"
-        className="w-85 max-w-[calc(100vw-(--spacing(8)))] rounded-[10px] bg-white p-3.75 pr-8 text-b7 whitespace-normal text-gray-8 shadow-[3px_7px_17.2px_#0000001a] supports-[position-area:bottom]:inset-auto supports-[position-area:bottom]:my-1 supports-[position-area:bottom]:[position-anchor:--phrase-sorting-hint] supports-[position-area:bottom]:[position-area:bottom_span-right] supports-[position-area:bottom]:[position-try-fallbacks:flip-inline]"
+        className="inset-auto m-0 w-85 max-w-[calc(100vw-(--spacing(8)))] rounded-[10px] bg-white p-3.75 pr-8 text-b7 whitespace-normal text-gray-8 shadow-[3px_7px_17.2px_#0000001a]"
       >
         <button
           type="button"
