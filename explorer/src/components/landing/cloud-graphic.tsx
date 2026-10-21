@@ -54,7 +54,7 @@ function Cloud({
       viewBox={viewBox}
       fill="currentColor"
       style={style}
-      className={`absolute left-0 w-24 animate-drift text-blue-2 motion-reduce:[animation-play-state:paused] md:w-48 ${className}`}
+      className={`absolute left-0 w-24 animate-drift text-white opacity-35 motion-reduce:[animation-play-state:paused] md:w-48 ${className}`}
     >
       {shape}
     </svg>
