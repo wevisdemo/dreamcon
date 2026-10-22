@@ -11,12 +11,12 @@ export function Footer() {
     <footer className="flex justify-between gap-5 bg-blue-7 p-5 text-white md:items-center md:p-7.5">
       <img src={logo} alt="Dream Con" className="h-7.5 shrink-0 md:h-10" />
       <div className="flex flex-col gap-5 md:contents">
-        <ul className="flex flex-col gap-1.25 text-h10 md:flex-row md:gap-15">
+        <ul className="flex max-w-xl flex-1 flex-col justify-around gap-1.25 text-h10 md:flex-row">
           {footerMenus.map(({ label, to }) => (
             <li key={label}>
               <Link
                 to={to}
-                className="flex items-center hover:text-blue-5 md:h-12.5 md:px-5"
+                className="flex items-center hover:text-blue-5 md:h-12.5"
               >
                 {label}
               </Link>

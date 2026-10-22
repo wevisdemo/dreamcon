@@ -38,7 +38,7 @@ export default function AboutPage() {
                 <span>
                   โครงการ Dream Con เกิดจากความร่วมมือขององค์กรต่างๆ ได้แก่ มูลนิธิฟรีดริช
                   เนามัน (FNF) วีวิซ เดโม (WeVis) สถาบันเพื่อการยุติธรรมแห่งประเทศไทย
-                  (TIJ) และ Hand Social Enterprises
+                  (TIJ) และ HAND Social Enterprise
                 </span>
               </div>
               <div className="flex w-full flex-col gap-4 md:w-1/2">

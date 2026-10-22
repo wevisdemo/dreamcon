@@ -17,7 +17,7 @@ export const ORGANIZERS = [
     width: 82,
     height: 41,
   },
-  { name: 'Hand Social Enterprises', logo: handLogo, width: 98, height: 43 },
+  { name: 'HAND Social Enterprise', logo: handLogo, width: 98, height: 43 },
 ];
 
 export const ORGANIZERS_SUMMARY = `โครงการ Dream Con เกิดขึ้นจากความร่วมมือขององค์กรต่าง ๆ ได้แก่ ${ORGANIZERS.slice(

@@ -250,11 +250,11 @@ export const Route = createFileRoute('/')({
           </div>
         </section>
         <section className="px-1 pb-1 md:px-2.5 md:pb-2.5">
-          <div className="flex flex-col overflow-hidden rounded-2xl lg:grid lg:grid-cols-[calc((100%-1.25rem)/3)_1fr]">
+          <div className="flex flex-col overflow-hidden rounded-2xl xl:grid xl:grid-cols-[calc((100%-1.25rem)/3)_1fr]">
             <h2 className="flex items-center justify-center bg-green-4 p-7.5 text-center text-h7 font-bold md:p-15">
               ช่องทางการมีส่วนร่วม
             </h2>
-            <div className="flex flex-col gap-7.5 bg-green-3 p-7.5 md:p-15 lg:flex-row">
+            <div className="flex flex-col gap-7.5 bg-green-3 p-7.5 md:p-15 xl:flex-row">
               <div className="flex flex-1 gap-5">
                 <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-green-4 text-green-6 md:size-20">
                   <PartnershipIcon className="h-5.75 md:h-11.5" />
