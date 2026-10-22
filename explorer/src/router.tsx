@@ -1,3 +1,4 @@
+import './utils/polyfills';
 import { createRouter } from '@tanstack/react-router';
 import { routeTree } from './route-tree.gen';
 
