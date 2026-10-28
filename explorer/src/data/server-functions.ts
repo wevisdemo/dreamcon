@@ -5,6 +5,7 @@ import { loadConversations } from './conversations';
 import { loadEvents } from './events';
 import { loadGroupQuestions } from './group-questions';
 import { loadPartners } from './partners';
+import { loadSearchGroups } from './search-groups';
 
 export const getConversations = createServerFn({ method: 'GET' })
   .middleware([staticFunctionMiddleware])
@@ -32,3 +33,7 @@ export const getGroupQuestions = createServerFn({ method: 'GET' })
 export const getPartners = createServerFn({ method: 'GET' })
   .middleware([staticFunctionMiddleware])
   .handler(loadPartners);
+
+export const getSearchGroups = createServerFn({ method: 'GET' })
+  .middleware([staticFunctionMiddleware])
+  .handler(loadSearchGroups);

@@ -1,5 +1,7 @@
 import { asArray, asString } from 'sheethuahua';
 
+export const SPREADSHEET_ID = '1I5zayl6xMft3eJZlmdh06LA9IGKqqJNMHFRB3JxPHkE';
+
 export const csvUrl = (repo: 'dreamcon' | 'dreamcon-data', name: string) =>
   `https://raw.githubusercontent.com/wevisdemo/${repo}/published-data/${name}.csv`;
 

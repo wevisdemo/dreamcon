@@ -24,6 +24,7 @@ import {
   getConversations,
   getEvents,
   getGroupQuestions,
+  getSearchGroups,
 } from '../data/server-functions';
 import { useScrollIntoView } from '../hooks/use-scroll-into-view';
 import {
@@ -39,7 +40,7 @@ import {
   sortEventsByDate,
   type EventSelection,
 } from '../utils/event';
-import { searchConversations } from '../utils/search';
+import { expandKeyword, searchConversations } from '../utils/search';
 
 type DashboardSearch = {
   keyword?: string;
@@ -62,16 +63,15 @@ export const Route = createFileRoute('/dashboard')({
   }),
   staleTime: Infinity,
   loader: async () => {
-    const [events, conversations, categories] = await Promise.all([
-      getEvents(),
-      getConversations(),
-      getGroupQuestions(),
-    ]);
+    const [events, conversations, categories, searchGroups] = await Promise.all(
+      [getEvents(), getConversations(), getGroupQuestions(), getSearchGroups()]
+    );
     const targetGroupTypesByEvent = new Map(
       events.map(({ id, targetGroup }) => [id, targetGroup.types])
     );
     return {
       categories,
+      searchGroups,
       events: sortEventsByDate(events),
       conversations: conversations.map(({ eventIds, ...conversation }) => ({
         ...conversation,
@@ -85,7 +85,8 @@ export const Route = createFileRoute('/dashboard')({
     };
   },
   component: function Dashboard() {
-    const { categories, events, conversations } = Route.useLoaderData();
+    const { categories, events, conversations, searchGroups } =
+      Route.useLoaderData();
     const {
       keyword = '',
       category: categorySelection,
@@ -177,9 +178,14 @@ export const Route = createFileRoute('/dashboard')({
       (a, b) => countViews(b) - countViews(a)
     );
 
+    const keywords = useMemo(
+      () => expandKeyword(keyword, searchGroups),
+      [keyword, searchGroups]
+    );
+
     const searchedConversations = searchConversations(
       sortedConversations,
-      keyword
+      keywords
     );
 
     const matchesCategory = ({ groups }: (typeof conversations)[number]) =>
@@ -291,7 +297,7 @@ export const Route = createFileRoute('/dashboard')({
                   {filteredConversations.map(conversation => (
                     <TopicCard
                       key={conversation.id}
-                      keyword={keyword}
+                      keywords={keywords}
                       selectedCategory={categorySelection?.category}
                       selectedTargetGroupTypes={selectedTargetGroupTypes}
                       selected={conversation.id === selectedCardId}

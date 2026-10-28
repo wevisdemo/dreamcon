@@ -3,21 +3,21 @@ import { findKeywordMatches } from '../../utils/search';
 
 export function HighlightedText({
   text,
-  keyword,
+  keywords,
 }: {
   text: string;
-  keyword: string;
+  keywords: string[];
 }) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const node = ref.current?.firstChild;
-    if (!keyword || !node || !('highlights' in CSS)) return;
+    if (keywords.length === 0 || !node || !('highlights' in CSS)) return;
 
     const highlight = CSS.highlights.get('search') ?? new Highlight();
     CSS.highlights.set('search', highlight);
 
-    const ranges = findKeywordMatches(text, keyword).map(({ start, end }) => {
+    const ranges = findKeywordMatches(text, keywords).map(({ start, end }) => {
       const range = new Range();
       range.setStart(node, start);
       range.setEnd(node, end);
@@ -25,7 +25,7 @@ export function HighlightedText({
     });
     ranges.forEach(range => highlight.add(range));
     return () => ranges.forEach(range => highlight.delete(range));
-  }, [text, keyword]);
+  }, [text, keywords]);
 
   return (
     <span

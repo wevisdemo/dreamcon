@@ -5,9 +5,7 @@ import {
   Spreadsheet,
   type StaticDecode,
 } from 'sheethuahua';
-import { once } from './shared';
-
-const SPREADSHEET_ID = '1I5zayl6xMft3eJZlmdh06LA9IGKqqJNMHFRB3JxPHkE';
+import { once, SPREADSHEET_ID } from './shared';
 
 export const partnerSchema = Object({
   name: Column('name', asString()),

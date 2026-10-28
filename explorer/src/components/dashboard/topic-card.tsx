@@ -13,7 +13,7 @@ export const TopicCard = memo(function TopicCard({
   groups,
   comments,
   targetGroupTypes,
-  keyword,
+  keywords,
   matchedComment,
   selectedCategory,
   selectedTargetGroupTypes = [],
@@ -23,7 +23,7 @@ export const TopicCard = memo(function TopicCard({
   className = '',
 }: Pick<Conversation, 'id' | 'title' | 'groups' | 'comments'> & {
   targetGroupTypes: string[];
-  keyword: string;
+  keywords: string[];
   matchedComment?: Comment;
   selectedCategory?: string;
   selectedTargetGroupTypes?: string[];
@@ -34,7 +34,7 @@ export const TopicCard = memo(function TopicCard({
 }) {
   const categories = [...new Set(groups.map(({ category }) => category))];
   const commentExcerpt =
-    matchedComment && excerptAroundKeyword(matchedComment.reason, keyword);
+    matchedComment && excerptAroundKeyword(matchedComment.reason, keywords);
   const sortedComments = comments.toSorted(
     (a, b) => commentViews.indexOf(a.view) - commentViews.indexOf(b.view)
   );
@@ -57,7 +57,7 @@ export const TopicCard = memo(function TopicCard({
                   category === selectedCategory ? 'primary' : 'secondary'
                 }
               >
-                <HighlightedText text={category} keyword={keyword} />
+                <HighlightedText text={category} keywords={keywords} />
               </FilterTag>
             ))}
           </div>
@@ -69,7 +69,7 @@ export const TopicCard = memo(function TopicCard({
             onClick={() => onSelect(id)}
             className="cursor-pointer text-left after:absolute after:inset-0"
           >
-            <HighlightedText text={title} keyword={keyword} />
+            <HighlightedText text={title} keywords={keywords} />
           </button>
         </h3>
       </div>
@@ -84,7 +84,7 @@ export const TopicCard = memo(function TopicCard({
         </div>
         {commentExcerpt && (
           <p className="text-b6 text-gray-6">
-            <HighlightedText text={commentExcerpt} keyword={keyword} />
+            <HighlightedText text={commentExcerpt} keywords={keywords} />
           </p>
         )}
       </div>
