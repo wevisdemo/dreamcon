@@ -1,12 +1,15 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import { csvFormat } from 'd3-dsv';
+import { mkdirSync, writeFileSync } from 'fs';
+import { join } from 'path';
+import { csvFormat, csvParse } from 'd3-dsv';
 import { collection, getDocs } from 'firebase/firestore';
 import { initDB } from './firestore';
 
 const { db } = initDB();
 
 const OUTPUT_DIR = 'out';
+
+const GLOSSARY_URL =
+  'https://docs.google.com/spreadsheets/d/1I5zayl6xMft3eJZlmdh06LA9IGKqqJNMHFRB3JxPHkE/gviz/tq?tqx=out:csv&sheet=glossary';
 
 const PUBLIC_COLUMNS: Record<string, string[]> = {
   events: [
@@ -82,6 +85,36 @@ function normalizeComment(
   return doc;
 }
 
+async function loadGlossary(): Promise<Map<string, string>> {
+  const response = await fetch(GLOSSARY_URL);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch glossary: ${response.status}`);
+  }
+  const rows = csvParse(await response.text());
+  return new Map(
+    rows.flatMap(row =>
+      row['Terms'] && row['Related terms']
+        ? [[row['Related terms'].trim(), row['Terms'].trim()] as const]
+        : []
+    )
+  );
+}
+
+function replaceRelatedTerms(
+  text: string,
+  glossary: Map<string, string>
+): string {
+  const pattern = [...glossary.keys(), ...glossary.values()]
+    .sort((a, b) => b.length - a.length)
+    // escape regex metacharacters so terms like "กม." match the literal dot
+    .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+    .join('|');
+  return text.replace(
+    new RegExp(pattern, 'g'),
+    match => glossary.get(match) ?? match
+  );
+}
+
 function toCsvRow(
   obj: Record<string, unknown>
 ): Record<string, string | number | boolean | null> {
@@ -92,7 +125,7 @@ function toCsvRow(
   return row;
 }
 
-async function dumpCollection(name: string) {
+async function dumpCollection(name: string, glossary: Map<string, string>) {
   const colRef = collection(db, name);
   const snapshot = await getDocs(colRef);
 
@@ -104,20 +137,24 @@ async function dumpCollection(name: string) {
     if (name === 'comments') {
       data = normalizeComment(data);
     }
+    if (name === 'topics' && typeof data['title'] === 'string') {
+      data['title'] = replaceRelatedTerms(data['title'], glossary);
+    }
     return data;
   });
 
   const rows = docs.map(toCsvRow);
-  const filePath = path.join(OUTPUT_DIR, `${name}.csv`);
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  fs.writeFileSync(filePath, csvFormat(rows, PUBLIC_COLUMNS[name]));
+  const filePath = join(OUTPUT_DIR, `${name}.csv`);
+  mkdirSync(OUTPUT_DIR, { recursive: true });
+  writeFileSync(filePath, csvFormat(rows, PUBLIC_COLUMNS[name]));
 
   console.log(`Dumped ${docs.length} docs from "${name}" -> ${filePath}`);
 }
 
 async function main() {
+  const glossary = await loadGlossary();
   for (const name of Object.keys(PUBLIC_COLUMNS)) {
-    await dumpCollection(name);
+    await dumpCollection(name, glossary);
   }
   console.log('Done.');
   process.exit(0);
