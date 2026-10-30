@@ -30,11 +30,13 @@ const closeModal = (page: Page) => closeButton(page).click();
 /**
  * Not this event's comment, so dnd-kit marks the wrapper aria-disabled and
  * Playwright's actionability check refuses the click; the icon still works.
+ * Dispatch the event instead of a `force` click, which lands on stale coordinates
+ * when the layout is still settling.
  */
 const openAddCommentModal = async (page: Page, reason: string) => {
   const card = commentCard(page, reason);
   await card.hover();
-  await card.getByLabel(ADD_COMMENT).click({ force: true });
+  await card.getByLabel(ADD_COMMENT).dispatchEvent('click');
   await expect(closeButton(page)).toBeVisible();
 };
 
@@ -314,7 +316,7 @@ test.describe('signed in as the Online writer', () => {
     const events = commentEvents(page, reason);
     await expect(events).toHaveText(/เวทีกรุงเทพฯ\s*\|\s*เวทีออนไลน์/);
 
-    await events.getByLabel(LEAVE_EVENT).click({ force: true });
+    await events.getByLabel(LEAVE_EVENT).dispatchEvent('click');
 
     await expect(
       page.getByText('เพราะวงสนทนาของคุณมี 1 ความคิดเห็นต่อยอดในความคิดเห็นนี้')
@@ -333,7 +335,7 @@ test.describe('signed in as the Online writer', () => {
     const events = commentEvents(page, reason);
     await expect(events).toHaveText(/เวทีกรุงเทพฯ\s*\|\s*เวทีออนไลน์/);
 
-    await events.getByLabel(LEAVE_EVENT).click({ force: true });
+    await events.getByLabel(LEAVE_EVENT).dispatchEvent('click');
     await expect(events).toHaveText(/^จากวง\s*เวทีกรุงเทพฯ$/);
 
     await openAddCommentModal(page, reason);

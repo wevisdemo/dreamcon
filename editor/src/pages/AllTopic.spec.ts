@@ -27,9 +27,19 @@ const SEEDED_TITLES = [
 const eventFilter = (page: Page, name: string) =>
   page.locator(`img[alt="Avatar of ${name}"]`).locator('..');
 
-/** Menu labels are `pointer-events: none`; the clickable target is their row. */
-const menuAction = (page: Page, label: 'แก้ไข' | 'ลบ') =>
-  page.getByText(label, { exact: true }).locator('..').click();
+/**
+ * Opens the topic menu and picks an action. The side panel animates in and
+ * re-renders on data updates, which can drop the popover, so reopen until the
+ * label shows. Labels are `pointer-events: none`; the clickable target is their row.
+ */
+const menuAction = async (page: Page, label: 'แก้ไข' | 'ลบ') => {
+  const action = page.getByText(label, { exact: true });
+  await expect(async () => {
+    await page.getByLabel('เมนู').first().click({ timeout: 2000 });
+    await action.waitFor({ timeout: 2000 });
+  }).toPass({ timeout: 20_000 });
+  await action.locator('..').click();
+};
 
 test.describe('anonymous', () => {
   test.beforeEach(async ({ page }) => {
@@ -198,13 +208,11 @@ test.describe('signed in as the Bangkok writer', () => {
       /ข้อถกเถียงจาก 1 วงสนทนา/
     );
 
-    await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'แก้ไข');
     await page.locator('#topic-title-text-area').fill(editedTitle);
     await submitForm(page);
     await expect(page.getByText(editedTitle, { exact: true })).toHaveCount(2); // list card + side panel
 
-    await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'ลบ');
     await expect(page.getByText(editedTitle, { exact: true })).toHaveCount(0);
   });
@@ -239,7 +247,6 @@ test.describe('signed in as the Bangkok writer', () => {
     await expect(card).toBeVisible();
 
     await card.click();
-    await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'ลบ');
     await expect(page.getByText(title, { exact: true })).toHaveCount(0);
   });
@@ -282,7 +289,6 @@ test.describe('signed in as the Bangkok writer', () => {
     await waitForLoaded(page);
 
     await page.getByText('รัฐธรรมนูญควรรับรองเสรีภาพในการแสดงออกอย่างไร').click();
-    await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'แก้ไข');
 
     await selectDropdown(page, 'การศึกษา', 'สวัสดิการ');
@@ -301,7 +307,6 @@ test.describe('signed in as the Bangkok writer', () => {
     ).toHaveCount(2);
 
     // Restore the seeded categories so later tests still see this topic as seeded.
-    await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'แก้ไข');
     await selectDropdown(page, 'การศึกษา', 'สวัสดิการ');
     await submitForm(page);
@@ -314,7 +319,6 @@ test.describe('signed in as the Bangkok writer', () => {
 
     // A topic with no comments, so this writer is allowed to edit it.
     await page.getByText('ศาลรัฐธรรมนูญควรมีอำนาจตรวจสอบเรื่องใดบ้าง').click();
-    await page.getByLabel('เมนู').first().click();
     await menuAction(page, 'แก้ไข');
 
     await selectDropdown(page, 'ฝ่ายตุลาการ'); // unticks the only category
