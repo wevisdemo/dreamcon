@@ -64,7 +64,7 @@ const useAuth = () => {
   };
 
   const loginAsAdmin = async (username: string, password: string) => {
-    await signInWithEmailAndPassword(auth, username, password);
+    await signInWithEmailAndPassword(auth, username.trim(), password);
   };
 
   const logoutAsAdmin = async () => {
