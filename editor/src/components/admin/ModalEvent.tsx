@@ -5,6 +5,7 @@ import {
   AddOrEditEventPayload,
   defaultAddOrEditEventPayload,
   DreamConEvent,
+  TagField,
 } from '../../types/event';
 import Modal from '../ui/Modal';
 import TagPicker from '../ui/TagPicker';
@@ -16,6 +17,8 @@ interface PropTypes {
   organizerOptions: string[];
   targetGroupTypeOptions: string[];
   onClose: () => void;
+  onRenameTag: (field: TagField, tag: string, next: string) => Promise<void>;
+  onDeleteTag: (field: TagField, tag: string) => Promise<void>;
   onSubmit: (mode: 'create' | 'edit', payload: AddOrEditEventPayload) => void;
 }
 
@@ -261,6 +264,10 @@ export default function ModalEvent(props: PropTypes) {
                 options={props.organizerOptions}
                 selected={payload.organizers}
                 onChange={organizers => setPayload({ ...payload, organizers })}
+                onRename={(tag, next) =>
+                  props.onRenameTag('organizers', tag, next)
+                }
+                onDelete={tag => props.onDeleteTag('organizers', tag)}
                 placeholder="เลือกองค์กร"
                 hint="เลือกได้มากกว่า 1 องค์กร หรือสร้างเพิ่ม"
               />
@@ -289,7 +296,7 @@ export default function ModalEvent(props: PropTypes) {
               </div>
             </div>
             <div className="flex-1">
-              <label className="mb-3 block text-blue-7">กลุ่มเป้าหมาย*</label>
+              <label className="mb-3 block text-blue-7">ผู้เข้าร่วม*</label>
               <input
                 type="text"
                 className={inputClassName}
@@ -302,15 +309,19 @@ export default function ModalEvent(props: PropTypes) {
             </div>
             <div className="flex-1">
               <label className="mb-3 block text-blue-7">
-                ประเภทกลุ่มเป้าหมาย*
+                ลักษณะที่ผู้เข้าร่วมมีเหมือนกัน*
               </label>
               <TagPicker
-                label="ประเภทกลุ่มเป้าหมาย"
+                label="ลักษณะที่ผู้เข้าร่วมมีเหมือนกัน"
                 options={props.targetGroupTypeOptions}
                 selected={payload.target_group_types}
                 onChange={target_group_types =>
                   setPayload({ ...payload, target_group_types })
                 }
+                onRename={(tag, next) =>
+                  props.onRenameTag('target_group_types', tag, next)
+                }
+                onDelete={tag => props.onDeleteTag('target_group_types', tag)}
                 placeholder="เลือกประเภท"
                 hint="เลือกได้มากกว่า 1 ประเภท หรือสร้างเพิ่ม"
               />

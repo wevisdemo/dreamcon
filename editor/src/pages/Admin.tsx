@@ -6,11 +6,10 @@ import EventCard from '../components/admin/EventCard';
 import ModalEvent from '../components/admin/ModalEvent';
 import FullPageLoader from '../components/ui/FullPageLoader';
 import { withBase } from '../const/app';
-import { eventOrganizers, eventTargetGroupTypes } from '../data/event';
 import { useEvent } from '../hooks/useEvent';
 import { useWriter } from '../hooks/useWriter';
 import DefaultLayout from '../layouts/default';
-import { AddOrEditEventPayload, DreamConEvent } from '../types/event';
+import { AddOrEditEventPayload, DreamConEvent, TagField } from '../types/event';
 
 enum RoomSortOption {
   LATEST_EVENT,
@@ -63,6 +62,7 @@ const AdminPage = () => {
     createEvent,
     editEvent,
     getEvents,
+    updateTag,
     loading: eventLoading,
   } = useEvent();
   const {
@@ -124,6 +124,15 @@ const AdminPage = () => {
     window.location.href = withBase(
       `/topics/?writer=${writerID}&event=${eventId}`
     );
+  };
+
+  const handleUpdateTag = async (
+    field: TagField,
+    tag: string,
+    next: string | null
+  ) => {
+    await updateTag(field, tag, next);
+    await fetchEvents();
   };
 
   const handleCreateEvent = async (payload: AddOrEditEventPayload) => {
@@ -262,18 +271,12 @@ const AdminPage = () => {
             setModalEvent({ ...modalEvent, isOpen: false });
           }}
           defaultState={modalEvent.defaultState}
-          organizerOptions={[
-            ...new Set([
-              ...eventOrganizers,
-              ...events.flatMap(event => event.organizers),
-            ]),
-          ]}
+          organizerOptions={[...new Set(events.flatMap(e => e.organizers))]}
           targetGroupTypeOptions={[
-            ...new Set([
-              ...eventTargetGroupTypes,
-              ...events.flatMap(event => event.target_group_types),
-            ]),
+            ...new Set(events.flatMap(e => e.target_group_types)),
           ]}
+          onRenameTag={handleUpdateTag}
+          onDeleteTag={(field, tag) => handleUpdateTag(field, tag, null)}
           onSubmit={handleSubmitEvent}
         />
       </div>

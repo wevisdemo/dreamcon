@@ -19,6 +19,8 @@ export interface DreamConEvent {
   index?: number; // use only in admin page
 }
 
+export type TagField = 'organizers' | 'target_group_types';
+
 export const defaultAddOrEditEventPayload: AddOrEditEventPayload = {
   display_name: '',
   avatar_url: '',

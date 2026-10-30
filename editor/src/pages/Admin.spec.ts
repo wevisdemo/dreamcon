@@ -105,7 +105,7 @@ test('creates a new event and shares a created target group type', async ({
   await page.getByRole('button', { name: 'KPI', exact: true }).click();
   await expect(submit).toBeDisabled();
 
-  await page.getByLabel('ประเภทกลุ่มเป้าหมาย').fill('ผู้สูงอายุ');
+  await page.getByLabel('ลักษณะที่ผู้เข้าร่วมมีเหมือนกัน').fill('ผู้สูงอายุ');
   await page.getByRole('button', { name: /^สร้าง\s*ผู้สูงอายุ$/ }).click();
   await submit.click();
 
@@ -117,7 +117,7 @@ test('creates a new event and shares a created target group type', async ({
   await expect(page.getByText(displayName)).toBeVisible();
 
   await page.getByText('เพิ่มวงสนทนา').click();
-  await page.getByLabel('ประเภทกลุ่มเป้าหมาย').click();
+  await page.getByLabel('ลักษณะที่ผู้เข้าร่วมมีเหมือนกัน').click();
   await expect(
     page.getByRole('button', { name: 'ผู้สูงอายุ', exact: true })
   ).toBeVisible();
@@ -153,4 +153,26 @@ test('organizers cannot be cleared once an event has them', async ({
   await expect(
     page.getByRole('button', { name: 'แก้ไข', exact: true })
   ).toBeDisabled();
+});
+
+test('renames and deletes a target group type across events', async ({
+  page,
+}) => {
+  const picker = page.getByLabel('ลักษณะที่ผู้เข้าร่วมมีเหมือนกัน');
+  const tag = (name: string) => page.getByRole('button', { name, exact: true });
+
+  await page.getByText('เพิ่มวงสนทนา').click();
+  await picker.click();
+  await page.getByRole('button', { name: 'แก้ไข ประชาชนภาคใต้' }).click();
+  await page.getByLabel('ชื่อแท็กใหม่').fill('ประชาชนภาคกลาง');
+  await page.getByRole('button', { name: 'ส่ง', exact: true }).click();
+
+  await expect(tag('ประชาชนภาคกลาง')).toBeVisible();
+  await expect(tag('ประชาชนภาคใต้')).toHaveCount(0);
+
+  await page.getByRole('button', { name: 'ลบแท็ก ประชาชนภาคกลาง' }).click();
+  await page.getByRole('button', { name: 'ยืนยัน', exact: true }).click();
+
+  await expect(tag('ประชาชนภาคกลาง')).toHaveCount(0);
+  await expect(tag('นักวิชาการ')).toBeVisible();
 });

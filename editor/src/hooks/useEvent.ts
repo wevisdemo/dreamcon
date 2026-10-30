@@ -4,13 +4,17 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   runTransaction,
+  where,
+  writeBatch,
 } from 'firebase/firestore';
 import {
   AddOrEditEventPayload,
   CreateEventDBPayload,
   DreamConEvent,
   DreamConEventDB,
+  TagField,
 } from '../types/event';
 import { db } from '../utils/firestore';
 
@@ -134,6 +138,37 @@ export const useEvent = () => {
     }
   };
 
+  /** Renames `tag` on every event that has it, or removes it when `next` is null. */
+  const updateTag = async (
+    field: TagField,
+    tag: string,
+    next: string | null
+  ) => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const snapshot = await getDocs(
+        query(collection(db, 'events'), where(field, 'array-contains', tag))
+      );
+      const batch = writeBatch(db);
+      snapshot.docs.forEach(eventDoc => {
+        const tags = (eventDoc.data()[field] as string[]).map(t =>
+          t === tag ? next : t
+        );
+        batch.update(eventDoc.ref, {
+          [field]: [...new Set(tags.filter(t => t !== null))],
+        });
+      });
+      await batch.commit();
+    } catch (err) {
+      console.error('Error updating tag: ', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const getEventByID = async (id: string): Promise<DreamConEventDB | null> => {
     setLoading(true);
     setError(null);
@@ -168,5 +203,13 @@ export const useEvent = () => {
     }
   };
 
-  return { createEvent, editEvent, getEventByID, getEvents, loading, error };
+  return {
+    createEvent,
+    editEvent,
+    getEventByID,
+    getEvents,
+    updateTag,
+    loading,
+    error,
+  };
 };
