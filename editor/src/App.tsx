@@ -23,7 +23,7 @@ function App() {
     <StoreProvider>
       <div className="flex min-h-dvh flex-col">
         <div className="flex min-h-0 flex-1 flex-col">
-          <Router basename={import.meta.env.BASE_URL}>
+          <Router basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
             <Routes>
               {/* Route for listing all comments */}
               <Route path="/topics" element={<AllTopic />} />
