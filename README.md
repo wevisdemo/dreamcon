@@ -7,13 +7,13 @@ Because the constitution may sometimes feel distant, we invite everyone to share
 
 ## Deployment
 
-| Name              | URL                                                                                  | Trigger                                        | Workflow                                                             |
-| ----------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------- |
-| Editor production | https://dreamcon.wevis.info/                                                         | Manual, after the e2e tests pass               | [Deploy editor to production](.github/workflows/editor-prod.yml)     |
-| Explorer staging  | https://wevisdemo.github.io/dreamcon/                                                | Push to `main` touching `explorer/`, or manual | [Deploy explorer to staging](.github/workflows/explorer-staging.yml) |
-| Published data    | [`published-data`](https://github.com/wevisdemo/dreamcon/tree/published-data) branch | Manual                                         | [Update published data](.github/workflows/publish-data.yml)          |
+| Name             | URL                                                                                  | Trigger                                        | Workflow                                                             |
+| ---------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------- | -------------------------------------------------------------------- |
+| Production       | https://dreamcon.wevis.info/                                                         | Manual, after the e2e tests pass               | [Deploy to production](.github/workflows/production.yml)             |
+| Explorer staging | https://wevisdemo.github.io/dreamcon/                                                | Push to `main` touching `explorer/`, or manual | [Deploy explorer to staging](.github/workflows/explorer-staging.yml) |
+| Published data   | [`published-data`](https://github.com/wevisdemo/dreamcon/tree/published-data) branch | Manual                                         | [Update published data](.github/workflows/publish-data.yml)          |
 
-The editor is still deployed at the production root until the explorer replaces it. The explorer reads the published data at build time, so to ship content changes, run Update published data and then Deploy explorer to staging.
+Production runs `pnpm build`, which puts the explorer at the root of `dist/` and the editor under `dist/editor/`. Explorer staging deploys only the explorer, since the editor would write to the production Firestore. Set `BASE_PATH` (default `/`) to serve the site under a subpath, as staging does. The explorer reads the published data at build time, so to ship content changes, run Update published data and then redeploy.
 
 ## Workspace
 

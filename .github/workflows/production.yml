@@ -1,4 +1,4 @@
-name: Deploy editor to production
+name: Deploy to production
 
 on:
   workflow_dispatch:
@@ -37,6 +37,7 @@ jobs:
       HUSKY: 0
       VITE_FIREBASE_CONFIG: ${{ secrets.VITE_FIREBASE_CONFIG }}
       VITE_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
+      VITE_SITE_ORIGIN: ${{ vars.PRODUCTION_BASE_URL }}
       ANALYTICS_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
     steps:
       - uses: actions/checkout@v7
@@ -49,13 +50,13 @@ jobs:
       - name: Build
         run: |
           : "${VITE_FIREBASE_CONFIG:?}" "${VITE_BASE_URL:?}"
-          nix develop --command pnpm --filter @dreamcon/editor build --base /
+          nix develop --command pnpm build
 
       - name: Upload
         uses: burnett01/rsync-deployments@v9
         with:
           switches: -avzr --delete
-          path: editor/dist/
+          path: dist/
           remote_path: ${{ secrets.SSH_PATH }}
           remote_host: ${{ secrets.SSH_HOST }}
           remote_user: ${{ secrets.SSH_USER }}

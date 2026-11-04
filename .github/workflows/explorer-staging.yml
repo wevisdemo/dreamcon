@@ -34,9 +34,10 @@ jobs:
 
       - name: Build
         env:
+          BASE_PATH: /${{ github.event.repository.name }}/
           VITE_SITE_ORIGIN: https://${{ github.repository_owner }}.github.io
           VITE_NO_INDEX: 'true'
-        run: nix develop --command pnpm --filter @dreamcon/explorer build --base "/${{ github.event.repository.name }}/"
+        run: nix develop --command pnpm --filter @dreamcon/explorer build
 
       - uses: actions/upload-pages-artifact@v5
         with:

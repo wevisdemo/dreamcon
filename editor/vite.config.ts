@@ -26,7 +26,7 @@ const emulatorProxy = Object.fromEntries(
   ])
 );
 
-const { ANALYTICS_BASE_URL } = process.env;
+const { ANALYTICS_BASE_URL, BASE_PATH = '/' } = process.env;
 
 const analytics = !!ANALYTICS_BASE_URL && {
   name: 'analytics',
@@ -46,7 +46,7 @@ const analytics = !!ANALYTICS_BASE_URL && {
 // https://vite.dev/config/
 export default defineConfig({
   // The public site package owns `/`
-  base: '/editor/',
+  base: `${BASE_PATH}editor/`,
   // `.env` files are shared by the whole workspace
   envDir: '..',
   plugins: [

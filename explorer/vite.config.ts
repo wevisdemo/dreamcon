@@ -29,6 +29,7 @@ export default defineConfig(async ({ command }) => {
   const conversations = command === 'build' ? await loadConversations() : [];
 
   return {
+    base: process.env.BASE_PATH ?? '/',
     server: { port: 3000, allowedHosts: true as const },
     plugins: [
       tanstackStart({
