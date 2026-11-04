@@ -39,6 +39,7 @@ jobs:
       VITE_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
       VITE_SITE_ORIGIN: ${{ vars.PRODUCTION_BASE_URL }}
       ANALYTICS_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
+      VITE_ANALYTICS_BASE_URL: ${{ vars.PRODUCTION_BASE_URL }}
     steps:
       - uses: actions/checkout@v7
 

@@ -3,6 +3,8 @@ import { Footer } from '../components/footer';
 import { Navbar } from '../components/navbar';
 import styles from '../styles.css?url';
 
+const ANALYTICS_BASE_URL = import.meta.env.VITE_ANALYTICS_BASE_URL;
+
 export const Route = createRootRoute({
   head: () => ({
     meta: [
@@ -31,6 +33,14 @@ export const Route = createRootRoute({
     >
       <head>
         <HeadContent />
+        {/* Not in head().scripts: TanStack re-injects those on client navigation, starting a second tracker */}
+        {ANALYTICS_BASE_URL && (
+          <script
+            defer
+            data-domain={new URL(ANALYTICS_BASE_URL).host}
+            src="https://analytics.punchup.world/js/script.js"
+          />
+        )}
       </head>
       <body className="flex min-h-dvh flex-col text-b5">
         <Navbar />

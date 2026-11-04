@@ -12,10 +12,11 @@ The public-facing site, served under `/`. Prerequisites and installation are in 
 
 ## Environment
 
-| Variable           | Description                                                                                                                                                                                           |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_SITE_ORIGIN` | Optional build-time site origin, without a path or trailing slash, used for the absolute `og:image` URL. Defaults to `http://localhost:3000`. The staging workflow sets it to the GitHub Pages origin |
-| `VITE_NO_INDEX`    | Set to `true` to add `noindex, nofollow` to every page. The staging workflow sets it so search engines skip staging                                                                                   |
+| Variable                  | Description                                                                                                                                                                                           |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_SITE_ORIGIN`        | Optional build-time site origin, without a path or trailing slash, used for the absolute `og:image` URL. Defaults to `http://localhost:3000`. The staging workflow sets it to the GitHub Pages origin |
+| `VITE_NO_INDEX`           | Set to `true` to add `noindex, nofollow` to every page. The staging workflow sets it so search engines skip staging                                                                                   |
+| `VITE_ANALYTICS_BASE_URL` | Optional site URL whose host is sent as the analytics `data-domain`. When set, the analytics script is added to every page. Only the production workflow sets it                                      |
 
 ## Command
 
